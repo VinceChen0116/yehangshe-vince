@@ -161,3 +161,19 @@ python3 archive.py --dry-run                 # 只看计划
 ## C. 下一步候选
 - 用合并后的代码 + 10-07~10-09 存档重跑（0DTE 否则 1DTE、虚值 ≤0.5%、1 分钟盯市），作为新基准。
 - 0DTE 专用出场规则（分批止盈、放宽硬止损或改为现货跌破正节点止损）、午间不开新仓——一次只改一个变量。
+
+## D. 实盘与云端定时任务（2026-10-12 建立）
+- **实盘模式**：`python3 main.py --live --one-day`。A、B 两套独立模拟账户同时运行（`live_universe_mode="both"`）：
+  - A（严格异动）= 成交量前 100 → 剔除指数/非白名单 ETF → 量能异动 且 PCR 极端（需求文档原文）；
+  - B（宽松）= 成交量前 100 → 剔除指数/非白名单 ETF → 股价 ≥ $20；
+  - 两者都**不限方向**（`pcr_direction_filter=False`，用户确认文档没有这条）；共用同一份 Heatmap（A 不额外耗配额）；Discord 标签 `🅰️【A·严格异动】` / `🅱️【B】`；A 交易明细 `*_A.csv`。
+  - 实测：Heatmap 无盘前数据，首个快照 09:35 ET 才可用 → 实盘 09:35:25 开始拉取（修复了"开盘即判定休市退出"的 bug）。
+  - 09:45 后开仓、11:30–14:30 不开新仓（期间只拉有持仓的标的）、15:30 后不开新仓、16:00 强平；同时持仓上限 8。
+  - 每小时 💓 心跳到 Discord。
+- **Discord**：`notify.py`，Webhook 来自 `config.json` 的 `discord_webhook_url` 或环境变量 `DISCORD_WEBHOOK_URL`；`python3 main.py --notify-test` 测试。回测实验（`experiment.py`）跑完也会推送对比表。
+- **云端环境变量**（claude.ai/code → 环境 → Environment variables）：`YHS_API_KEY`、`DISCORD_WEBHOOK_URL`。仓库里永远不放密钥。
+- **云端定时任务（Routines，每个交易日，新会话）**：
+  - `trig_01URbhAaykT4DAwC3zUVE5gk` 09:10 ET：拉最新分支 → `--check` → 后台启动 `--live --one-day` → 守到收盘 → 推送 `logs/live_*.log`、`live/trades_*.csv`。
+  - `trig_019k7B2KSVPfARD5HnKhZyH5` 16:25 ET：`archive.py --universe heatmap --expiries near` + `--expiries nearest`（212 只）→ 推送存档 → Discord 🗄️ 通知。约 1,500 次/天。
+  - 建议关闭 Mac 上旧的 17 只存档任务（已被云端覆盖）。
+- **信号记录**（`signal_log.py`，0 配额）：212 只 × 10/7–10/9，开仓时段内新结构 1,461 个，30 分钟方向收益 +0.023% ± 0.017%（≈0）；午间信号方向并不差（+0.030% ± 0.014%），午间亏损可能来自期权 theta——待大样本回测单独验证。
