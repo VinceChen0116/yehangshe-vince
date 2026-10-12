@@ -1,0 +1,12 @@
+{
+  "api_key": "",
+  "max_universe_size": 60,
+  "strike_mode": "target_node",
+  "use_chain_greeks": true,
+  "require_pcr_extreme": true,
+  "pcr_direction_filter": true,
+  "flow_require_vol_ge_oi": true,
+  "universe_fetch_time": "09:25",
+  "trades_csv": "trades_history.csv",
+  "log_level": "INFO"
+}

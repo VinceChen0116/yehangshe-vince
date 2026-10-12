@@ -1,0 +1,214 @@
+{
+ "date": "2026-10-09",
+ "entries": [
+  {
+   "ticker": "SOFI",
+   "rank": 10,
+   "total_volume": 1700000.0,
+   "call_volume": 1400000.0,
+   "put_volume": 300000.0,
+   "oi_current": 2000000.0,
+   "oi_change_pct": 0.12,
+   "vol_oi_ratio": 0.85,
+   "pcr": 0.21428571428571427,
+   "bias": "BULL",
+   "score": 4.207,
+   "reasons": [
+    "Vol/OI=0.85",
+    "OI增幅=12.0%",
+    "PCR=0.21偏多"
+   ],
+   "is_etf": false,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "AMD",
+   "rank": 8,
+   "total_volume": 2110000.0,
+   "call_volume": 1500000.0,
+   "put_volume": 610000.0,
+   "oi_current": 2700000.0,
+   "oi_change_pct": 0.09,
+   "vol_oi_ratio": 0.7814814814814814,
+   "pcr": 0.4066666666666667,
+   "bias": "BULL",
+   "score": 3.261,
+   "reasons": [
+    "Vol/OI=0.78",
+    "OI增幅=9.0%",
+    "PCR=0.41偏多"
+   ],
+   "is_etf": false,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "META",
+   "rank": 15,
+   "total_volume": 1000000.0,
+   "call_volume": 700000.0,
+   "put_volume": 300000.0,
+   "oi_current": 1000000.0,
+   "oi_change_pct": 0.07,
+   "vol_oi_ratio": 1.0,
+   "pcr": 0.42857142857142855,
+   "bias": "BULL",
+   "score": 3.214,
+   "reasons": [
+    "Vol/OI=1.00",
+    "OI增幅=7.0%",
+    "PCR=0.43偏多"
+   ],
+   "is_etf": false,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "NVDA",
+   "rank": 4,
+   "total_volume": 3380000.0,
+   "call_volume": 2400000.0,
+   "put_volume": 980000.0,
+   "oi_current": 3900000.0,
+   "oi_change_pct": 0.072,
+   "vol_oi_ratio": 0.8666666666666667,
+   "pcr": 0.4083333333333333,
+   "bias": "BULL",
+   "score": 3.162,
+   "reasons": [
+    "Vol/OI=0.87",
+    "OI增幅=7.2%",
+    "PCR=0.41偏多"
+   ],
+   "is_etf": false,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "GOOGL",
+   "rank": 11,
+   "total_volume": 1580000.0,
+   "call_volume": 1100000.0,
+   "put_volume": 480000.0,
+   "oi_current": 2100000.0,
+   "oi_change_pct": 0.065,
+   "vol_oi_ratio": 0.7523809523809524,
+   "pcr": 0.43636363636363634,
+   "bias": "BULL",
+   "score": 2.893,
+   "reasons": [
+    "Vol/OI=0.75",
+    "OI增幅=6.5%",
+    "PCR=0.44偏多"
+   ],
+   "is_etf": false,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "MSFT",
+   "rank": 17,
+   "total_volume": 860000.0,
+   "call_volume": 600000.0,
+   "put_volume": 260000.0,
+   "oi_current": 1100000.0,
+   "oi_change_pct": 0.06,
+   "vol_oi_ratio": 0.7818181818181819,
+   "pcr": 0.43333333333333335,
+   "bias": "BULL",
+   "score": 2.882,
+   "reasons": [
+    "Vol/OI=0.78",
+    "OI增幅=6.0%",
+    "PCR=0.43偏多"
+   ],
+   "is_etf": false,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "TSLA",
+   "rank": 6,
+   "total_volume": 2550000.0,
+   "call_volume": 900000.0,
+   "put_volume": 1650000.0,
+   "oi_current": 3100000.0,
+   "oi_change_pct": 0.081,
+   "vol_oi_ratio": 0.8225806451612904,
+   "pcr": 1.8333333333333333,
+   "bias": "BEAR",
+   "score": 2.866,
+   "reasons": [
+    "Vol/OI=0.82",
+    "OI增幅=8.1%",
+    "PCR=1.83偏空"
+   ],
+   "is_etf": false,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "AAPL",
+   "rank": 9,
+   "total_volume": 1740000.0,
+   "call_volume": 1200000.0,
+   "put_volume": 540000.0,
+   "oi_current": 2300000.0,
+   "oi_change_pct": 0.055,
+   "vol_oi_ratio": 0.7565217391304347,
+   "pcr": 0.45,
+   "bias": "BULL",
+   "score": 2.757,
+   "reasons": [
+    "Vol/OI=0.76",
+    "OI增幅=5.5%",
+    "PCR=0.45偏多"
+   ],
+   "is_etf": false,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "QQQ",
+   "rank": 3,
+   "total_volume": 5100000.0,
+   "call_volume": 1800000.0,
+   "put_volume": 3300000.0,
+   "oi_current": 6500000.0,
+   "oi_change_pct": 0.06,
+   "vol_oi_ratio": 0.7846153846153846,
+   "pcr": 1.8333333333333333,
+   "bias": "BEAR",
+   "score": 2.618,
+   "reasons": [
+    "Vol/OI=0.78",
+    "OI增幅=6.0%",
+    "PCR=1.83偏空"
+   ],
+   "is_etf": true,
+   "spot_checked": false,
+   "spot_usd": null
+  },
+  {
+   "ticker": "SPY",
+   "rank": 1,
+   "total_volume": 11600000.0,
+   "call_volume": 4200000.0,
+   "put_volume": 7400000.0,
+   "oi_current": 15000000.0,
+   "oi_change_pct": 0.03,
+   "vol_oi_ratio": 0.7733333333333333,
+   "pcr": 1.7619047619047619,
+   "bias": "BEAR",
+   "score": 1.935,
+   "reasons": [
+    "Vol/OI=0.77",
+    "PCR=1.76偏空"
+   ],
+   "is_etf": true,
+   "spot_checked": false,
+   "spot_usd": null
+  }
+ ]
+}
