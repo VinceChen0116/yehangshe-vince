@@ -175,6 +175,16 @@ class SystemConfig:
     no_entry_windows: tuple = ()
     force_close_time: str = "16:00"
 
+    # ------------------------------------------------------------------ 盘前「加速通道」形态（corridor.py）
+    # 看涨：现价略高于显著正 GEX 地板，上方到下一个显著正 GEX 天花板之间以负 GEX 为主（做市商顺势加速），目标 = 天花板
+    # 看跌：镜像。Heatmap 收盘后不再更新，所以用上一交易日最后一个快照即可，前一晚扫描。
+    corridor_node_min_rel: float = 0.30       # "显著"节点：|GEX| ≥ 该到期最大 |GEX| 的 30%
+    corridor_floor_max_dist_pct: float = 0.04 # 现价距地板（看跌为天花板）≤ 4%
+    corridor_neg_share_min: float = 0.60      # 通道内负 GEX 占通道 |GEX| 的比例 ≥ 60%
+    corridor_min_room_pct: float = 0.02       # 现价到目标 ≥ 2%
+    corridor_max_room_pct: float = 0.25       # 现价到目标 ≤ 25%
+    corridor_top_n: int = 20                  # Discord 每晚最多推送的候选数
+
     # ------------------------------------------------------------------ 盘前研究工作流（--premarket）
     # 以下均为"待验证研究参数"，不代表已回测的最优值
     pm_rank_top_n: int = 30               # 成交量排名前 N
