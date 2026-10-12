@@ -45,7 +45,7 @@ python -m unittest test_premarket -v                                   # 离线�
 
 ## 我做的几个解读（可在 config 中改）
 
-- **初筛逻辑**：量能异动（Vol/OI ≥ 0.65 或 OI 增幅 ≥ 5%）**且** PCR 极端，两者都满足才入池（`require_volume_anomaly` / `require_pcr_extreme`）。另外结构方向与 PCR 偏向相反时放弃（`pcr_direction_filter`）。
+- **初筛逻辑**：量能异动（Vol/OI ≥ 0.65 或 OI 增幅 ≥ 5%）**且** PCR 极端，两者都满足才入池（`require_volume_anomaly` / `require_pcr_extreme`）。（PCR 偏向只作标签，不限制做多/做空；`pcr_direction_filter` 默认关闭。）实盘默认 A、B 两套账户同时运行（`live_universe_mode="both"`）：A 严格按上述初筛，B 去掉量能异动与 PCR 条件；Discord 消息分别带 `🅰️【A·严格异动】` / `🅱️【B】`。
 - **到期日**：有 0DTE 用 0DTE，否则 1DTE（交易日口径，周五→周一算 1DTE）；都没有则该标的不交易（`expiry_max_trading_dte`）。
 - **买入行权价**：目标仍是负 GEX 节点（`strike_mode="target_node"`），但最多虚值 0.5%（`max_otm_pct`）：在 Heatmap 当前到期的挂牌行权价中，选虚值不超过 0.5% 且离节点最近的一个（不取整，不会造出不存在的合约）。真实 |delta| < 0.15（`min_entry_delta`）或期权价 < $0.05（`min_option_price`）不开仓。改为 `"atm"` 则买平值。
 - **开盘观察期**：09:45 ET 前不开新仓（`no_new_entries_before`）。

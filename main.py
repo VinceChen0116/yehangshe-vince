@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import calendar
+import copy
 import json
 import datetime as dt
 import logging
@@ -22,12 +23,12 @@ import os
 import sys
 import time
 
-from config import (SystemConfig, et_datetime, et_now, expiry_candidates, hhmm_to_minutes, minutes_of_day, parse_iso,
-                    poll_interval_min, setup_logging, to_et)
+from config import (SystemConfig, entry_blocked_window, et_datetime, et_now, expiry_candidates, hhmm_to_minutes,
+                    minutes_of_day, parse_iso, poll_interval_min, setup_logging, to_et)
 from detector import (HEATMAP_PATH, FLOW_TRADES_PATH, SignalDetector, UniverseEntry, UniverseFilter,
-                      extract_rows, pick, pick_num)
+                      extract_rows, is_strict, pick, pick_num)
 from archive import get_heatmap_rows, rows_to_frames
-from notify import DiscordNotifier, from_config as notify_from_config
+from notify import TAG_A, TAG_B, DiscordNotifier, from_config as notify_from_config
 from paper_trader import CHAIN_PATH, PaperTrader, SessionEngine, bs_price_greeks
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
@@ -173,28 +174,81 @@ def run_live(cfg: SystemConfig, one_day: bool = False) -> None:
         sleep_until(et_datetime(next_weekday(day), cfg.universe_fetch_time), "等待下一交易日")
 
 
+class LiveAccount:
+    """实盘里的一套独立模拟账户（A 或 B）：自己的标的、检测器、持仓上限、交易明细与 Discord 标签。"""
+
+    def __init__(self, name: str, cfg: SystemConfig, client, universe: list, notifier, tag: str):
+        self.name, self.cfg, self.tag = name, cfg, tag
+        self.tickers = {e.ticker for e in universe}
+        self.detector = SignalDetector(cfg, universe)
+        self.trader = PaperTrader(cfg)
+        self.trader.notifier = notifier.tagged(tag) if notifier else None
+        self.engine = SessionEngine(cfg, client, self.detector, self.trader)
+
+    def status(self) -> str:
+        pos = self.trader.open_positions()
+        done = [p for p in self.trader.positions if not p.is_open]
+        return (f"{self.tag} 持仓 {len(pos)}" + ("（" + "，".join(f"{p.ticker} {p.roi_pct:+.0f}%" for p in pos) + "）" if pos else "")
+                + f"，已平 {len(done)} 笔 ${sum(p.realized_pnl for p in done):+,.0f}")
+
+
+def _with_suffix(path: str, suffix: str) -> str:
+    root, ext = os.path.splitext(path)
+    return f"{root}{suffix}{ext or '.csv'}"
+
+
+def build_live_accounts(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier) -> tuple[list, list]:
+    """阶段 1：拉一次成交量榜（宽松条件），从中标出严格异动的 A 池，按 live_universe_mode 建账户。"""
+    broad_cfg = copy.copy(cfg)
+    broad_cfg.require_volume_anomaly = broad_cfg.require_pcr_extreme = False
+    universe = UniverseFilter(broad_cfg).build(client, day)
+    # A 池永远排在最前，配额不够截断时只截 B 池里成交量靠后的
+    universe.sort(key=lambda e: (not is_strict(e, cfg), e.rank))
+    cap = budget_cap(cfg, client.quota_remaining, day)
+    mode = cfg.live_universe_mode
+    strict = [e for e in universe if is_strict(e, cfg)]
+    if mode == "strict":
+        universe = strict
+    universe = universe[:cap]
+    strict = [e for e in strict if e in universe]
+    accounts = []
+    if mode in ("both", "broad"):
+        bcfg = copy.copy(broad_cfg)
+        bcfg.trades_csv = cfg.trades_csv
+        accounts.append(LiveAccount("B", bcfg, client, universe, notifier, TAG_B))
+    if mode in ("both", "strict") and strict:
+        acfg = copy.copy(cfg)
+        acfg.trades_csv = _with_suffix(cfg.trades_csv, "_A") if mode == "both" else cfg.trades_csv
+        accounts.append(LiveAccount("A", acfg, client, strict, notifier, TAG_A))
+    return universe, accounts
+
+
 def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=None) -> None:
     log.info("=" * 78)
-    log.info("交易日 %s 开始", day)
-    universe = UniverseFilter(cfg).build(client, day)
-    cap = budget_cap(cfg, client.quota_remaining, day)
-    universe = universe[:cap]
-    if not universe:
+    log.info("交易日 %s 开始（标的池模式：%s）", day, cfg.live_universe_mode)
+    universe, accounts = build_live_accounts(cfg, client, day, notifier)
+    if not universe or not accounts:
         log.warning("今日标的池为空（或预算不足），跳过")
+        if notifier:
+            notifier.text(f"⚠️ {day} 今日标的池为空，不交易。")
         return
-    log.info("今日监控 %d 只：%s", len(universe), ", ".join(e.ticker for e in universe))
+    strict_set = {e.ticker for e in universe if is_strict(e, cfg)}
+    for a in accounts:
+        log.info("账户 %s 监控 %d 只：%s", a.name, len(a.tickers), ", ".join(sorted(a.tickers)))
     if notifier:
-        notifier.text(f"📋 **{day}** 今日监控 {len(universe)} 只：" + ", ".join(e.ticker for e in universe))
-    detector = SignalDetector(cfg, universe)
-    trader = PaperTrader(cfg)
-    trader.notifier = notifier
-    engine = SessionEngine(cfg, client, detector, trader)
+        notifier.text(f"📋 **{day}** 今日监控 {len(universe)} 只（🅰️ = 严格异动 A 池，共 {len(strict_set)} 只）：\n"
+                      + ", ".join(("🅰️" if e.ticker in strict_set else "") + e.ticker for e in universe))
     pool = [e.ticker for e in universe]
     last_poll: dict[str, dt.datetime] = {}
     open_t = et_datetime(day, cfg.session_open)
     close_t = et_datetime(day, cfg.force_close_time)
     session_verified = False
     next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min or 0)
+
+    def finish_all(when: dt.datetime, reason: str = "EOD_FORCE_CLOSE") -> None:
+        for a in accounts:
+            log.info("----- 账户 %s 收盘 -----", a.name)
+            finish_day(a.cfg, a.engine, a.trader, client, when, reason)
 
     try:
         sleep_until(open_t + dt.timedelta(seconds=cfg.poll_offset_s), "等待开盘")
@@ -205,13 +259,17 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             # 对齐到 5 分钟采样网格
             grid = open_t + dt.timedelta(minutes=5 * ((minutes_of_day(now) - minutes_of_day(open_t)) // 5))
             interval = poll_interval_min(cfg, grid)
+            no_entry = entry_blocked_window(cfg, grid) is not None
             for t in list(pool):
-                if t in detector.rejected_spot:
+                if any(t in a.detector.rejected_spot for a in accounts):
                     pool.remove(t)
                     continue
-                has_pos = trader.open_for(t) is not None and cfg.poll_open_positions_fast
+                has_pos = any(a.trader.open_for(t) is not None for a in accounts)
+                if no_entry and not has_pos:
+                    continue   # 禁止开新仓的时段（午间）只盯持仓标的，省配额
                 lp = last_poll.get(t)
-                if not has_pos and lp is not None and (grid - lp).total_seconds() < interval * 60:
+                if not (has_pos and cfg.poll_open_positions_fast) and lp is not None \
+                        and (grid - lp).total_seconds() < interval * 60:
                     continue
                 if lp is not None and lp >= grid:
                     continue
@@ -235,27 +293,26 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
                             notifier.text(f"💤 {day} 判定休市（Heatmap 会话日期 {sd}），今日不交易。")
                         return
                     session_verified = True
-                engine.on_snapshot(t, payload, et_now())
+                ts = et_now()
+                for a in accounts:   # 同一份快照喂给每个账户，A 不额外消耗配额
+                    if t in a.tickers:
+                        a.engine.on_snapshot(t, payload, ts)
             nxt = grid + dt.timedelta(minutes=5, seconds=cfg.poll_offset_s)
-            log.info("[%s] 本轮完成：持仓 %d 笔，监控 %d 只，配额剩余 %s；下一轮 %s",
-                     et_now().strftime("%H:%M:%S"), len(trader.open_positions()), len(pool),
+            log.info("[%s] 本轮完成：%s；监控 %d 只，配额剩余 %s；下一轮 %s", et_now().strftime("%H:%M:%S"),
+                     "；".join(f"{a.name} 持仓 {len(a.trader.open_positions())}" for a in accounts), len(pool),
                      client.quota_remaining, nxt.strftime("%H:%M:%S"))
             if notifier and cfg.discord_heartbeat_min and et_now() >= next_heartbeat:
                 next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min)
-                pos = trader.open_positions()
-                done = [p for p in trader.positions if not p.is_open]
-                notifier.text(f"💓 {et_now().strftime('%H:%M')} ET 运行中｜监控 {len(pool)} 只｜持仓 {len(pos)} 笔"
-                              + ("：" + "，".join(f"{p.ticker} {p.roi_pct:+.0f}%" for p in pos) if pos else "")
-                              + f"｜已平 {len(done)} 笔 ${sum(p.realized_pnl for p in done):+,.0f}"
-                              + f"｜配额剩余 {client.quota_remaining}")
+                notifier.text(f"💓 {et_now().strftime('%H:%M')} ET 运行中｜监控 {len(pool)} 只｜"
+                              + "｜".join(a.status() for a in accounts) + f"｜配额剩余 {client.quota_remaining}")
             sleep_until(min(nxt, close_t))
-        finish_day(cfg, engine, trader, client, close_t)
+        finish_all(close_t)
     except QuotaExhausted:
-        finish_day(cfg, engine, trader, client, et_now(), "QUOTA_HALT")
+        finish_all(et_now(), "QUOTA_HALT")
         raise
     except KeyboardInterrupt:
         log.warning("收到中断信号，按最新现货清平所有模拟持仓并导出")
-        finish_day(cfg, engine, trader, client, et_now(), "MANUAL_STOP")
+        finish_all(et_now(), "MANUAL_STOP")
         raise
 
 

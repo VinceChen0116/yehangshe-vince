@@ -11,6 +11,7 @@ notify.py —— Discord 实时通知（仅标准库）
 """
 from __future__ import annotations
 
+import copy
 import json
 import logging
 import time
@@ -20,16 +21,26 @@ import urllib.request
 log = logging.getLogger("yhs.notify")
 
 GREEN, RED, BLUE, GREY, ORANGE = 0x2ECC71, 0xE74C3C, 0x3498DB, 0x95A5A6, 0xE67E22
+TAG_A, TAG_B = "🅰️【A·严格异动】", "🅱️【B】"
 REASON_CN = {"STOP_LOSS": "硬止损", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈",
              "HARD_TAKE_PROFIT": "硬顶止盈", "EOD_FORCE_CLOSE": "收盘强平", "QUOTA_HALT": "配额熔断",
              "MANUAL_STOP": "手动停止"}
 
 
 class DiscordNotifier:
-    def __init__(self, webhook_url: str, username: str = "夜航社 GEX 模拟盘", timeout_s: float = 10.0):
+    def __init__(self, webhook_url: str, username: str = "夜航社 GEX 模拟盘", timeout_s: float = 10.0, tag: str = ""):
         self.url = (webhook_url or "").strip()
         self.username = username
         self.timeout_s = timeout_s
+        self.tag = tag   # 账户标签，加在每条消息最前面（如 "🅰️【A·严格异动】"）
+
+    def tagged(self, tag: str) -> "DiscordNotifier":
+        n = copy.copy(self)
+        n.tag = tag
+        return n
+
+    def _t(self, title: str) -> str:
+        return f"{self.tag} {title}" if self.tag else title
 
     @property
     def enabled(self) -> bool:
@@ -67,12 +78,12 @@ class DiscordNotifier:
 
     # ------------------------------------------------------------------ 事件
     def text(self, msg: str) -> None:
-        self.send(msg)
+        self.send(self._t(msg))
 
     def position_opened(self, p) -> None:
         bull = p.action == "BUY_CALL"
         self.send(embeds=[{
-            "title": f"{'🟢' if bull else '🔴'} 开仓 {p.ticker} {'CALL' if bull else 'PUT'} {p.strike:g}",
+            "title": self._t(f"{'🟢' if bull else '🔴'} 开仓 {p.ticker} {'CALL' if bull else 'PUT'} {p.strike:g}"),
             "color": GREEN if bull else RED,
             "fields": [
                 {"name": "合约", "value": f"`{p.contract_symbol}`", "inline": False},
@@ -89,8 +100,8 @@ class DiscordNotifier:
     def position_closed(self, p) -> None:
         win = p.realized_pnl > 0
         self.send(embeds=[{
-            "title": f"{'✅' if win else '❌'} 平仓 {p.ticker} {p.strike:g}{'C' if p.right == 'C' else 'P'} "
-                     f"{p.realized_roi_pct:+.1f}%（{REASON_CN.get(p.exit_reason, p.exit_reason)}）",
+            "title": self._t(f"{'✅' if win else '❌'} 平仓 {p.ticker} {p.strike:g}{'C' if p.right == 'C' else 'P'} "
+                             f"{p.realized_roi_pct:+.1f}%（{REASON_CN.get(p.exit_reason, p.exit_reason)}）"),
             "color": GREEN if win else RED,
             "fields": [
                 {"name": "期权", "value": f"${p.entry_option_price:.2f} → ${p.exit_option_price:.2f}", "inline": True},
@@ -104,13 +115,13 @@ class DiscordNotifier:
 
     def daily_summary(self, day, stats: dict, positions: list) -> None:
         if not stats.get("trades"):
-            self.send(f"📊 **{day} 收盘**：今日无交易。")
+            self.send(self._t(f"📊 **{day} 收盘**：今日无交易。"))
             return
         lines = [f"`{p.ticker:<5} {p.action[4:]:<4} {p.realized_roi_pct:+7.1f}%  {REASON_CN.get(p.exit_reason, p.exit_reason)}`"
                  for p in positions if not p.is_open]
         pf = stats.get("profit_factor")
         self.send(embeds=[{
-            "title": f"📊 {day} 收盘复盘：{stats['trades']} 笔，合计 ${stats['total_pnl_usd']:+,.2f}",
+            "title": self._t(f"📊 {day} 收盘复盘：{stats['trades']} 笔，合计 ${stats['total_pnl_usd']:+,.2f}"),
             "color": GREEN if stats["total_pnl_usd"] >= 0 else RED,
             "description": "\n".join(lines)[:3500],
             "fields": [

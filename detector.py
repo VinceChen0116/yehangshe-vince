@@ -138,7 +138,10 @@ class UniverseFilter:
         self.cfg = cfg
 
     def cache_path(self, day: dt.date) -> str:
-        return os.path.join(self.cfg.data_dir, f"universe_{day.isoformat()}.json")
+        c = self.cfg
+        suffix = "" if (c.require_volume_anomaly and c.require_pcr_extreme) else \
+            f"_va{int(c.require_volume_anomaly)}_pcr{int(c.require_pcr_extreme)}"
+        return os.path.join(c.data_dir, f"universe_{day.isoformat()}{suffix}.json")
 
     def build(self, client, day: dt.date, force: bool = False) -> list[UniverseEntry]:
         path = self.cache_path(day)
@@ -240,6 +243,13 @@ class UniverseFilter:
         for e in out:
             log.info("   入池 %-6s 偏向=%-7s 评分=%.2f  %s", e.ticker, e.bias, e.score, "，".join(e.reasons))
         return out
+
+
+def is_strict(e: UniverseEntry, cfg: SystemConfig) -> bool:
+    """是否满足需求文档阶段 1 的严格初筛（A 方案）：量能异动 且 PCR 极端。"""
+    anomaly = (e.vol_oi_ratio is not None and e.vol_oi_ratio >= cfg.vol_oi_min) or \
+              (e.oi_change_pct is not None and e.oi_change_pct >= cfg.oi_growth_min)
+    return anomaly and e.bias != "NEUTRAL"
 
 
 # =============================================================================

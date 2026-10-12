@@ -92,7 +92,12 @@ class SystemConfig:
     pcr_bear_min: float = 1.60
     require_volume_anomaly: bool = True   # 必须满足 Vol/OI 或 OI 增幅
     require_pcr_extreme: bool = True      # 必须满足 PCR 极端倾斜
-    pcr_direction_filter: bool = True     # 结构方向与 PCR 偏向相反时放弃信号
+    # 结构方向与 PCR 偏向相反时放弃信号。需求文档没有这条，是初版代码的额外解读；2026-10-12 用户确认不限方向，默认关闭
+    pcr_direction_filter: bool = False
+    # 实盘标的池：both = A、B 两套独立账户同时运行（推荐）；strict = 只跑 A；broad = 只跑 B
+    #   A（严格异动）：成交量前 100 → 剔除指数/非白名单 ETF → 量能异动 且 PCR 极端（需求文档阶段 1 原文）
+    #   B（宽松）：成交量前 100 → 剔除指数/非白名单 ETF → 股价 ≥ min_spot_usd，不要求异动与 PCR
+    live_universe_mode: str = "both"
     max_universe_size: int = 60           # 预算守卫上限
     est_polls_per_ticker_day: int = 57    # 保守估计：5min×24 + 午间 15 次 + 5min×18 ≈ 57 次/标的/日
     flow_chain_budget_share: float = 0.15 # 每日预算中预留给 Flow/期权链的比例
