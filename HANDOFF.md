@@ -119,32 +119,29 @@ python3 archive.py --dry-run                 # 只看计划
 
 # 附录：云端 session 进展（2026-10-12，分支 `claude/yehangshe-mcp-backtest-8u54ni`）
 
-> 云端仓库：`VinceChen0116/yehangshe-vince`。代码来自用户上传的 zip（时间早于上面的本地进展），**本地 §4 第 8、10–14 条改动不在这里**（没有 `archive.py`、1 分钟盯市、`min_entry_delta`、09:45、行权价不取整）。两份代码已分叉，需合并。
+> 云端仓库：`VinceChen0116/yehangshe-vince`。**本地代码（`yhs_gex_system_2_1.zip`）已与云端改动三方合并，仓库即为唯一最新版本**；本地目录请以仓库为准（`config.json` 不在仓库里，需自行保留）。
+> 本地 §4 全部改动（1 分钟盯市、`min_entry_delta`、09:45、`archive.py` 与 10-07~10-09 存档、503 不重试、09:30 坏点等）都在仓库里。
 
-## A. 云端已做的改动
+## A. 云端新增（在本地版本之上）
 1. Flow 默认关闭：`require_flow_confirm=False`、`pm_require_flow_for_confirm=False`（Flow API 修复中）。
-2. **到期日：有 0DTE 用 0DTE，否则 1DTE**（用户 10-12 的明确要求；交易日口径，周五→周一算 1DTE，含节假日）；都没有则该标的不交易。`config.expiry_max_trading_dte=1`，`detector.parse_heatmap` 实现；历史回放依次尝试回放日、下一个交易日两个到期。取代了 `nearest_friday`。
-3. NYSE 日历从 `premarket_workflow.py` 移到 `config.py`（`premarket_workflow` 重新导入，接口不变），新增 `config.trading_dte()`。
-4. 行权价：仍以负 GEX 节点为目标，但**最多虚值 0.5%**（`max_otm_pct`）；超出则改为距现货 0.5% 内（无期权链时按步长取整再向现货退一档——**与本地第 8 条"不取整"冲突，见 C**）。
-5. 期权价格 < $0.20 不开仓（`min_entry_price_usd`；本地是 `min_option_price=0.05`）。
-6. 09:40 前不开仓（`no_new_entries_before`；本地是 09:45）。
-7. `yhs_client.py`：503 "recently failed" 不重试（同本地第 9 条）。
-8. mock 回放的近端到期改为回放当天（0DTE）。
-9. 新增 `test_trading_rules.py`（9 个测试）；`python -m unittest test_trading_rules test_premarket` 全部通过。
-10. API Key：容器内 `config.json`（gitignore，权限 600）；仓库不含 Key。
+2. **到期日：有 0DTE 用 0DTE，否则 1DTE**（用户 10-12 明确要求；交易日口径，周五→周一算 1DTE，含节假日）；都没有则该标的不交易。`config.expiry_max_trading_dte=1`，在 `detector.parse_heatmap` 实现；历史回放依次尝试回放日、下一个交易日两个到期（经 `archive.get_heatmap_rows`，存档优先；查询结果为空也会存档，下次不再扣配额）。**取代 `nearest_friday`**。注：NVDA 等个股有周一/三/五到期，所以周三也有 0DTE。
+3. NYSE 日历从 `premarket_workflow.py` 移到 `config.py`（`premarket_workflow` 仍可导入同名函数，`archive.py` 改为从 `config` 导入），新增 `config.trading_dte()`。
+4. **行权价**（合并本地"不取整"与云端"限制虚值"）：目标仍是负 GEX 节点，但在 Heatmap 当前到期的挂牌行权价（`HeatmapSnapshot.strikes`）中，选虚值 ≤ `max_otm_pct`(0.5%) 且离节点最近的一个；挂牌价不取整。没有挂牌列表时才按步长取整并退回上限内。
+5. 合并时的取舍：开仓时间用本地 **09:45**；最低价格用本地 `min_option_price=0.05` + `min_entry_delta=0.15`（删去云端的 `min_entry_price_usd=0.20`）。
+6. mock 回放的近端到期改为回放当天（0DTE）。
+7. 新增 `test_trading_rules.py`（10 个测试，含 192.5 不取整）；`python3 -m unittest test_trading_rules test_premarket` 全部通过；vermin 确认运行时兼容 Python 3.7。
+8. 云端容器的 API Key 在本地 `config.json`（gitignore，权限 600）。
 
-## B. 云端回测（15 只：SPY,QQQ,TLT,SOXL,TQQQ,NVDA,TSLA,AAPL,AMD,META,MSFT,AMZN,GOOGL,PLTR,AVGO；仅 Heatmap；**5 分钟盯市**；规则为 A.2/A.4–A.6）
+## B. 云端回测（合并前的云端代码：5 分钟盯市、无 delta 过滤、09:40、$0.20 门槛、虚值 ≤0.5% 按步长取整）
+15 只：SPY,QQQ,TLT,SOXL,TQQQ,NVDA,TSLA,AAPL,AMD,META,MSFT,AMZN,GOOGL,PLTR,AVGO；仅 Heatmap。
 | 日期 | 笔数 | 合计 | 胜率 | 方向正确率 | 平均峰值 |
 |---|---|---|---|---|---|
 | 10-08 | 22 | -$456 | 32% | 64% | +32.8% |
 | 10-09 | 25 | -$986 | 20% | 64% | +37.6% |
 | 合计 | 47 | -$1,442 | 26% | 64% | +35.4% |
 
-观察：方向对但出场亏（10 笔峰值 ≥+35% 最终全亏，保本线跳空）；硬止损 23 次；午间开仓胜率 13%。文件：`backtests/*_v2.{csv,log}`。
-与本地 §6 对比：本地"买远端节点"版本 +$853，但去掉最大一笔仅 +$55；云端把行权价限制在 0.5% 内后变成 -$1,442。两边标的、盯市粒度不同，**不可直接比较**，但提示"近平值 + 现行出场规则"在 0DTE 上不赚钱。
+观察：方向对但出场亏（10 笔峰值 ≥+35% 最终全亏，保本线跳空）；硬止损 23 次；午间开仓胜率 13%。文件：`backtests/*_v2.{csv,log}`。与本地 §6（远端节点 +$853，去掉最大一笔 +$55）标的与盯市粒度不同，不可直接比较。**合并后的代码尚未重跑回测。**
 
-## C. 待决定的冲突
-- 行权价：本地"直接用节点行权价、不取整" vs 云端"限制虚值 0.5%"。较好的合并方式：在 Heatmap `cells` 里实际存在的行权价中，选不超过虚值上限、离节点最近的一个（既不会造出不存在的合约，也不会买彩票）。
-- 开仓时间：09:40（云端）vs 09:45（本地）。
-- 最低价格：$0.20（云端）vs $0.05 + `min_entry_delta=0.15`（本地）。
-- 到期日：用户已在云端明确要求 0DTE 否则 1DTE，应以此为准。
+## C. 下一步候选
+- 用合并后的代码 + 10-07~10-09 存档重跑（0DTE 否则 1DTE、虚值 ≤0.5%、1 分钟盯市），作为新基准。
+- 0DTE 专用出场规则（分批止盈、放宽硬止损或改为现货跌破正节点止损）、午间不开新仓——一次只改一个变量。

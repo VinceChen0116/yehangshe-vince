@@ -257,6 +257,7 @@ class HeatmapSnapshot:
     king_put_strike: float       # 最大负 GEX 节点
     king_put_gex: float
     n_cells: int
+    strikes: tuple = ()          # 该到期日 Heatmap 中出现的全部挂牌行权价（升序）
 
 
 def parse_heatmap(payload: dict, cfg: SystemConfig, ref_date: dt.date) -> HeatmapSnapshot | None:
@@ -306,6 +307,7 @@ def parse_heatmap(payload: dict, cfg: SystemConfig, ref_date: dt.date) -> Heatma
         king_put_strike=float(kp["strike_usd"]),
         king_put_gex=_num(kp["net_dealer_gex_usd"]),
         n_cells=len(ec),
+        strikes=tuple(sorted({float(c["strike_usd"]) for c in ec if c.get("strike_usd") is not None})),
     )
 
 

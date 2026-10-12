@@ -112,6 +112,7 @@ class PaperTrader:
         self.chain_calls = 0
         # 可选的真实期权价格源：callable(contract_symbol, now_et) -> 价格 | None（历史回放接入 contract-intraday）
         self.price_provider = None
+        self.delta_provider = None   # 可选：callable(contract_symbol, now_et) -> 真实 |delta| | None
 
     # ------------------------------------------------------------------ 查询
     def open_positions(self) -> list[Position]:
@@ -127,14 +128,19 @@ class PaperTrader:
         return [p for p in self.positions if p.ticker == ticker and p.entry_time.date() == day]
 
     # ------------------------------------------------------------------ 开仓
-    def _choose_strike(self, sig: FullSignal) -> float:
+    def _choose_strike(self, sig: FullSignal) -> tuple[float, bool]:
+        """返回 (行权价, 是否为挂牌行权价)。target_node：目标负 GEX 节点，但虚值不超过 max_otm_pct；
+        优先在 Heatmap 当前到期的挂牌行权价中选离节点最近的，避免造出不存在的合约。"""
         spot = sig.snapshot.spot
         if self.cfg.strike_mode == "atm":
-            return spot
-        cap = self.cfg.max_otm_pct
-        if sig.structure.right == "C":
-            return min(sig.structure.neg_strike, spot * (1 + cap))
-        return max(sig.structure.neg_strike, spot * (1 - cap))
+            return spot, False
+        node, is_call = sig.structure.neg_strike, sig.structure.right == "C"
+        limit = spot * (1 + self.cfg.max_otm_pct) if is_call else spot * (1 - self.cfg.max_otm_pct)
+        ok = [k for k in sig.snapshot.strikes
+              if (k <= limit + 1e-6 if is_call else k >= limit - 1e-6)]
+        if ok:
+            return min(ok, key=lambda k: (abs(k - node), abs(k - spot))), True
+        return (min(node, limit) if is_call else max(node, limit)), False
 
     def _price_from_chain(self, client, sig: FullSignal, want_strike: float):
         """单次期权链调用。返回 (symbol, strike, mid, |delta|, gamma) 或 None。"""
@@ -193,7 +199,7 @@ class PaperTrader:
 
     def open_position(self, client, sig: FullSignal, now_et: dt.datetime) -> Position | None:
         cfg = self.cfg
-        want = self._choose_strike(sig)
+        want, listed = self._choose_strike(sig)
         spot = sig.snapshot.spot
         exp = sig.snapshot.expiration
         quote = self._price_from_chain(client, sig, want) if client is not None else None
@@ -201,13 +207,17 @@ class PaperTrader:
             sym, strike, mid, delta, gamma = quote
             src = "chain"
         else:
-            strike = _round_strike(want, spot)
-            if cfg.strike_mode != "atm":   # 取整后超出虚值上限时，向现货方向退一档
-                step = _strike_step(spot)
-                if sig.structure.right == "C" and strike > spot * (1 + cfg.max_otm_pct) + 1e-6:
-                    strike = round(strike - step, 2)
-                elif sig.structure.right == "P" and strike < spot * (1 - cfg.max_otm_pct) - 1e-6:
-                    strike = round(strike + step, 2)
+            if listed:
+                # 来自 Heatmap 的挂牌行权价，不能再取整（如 192.5 取整成 192 会生成不存在的合约）
+                strike = want
+            else:
+                strike = _round_strike(want, spot)
+                if cfg.strike_mode != "atm":   # 取整后超出虚值上限时，向现货方向退一档
+                    step = _strike_step(spot)
+                    if sig.structure.right == "C" and strike > spot * (1 + cfg.max_otm_pct) + 1e-6:
+                        strike = round(strike - step, 2)
+                    elif sig.structure.right == "P" and strike < spot * (1 - cfg.max_otm_pct) - 1e-6:
+                        strike = round(strike + step, 2)
             sym = occ_symbol(sig.ticker, exp, sig.structure.right, strike)
             T = max((dt.date.fromisoformat(exp) - now_et.date()).days, 0) / 365 + \
                 max(0, hhmm_to_minutes("16:00") - minutes_of_day(now_et)) / (365 * 24 * 60)
@@ -220,15 +230,22 @@ class PaperTrader:
                 if real is None:   # 此刻无报价（如开盘首个 5 分钟）：按 5 分钟内下一个可用报价成交
                     real = self.price_provider(sym, now_et + dt.timedelta(minutes=5))
             if real is not None:
-                mid, src = real, "real_data"   # 真实成交价或真实 IV 定价；δ/γ 仍取 BS 值（仅作兜底）
-        if mid < cfg.min_entry_price_usd:
-            log.info("【阶段4·放弃】%s %s %s 价格 %.3f < $%.2f，合约过于便宜（跳空风险大），不开仓",
-                     sig.ticker, sym, sig.structure.action, mid, cfg.min_entry_price_usd)
-            return None
+                mid, src = real, "real_data"   # 真实成交价或真实 IV 定价；γ 仍取 BS 值（仅作兜底）
+                real_delta = self.delta_provider(sym, now_et) if self.delta_provider else None
+                if real_delta is not None:
+                    delta = real_delta
         if not cfg.use_chain_greeks or delta is None:
             delta = cfg.default_delta
         if not cfg.use_chain_greeks or gamma is None:
             gamma = cfg.default_gamma
+        if cfg.min_entry_delta and delta is not None and delta < cfg.min_entry_delta:
+            log.info("【阶段4·放弃】%s %s |δ|=%.3f < %.2f，过于虚值（彩票合约），不开仓",
+                     sig.ticker, sym, delta, cfg.min_entry_delta)
+            return None
+        if mid < cfg.min_option_price:
+            log.warning("【阶段4·放弃】%s %s 期权价 %.3f < $%.2f，报价不可信或流动性不足，不开仓",
+                        sig.ticker, sym, mid, cfg.min_option_price)
+            return None
         cost = mid * (1 + cfg.slippage_pct)
         p = Position(
             position_id=f"P{now_et.strftime('%Y%m%d')}-{next(self._ids):04d}",
@@ -440,7 +457,7 @@ class SessionEngine:
     def can_enter(self, ticker: str, now_et: dt.datetime) -> tuple[bool, str]:
         cfg = self.cfg
         if minutes_of_day(now_et) < hhmm_to_minutes(cfg.no_new_entries_before):
-            return False, f"{cfg.no_new_entries_before} 前只观察不开仓"
+            return False, f"{cfg.no_new_entries_before} 前不开新仓（开盘噪音期）"
         if minutes_of_day(now_et) >= hhmm_to_minutes(cfg.no_new_entries_after):
             return False, f"{cfg.no_new_entries_after} 后不再开新仓"
         if len(self.trader.open_positions()) >= cfg.max_open_positions:

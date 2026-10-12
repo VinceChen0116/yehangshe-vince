@@ -25,6 +25,7 @@ from config import (SystemConfig, et_datetime, et_now, hhmm_to_minutes, minutes_
                     next_trading_day, poll_interval_min, setup_logging, to_et)
 from detector import (HEATMAP_PATH, FLOW_TRADES_PATH, SignalDetector, UniverseEntry, UniverseFilter,
                       extract_rows, pick, pick_num)
+from archive import get_heatmap_rows
 from paper_trader import CHAIN_PATH, PaperTrader, SessionEngine, bs_price_greeks
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
@@ -229,36 +230,28 @@ class HistoryClient:
         self.flow_cache: dict[str, list[dict]] = {}
         self.max_flow_pages = max_flow_pages
         self.intraday: dict[str, list[tuple[dt.datetime, float]]] = {}       # 合约 → [(bar 开始时间 ET, close)]
-        self.greeks: dict[str, list[tuple[dt.datetime, float, float]]] = {}  # 合约 → [(时间 ET, 标的价, IV)]
+        self.greeks: dict[str, list[tuple]] = {}  # 合约 → [(时间 ET, 标的价, IV, |delta|)]
         self.intraday_unavailable = False   # 回放日不是最近交易日时，contract-intraday 无数据，首次发现后不再请求
 
     def load_heatmap(self, ticker: str, expiration: str) -> int:
-        frames, cursor, pages = {}, None, 0
-        while True:
-            # from/to 只传日期时服务端返回空集，必须传带时区的完整时间
-            params = {"expiration": expiration,
-                      "from": et_datetime(self.date, "09:30").isoformat(),
-                      "to": et_datetime(self.date, "16:00").isoformat(),
-                      "limit": 24, "cursor": cursor}
-            payload = self.real.get(f"/v1/derived/heatmap/{ticker}/history", params)
-            pages += 1
-            for row in extract_rows(payload):
-                ts = parse_iso(row.get("minute_at"))
-                if ts is None:
-                    continue
-                et = to_et(ts)
-                frames[et.replace(second=0, microsecond=0)] = {"data": {
-                    "ticker": ticker, "generated_at": row.get("minute_at"),
-                    "session_date_et": self.date.isoformat(), "spot_usd": row.get("spot_usd"),
-                    "expirations": [row.get("expiration") or expiration],
-                    "cells": [{"strike_usd": c.get("strike_usd"), "expiration": row.get("expiration") or expiration,
-                               "net_dealer_gex_usd": c.get("net_dealer_gex_usd")} for c in row.get("cells") or []],
-                }}
-            cursor = (payload.get("_meta") or {}).get("next_cursor") if isinstance(payload, dict) else None
-            if not cursor or pages >= 10:
-                break
+        """整日 5 分钟快照：本地存档优先（archive.py），没有则从 API 拉取并顺手存档。"""
+        rows, src = get_heatmap_rows(self.real, self.cfg, ticker, expiration, self.date)
+        frames = {}
+        for row in rows:
+            ts = parse_iso(row.get("minute_at"))
+            if ts is None:
+                continue
+            et = to_et(ts)
+            frames[et.replace(second=0, microsecond=0)] = {"data": {
+                "ticker": ticker, "generated_at": row.get("minute_at"),
+                "session_date_et": self.date.isoformat(), "spot_usd": row.get("spot_usd"),
+                "expirations": [row.get("expiration") or expiration],
+                "cells": [{"strike_usd": c.get("strike_usd"), "expiration": row.get("expiration") or expiration,
+                           "net_dealer_gex_usd": c.get("net_dealer_gex_usd")} for c in row.get("cells") or []],
+            }}
         self.frames[ticker] = frames
-        log.info("【历史】%s 到期 %s 载入 %d 个 5 分钟快照（%d 页）", ticker, expiration, len(frames), pages)
+        log.info("【历史】%s 到期 %s 载入 %d 个 5 分钟快照（来源：%s）", ticker, expiration, len(frames),
+                 "本地存档" if src == "archive" else "API")
         return len(frames)
 
     def _load_intraday(self, core: str) -> list[tuple[dt.datetime, float]]:
@@ -292,26 +285,27 @@ class HistoryClient:
         self.intraday[core] = bars
         return bars
 
-    def _load_greeks(self, core: str) -> list[tuple[dt.datetime, float, float]]:
+    def _load_greeks(self, core: str) -> list[tuple]:
         """contract-greeks-series：全天 5 分钟 (时间 ET, 标的价, IV)。snapshot_at 为不带时区的美东时间。"""
         if core in self.greeks:
             return self.greeks[core]
-        rows: list[tuple[dt.datetime, float, float]] = []
+        rows: list[tuple] = []
         try:
             d = self.date.isoformat()
             payload = self.real.get(f"/v1/options/contract-greeks-series/{core}",
-                                    {"from": d, "to": d, "interval": "5m"})
+                                    {"from": d, "to": d, "interval": self.cfg.greeks_interval})
             data = payload.get("data") if isinstance(payload, dict) else None
             for r in (data or {}).get("rows") or []:
                 ts = r.get("snapshot_at")
                 S, iv, delta = r.get("underlying_price_usd"), r.get("implied_vol_pct"), r.get("delta")
                 if not ts or not S or not iv or delta is None:
                     continue
-                if abs(float(delta)) < 0.001:   # 开盘首个点常为未成形的异常值（δ≈0、IV 失真）
+                # 09:30 开盘首个点是未成形的异常值（实测 IV 仅 6%~12%、δ≈0，会把期权算成 $0.01），一律丢弃
+                if ts[11:16] == "09:30" or abs(float(delta)) < 0.001:
                     continue
-                rows.append((et_datetime(self.date, ts[11:16]), float(S), float(iv)))
+                rows.append((et_datetime(self.date, ts[11:16]), float(S), float(iv), abs(float(delta))))
             rows.sort()
-            log.info("【历史】%s 真实 IV 序列 %d 个 5 分钟点", core, len(rows))
+            log.info("【历史】%s 真实 IV 序列 %d 个点（%s）", core, len(rows), self.cfg.greeks_interval)
         except QuotaExhausted:
             raise
         except YHSApiError as e:
@@ -339,12 +333,23 @@ class HistoryClient:
             g = row
         if g is None or (t - g[0]).total_seconds() > 15 * 60:
             return None
-        _, S, iv = g
+        _, S, iv, _d = g
         right, K = core[-9], int(core[-8:]) / 1000
         exp = dt.datetime.strptime(core[-15:-9], "%y%m%d").date()
         T = ((exp - t.date()).days + max(0, 16 * 60 - t.hour * 60 - t.minute) / (24 * 60)) / 365
         px, _, _ = bs_price_greeks(S, K, T, self.cfg.risk_free_rate, iv, right == "C")
         return px
+
+    def option_delta(self, contract: str, t: dt.datetime) -> float | None:
+        """t 时刻（含 5 分钟内下一个点，与开仓成交口径一致）的真实 |delta|。"""
+        rows = self._load_greeks(contract.split(":")[-1])
+        best = None
+        for row in rows:
+            if row[0] > t + dt.timedelta(minutes=5):
+                break
+            if (t - row[0]).total_seconds() <= 15 * 60:
+                best = row
+        return best[3] if best else None
 
     def frame_at(self, ticker: str, t: dt.datetime) -> dict | None:
         return self.frames.get(ticker, {}).get(t.replace(second=0, microsecond=0))
@@ -397,7 +402,8 @@ def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], exp
                     loaded.append(t)
                     break
             except YHSApiError as e:
-                log.warning("%s 到期 %s 历史 Heatmap 载入失败：%s（Heatmap 历史仅保留最近 3 个交易日）", t, exp, e)
+                log.warning("%s 到期 %s 历史 Heatmap 载入失败：%s（服务端 Heatmap 历史仅保留最近 3 个交易日，"
+                            "更早的日期需有 archive.py 存档）", t, exp, e)
         else:
             log.info("【历史】%s 在 %s 没有 0DTE/1DTE 到期（%s），跳过该标的", t, date, "、".join(candidates))
     if not loaded:
@@ -407,6 +413,7 @@ def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], exp
     trader = PaperTrader(cfg)
     if cfg.use_real_option_pricing:
         trader.price_provider = hc.option_price
+        trader.delta_provider = hc.option_delta
     engine = SessionEngine(cfg, hc, detector, trader)
     last_poll: dict[str, dt.datetime] = {}
     for i in range(78):
@@ -425,6 +432,16 @@ def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], exp
                 continue
             last_poll[t] = now
             engine.on_snapshot(t, frame, now)
+        # 两个 5 分钟 Heatmap 快照之间，对持仓逐分钟盯市（只用期权价格数据，不产生新的开仓信号，0 额外配额）
+        if cfg.intraday_mark_min and cfg.use_real_option_pricing:
+            for m in range(cfg.intraday_mark_min, 5, cfg.intraday_mark_min):
+                tm = now + dt.timedelta(minutes=m)
+                hc.now = tm
+                for p in trader.open_positions():
+                    if p.price_source != "real_data":
+                        continue
+                    if trader.mark(p, engine.last_spot.get(p.ticker, p.last_spot), tm):
+                        engine.last_exit_time[p.ticker] = tm
     finish_day(cfg, engine, trader, real, et_datetime(date, "16:00"))
     return trader.stats()
 

@@ -46,8 +46,9 @@ python -m unittest test_premarket -v                                   # 离线�
 
 - **初筛逻辑**：量能异动（Vol/OI ≥ 0.65 或 OI 增幅 ≥ 5%）**且** PCR 极端，两者都满足才入池（`require_volume_anomaly` / `require_pcr_extreme`）。另外结构方向与 PCR 偏向相反时放弃（`pcr_direction_filter`）。
 - **到期日**：有 0DTE 用 0DTE，否则 1DTE（交易日口径，周五→周一算 1DTE）；都没有则该标的不交易（`expiry_max_trading_dte`）。
-- **买入行权价**：目标仍是负 GEX 节点（`strike_mode="target_node"`），但最多虚值 0.5%（`max_otm_pct`），节点更远时买距现货 0.5% 以内的行权价；期权价格 < $0.20 不开仓（`min_entry_price_usd`）。改为 `"atm"` 则买平值。
-- **开盘观察期**：09:40 ET 前只观察不开仓（`no_new_entries_before`）。
+- **买入行权价**：目标仍是负 GEX 节点（`strike_mode="target_node"`），但最多虚值 0.5%（`max_otm_pct`）：在 Heatmap 当前到期的挂牌行权价中，选虚值不超过 0.5% 且离节点最近的一个（不取整，不会造出不存在的合约）。真实 |delta| < 0.15（`min_entry_delta`）或期权价 < $0.05（`min_option_price`）不开仓。改为 `"atm"` 则买平值。
+- **开盘观察期**：09:45 ET 前不开新仓（`no_new_entries_before`）。
+- **历史回放**：Heatmap 本地存档优先（`archive.py`，见 HANDOFF.md §7）；持仓在 5 分钟快照之间逐分钟盯市（`intraday_mark_min=1`，greeks 用 1m 粒度，0 额外配额）。
 - **Flow**：Flow API 修复中，默认跳过阶段 3（`require_flow_confirm=false`）。
 - **Greeks**：期权链返回 delta/gamma 时用真实值，否则用文档默认 δ=0.45、γ=0.04（`use_chain_greeks`）。高价股用固定 γ=0.04 会明显高估凸性，建议保留真实值。
 - **追踪止盈"回撤 20%"**：解读为从峰值 ROI 回撤 20 个**百分点**（峰值 +80% → +60% 平仓）。

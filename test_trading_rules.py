@@ -1,4 +1,4 @@
-"""交易规则离线测试：到期选择（0DTE 否则 1DTE）、行权价虚值上限、最低价格、开盘观察期。0 配额。
+"""交易规则离线测试：到期选择（0DTE 否则 1DTE）、行权价虚值上限、最低价格、09:45 前不开仓。0 配额。
 
 运行：python -m unittest test_trading_rules -v
 """
@@ -49,8 +49,21 @@ class ExpiryTest(unittest.TestCase):
         self.assertIsNone(parse_heatmap(heatmap(WED, ["2026-10-09", "2026-10-16"]), self.cfg, WED))
 
 
-def signal(right: str, spot: float, pos: float, neg: float, exp: str = "2026-10-09") -> FullSignal:
-    snap = parse_heatmap(heatmap(FRI, [exp], spot), SystemConfig(), FRI)
+def signal(right: str, spot: float, pos: float, neg: float, exp: str = "2026-10-09",
+           strikes: list[float] | None = None) -> FullSignal:
+    if strikes is None:   # 现价附近的挂牌行权价网格，含两个节点
+        step = 0.5 if spot < 50 else (1.0 if spot < 200 else (2.5 if spot < 500 else 5.0))
+        base = round(spot / step) * step
+        strikes = sorted({round(base + i * step, 2) for i in range(-10, 11)} | {pos, neg})
+    cells = [{"strike_usd": k, "expiration": exp, "net_dealer_gex_usd": 1e6} for k in strikes]
+    for c in cells:
+        if c["strike_usd"] == pos:
+            c["net_dealer_gex_usd"] = 2e8
+        elif c["strike_usd"] == neg:
+            c["net_dealer_gex_usd"] = -2e8
+    payload = {"data": {"ticker": "AAA", "spot_usd": spot, "session_date_et": FRI.isoformat(),
+                        "expirations": [exp], "cells": cells}}
+    snap = parse_heatmap(payload, SystemConfig(), FRI)
     st = StructureSignal("SPRINGBOARD" if right == "C" else "CLIFF", "BUY_CALL" if right == "C" else "BUY_PUT",
                          right, pos, neg, spot, abs(spot - pos) / pos)
     return FullSignal("AAA", et_datetime(FRI, "10:00"), snap, st, FlowConfirmation(True, "test"), "NEUTRAL", 0)
@@ -76,14 +89,20 @@ class StrikeAndEntryTest(unittest.TestCase):
         p = self.trader.open_position(None, signal("C", 1000.0, 995.0, 1005.0), self.now)
         self.assertEqual(p.strike, 1005.0)
 
+    def test_listed_strike_not_rounded(self):
+        # COIN 192.5：挂牌行权价不能被取整成不存在的 192
+        p = self.trader.open_position(None, signal("C", 192.0, 190.0, 200.0, strikes=[185.0, 190.0, 192.5, 195.0, 200.0]),
+                                      self.now)
+        self.assertEqual(p.strike, 192.5)
+
     def test_min_entry_price(self):
-        self.cfg.min_entry_price_usd = 1_000.0
+        self.cfg.min_option_price = 1_000.0
         self.assertIsNone(self.trader.open_position(None, signal("C", 100.0, 99.0, 100.5), self.now))
 
-    def test_no_entries_before_0940(self):
+    def test_no_entries_before_0945(self):
         eng = SessionEngine(self.cfg, None, None, self.trader)
-        self.assertFalse(eng.can_enter("AAA", et_datetime(FRI, "09:35"))[0])
-        self.assertTrue(eng.can_enter("AAA", et_datetime(FRI, "09:40"))[0])
+        self.assertFalse(eng.can_enter("AAA", et_datetime(FRI, "09:40"))[0])
+        self.assertTrue(eng.can_enter("AAA", et_datetime(FRI, "09:45"))[0])
 
 
 if __name__ == "__main__":

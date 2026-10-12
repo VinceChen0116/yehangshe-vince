@@ -123,8 +123,7 @@ class SystemConfig:
 
     # ------------------------------------------------------------------ 阶段4 模拟交易
     strike_mode: str = "target_node"      # "target_node"：买负 GEX 节点行权价（受 max_otm_pct 限制）；"atm"：买最近平值
-    max_otm_pct: float = 0.005            # 行权价最多虚值 0.5%：负节点更远时改买距现货 0.5% 的行权价，避免 0DTE 买到彩票合约
-    min_entry_price_usd: float = 0.20     # 期权价格低于此值不开仓（极便宜合约 5 分钟内就会跳空穿过止损）
+    max_otm_pct: float = 0.005            # 行权价最多虚值 0.5%：负节点更远时，改买 Heatmap 挂牌行权价中虚值 ≤0.5% 且离节点最近的
     use_chain_greeks: bool = True         # 期权链若返回 delta/gamma 则使用，否则用默认值
     default_delta: float = 0.45
     default_gamma: float = 0.04
@@ -134,6 +133,10 @@ class SystemConfig:
     # 历史回放：用真实期权数据开仓与盯市（每个合约 2 次配额）——
     #   contract-intraday 真实成交价（仅最近 150 分钟）优先，其余时段用 contract-greeks-series 的真实 IV + BS
     use_real_option_pricing: bool = True
+    greeks_interval: str = "1m"           # contract-greeks-series 粒度：1m 一次请求即全天 391 点，配额与 5m 相同
+    intraday_mark_min: int = 1            # 历史回放持仓盯市间隔（分钟）；0 = 只在 5 分钟 Heatmap 快照时盯市
+    min_entry_delta: float = 0.15         # 开仓合约 |delta| 低于此值不开仓（0 = 关闭）；历史回放用真实 delta
+    min_option_price: float = 0.05       # 期权价低于此值不开仓（防异常报价导致 ROI 失真）
     contracts_per_trade: int = 1
     contract_multiplier: int = 100
 
@@ -148,7 +151,7 @@ class SystemConfig:
     max_open_positions: int = 5
     max_trades_per_ticker_day: int = 2
     reentry_cooldown_min: int = 30
-    no_new_entries_before: str = "09:40"  # 开盘前 10 分钟（前两根 5 分钟）只观察不开仓
+    no_new_entries_before: str = "09:45"  # 开盘前 15 分钟 Heatmap 噪音大，不开新仓
     no_new_entries_after: str = "15:30"
     force_close_time: str = "16:00"
 
@@ -184,6 +187,10 @@ class SystemConfig:
 
     # ------------------------------------------------------------------ 输出
     trades_csv: str = "trades_history.csv"
+    # 每日存档（archive.py）：服务端 Heatmap 历史只保留 3 个交易日
+    archive_tickers: tuple = ("SPY", "QQQ", "TQQQ", "SOXL", "NVDA", "TSLA", "AAPL", "AMD", "META", "MSFT",
+                              "AMZN", "GOOGL", "AVGO", "PLTR", "MSTR", "COIN", "NFLX")
+    archive_max_dte: int = 7              # 存档未来 7 天内的全部到期日（另加下一个周五）
     data_dir: str = "yhs_data"
     log_level: str = "INFO"
 
