@@ -1,0 +1,33 @@
+{
+  "option_35": {
+    "trades": 39,
+    "total_pnl": -75.63,
+    "pnl_ex_best": -1759.03,
+    "win_rate_pct": 30.8,
+    "avg_roi_pct": 1.8,
+    "profit_factor": 0.97,
+    "exit_reasons": {
+      "STOP_LOSS": 21,
+      "TRAILING_STOP": 9,
+      "EOD_FORCE_CLOSE": 2,
+      "HARD_TAKE_PROFIT": 2,
+      "BREAKEVEN_STOP": 5
+    }
+  },
+  "underlying_05": {
+    "trades": 39,
+    "total_pnl": -805.89,
+    "pnl_ex_best": -2489.29,
+    "win_rate_pct": 30.8,
+    "avg_roi_pct": 0.1,
+    "profit_factor": 0.76,
+    "exit_reasons": {
+      "STOP_LOSS": 9,
+      "UNDERLYING_STOP": 13,
+      "EOD_FORCE_CLOSE": 3,
+      "TRAILING_STOP": 8,
+      "HARD_TAKE_PROFIT": 3,
+      "BREAKEVEN_STOP": 3
+    }
+  }
+}
