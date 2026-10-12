@@ -25,3 +25,88 @@
 06:07:13 [INFO] yhs.corridor: 候选 WFC UP 现价 83.59 基准 83 → 目标 86（+2.9%，到期 2026-10-16，分 0.63）
 06:07:14 [INFO] yhs.corridor: 候选 WMB DOWN 现价 72.69 基准 75 → 目标 70（-3.7%，到期 2026-10-16，分 0.61）
 06:07:21 [INFO] yhs.corridor: 验证 0 个历史候选；扫描到 26 个新候选。本进程计费调用 212 次，免费调用 0 次；服务端剩余配额 93164 / 100000；按端点：{'derived/heatmap/snapshot': 212}
+22:05:17 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），4.0s 后重试
+22:05:22 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:05:30 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），16.1s 后重试
+22:05:47 [WARNING] yhs.corridor: AAOI 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AAOI is not available yet (/v1/derived/heatmap/AAOI/snapshot)
+22:05:48 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAPL/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:05:52 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAPL/snapshot（READ_MODEL_UNAVAILABLE），8.2s 后重试
+22:06:01 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAPL/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:06:18 [WARNING] yhs.corridor: AAPL 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AAPL is not available yet (/v1/derived/heatmap/AAPL/snapshot)
+22:06:19 [WARNING] yhs.client: 503 /v1/derived/heatmap/ACN/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:06:23 [WARNING] yhs.client: 503 /v1/derived/heatmap/ACN/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:06:31 [WARNING] yhs.client: 503 /v1/derived/heatmap/ACN/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:06:48 [WARNING] yhs.corridor: ACN 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ACN is not available yet (/v1/derived/heatmap/ACN/snapshot)
+22:06:49 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADBE/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
+22:06:54 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADBE/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:07:02 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADBE/snapshot（READ_MODEL_UNAVAILABLE），16.3s 后重试
+22:07:19 [WARNING] yhs.corridor: ADBE 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ADBE is not available yet (/v1/derived/heatmap/ADBE/snapshot)
+22:07:20 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADI/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:07:24 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADI/snapshot（READ_MODEL_UNAVAILABLE），8.3s 后重试
+22:07:33 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADI/snapshot（READ_MODEL_UNAVAILABLE），16.1s 后重试
+22:07:50 [WARNING] yhs.corridor: ADI 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ADI is not available yet (/v1/derived/heatmap/ADI/snapshot)
+22:07:51 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADSK/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
+22:07:55 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADSK/snapshot（READ_MODEL_UNAVAILABLE），8.0s 后重试
+22:08:03 [WARNING] yhs.client: 503 /v1/derived/heatmap/ADSK/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:08:20 [WARNING] yhs.corridor: ADSK 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ADSK is not available yet (/v1/derived/heatmap/ADSK/snapshot)
+22:08:21 [WARNING] yhs.client: 503 /v1/derived/heatmap/AEHR/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
+22:08:26 [WARNING] yhs.client: 503 /v1/derived/heatmap/AEHR/snapshot（READ_MODEL_UNAVAILABLE），8.3s 后重试
+22:08:34 [WARNING] yhs.client: 503 /v1/derived/heatmap/AEHR/snapshot（READ_MODEL_UNAVAILABLE），16.1s 后重试
+22:08:51 [WARNING] yhs.corridor: AEHR 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AEHR is not available yet (/v1/derived/heatmap/AEHR/snapshot)
+22:08:52 [WARNING] yhs.client: 503 /v1/derived/heatmap/AFRM/snapshot（READ_MODEL_UNAVAILABLE），4.3s 后重试
+22:08:57 [WARNING] yhs.client: 503 /v1/derived/heatmap/AFRM/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:09:05 [WARNING] yhs.client: 503 /v1/derived/heatmap/AFRM/snapshot（READ_MODEL_UNAVAILABLE），16.0s 后重试
+22:09:22 [WARNING] yhs.corridor: AFRM 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AFRM is not available yet (/v1/derived/heatmap/AFRM/snapshot)
+22:09:23 [WARNING] yhs.client: 503 /v1/derived/heatmap/ALAB/snapshot（READ_MODEL_UNAVAILABLE），4.0s 后重试
+22:09:27 [WARNING] yhs.client: 503 /v1/derived/heatmap/ALAB/snapshot（READ_MODEL_UNAVAILABLE），8.3s 后重试
+22:09:36 [WARNING] yhs.client: 503 /v1/derived/heatmap/ALAB/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:09:52 [WARNING] yhs.corridor: ALAB 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ALAB is not available yet (/v1/derived/heatmap/ALAB/snapshot)
+22:09:53 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMAT/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:09:58 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMAT/snapshot（READ_MODEL_UNAVAILABLE），8.3s 后重试
+22:10:06 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMAT/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:10:23 [WARNING] yhs.corridor: AMAT 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AMAT is not available yet (/v1/derived/heatmap/AMAT/snapshot)
+22:10:24 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMD/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
+22:10:29 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMD/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:10:37 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMD/snapshot（READ_MODEL_UNAVAILABLE），16.3s 后重试
+22:10:54 [WARNING] yhs.corridor: AMD 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AMD is not available yet (/v1/derived/heatmap/AMD/snapshot)
+22:10:55 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMKR/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
+22:10:59 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMKR/snapshot（READ_MODEL_UNAVAILABLE），8.3s 后重试
+22:11:08 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMKR/snapshot（READ_MODEL_UNAVAILABLE），16.0s 后重试
+22:11:25 [WARNING] yhs.corridor: AMKR 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AMKR is not available yet (/v1/derived/heatmap/AMKR/snapshot)
+22:11:26 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMZN/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:11:30 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMZN/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:11:39 [WARNING] yhs.client: 503 /v1/derived/heatmap/AMZN/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:11:55 [WARNING] yhs.corridor: AMZN 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AMZN is not available yet (/v1/derived/heatmap/AMZN/snapshot)
+22:11:56 [WARNING] yhs.client: 503 /v1/derived/heatmap/ANET/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:12:01 [WARNING] yhs.client: 503 /v1/derived/heatmap/ANET/snapshot（READ_MODEL_UNAVAILABLE），8.0s 后重试
+22:12:09 [WARNING] yhs.client: 503 /v1/derived/heatmap/ANET/snapshot（READ_MODEL_UNAVAILABLE），16.0s 后重试
+22:12:26 [WARNING] yhs.corridor: ANET 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ANET is not available yet (/v1/derived/heatmap/ANET/snapshot)
+22:12:27 [WARNING] yhs.client: 503 /v1/derived/heatmap/APLD/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:12:31 [WARNING] yhs.client: 503 /v1/derived/heatmap/APLD/snapshot（READ_MODEL_UNAVAILABLE），8.2s 后重试
+22:12:39 [WARNING] yhs.client: 503 /v1/derived/heatmap/APLD/snapshot（READ_MODEL_UNAVAILABLE），16.0s 后重试
+22:12:56 [WARNING] yhs.corridor: APLD 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker APLD is not available yet (/v1/derived/heatmap/APLD/snapshot)
+22:12:57 [WARNING] yhs.client: 503 /v1/derived/heatmap/APP/snapshot（READ_MODEL_UNAVAILABLE），4.3s 后重试
+22:13:02 [WARNING] yhs.client: 503 /v1/derived/heatmap/APP/snapshot（READ_MODEL_UNAVAILABLE），8.3s 后重试
+22:13:10 [WARNING] yhs.client: 503 /v1/derived/heatmap/APP/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:13:27 [WARNING] yhs.corridor: APP 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker APP is not available yet (/v1/derived/heatmap/APP/snapshot)
+22:13:28 [WARNING] yhs.client: 503 /v1/derived/heatmap/ARM/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
+22:13:32 [WARNING] yhs.client: 503 /v1/derived/heatmap/ARM/snapshot（READ_MODEL_UNAVAILABLE），8.3s 后重试
+22:13:41 [WARNING] yhs.client: 503 /v1/derived/heatmap/ARM/snapshot（READ_MODEL_UNAVAILABLE），16.0s 后重试
+22:13:58 [WARNING] yhs.corridor: ARM 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ARM is not available yet (/v1/derived/heatmap/ARM/snapshot)
+22:13:59 [WARNING] yhs.client: 503 /v1/derived/heatmap/ASML/snapshot（READ_MODEL_UNAVAILABLE），4.0s 后重试
+22:14:03 [WARNING] yhs.client: 503 /v1/derived/heatmap/ASML/snapshot（READ_MODEL_UNAVAILABLE），8.2s 后重试
+22:14:12 [WARNING] yhs.client: 503 /v1/derived/heatmap/ASML/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:14:28 [WARNING] yhs.corridor: ASML 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ASML is not available yet (/v1/derived/heatmap/ASML/snapshot)
+22:14:29 [WARNING] yhs.client: 503 /v1/derived/heatmap/ASTS/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:14:34 [WARNING] yhs.client: 503 /v1/derived/heatmap/ASTS/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:14:42 [WARNING] yhs.client: 503 /v1/derived/heatmap/ASTS/snapshot（READ_MODEL_UNAVAILABLE），16.0s 后重试
+22:14:59 [WARNING] yhs.corridor: ASTS 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ASTS is not available yet (/v1/derived/heatmap/ASTS/snapshot)
+22:15:00 [WARNING] yhs.client: 503 /v1/derived/heatmap/AVAV/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
+22:15:04 [WARNING] yhs.client: 503 /v1/derived/heatmap/AVAV/snapshot（READ_MODEL_UNAVAILABLE），8.2s 后重试
+22:15:13 [WARNING] yhs.client: 503 /v1/derived/heatmap/AVAV/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:15:30 [WARNING] yhs.corridor: AVAV 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AVAV is not available yet (/v1/derived/heatmap/AVAV/snapshot)
+22:15:31 [WARNING] yhs.client: 503 /v1/derived/heatmap/AVGO/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:15:35 [WARNING] yhs.client: 503 /v1/derived/heatmap/AVGO/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:16:15 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
+22:16:20 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:16:28 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），16.3s 后重试
