@@ -363,12 +363,82 @@ def post_discord(cfg: SystemConfig, session, found: list, evaluated: list, all_r
                     "footer": {"text": f"基于 {session} 收盘 Heatmap · 地板/天花板 = 显著正 GEX，通道 = 负 GEX 为主 · 仅供研究"}}])
 
 
+def run_trade_backtest(cfg: SystemConfig, client, entry_hhmm: str = "09:35") -> dict:
+    """把每个已回测的候选模拟成一笔期权交易：次日 entry_hhmm 按真实期权价买入（看涨 call / 看跌 put，
+    行权价朝目标、虚值 ≤ max_otm_pct，到期 = 候选到期），之后每分钟用真实标的价盯市，按两种止损方式分别出场，16:00 强平。
+    返回 {止损方式: [Position]}。期权价格每个合约约 1–2 次配额（有缓存）。"""
+    import copy
+    from detector import FlowConfirmation, FullSignal, HeatmapSnapshot, StructureSignal
+    from main import HistoryClient
+    from paper_trader import PaperTrader
+    modes = {"option_35": {"stop_mode": "option", "stop_loss_pct": -35.0},
+             "underlying_05": {"stop_mode": "underlying", "underlying_stop_buffer_pct": 0.005}}
+    out = {m: [] for m in modes}
+    cands = [r for r in load_csv() if r.get("source") == "archive"]
+    for S_str in sorted({r["next_session"] for r in cands}):
+        S = dt.date.fromisoformat(S_str)
+        hc = HistoryClient(client, cfg, S)
+        entry = et_datetime(S, entry_hhmm)
+        for r in [r for r in cands if r["next_session"] == S_str]:
+            spots = session_spots(cfg, r["ticker"], S)
+            at = [s for t, s in spots if t >= entry]
+            if not at:
+                continue
+            spot = at[0]
+            up = r["direction"] == "UP"
+            base, target = float(r["base"]), float(r["target"])
+            strikes = tuple(sorted({float(k) for k in r["corridor_strikes"].split()} | {base, target}))
+            snap = HeatmapSnapshot(ticker=r["ticker"], generated_at=entry, session_date=S, spot=spot,
+                                   expiration=r["expiration"], king_call_strike=base, king_call_gex=float(r["base_gex"]),
+                                   king_put_strike=target, king_put_gex=float(r["corridor_neg_gex"]), n_cells=len(strikes),
+                                   strikes=strikes, total_abs_gex=float(r["max_abs_gex"]))
+            st = StructureSignal("CORRIDOR_UP" if up else "CORRIDOR_DOWN", "BUY_CALL" if up else "BUY_PUT",
+                                 "C" if up else "P", base, target, spot, abs(spot - base) / base)
+            sig = FullSignal(r["ticker"], entry, snap, st, FlowConfirmation(True, "corridor"), "NEUTRAL", 0,
+                             score=float(r["score"]))
+            for m, over in modes.items():
+                c2 = copy.copy(cfg)
+                for k, v in over.items():
+                    setattr(c2, k, v)
+                tr = PaperTrader(c2)
+                tr.price_provider, tr.delta_provider = hc.option_price, hc.option_delta
+                p = tr.open_position(hc, sig, entry)
+                if p is None:
+                    continue
+                t, last = entry, spot
+                close_t = et_datetime(S, "16:00")
+                while p.is_open and t < close_t - dt.timedelta(minutes=1):
+                    t += dt.timedelta(minutes=1)
+                    last = hc.underlying_at(p.contract_symbol, t) or last
+                    tr.mark(p, last, t)
+                if p.is_open:
+                    tr.close(p, last, close_t, "EOD_FORCE_CLOSE")
+                out[m].append(p)
+    return out
+
+
+def trade_summary(ps: list) -> dict:
+    if not ps:
+        return {"trades": 0}
+    pnl = [p.realized_pnl for p in ps]
+    gw, gl = sum(x for x in pnl if x > 0), -sum(x for x in pnl if x < 0)
+    reasons = {}
+    for p in ps:
+        reasons[p.exit_reason] = reasons.get(p.exit_reason, 0) + 1
+    return {"trades": len(ps), "total_pnl": round(sum(pnl), 2), "pnl_ex_best": round(sum(pnl) - max(pnl), 2),
+            "win_rate_pct": round(100 * sum(x > 0 for x in pnl) / len(ps), 1),
+            "avg_roi_pct": round(sum(p.realized_roi_pct for p in ps) / len(ps), 1),
+            "profit_factor": round(gw / gl, 2) if gl else None, "exit_reasons": reasons}
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="盘前加速通道形态")
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--scan", action="store_true")
     mode.add_argument("--evaluate", action="store_true")
     mode.add_argument("--backtest", action="store_true")
+    mode.add_argument("--trade-backtest", action="store_true",
+                      help="把回测候选模拟成期权交易，对比期权 -35%% 止损与标的破节点 0.5%% 止损")
     ap.add_argument("--no-discord", action="store_true")
     ap.add_argument("--config")
     ap.add_argument("--log-file")
@@ -377,6 +447,22 @@ def main(argv=None) -> int:
     setup_logging(cfg.log_level, args.log_file)
     client = YHSClient(cfg)
     rows = load_csv()
+
+    if args.trade_backtest:
+        res = run_trade_backtest(cfg, client)
+        os.makedirs(OUT_DIR, exist_ok=True)
+        from paper_trader import PaperTrader
+        summary = {}
+        for m, ps in res.items():
+            tr = PaperTrader(cfg)
+            tr.positions = ps
+            tr.export_trades_csv(os.path.join(OUT_DIR, f"trades_{m}.csv"))
+            summary[m] = trade_summary(ps)
+            log.info("止损方式 %s：%s", m, summary[m])
+        with open(os.path.join(OUT_DIR, "trade_backtest_summary.json"), "w", encoding="utf-8") as f:
+            json.dump(summary, f, ensure_ascii=False, indent=2)
+        log.info(client.quota_summary())
+        return 0
 
     if args.backtest:
         res = run_backtest(cfg, client)
