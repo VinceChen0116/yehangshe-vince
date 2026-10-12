@@ -153,8 +153,9 @@ class SystemConfig:
     stop_loss_pct: float = -35.0
     # 初始止损方式：option = 期权 ROI ≤ stop_loss_pct；underlying = 标的反向穿越正 GEX 节点（看涨地板/看跌天花板）
     #   再多 underlying_stop_buffer_pct 才止损，期权另设 disaster_stop_pct 灾难止损兜底。保本/追踪止盈两种方式相同。
-    stop_mode: str = "option"
-    underlying_stop_buffer_pct: float = 0.002
+    # 2026-10-12 回测 stop_und_b05 最好（+$1,042 vs 期权 -35% 的 +$240），用户确认实盘改用 underlying + 0.5%
+    stop_mode: str = "underlying"
+    underlying_stop_buffer_pct: float = 0.005
     disaster_stop_pct: float = -60.0
     breakeven_trigger_pct: float = 35.0
     breakeven_stop_pct: float = 0.0

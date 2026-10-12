@@ -167,6 +167,7 @@ class UnderlyingStopTest(unittest.TestCase):
         self.cfg = SystemConfig()
         self.cfg.use_real_option_pricing = False
         self.cfg.stop_mode = "underlying"
+        self.cfg.underlying_stop_buffer_pct = 0.002
         self.trader = PaperTrader(self.cfg)
         self.now = et_datetime(FRI, "10:00")
         # 看涨：地板（正节点）99，现价 100；期权价格由测试指定（模拟真实价格源）
