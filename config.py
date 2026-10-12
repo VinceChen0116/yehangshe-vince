@@ -135,7 +135,7 @@ class SystemConfig:
     use_real_option_pricing: bool = True
     greeks_interval: str = "1m"           # contract-greeks-series 粒度：1m 一次请求即全天 391 点，配额与 5m 相同
     intraday_mark_min: int = 1            # 历史回放持仓盯市间隔（分钟）；0 = 只在 5 分钟 Heatmap 快照时盯市
-    min_entry_delta: float = 0.15         # 开仓合约 |delta| 低于此值不开仓（0 = 关闭）；历史回放用真实 delta
+    min_entry_delta: float = 0.0          # 开仓合约 |delta| 低于此值不开仓（0 = 关闭；2026-10-12 用户决定关闭）；历史回放用真实 delta
     min_option_price: float = 0.05       # 期权价低于此值不开仓（防异常报价导致 ROI 失真）
     contracts_per_trade: int = 1
     contract_multiplier: int = 100

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import calendar
+import json
 import datetime as dt
 import logging
 import os
@@ -216,6 +217,13 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date) -> None:
 # =============================================================================
 # 历史回放（真实数据）
 # =============================================================================
+def _intraday_day(payload: dict) -> dt.date | None:
+    """contract-intraday 返回的分钟线所属交易日（取最后一根 bar）。"""
+    bars = ((payload.get("data") or {}).get("bars") or []) if isinstance(payload, dict) else []
+    ts = parse_iso(bars[-1].get("start_time")) if bars else None
+    return to_et(ts).date() if ts else None
+
+
 class HistoryClient:
     """历史回放的数据代理：
        * Heatmap：预先按 /v1/derived/heatmap/{t}/history 分页拉取整日 5 分钟快照，回放时本地供给（0 额外配额）
@@ -254,6 +262,22 @@ class HistoryClient:
                  "本地存档" if src == "archive" else "API")
         return len(frames)
 
+    def _cached_get(self, kind: str, core: str, path: str, params: dict | None, keep=None) -> dict:
+        """期权价格数据的本地缓存：已收盘交易日的数据不会再变，缓存后重跑回测 0 配额且结果可复现。
+        缓存位置 yhs_data/cache/{kind}/{日期}/{合约}.json；keep(payload) 为 False 时不写缓存。"""
+        fp = os.path.join(self.cfg.data_dir, "cache", kind, self.date.isoformat(), f"{core}.json")
+        if os.path.exists(fp):
+            with open(fp, encoding="utf-8") as f:
+                return json.load(f)
+        payload = self.real.get(path, params)
+        closed = self.date < et_now().date() or et_now() >= et_datetime(self.date, "16:30")
+        if closed and isinstance(payload, dict) and (keep is None or keep(payload)):
+            os.makedirs(os.path.dirname(fp), exist_ok=True)
+            with open(fp + ".tmp", "w", encoding="utf-8") as f:
+                json.dump(payload, f, ensure_ascii=False)
+            os.replace(fp + ".tmp", fp)
+        return payload
+
     def _load_intraday(self, core: str) -> list[tuple[dt.datetime, float]]:
         """contract-intraday：单合约最近一个交易日的 1 分钟成交 bar（接口只给最新 150 根，约收盘前 2.5 小时）。"""
         if core in self.intraday:
@@ -263,7 +287,8 @@ class HistoryClient:
             self.intraday[core] = bars
             return bars
         try:
-            payload = self.real.get(f"/v1/options/contract-intraday/{core}")
+            payload = self._cached_get("intraday", core, f"/v1/options/contract-intraday/{core}", None,
+                                       keep=lambda pl: _intraday_day(pl) == self.date)
             data = payload.get("data") if isinstance(payload, dict) else None
             for b in (data or {}).get("bars") or []:
                 ts, px = parse_iso(b.get("start_time")), b.get("close_usd")
@@ -292,8 +317,9 @@ class HistoryClient:
         rows: list[tuple] = []
         try:
             d = self.date.isoformat()
-            payload = self.real.get(f"/v1/options/contract-greeks-series/{core}",
-                                    {"from": d, "to": d, "interval": self.cfg.greeks_interval})
+            payload = self._cached_get(f"greeks_{self.cfg.greeks_interval}", core,
+                                       f"/v1/options/contract-greeks-series/{core}",
+                                       {"from": d, "to": d, "interval": self.cfg.greeks_interval})
             data = payload.get("data") if isinstance(payload, dict) else None
             for r in (data or {}).get("rows") or []:
                 ts = r.get("snapshot_at")
