@@ -30,7 +30,7 @@ import os
 import sys
 
 from archive import HEATMAP_HISTORY_PATH, load_archived_heatmap, rows_to_frames
-from config import SystemConfig, et_datetime, next_trading_day, setup_logging
+from config import SystemConfig, et_datetime, et_now, is_trading_day, next_trading_day, setup_logging
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
 log = logging.getLogger("yhs.corridor")
@@ -267,30 +267,77 @@ def summarize(rows: list) -> dict:
 # =============================================================================
 # 运行模式
 # =============================================================================
+def history_candidate(client, cfg: SystemConfig, t: str, P: dt.date, S: dt.date, source: str = "archive"):
+    """用 P 日收盘的历史 Heatmap（存档优先）找 S 日的候选：最近到期（S 起逐个交易日探测）+ 最近周五。"""
+    by_exp, spot = {}, None
+    d, nearest = S, None
+    for _ in range(10):
+        cc = close_cells(client, cfg, t, P, d.isoformat())
+        if cc:
+            nearest = d
+            spot, by_exp[d.isoformat()] = cc[0], cc[1]
+            break
+        d = next_trading_day(d)
+    fri = S + dt.timedelta(days=(4 - S.weekday()) % 7)
+    if nearest and fri != nearest and fri > nearest:
+        cc = close_cells(client, cfg, t, P, fri.isoformat())
+        if cc:
+            by_exp[fri.isoformat()] = cc[1]
+    if not by_exp:
+        return None
+    return best_for_ticker(t, P, S, spot, by_exp, cfg, source)
+
+
 def run_scan(cfg: SystemConfig, client) -> tuple:
-    """当前快照 = 最近一个交易日的收盘状态，扫描下一交易日的候选。"""
+    """当前快照 = 最近一个交易日的收盘状态，扫描下一交易日的候选。
+    收盘后快照接口可能返回 503 READ_MODEL_UNAVAILABLE：连续 3 只不可用就整体改用历史接口取收盘数据（存档优先）。"""
     found, session = [], None
+    unavailable = 0
     for t in universe(cfg):
-        try:
-            p = client.get(f"/v1/derived/heatmap/{t}/snapshot")
-        except QuotaExhausted:
-            raise
-        except YHSApiError as e:
-            log.warning("%s 快照失败：%s", t, e)
-            continue
-        d = p.get("data") or {}
-        if not d.get("spot_usd") or not d.get("session_date_et"):
-            continue
-        session = dt.date.fromisoformat(d["session_date_et"])
-        nxt = next_trading_day(session)
-        exps = scan_expirations(d.get("expirations") or [], nxt)
-        by_exp = {e: [c for c in d.get("cells") or [] if c.get("expiration") == e] for e in exps}
-        c = best_for_ticker(t, session, nxt, float(d["spot_usd"]), by_exp, cfg, "snapshot")
+        c = None
+        if unavailable < 3:
+            try:
+                p = client.get(f"/v1/derived/heatmap/{t}/snapshot")
+            except QuotaExhausted:
+                raise
+            except YHSApiError as e:
+                log.warning("%s 快照失败：%s", t, e)
+                if "READ_MODEL_UNAVAILABLE" in str(e):
+                    unavailable += 1
+                    if unavailable == 3:
+                        log.warning("快照接口不可用，改用历史接口取收盘数据")
+                p = None
+            d = (p or {}).get("data") or {}
+            if d.get("spot_usd") and d.get("session_date_et"):
+                unavailable = 0
+                session = dt.date.fromisoformat(d["session_date_et"])
+                nxt = next_trading_day(session)
+                exps = scan_expirations(d.get("expirations") or [], nxt)
+                by_exp = {e: [x for x in d.get("cells") or [] if x.get("expiration") == e] for e in exps}
+                c = best_for_ticker(t, session, nxt, float(d["spot_usd"]), by_exp, cfg, "snapshot")
+            elif p is not None:
+                continue
+        if unavailable >= 3 or (c is None and p is None):
+            if session is None:
+                session = last_closed_session()
+            c = history_candidate(client, cfg, t, session, next_trading_day(session), "history")
         if c:
             found.append(c)
             log.info("候选 %s %s 现价 %.2f 基准 %g → 目标 %g（%+.1f%%，到期 %s，分 %.2f）", t, c["direction"], c["spot"],
                      c["base"], c["target"], c["room_pct"] * (1 if c["direction"] == "UP" else -1), c["expiration"], c["score"])
     return session, found
+
+
+def last_closed_session() -> dt.date:
+    """最近一个已收盘的交易日（美东 16:00 后算今天）。"""
+    now = et_now()
+    d = now.date()
+    if is_trading_day(d) and now.time() >= dt.time(16, 0):
+        return d
+    d -= dt.timedelta(days=1)
+    while not is_trading_day(d):
+        d -= dt.timedelta(days=1)
+    return d
 
 
 def run_backtest(cfg: SystemConfig, client) -> list:
@@ -305,24 +352,7 @@ def run_backtest(cfg: SystemConfig, client) -> list:
             continue
         log.info("===== 回测：%s 收盘 → %s =====", P, S)
         for t in universe(cfg):
-            by_exp, spot = {}, None
-            # 最近到期（S 起逐个交易日探测）+ 最近周五
-            d, nearest = S, None
-            for _ in range(10):
-                cc = close_cells(client, cfg, t, P, d.isoformat())
-                if cc:
-                    nearest = d
-                    spot, by_exp[d.isoformat()] = cc[0], cc[1]
-                    break
-                d = next_trading_day(d)
-            fri = S + dt.timedelta(days=(4 - S.weekday()) % 7)
-            if nearest and fri != nearest and fri > nearest:
-                cc = close_cells(client, cfg, t, P, fri.isoformat())
-                if cc:
-                    by_exp[fri.isoformat()] = cc[1]
-            if not by_exp:
-                continue
-            c = best_for_ticker(t, P, S, spot, by_exp, cfg, "archive")
+            c = history_candidate(client, cfg, t, P, S)
             if c:
                 c.update(evaluate(c, session_spots(cfg, t, S), cfg.corridor_break_buffer_pct))
                 out.append(c)
