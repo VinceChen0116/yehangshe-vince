@@ -207,6 +207,9 @@ class YHSClient:
                 time.sleep(ra + 0.2)
                 continue
 
+            if status == 503 and "recently failed" in (msg or "").lower():
+                # 通常是请求了不存在的合约（"This key recently failed to materialize"），重试无意义
+                raise YHSApiError(status, code or "READ_MODEL_UNAVAILABLE", msg, path)
             if status in (500, 502, 503, 504):
                 n503 += 1
                 if n503 > self.cfg.max_503_retries:
