@@ -115,11 +115,13 @@ def scan_expirations(listed: list, next_session: dt.date) -> list:
 
 def best_for_ticker(ticker: str, session: dt.date, nxt: dt.date, spot: float, cells_by_exp: dict,
                     cfg: SystemConfig, source: str) -> dict | None:
+    """优先最近到期：按到期日从近到远，取第一个出现加速通道的到期（最近到期没有才看周五）。"""
     best = None
-    for exp, cells in cells_by_exp.items():
-        c = find_corridor(cells, spot, cfg)
-        if c and (best is None or c["score"] > best["score"]):
+    for exp in sorted(cells_by_exp):
+        c = find_corridor(cells_by_exp[exp], spot, cfg)
+        if c:
             best = dict(c, expiration=exp)
+            break
     if best:
         best.update(session=session.isoformat(), next_session=nxt.isoformat(), ticker=ticker, source=source)
     return best
