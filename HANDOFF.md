@@ -168,7 +168,8 @@ python3 archive.py --dry-run                 # 只看计划
   - B（宽松）= 成交量前 100 → 剔除指数/非白名单 ETF → 股价 ≥ $20；
   - 两者都**不限方向**（`pcr_direction_filter=False`，用户确认文档没有这条）；共用同一份 Heatmap（A 不额外耗配额）；Discord 标签 `🅰️【A·严格异动】` / `🅱️【B】`；A 交易明细 `*_A.csv`。
   - 实测：Heatmap 无盘前数据，首个快照 09:35 ET 才可用 → 实盘 09:35:25 开始拉取（修复了"开盘即判定休市退出"的 bug）。
-  - 09:45 后开仓、11:30–14:30 不开新仓（期间只拉有持仓的标的）、15:30 后不开新仓、16:00 强平；同时持仓上限 8。
+  - 09:45 后开仓、15:30 后不开新仓、16:00 强平；同时持仓上限 8。午间：曾设 11:30–14:30 不开新仓，当天改回允许（`no_entry_windows=()`），由回测 big_s05_midday 对比决定。
+  - 信号筛选：每轮按信号评分（0–1）从高到低开仓，评分 ≥ 0.5，每账户每天最多 15 笔（`signal_ranking`/`min_signal_score`/`max_trades_per_day`）。
   - 每小时 💓 心跳到 Discord。
 - **Discord**：`notify.py`，Webhook 来自 `config.json` 的 `discord_webhook_url` 或环境变量 `DISCORD_WEBHOOK_URL`；`python3 main.py --notify-test` 测试。回测实验（`experiment.py`）跑完也会推送对比表。
 - **云端环境变量**（claude.ai/code → 环境 → Environment variables）：`YHS_API_KEY`、`DISCORD_WEBHOOK_URL`。仓库里永远不放密钥。

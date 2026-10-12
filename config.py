@@ -170,8 +170,9 @@ class SystemConfig:
     reentry_cooldown_min: int = 30
     no_new_entries_before: str = "09:45"  # 开盘前 15 分钟 Heatmap 噪音大，不开新仓
     no_new_entries_after: str = "15:30"
-    # 禁止开新仓的时段（持仓照常盯市与出场）。午间 11:30–14:30 回测持续亏损，2026-10-12 用户决定剔除；设为 [] 可关闭
-    no_entry_windows: tuple = (("11:30", "14:30"),)
+    # 禁止开新仓的时段（持仓照常盯市与出场），如 (("11:30", "14:30"),)。2026-10-12 用户先剔除午间，
+    # 后因信号记录显示午间信号方向并不差，改回允许午间开仓，待回测 big_s05_midday 对比
+    no_entry_windows: tuple = ()
     force_close_time: str = "16:00"
 
     # ------------------------------------------------------------------ 盘前研究工作流（--premarket）

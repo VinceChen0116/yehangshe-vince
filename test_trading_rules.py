@@ -115,6 +115,7 @@ class StrikeAndEntryTest(unittest.TestCase):
         self.assertTrue(eng.can_enter("AAA", et_datetime(FRI, "09:45"))[0])
 
     def test_no_entries_midday(self):
+        self.cfg.no_entry_windows = (("11:30", "14:30"),)
         eng = SessionEngine(self.cfg, None, None, self.trader)
         self.assertTrue(eng.can_enter("AAA", et_datetime(FRI, "11:25"))[0])
         self.assertFalse(eng.can_enter("AAA", et_datetime(FRI, "11:30"))[0])
