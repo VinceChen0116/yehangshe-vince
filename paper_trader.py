@@ -441,6 +441,7 @@ class PaperTrader:
 _REASON_CN = {
     "STOP_LOSS": "硬止损", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈", "UNDERLYING_STOP": "标的破节点止损",
     "HARD_TAKE_PROFIT": "硬顶止盈+150%", "EOD_FORCE_CLOSE": "收盘强平", "QUOTA_HALT": "配额熔断平仓",
+    "REPLACED": "被更高分信号替换",
 }
 
 
@@ -528,6 +529,8 @@ class SessionEngine:
                 skipped.append(f"{sig.ticker}({sig.score:.2f}<门槛)")
                 continue
             ok, why = self.can_enter(sig.ticker, now_et)
+            if not ok and why == "持仓数已达上限" and self._replace_weakest(sig, now_et):
+                ok, why = self.can_enter(sig.ticker, now_et)
             if not ok:
                 skipped.append(f"{sig.ticker}({sig.score:.2f},{why})")
                 continue
@@ -535,6 +538,21 @@ class SessionEngine:
                 opened.append(f"{sig.ticker}({sig.score:.2f})")
         log.info("【排序】%s 本轮信号 %d 个 → 开仓 %s%s", now_et.strftime("%H:%M"), len(ranked),
                  "、".join(opened) or "无", ("；未开：" + "、".join(skipped[:8]) + ("…" if len(skipped) > 8 else "")) if skipped else "")
+
+    def _replace_weakest(self, sig, now_et: dt.datetime) -> bool:
+        """持仓已满时：若新信号分数比某个未盈利持仓的开仓分数高出 rank_replace_margin，平掉分数最低的那个腾位。"""
+        cfg = self.cfg
+        if cfg.rank_replace_margin <= 0:
+            return False
+        weak = [p for p in self.trader.open_positions()
+                if p.roi_pct <= cfg.rank_replace_max_roi and p.signal_score + cfg.rank_replace_margin <= sig.score]
+        if not weak:
+            return False
+        p = min(weak, key=lambda x: x.signal_score)
+        log.info("【替换】%s(%.2f, ROI %+.1f%%) → %s(%.2f)", p.ticker, p.signal_score, p.roi_pct, sig.ticker, sig.score)
+        self.trader.close(p, self.last_spot.get(p.ticker, p.last_spot), now_et, "REPLACED")
+        self.last_exit_time[p.ticker] = now_et
+        return True
 
     def end_of_day(self, now_et: dt.datetime) -> None:
         if self.trader.open_positions():

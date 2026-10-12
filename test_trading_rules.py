@@ -147,6 +147,28 @@ class RankingTest(unittest.TestCase):
         self.eng.flush(self.now)
         self.assertEqual(len(self.trader.positions), 2)   # 当日上限已满
 
+    def test_replace_weakest_when_full(self):
+        self.cfg.max_open_positions = 2
+        self.cfg.rank_replace_margin = 0.10
+        self.eng.pending = {t: self._sig(t, sc) for t, sc in (("LOW", 0.55), ("MID", 0.70))}
+        self.eng.flush(self.now)
+        self.eng.pending = {"NEW": self._sig("NEW", 0.66)}          # 只比 LOW 高 0.11 → 换掉 LOW
+        self.eng.flush(et_datetime(FRI, "10:05"))
+        tickers = sorted(p.ticker for p in self.trader.open_positions())
+        self.assertEqual(tickers, ["MID", "NEW"])
+        self.assertEqual(next(p for p in self.trader.positions if p.ticker == "LOW").exit_reason, "REPLACED")
+        self.eng.pending = {"X": self._sig("X", 0.70)}              # 不够高出 0.10 → 不换
+        self.eng.flush(et_datetime(FRI, "10:10"))
+        self.assertEqual(len(self.trader.open_positions()), 2)
+
+    def test_replace_off_by_default(self):
+        self.cfg.max_open_positions = 1
+        self.eng.pending = {"LOW": self._sig("LOW", 0.5)}
+        self.eng.flush(self.now)
+        self.eng.pending = {"HI": self._sig("HI", 0.99)}
+        self.eng.flush(et_datetime(FRI, "10:05"))
+        self.assertEqual([p.ticker for p in self.trader.open_positions()], ["LOW"])
+
     def test_min_score(self):
         self.cfg.min_signal_score = 0.6
         self.eng.pending = {"A": self._sig("A", 0.5), "B": self._sig("B", 0.7)}

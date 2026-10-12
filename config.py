@@ -170,6 +170,9 @@ class SystemConfig:
     #   score = 每轮先收集所有信号，按 signal_score 从高到低填空位；first_come = 先到先得（旧行为）
     signal_ranking: str = "score"
     max_trades_per_day: int = 15          # 每个账户每天最多开仓笔数；0 = 不限
+    # 持仓满时的替换（实验，默认关闭）：新信号分数 ≥ 某持仓开仓分数 + margin，且该持仓 ROI ≤ max_roi，则平掉分数最低者换入
+    rank_replace_margin: float = 0.0
+    rank_replace_max_roi: float = 0.0
     min_signal_score: float = 0.5         # 评分 ≥ 此值才开仓（0–1；2026-10-12 用户定为 0.5）；0 = 不设门槛
     # 打分权重：加速燃料（负节点占比）、地板/天花板厚度（正节点占比）、贴近正节点（proximity）或远离正节点（distance，
     # 二者互为反向）、目标可达（目标距离≈1 小时波动）、节点新鲜

@@ -25,7 +25,7 @@ TAG_A, TAG_B = "🅰️【A·严格异动】", "🅱️【B】"
 REASON_CN = {"STOP_LOSS": "硬止损", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈",
              "UNDERLYING_STOP": "标的破节点止损",
              "HARD_TAKE_PROFIT": "硬顶止盈", "EOD_FORCE_CLOSE": "收盘强平", "QUOTA_HALT": "配额熔断",
-             "MANUAL_STOP": "手动停止"}
+             "MANUAL_STOP": "手动停止", "REPLACED": "被更高分信号替换"}
 
 
 class DiscordNotifier:
