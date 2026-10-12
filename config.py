@@ -48,6 +48,7 @@ KNOWN_ETFS = frozenset({
     "SMCX", "PLTU", "GGLL", "AAPU", "METU", "AMZU", "MSFU",
     # 行业 / 主题
     "XLF", "XLE", "XLK", "XLV", "XLI", "XLY", "XLP", "XLU", "XLB", "XLRE", "XLC", "XBI", "XOP",
+    "BLOK", "BOTZ", "FIW", "ITA", "KORU", "MAGS", "MJ", "MOAT", "URNM", "SPCX", "DRAM",
     "XME", "XRT", "XHB", "KRE", "KBE", "SMH", "SOXX", "IBB", "ITB", "IYR", "VNQ", "OIH", "GDX",
     "GDXJ", "SIL", "SILJ", "COPX", "URA", "LIT", "TAN", "ICLN", "JETS", "ARKK", "ARKG", "ARKW",
     "ARKF", "ARKQ", "IGV", "CIBR", "HACK", "KWEB", "FXI", "MCHI", "EWZ", "EWJ", "EWW", "EWT",

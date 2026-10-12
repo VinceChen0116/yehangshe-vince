@@ -28,13 +28,15 @@ import logging
 import os
 import sys
 
-from config import SystemConfig, et_datetime, et_now, is_trading_day, prev_trading_day, setup_logging
+from config import (INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, et_datetime, et_now, is_trading_day,
+                    next_trading_day, prev_trading_day, setup_logging)
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
 log = logging.getLogger("yhs.archive")
 
 HEATMAP_HISTORY_PATH = "/v1/derived/heatmap/{ticker}/history"
 HEATMAP_SNAPSHOT_PATH = "/v1/derived/heatmap/{ticker}/snapshot"
+DISCOVER_PATH = "/v1/discover"
 VOLUME_RANK_PATH = "/v1/market/options-volume-rank"
 RETENTION_SESSIONS = 3      # 服务端 Heatmap 历史保留的交易日数
 
@@ -148,15 +150,57 @@ def pick_expirations(listed: list[str], day: dt.date, today: dt.date, max_dte: i
 # =============================================================================
 # 执行
 # =============================================================================
+def build_heatmap_universe(client, cfg: SystemConfig, refresh: bool = False) -> list[str]:
+    """回测标的池（规格阶段1的静态部分）：夜航社 Heatmap working_set 全部标的，
+    剔除指数与白名单外 ETF，再用 Heatmap 快照的现价剔除 < min_spot_usd 的标的（每只 1 次配额，结果缓存）。"""
+    path = os.path.join(archive_root(cfg), "universe", "heatmap_filtered.json")
+    if os.path.exists(path) and not refresh:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)["tickers"]
+    ws = ((client.get(DISCOVER_PATH).get("data") or {}).get("working_sets") or {}).get("dealer-heatmap") or {}
+    all_t = sorted(ws.get("tickers") or [])
+    whitelist = set(cfg.etf_whitelist)
+    detail, keep = {}, []
+    for t in all_t:
+        if t in INDEX_BLACKLIST:
+            detail[t] = "指数"
+            continue
+        if t in KNOWN_ETFS and t not in whitelist:
+            detail[t] = "白名单外 ETF"
+            continue
+        try:
+            spot = ((client.get(HEATMAP_SNAPSHOT_PATH.format(ticker=t)).get("data") or {}).get("spot_usd"))
+        except QuotaExhausted:
+            raise
+        except YHSApiError as ex:
+            detail[t] = f"快照失败：{ex.code}"
+            continue
+        if spot is None or float(spot) < cfg.min_spot_usd:
+            detail[t] = f"股价 {spot} < {cfg.min_spot_usd}"
+            continue
+        detail[t] = float(spot)
+        keep.append(t)
+    _write_json(path, {"built_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+                       "source": "discover.working_sets.dealer-heatmap", "min_spot_usd": cfg.min_spot_usd,
+                       "etf_whitelist": sorted(whitelist), "tickers": keep, "detail": detail})
+    log.info("回测标的池：working_set %d 只 → 保留 %d 只（%s）", len(all_t), len(keep), path)
+    return keep
+
+
 def archive_day(client, cfg: SystemConfig, day: dt.date, tickers: list[str], today: dt.date,
-                dry_run: bool = False) -> dict:
-    log.info("===== 存档 %s：%d 只标的 =====", day, len(tickers))
+                dry_run: bool = False, expiry_mode: str = "full") -> dict:
+    """expiry_mode="full"：未来 archive_max_dte 天内全部到期日（每日收盘存档用）；
+    "near"：只存 0DTE 与 1DTE（交易日口径），回测够用、省配额，适合大批量补存。"""
+    log.info("===== 存档 %s：%d 只标的（%s）=====", day, len(tickers), "仅 0DTE/1DTE" if expiry_mode == "near" else "全部近端到期")
     summary = {"session_date": day.isoformat(), "tickers": {}, "started_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
     for t in tickers:
         try:
-            snap = client.get(HEATMAP_SNAPSHOT_PATH.format(ticker=t)) if not dry_run else {"data": {}}
-            listed = ((snap.get("data") or {}).get("expirations") or []) if isinstance(snap, dict) else []
-            exps = pick_expirations(listed, day, today, cfg.archive_max_dte)
+            if expiry_mode == "near":
+                exps = [day.isoformat(), next_trading_day(day).isoformat()]
+            else:
+                snap = client.get(HEATMAP_SNAPSHOT_PATH.format(ticker=t)) if not dry_run else {"data": {}}
+                listed = ((snap.get("data") or {}).get("expirations") or []) if isinstance(snap, dict) else []
+                exps = pick_expirations(listed, day, today, cfg.archive_max_dte)
             info = {}
             for e in exps:
                 if os.path.exists(heatmap_path(cfg, day, t, e)):
@@ -188,6 +232,17 @@ def archive_day(client, cfg: SystemConfig, day: dt.date, tickers: list[str], tod
     failed = [t for t, v in summary["tickers"].items() if "error" in v]
     summary["complete"] = not failed
     summary["finished_at"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    # 与已有 manifest 合并：分批存档不同标的时，不能把之前已完成的标的从 manifest 里抹掉
+    mp = manifest_path(cfg, day)
+    if not dry_run and os.path.exists(mp):
+        with open(mp, encoding="utf-8") as f:
+            old = json.load(f)
+        merged = dict(old.get("tickers") or {})
+        for t, v in summary["tickers"].items():
+            merged[t] = {**merged.get(t, {}), **v} if isinstance(merged.get(t), dict) and "error" not in v else v
+        summary["tickers"] = merged
+        summary["started_at"] = old.get("started_at", summary["started_at"])
+        summary["complete"] = not [t for t, v in merged.items() if "error" in v]
     if not dry_run:
         _write_json(manifest_path(cfg, day), summary)
     log.info("存档 %s %s%s", day, "完成" if not failed else "部分失败：", "" if not failed else ",".join(failed))
@@ -209,6 +264,11 @@ def main(argv=None) -> int:
     ap.add_argument("--tickers", help="逗号分隔，默认 config.archive_tickers")
     ap.add_argument("--config", help="JSON 配置文件")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--universe", choices=["config", "heatmap"], default="config",
+                    help="config：config.archive_tickers；heatmap：夜航社 Heatmap 全部标的按规格阶段1筛选（指数/白名单外ETF/<$20 剔除）")
+    ap.add_argument("--expiries", choices=["full", "near"], default="full",
+                    help="full：未来 7 天内全部到期日；near：只存 0DTE 与 1DTE")
+    ap.add_argument("--days", type=int, default=RETENTION_SESSIONS, help="补齐最近 N 个交易日（≤3，服务端只保留 3 天）")
     ap.add_argument("--log-file", default=None)
     args = ap.parse_args(argv)
 
@@ -217,7 +277,13 @@ def main(argv=None) -> int:
     if not os.path.isabs(cfg.data_dir):
         cfg.data_dir = os.path.join(base, cfg.data_dir)   # 定时任务的工作目录不固定，统一落到项目目录
     setup_logging(cfg.log_level, args.log_file or os.path.join(base, "logs", "archive.log"))
-    tickers = [t.strip().upper() for t in (args.tickers or ",".join(cfg.archive_tickers)).split(",") if t.strip()]
+    client = YHSClient(cfg)
+    if args.tickers:
+        tickers = [t.strip().upper() for t in args.tickers.split(",") if t.strip()]
+    elif args.universe == "heatmap":
+        tickers = build_heatmap_universe(client, cfg)
+    else:
+        tickers = list(cfg.archive_tickers)
 
     now = et_now()
     today = now.date()
@@ -228,16 +294,15 @@ def main(argv=None) -> int:
             log.error("%s 不是交易日", days[0])
             return 2
     else:
-        days = [d for d in recent_sessions(last, RETENTION_SESSIONS) if not is_archived(cfg, d, tickers)]
+        days = [d for d in recent_sessions(last, min(args.days, RETENTION_SESSIONS)) if not is_archived(cfg, d, tickers)]
         if not days:
             log.info("最近 %d 个交易日（截至 %s）均已存档，无需操作", RETENTION_SESSIONS, last)
             return 0
 
-    client = YHSClient(cfg)
     ok = True
     try:
         for d in days:
-            ok &= archive_day(client, cfg, d, tickers, today, args.dry_run)["complete"]
+            ok &= archive_day(client, cfg, d, tickers, today, args.dry_run, args.expiries)["complete"]
     except QuotaExhausted as e:
         log.critical("配额熔断，停止存档：%s", e)
         return 3
