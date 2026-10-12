@@ -489,3 +489,605 @@
 21:33:34 [INFO] yhs.archive:   DE    10-12:0  10-13:0
 21:33:36 [INFO] yhs.archive:   DELL  10-12:0  10-13:0
 21:33:39 [INFO] yhs.archive:   DIS   10-12:0  10-13:0
+21:33:42 [INFO] yhs.archive:   DKS   10-12:0  10-13:0
+21:33:44 [INFO] yhs.archive:   DOW   10-12:0  10-13:0
+21:33:46 [INFO] yhs.archive:   DUOL  10-12:0  10-13:0
+21:33:48 [INFO] yhs.archive:   DVN   10-12:0  10-13:0
+21:33:51 [INFO] yhs.archive:   ENPH  10-12:0  10-13:0
+21:33:53 [INFO] yhs.archive:   ES    10-12:0  10-13:0
+21:33:56 [INFO] yhs.archive:   FCX   10-12:0  10-13:0
+21:33:58 [INFO] yhs.archive:   FIG   10-12:0  10-13:0
+21:34:00 [INFO] yhs.archive:   FISV  10-12:0  10-13:0
+21:34:03 [INFO] yhs.archive:   FN    10-12:0  10-13:0
+21:34:05 [INFO] yhs.archive:   FPS   10-12:0  10-13:0
+21:34:08 [INFO] yhs.archive:   FSLR  10-12:0  10-13:0
+21:34:10 [INFO] yhs.archive:   FTNT  10-12:0  10-13:0
+21:34:12 [INFO] yhs.archive:   GEV   10-12:0  10-13:0
+21:34:15 [INFO] yhs.archive:   GFS   10-12:0  10-13:0
+21:34:17 [INFO] yhs.archive:   GLW   10-12:0  10-13:0
+21:34:20 [INFO] yhs.archive:   GM    10-12:0  10-13:0
+21:34:22 [INFO] yhs.archive:   GME   10-12:0  10-13:0
+21:34:25 [INFO] yhs.archive:   GNRC  10-12:0  10-13:0
+21:34:27 [INFO] yhs.archive:   GOOG  10-12:0  10-13:0
+21:34:33 [INFO] yhs.archive:   GOOGL 10-12:77  10-13:0
+21:34:35 [INFO] yhs.archive:   GS    10-12:0  10-13:0
+21:34:38 [INFO] yhs.archive:   HD    10-12:0  10-13:0
+21:34:40 [INFO] yhs.archive:   HIMS  10-12:0  10-13:0
+21:34:42 [INFO] yhs.archive:   HNGE  10-12:0  10-13:0
+21:34:45 [INFO] yhs.archive:   HOOD  10-12:0  10-13:0
+21:34:47 [INFO] yhs.archive:   HPE   10-12:0  10-13:0
+21:34:50 [INFO] yhs.archive:   HPQ   10-12:0  10-13:0
+21:34:52 [INFO] yhs.archive:   HSBC  10-12:0  10-13:0
+21:34:54 [INFO] yhs.archive:   HUT   10-12:0  10-13:0
+21:34:57 [INFO] yhs.archive:   IBM   10-12:0  10-13:0
+21:34:59 [INFO] yhs.archive:   ICE   10-12:0  10-13:0
+21:35:02 [INFO] yhs.archive:   INOD  10-12:0  10-13:0
+21:35:08 [INFO] yhs.archive:   INTC  10-12:77  10-13:0
+21:35:10 [INFO] yhs.archive:   INTU  10-12:0  10-13:0
+21:35:13 [INFO] yhs.archive:   IONQ  10-12:0  10-13:0
+21:35:15 [INFO] yhs.archive:   IREN  10-12:0  10-13:0
+21:35:17 [INFO] yhs.archive:   ISRG  10-12:0  10-13:0
+21:35:20 [INFO] yhs.archive:   JD    10-12:0  10-13:0
+21:35:22 [INFO] yhs.archive:   JNJ   10-12:0  10-13:0
+21:35:25 [INFO] yhs.archive:   JPM   10-12:0  10-13:0
+21:35:27 [INFO] yhs.archive:   KO    10-12:0  10-13:0
+21:35:29 [INFO] yhs.archive:   LITE  10-12:0  10-13:0
+21:35:32 [INFO] yhs.archive:   LLY   10-12:0  10-13:0
+21:35:34 [INFO] yhs.archive:   LMND  10-12:0  10-13:0
+21:35:37 [INFO] yhs.archive:   LMT   10-12:0  10-13:0
+21:35:39 [INFO] yhs.archive:   LRCX  10-12:0  10-13:0
+21:35:41 [INFO] yhs.archive:   MCD   10-12:0  10-13:0
+21:35:44 [INFO] yhs.archive:   MDB   10-12:0  10-13:0
+21:36:06 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/MDT/history：<urlopen error _ssl.c:1015: The handshake operation timed out>，4.1s 后第 1 次重试
+21:36:11 [INFO] yhs.archive:   MDT   10-12:0  10-13:0
+21:36:16 [INFO] yhs.archive:   META  10-12:77  10-13:0
+21:36:19 [INFO] yhs.archive:   MNDY  10-12:0  10-13:0
+21:36:21 [INFO] yhs.archive:   MP    10-12:0  10-13:0
+21:36:24 [INFO] yhs.archive:   MPWR  10-12:0  10-13:0
+21:36:26 [INFO] yhs.archive:   MRK   10-12:0  10-13:0
+21:36:28 [INFO] yhs.archive:   MRNA  10-12:0  10-13:0
+21:36:31 [INFO] yhs.archive:   MRVL  10-12:0  10-13:0
+21:36:33 [INFO] yhs.archive:   MS    10-12:0  10-13:0
+21:36:39 [INFO] yhs.archive:   MSFT  10-12:77  10-13:0
+21:36:42 [INFO] yhs.archive:   MSTR  10-12:0  10-13:0
+21:36:48 [INFO] yhs.archive:   MU    10-12:77  10-13:0
+21:36:50 [INFO] yhs.archive:   MXL   10-12:0  10-13:0
+21:36:52 [INFO] yhs.archive:   NASA  10-12:0  10-13:0
+21:36:55 [INFO] yhs.archive:   NBIS  10-12:0  10-13:0
+21:36:57 [INFO] yhs.archive:   NEE   10-12:0  10-13:0
+21:37:00 [INFO] yhs.archive:   NEM   10-12:0  10-13:0
+21:37:02 [INFO] yhs.archive:   NET   10-12:0  10-13:0
+21:37:04 [INFO] yhs.archive:   NFLX  10-12:0  10-13:0
+21:37:07 [INFO] yhs.archive:   NKE   10-12:0  10-13:0
+21:37:09 [INFO] yhs.archive:   NKTR  10-12:0  10-13:0
+21:37:12 [INFO] yhs.archive:   NOW   10-12:0  10-13:0
+21:37:18 [INFO] yhs.archive:   NVDA  10-12:77  10-13:0
+21:37:20 [INFO] yhs.archive:   NVO   10-12:0  10-13:0
+21:37:22 [INFO] yhs.archive:   OKLO  10-12:0  10-13:0
+21:37:25 [INFO] yhs.archive:   OKTA  10-12:0  10-13:0
+21:37:27 [INFO] yhs.archive:   ON    10-12:0  10-13:0
+21:37:30 [INFO] yhs.archive:   ORCL  10-12:0  10-13:0
+21:37:32 [INFO] yhs.archive:   OSCR  10-12:0  10-13:0
+21:37:34 [INFO] yhs.archive:   OUST  10-12:0  10-13:0
+21:37:37 [INFO] yhs.archive:   OXY   10-12:0  10-13:0
+21:37:39 [INFO] yhs.archive:   PANW  10-12:0  10-13:0
+21:37:42 [INFO] yhs.archive:   PDD   10-12:0  10-13:0
+21:37:44 [INFO] yhs.archive:   PEP   10-12:0  10-13:0
+21:37:46 [INFO] yhs.archive:   PFE   10-12:0  10-13:0
+21:37:49 [INFO] yhs.archive:   PG    10-12:0  10-13:0
+21:37:51 [INFO] yhs.archive:   PLTR  10-12:0  10-13:0
+21:37:54 [INFO] yhs.archive:   PYPL  10-12:0  10-13:0
+21:37:56 [INFO] yhs.archive:   QCOM  10-12:0  10-13:0
+21:38:06 [INFO] yhs.archive:   QQQ   10-12:76  10-13:76
+21:38:08 [INFO] yhs.archive:   QSR   10-12:0  10-13:0
+21:38:10 [INFO] yhs.archive:   QURE  10-12:0  10-13:0
+21:38:13 [INFO] yhs.archive:   RBLX  10-12:0  10-13:0
+21:38:15 [INFO] yhs.archive:   RDDT  10-12:0  10-13:0
+21:38:18 [INFO] yhs.archive:   RKLB  10-12:0  10-13:0
+21:38:20 [INFO] yhs.archive:   RTX   10-12:0  10-13:0
+21:38:22 [INFO] yhs.archive:   S     10-12:0  10-13:0
+21:38:25 [INFO] yhs.archive:   SAP   10-12:0  10-13:0
+21:38:27 [INFO] yhs.archive:   SBUX  10-12:0  10-13:0
+21:38:30 [INFO] yhs.archive:   SCCO  10-12:0  10-13:0
+21:38:32 [INFO] yhs.archive:   SCHW  10-12:0  10-13:0
+21:38:34 [INFO] yhs.archive:   SHEL  10-12:0  10-13:0
+21:38:37 [INFO] yhs.archive:   SHOP  10-12:0  10-13:0
+21:38:39 [INFO] yhs.archive:   SKHY  10-12:0  10-13:0
+21:38:42 [INFO] yhs.archive:   SLB   10-12:0  10-13:0
+21:38:44 [INFO] yhs.archive:   SMCI  10-12:0  10-13:0
+21:38:46 [INFO] yhs.archive:   SNDK  10-12:0  10-13:0
+21:38:49 [INFO] yhs.archive:   SNOW  10-12:0  10-13:0
+21:38:51 [INFO] yhs.archive:   SNPS  10-12:0  10-13:0
+21:38:57 [INFO] yhs.archive:   SOXL  10-12:77  10-13:0
+21:39:00 [INFO] yhs.archive:   SPOT  10-12:0  10-13:0
+21:39:09 [INFO] yhs.archive:   SPY   10-12:77  10-13:77
+21:39:12 [INFO] yhs.archive:   STM   10-12:0  10-13:0
+21:39:14 [INFO] yhs.archive:   STX   10-12:0  10-13:0
+21:39:16 [INFO] yhs.archive:   SYM   10-12:0  10-13:0
+21:39:19 [INFO] yhs.archive:   T     10-12:0  10-13:0
+21:39:21 [INFO] yhs.archive:   TCOM  10-12:0  10-13:0
+21:39:24 [INFO] yhs.archive:   TEAM  10-12:0  10-13:0
+21:39:26 [INFO] yhs.archive:   TEM   10-12:0  10-13:0
+21:39:28 [INFO] yhs.archive:   TER   10-12:0  10-13:0
+21:39:31 [INFO] yhs.archive:   TGT   10-12:0  10-13:0
+21:39:37 [INFO] yhs.archive:   TLT   10-12:77  10-13:0
+21:39:43 [INFO] yhs.archive:   TQQQ  10-12:77  10-13:0
+21:39:45 [INFO] yhs.archive:   TSEM  10-12:0  10-13:0
+21:39:51 [INFO] yhs.archive:   TSLA  10-12:76  10-13:0
+21:39:54 [INFO] yhs.archive:   TSM   10-12:0  10-13:0
+21:39:56 [INFO] yhs.archive:   TTMI  10-12:0  10-13:0
+21:39:58 [INFO] yhs.archive:   TTWO  10-12:0  10-13:0
+21:40:01 [INFO] yhs.archive:   TXN   10-12:0  10-13:0
+21:40:03 [INFO] yhs.archive:   U     10-12:0  10-13:0
+21:40:06 [INFO] yhs.archive:   UBER  10-12:0  10-13:0
+21:40:08 [INFO] yhs.archive:   UCTT  10-12:0  10-13:0
+21:40:11 [INFO] yhs.archive:   UMAC  10-12:0  10-13:0
+21:40:13 [INFO] yhs.archive:   UNH   10-12:0  10-13:0
+21:40:15 [INFO] yhs.archive:   UPS   10-12:0  10-13:0
+21:40:18 [INFO] yhs.archive:   V     10-12:0  10-13:0
+21:40:20 [INFO] yhs.archive:   VICR  10-12:0  10-13:0
+21:40:23 [INFO] yhs.archive:   VKTX  10-12:0  10-13:0
+21:40:25 [INFO] yhs.archive:   VRT   10-12:0  10-13:0
+21:40:27 [INFO] yhs.archive:   VST   10-12:0  10-13:0
+21:40:30 [INFO] yhs.archive:   VZ    10-12:0  10-13:0
+21:40:32 [INFO] yhs.archive:   WDAY  10-12:0  10-13:0
+21:40:35 [INFO] yhs.archive:   WDC   10-12:0  10-13:0
+21:40:37 [INFO] yhs.archive:   WFC   10-12:0  10-13:0
+21:40:39 [INFO] yhs.archive:   WMB   10-12:0  10-13:0
+21:40:42 [INFO] yhs.archive:   WMT   10-12:0  10-13:0
+21:40:44 [INFO] yhs.archive:   WOLF  10-12:0  10-13:0
+21:40:47 [INFO] yhs.archive:   XOM   10-12:0  10-13:0
+21:40:49 [INFO] yhs.archive:   YPF   10-12:0  10-13:0
+21:40:51 [INFO] yhs.archive:   ZM    10-12:0  10-13:0
+21:40:54 [INFO] yhs.archive:   ZS    10-12:0  10-13:0
+21:40:55 [INFO] yhs.archive:   成交量榜已存档
+21:40:55 [INFO] yhs.archive: 存档 2026-10-12 完成
+21:40:55 [INFO] yhs.archive: 本次存档结束。本进程计费调用 479 次，免费调用 0 次；服务端剩余配额 89740 / 100000；按端点：{'derived/heatmap/history': 478, 'market/options-volume-rank': 1}
+21:40:55 [INFO] yhs.archive: ===== 存档 2026-10-08：212 只标的（全部近端到期）=====
+21:40:55 [INFO] yhs.archive:   AAOI  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AAPL  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ACN   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ADBE  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ADI   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ADSK  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AEHR  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AFRM  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ALAB  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AMAT  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AMD   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AMKR  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AMZN  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ANET  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   APLD  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   APP   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ARM   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ASML  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ASTS  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AVAV  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AVGO  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   AXTI  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BA    10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BABA  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BAC   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BBY   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BE    10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BKNG  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BMNR  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BMY   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BOX   10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:55 [INFO] yhs.archive:   BRKB  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BSX   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   BTU   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   C     10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CAT   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CBRS  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CCJ   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CCL   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CDNS  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CEG   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CELH  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CHTR  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CIEN  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CMCSA 10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   COHR  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   COIN  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   COST  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CRCL  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CRDO  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CRM   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CRWD  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CRWV  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CSCO  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CVNA  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   CVX   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DAL   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DASH  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DDOG  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DE    10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DELL  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DIS   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DKS   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DOW   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DUOL  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   DVN   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ENPH  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ES    10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:55 [INFO] yhs.archive:   FCX   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   FIG   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   FISV  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   FN    10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:55 [INFO] yhs.archive:   FPS   10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:55 [INFO] yhs.archive:   FSLR  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   FTNT  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   GEV   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   GFS   10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:55 [INFO] yhs.archive:   GLW   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   GM    10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   GME   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   GNRC  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   GOOG  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   GOOGL 10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   GS    10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   HD    10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   HIMS  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   HNGE  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:55 [INFO] yhs.archive:   HOOD  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   HPE   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   HPQ   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   HSBC  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   HUT   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   IBM   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ICE   10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   INOD  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   INTC  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   INTU  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   IONQ  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   IREN  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   ISRG  10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   JD    10-08:0  10-09:78
+21:40:55 [INFO] yhs.archive:   JNJ   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   JPM   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   KO    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   LITE  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   LLY   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   LMND  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   LMT   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   LRCX  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MCD   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MDB   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MDT   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   META  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MNDY  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   MP    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MPWR  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   MRK   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MRNA  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MRVL  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MS    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MSFT  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MSTR  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MU    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   MXL   10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   NASA  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NBIS  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NEE   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NEM   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NET   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NFLX  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NKE   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NKTR  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   NOW   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NVDA  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   NVO   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   OKLO  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   OKTA  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   ON    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   ORCL  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   OSCR  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   OUST  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   OXY   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   PANW  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   PDD   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   PEP   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   PFE   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   PG    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   PLTR  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   PYPL  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   QCOM  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   QQQ   10-08:78
+21:40:56 [INFO] yhs.archive:   QSR   10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   QURE  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   RBLX  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   RDDT  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   RKLB  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   RTX   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   S     10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SAP   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SBUX  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SCCO  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SCHW  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SHEL  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SHOP  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SKHY  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SLB   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SMCI  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SNDK  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SNOW  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SNPS  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SOXL  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SPOT  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SPY   10-08:78
+21:40:56 [INFO] yhs.archive:   STM   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   STX   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   SYM   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   T     10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TCOM  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   TEAM  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TEM   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TER   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TGT   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TLT   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TQQQ  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TSEM  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TSLA  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TSM   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TTMI  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   TTWO  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   TXN   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   U     10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   UBER  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   UCTT  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   UMAC  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   UNH   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   UPS   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   V     10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   VICR  10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   VKTX  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   VRT   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   VST   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   VZ    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   WDAY  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   WDC   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   WFC   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   WMB   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   WMT   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   WOLF  10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   XOM   10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   YPF   10-08:0  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   ZM    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive:   ZS    10-08:0  10-09:78
+21:40:56 [INFO] yhs.archive: 存档 2026-10-08 完成
+21:40:56 [INFO] yhs.archive: ===== 存档 2026-10-09：212 只标的（全部近端到期）=====
+21:40:56 [INFO] yhs.archive:   AAOI  10-09:78
+21:40:56 [INFO] yhs.archive:   AAPL  10-09:78
+21:40:56 [INFO] yhs.archive:   ACN   10-09:78
+21:40:56 [INFO] yhs.archive:   ADBE  10-09:78
+21:40:56 [INFO] yhs.archive:   ADI   10-09:78
+21:40:56 [INFO] yhs.archive:   ADSK  10-09:77
+21:40:56 [INFO] yhs.archive:   AEHR  10-09:77
+21:40:56 [INFO] yhs.archive:   AFRM  10-09:78
+21:40:56 [INFO] yhs.archive:   ALAB  10-09:78
+21:40:56 [INFO] yhs.archive:   AMAT  10-09:78
+21:40:56 [INFO] yhs.archive:   AMD   10-09:78
+21:40:56 [INFO] yhs.archive:   AMKR  10-09:78
+21:40:56 [INFO] yhs.archive:   AMZN  10-09:78
+21:40:56 [INFO] yhs.archive:   ANET  10-09:78
+21:40:56 [INFO] yhs.archive:   APLD  10-09:78
+21:40:56 [INFO] yhs.archive:   APP   10-09:78
+21:40:56 [INFO] yhs.archive:   ARM   10-09:78
+21:40:56 [INFO] yhs.archive:   ASML  10-09:78
+21:40:56 [INFO] yhs.archive:   ASTS  10-09:78
+21:40:56 [INFO] yhs.archive:   AVAV  10-09:78
+21:40:56 [INFO] yhs.archive:   AVGO  10-09:78
+21:40:56 [INFO] yhs.archive:   AXTI  10-09:78
+21:40:56 [INFO] yhs.archive:   BA    10-09:78
+21:40:56 [INFO] yhs.archive:   BABA  10-09:78
+21:40:56 [INFO] yhs.archive:   BAC   10-09:78
+21:40:56 [INFO] yhs.archive:   BBY   10-09:78
+21:40:56 [INFO] yhs.archive:   BE    10-09:78
+21:40:56 [INFO] yhs.archive:   BKNG  10-09:78
+21:40:56 [INFO] yhs.archive:   BMNR  10-09:78
+21:40:56 [INFO] yhs.archive:   BMY   10-09:78
+21:40:56 [INFO] yhs.archive:   BOX   10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:40:56 [INFO] yhs.archive:   BRKB  10-09:78
+21:40:56 [INFO] yhs.archive:   BSX   10-09:78
+21:40:56 [INFO] yhs.archive:   BTU   10-09:78
+21:40:56 [INFO] yhs.archive:   C     10-09:77
+21:40:56 [INFO] yhs.archive:   CAT   10-09:78
+21:40:56 [INFO] yhs.archive:   CBRS  10-09:78
+21:40:56 [INFO] yhs.archive:   CCJ   10-09:78
+21:40:56 [INFO] yhs.archive:   CCL   10-09:78
+21:40:56 [INFO] yhs.archive:   CDNS  10-09:78
+21:40:56 [INFO] yhs.archive:   CEG   10-09:78
+21:40:56 [INFO] yhs.archive:   CELH  10-09:77
+21:40:56 [INFO] yhs.archive:   CHTR  10-09:78
+21:40:56 [INFO] yhs.archive:   CIEN  10-09:78
+21:40:56 [INFO] yhs.archive:   CMCSA 10-09:78
+21:40:56 [INFO] yhs.archive:   COHR  10-09:78
+21:40:56 [INFO] yhs.archive:   COIN  10-09:78
+21:40:56 [INFO] yhs.archive:   COST  10-09:78
+21:40:56 [INFO] yhs.archive:   CRCL  10-09:78
+21:40:56 [INFO] yhs.archive:   CRDO  10-09:78
+21:40:56 [INFO] yhs.archive:   CRM   10-09:78
+21:40:56 [INFO] yhs.archive:   CRWD  10-09:78
+21:40:56 [INFO] yhs.archive:   CRWV  10-09:78
+21:40:56 [INFO] yhs.archive:   CSCO  10-09:78
+21:40:56 [INFO] yhs.archive:   CVNA  10-09:78
+21:40:56 [INFO] yhs.archive:   CVX   10-09:78
+21:40:56 [INFO] yhs.archive:   DAL   10-09:78
+21:40:56 [INFO] yhs.archive:   DASH  10-09:78
+21:40:56 [INFO] yhs.archive:   DDOG  10-09:78
+21:40:56 [INFO] yhs.archive:   DE    10-09:78
+21:40:56 [INFO] yhs.archive:   DELL  10-09:78
+21:40:56 [INFO] yhs.archive:   DIS   10-09:78
+21:40:56 [INFO] yhs.archive:   DKS   10-09:78
+21:40:56 [INFO] yhs.archive:   DOW   10-09:78
+21:40:56 [INFO] yhs.archive:   DUOL  10-09:78
+21:40:56 [INFO] yhs.archive:   DVN   10-09:78
+21:40:56 [INFO] yhs.archive:   ENPH  10-09:78
+21:40:56 [INFO] yhs.archive:   ES    10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   FCX   10-09:78
+21:40:56 [INFO] yhs.archive:   FIG   10-09:78
+21:40:56 [INFO] yhs.archive:   FISV  10-09:78
+21:40:56 [INFO] yhs.archive:   FN    10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   FPS   10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   FSLR  10-09:78
+21:40:56 [INFO] yhs.archive:   FTNT  10-09:78
+21:40:56 [INFO] yhs.archive:   GEV   10-09:78
+21:40:56 [INFO] yhs.archive:   GFS   10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   GLW   10-09:78
+21:40:56 [INFO] yhs.archive:   GM    10-09:78
+21:40:56 [INFO] yhs.archive:   GME   10-09:78
+21:40:56 [INFO] yhs.archive:   GNRC  10-09:78
+21:40:56 [INFO] yhs.archive:   GOOG  10-09:78
+21:40:56 [INFO] yhs.archive:   GOOGL 10-09:78
+21:40:56 [INFO] yhs.archive:   GS    10-09:78
+21:40:56 [INFO] yhs.archive:   HD    10-09:78
+21:40:56 [INFO] yhs.archive:   HIMS  10-09:78
+21:40:56 [INFO] yhs.archive:   HNGE  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   HOOD  10-09:78
+21:40:56 [INFO] yhs.archive:   HPE   10-09:78
+21:40:56 [INFO] yhs.archive:   HPQ   10-09:78
+21:40:56 [INFO] yhs.archive:   HSBC  10-09:78
+21:40:56 [INFO] yhs.archive:   HUT   10-09:78
+21:40:56 [INFO] yhs.archive:   IBM   10-09:78
+21:40:56 [INFO] yhs.archive:   ICE   10-09:78
+21:40:56 [INFO] yhs.archive:   INOD  10-09:78
+21:40:56 [INFO] yhs.archive:   INTC  10-09:78
+21:40:56 [INFO] yhs.archive:   INTU  10-09:78
+21:40:56 [INFO] yhs.archive:   IONQ  10-09:78
+21:40:56 [INFO] yhs.archive:   IREN  10-09:78
+21:40:56 [INFO] yhs.archive:   ISRG  10-09:78
+21:40:56 [INFO] yhs.archive:   JD    10-09:78
+21:40:56 [INFO] yhs.archive:   JNJ   10-09:78
+21:40:56 [INFO] yhs.archive:   JPM   10-09:77
+21:40:56 [INFO] yhs.archive:   KO    10-09:78
+21:40:56 [INFO] yhs.archive:   LITE  10-09:78
+21:40:56 [INFO] yhs.archive:   LLY   10-09:78
+21:40:56 [INFO] yhs.archive:   LMND  10-09:78
+21:40:56 [INFO] yhs.archive:   LMT   10-09:78
+21:40:56 [INFO] yhs.archive:   LRCX  10-09:77
+21:40:56 [INFO] yhs.archive:   MCD   10-09:78
+21:40:56 [INFO] yhs.archive:   MDB   10-09:78
+21:40:56 [INFO] yhs.archive:   MDT   10-09:78
+21:40:56 [INFO] yhs.archive:   META  10-09:78
+21:40:56 [INFO] yhs.archive:   MNDY  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   MP    10-09:78
+21:40:56 [INFO] yhs.archive:   MPWR  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   MRK   10-09:78
+21:40:56 [INFO] yhs.archive:   MRNA  10-09:78
+21:40:56 [INFO] yhs.archive:   MRVL  10-09:78
+21:40:56 [INFO] yhs.archive:   MS    10-09:78
+21:40:56 [INFO] yhs.archive:   MSFT  10-09:78
+21:40:56 [INFO] yhs.archive:   MSTR  10-09:77
+21:40:56 [INFO] yhs.archive:   MU    10-09:78
+21:40:56 [INFO] yhs.archive:   MXL   10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   NASA  10-09:78
+21:40:56 [INFO] yhs.archive:   NBIS  10-09:78
+21:40:56 [INFO] yhs.archive:   NEE   10-09:78
+21:40:56 [INFO] yhs.archive:   NEM   10-09:78
+21:40:56 [INFO] yhs.archive:   NET   10-09:78
+21:40:56 [INFO] yhs.archive:   NFLX  10-09:78
+21:40:56 [INFO] yhs.archive:   NKE   10-09:78
+21:40:56 [INFO] yhs.archive:   NKTR  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   NOW   10-09:78
+21:40:56 [INFO] yhs.archive:   NVDA  10-09:78
+21:40:56 [INFO] yhs.archive:   NVO   10-09:77
+21:40:56 [INFO] yhs.archive:   OKLO  10-09:78
+21:40:56 [INFO] yhs.archive:   OKTA  10-09:77
+21:40:56 [INFO] yhs.archive:   ON    10-09:78
+21:40:56 [INFO] yhs.archive:   ORCL  10-09:78
+21:40:56 [INFO] yhs.archive:   OSCR  10-09:78
+21:40:56 [INFO] yhs.archive:   OUST  10-09:78
+21:40:56 [INFO] yhs.archive:   OXY   10-09:78
+21:40:56 [INFO] yhs.archive:   PANW  10-09:78
+21:40:56 [INFO] yhs.archive:   PDD   10-09:78
+21:40:56 [INFO] yhs.archive:   PEP   10-09:78
+21:40:56 [INFO] yhs.archive:   PFE   10-09:78
+21:40:56 [INFO] yhs.archive:   PG    10-09:78
+21:40:56 [INFO] yhs.archive:   PLTR  10-09:78
+21:40:56 [INFO] yhs.archive:   PYPL  10-09:78
+21:40:56 [INFO] yhs.archive:   QCOM  10-09:78
+21:40:56 [INFO] yhs.archive:   QQQ   10-09:78
+21:40:56 [INFO] yhs.archive:   QSR   10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   QURE  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   RBLX  10-09:78
+21:40:56 [INFO] yhs.archive:   RDDT  10-09:78
+21:40:56 [INFO] yhs.archive:   RKLB  10-09:78
+21:40:56 [INFO] yhs.archive:   RTX   10-09:78
+21:40:56 [INFO] yhs.archive:   S     10-09:78
+21:40:56 [INFO] yhs.archive:   SAP   10-09:78
+21:40:56 [INFO] yhs.archive:   SBUX  10-09:78
+21:40:56 [INFO] yhs.archive:   SCCO  10-09:78
+21:40:56 [INFO] yhs.archive:   SCHW  10-09:78
+21:40:56 [INFO] yhs.archive:   SHEL  10-09:78
+21:40:56 [INFO] yhs.archive:   SHOP  10-09:78
+21:40:56 [INFO] yhs.archive:   SKHY  10-09:78
+21:40:56 [INFO] yhs.archive:   SLB   10-09:78
+21:40:56 [INFO] yhs.archive:   SMCI  10-09:78
+21:40:56 [INFO] yhs.archive:   SNDK  10-09:78
+21:40:56 [INFO] yhs.archive:   SNOW  10-09:78
+21:40:56 [INFO] yhs.archive:   SNPS  10-09:78
+21:40:56 [INFO] yhs.archive:   SOXL  10-09:78
+21:40:56 [INFO] yhs.archive:   SPOT  10-09:78
+21:40:56 [INFO] yhs.archive:   SPY   10-09:78
+21:40:56 [INFO] yhs.archive:   STM   10-09:78
+21:40:56 [INFO] yhs.archive:   STX   10-09:78
+21:40:56 [INFO] yhs.archive:   SYM   10-09:78
+21:40:56 [INFO] yhs.archive:   T     10-09:77
+21:40:56 [INFO] yhs.archive:   TCOM  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   TEAM  10-09:78
+21:40:56 [INFO] yhs.archive:   TEM   10-09:78
+21:40:56 [INFO] yhs.archive:   TER   10-09:78
+21:40:56 [INFO] yhs.archive:   TGT   10-09:78
+21:40:56 [INFO] yhs.archive:   TLT   10-09:78
+21:40:56 [INFO] yhs.archive:   TQQQ  10-09:78
+21:40:56 [INFO] yhs.archive:   TSEM  10-09:78
+21:40:56 [INFO] yhs.archive:   TSLA  10-09:77
+21:40:56 [INFO] yhs.archive:   TSM   10-09:77
+21:40:56 [INFO] yhs.archive:   TTMI  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   TTWO  10-09:77
+21:40:56 [INFO] yhs.archive:   TXN   10-09:78
+21:40:56 [INFO] yhs.archive:   U     10-09:78
+21:40:56 [INFO] yhs.archive:   UBER  10-09:78
+21:40:56 [INFO] yhs.archive:   UCTT  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   UMAC  10-09:78
+21:40:56 [INFO] yhs.archive:   UNH   10-09:78
+21:40:56 [INFO] yhs.archive:   UPS   10-09:78
+21:40:56 [INFO] yhs.archive:   V     10-09:78
+21:40:56 [INFO] yhs.archive:   VICR  10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   VKTX  10-09:78
+21:40:56 [INFO] yhs.archive:   VRT   10-09:78
+21:40:56 [INFO] yhs.archive:   VST   10-09:78
+21:40:56 [INFO] yhs.archive:   VZ    10-09:78
+21:40:56 [INFO] yhs.archive:   WDAY  10-09:78
+21:40:56 [INFO] yhs.archive:   WDC   10-09:78
+21:40:56 [INFO] yhs.archive:   WFC   10-09:78
+21:40:56 [INFO] yhs.archive:   WMB   10-09:78
+21:40:56 [INFO] yhs.archive:   WMT   10-09:78
+21:40:56 [INFO] yhs.archive:   WOLF  10-09:78
+21:40:56 [INFO] yhs.archive:   XOM   10-09:78
+21:40:56 [INFO] yhs.archive:   YPF   10-09:0  10-12:0  10-13:0  10-14:0  10-15:0  10-16:78
+21:40:56 [INFO] yhs.archive:   ZM    10-09:78
+21:40:56 [INFO] yhs.archive:   ZS    10-09:78
+21:40:56 [INFO] yhs.archive: 存档 2026-10-09 完成
+21:40:56 [INFO] yhs.archive: ===== 存档 2026-10-12：212 只标的（全部近端到期）=====
+21:41:03 [INFO] yhs.archive:   AAOI  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:41:03 [INFO] yhs.archive:   AAPL  10-12:77
+21:41:10 [INFO] yhs.archive:   ACN   10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:41:17 [INFO] yhs.archive:   ADBE  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:41:24 [INFO] yhs.archive:   ADI   10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:41:32 [INFO] yhs.archive:   ADSK  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:41:39 [INFO] yhs.archive:   AEHR  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:41:46 [INFO] yhs.archive:   AFRM  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:41:53 [INFO] yhs.archive:   ALAB  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:42:00 [INFO] yhs.archive:   AMAT  10-12:0  10-13:0  10-14:0  10-15:0  10-16:76
+21:42:00 [INFO] yhs.archive:   AMD   10-12:77
+21:42:08 [INFO] yhs.archive:   AMKR  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:42:08 [INFO] yhs.archive:   AMZN  10-12:77
+21:42:15 [INFO] yhs.archive:   ANET  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:42:22 [INFO] yhs.archive:   APLD  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:42:29 [INFO] yhs.archive:   APP   10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:42:36 [INFO] yhs.archive:   ARM   10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:42:44 [INFO] yhs.archive:   ASML  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
+21:42:51 [INFO] yhs.archive:   ASTS  10-12:0  10-13:0  10-14:0  10-15:0  10-16:77
