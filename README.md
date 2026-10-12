@@ -18,7 +18,8 @@ python main.py --replay
 python main.py --replay --source history --date 2026-10-09 --tickers NVDA,TSLA,AAPL
 
 # 5. 实盘盘中监控（建议 09:20 ET 前启动，可常驻）
-python main.py --live --log-file logs/live.log
+python main.py --notify-test                 # 先测试 Discord Webhook（config.json 的 discord_webhook_url）
+caffeinate -i python3 main.py --live --log-file logs/live.log   # macOS：caffeinate 防止休眠；开仓/平仓/收盘复盘推送到 Discord
 
 # 6. 盘前研究工作流：活跃榜 → Heatmap 关键节点 → Flow 确认，输出 long/short/range 观察名单
 python main.py --premarket

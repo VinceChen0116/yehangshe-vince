@@ -113,6 +113,7 @@ class PaperTrader:
         # 可选的真实期权价格源：callable(contract_symbol, now_et) -> 价格 | None（历史回放接入 contract-intraday）
         self.price_provider = None
         self.delta_provider = None   # 可选：callable(contract_symbol, now_et) -> 真实 |delta| | None
+        self.notifier = None         # 可选：notify.DiscordNotifier（仅实盘模式设置）
 
     # ------------------------------------------------------------------ 查询
     def open_positions(self) -> list[Position]:
@@ -264,6 +265,8 @@ class PaperTrader:
                  " | δ=%.3f γ=%.4f | 定价来源=%s | 目标加速位 %.2f",
                  p.position_id, p.ticker, p.action, strike, exp, spot, mid, cost, cfg.slippage_pct * 100,
                  delta, gamma, src, p.target_strike)
+        if self.notifier:
+            self.notifier.position_opened(p)
         return p
 
     # ------------------------------------------------------------------ 盯市与出场
@@ -332,6 +335,8 @@ class PaperTrader:
                  p.position_id, p.ticker, p.action, _REASON_CN.get(reason, reason), p.entry_spot, spot,
                  p.entry_option_price, exit_px, p.realized_roi_pct, p.peak_roi_pct, p.max_adverse_roi_pct,
                  p.realized_pnl)
+        if self.notifier:
+            self.notifier.position_closed(p)
         return p
 
     def force_close_all(self, now_et: dt.datetime, spots: dict[str, float], reason: str = "EOD_FORCE_CLOSE"):

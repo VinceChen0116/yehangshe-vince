@@ -27,6 +27,7 @@ from config import (SystemConfig, et_datetime, et_now, expiry_candidates, hhmm_t
 from detector import (HEATMAP_PATH, FLOW_TRADES_PATH, SignalDetector, UniverseEntry, UniverseFilter,
                       extract_rows, pick, pick_num)
 from archive import get_heatmap_rows, rows_to_frames
+from notify import DiscordNotifier, from_config as notify_from_config
 from paper_trader import CHAIN_PATH, PaperTrader, SessionEngine, bs_price_greeks
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
@@ -104,6 +105,8 @@ def finish_day(cfg: SystemConfig, engine: SessionEngine, trader: PaperTrader, cl
     else:
         trader.force_close_all(when, engine.last_spot, reason)
     trader.print_report()
+    if trader.notifier:
+        trader.notifier.daily_summary(when.date(), trader.stats(), trader.positions)
     if any(not p.is_open for p in trader.positions):
         trader.export_trades_csv(cfg.trades_csv, append=True)
     log.info("检测统计：%s", engine.detector.stats)
@@ -119,6 +122,13 @@ def run_live(cfg: SystemConfig) -> None:
              cfg.masked_key(), cfg.fast_poll_min, cfg.slow_poll_min, cfg.safe_rpm, cfg.min_request_interval_s,
              cfg.max_in_flight)
     check_quota(client)
+    notifier = notify_from_config(cfg)
+    if notifier:
+        notifier.text(f"🚀 实盘监控（模拟盘）已启动，本月剩余配额 {client.quota_remaining}。"
+                      f"开仓 {cfg.no_new_entries_before}–{cfg.no_new_entries_after} ET"
+                      + ("，" + "、".join(f"{a}–{b}" for a, b in cfg.no_entry_windows) + " 不开新仓" if cfg.no_entry_windows else ""))
+    else:
+        log.info("未配置 discord_webhook_url，不推送 Discord")
 
     while True:
         now = et_now()
@@ -135,14 +145,25 @@ def run_live(cfg: SystemConfig) -> None:
             sleep_until(fetch_t, "等待拉取当日标的池")
 
         try:
-            run_live_day(cfg, client, day)
+            run_live_day(cfg, client, day, notifier)
         except QuotaExhausted as e:
             log.critical("配额熔断，停止实盘监控：%s", e)
+            if notifier:
+                notifier.text(f"⛔ 配额熔断，实盘监控已停止：{e}")
             return
+        except KeyboardInterrupt:
+            if notifier:
+                notifier.text("⏹️ 实盘监控已手动停止。")
+            raise
+        except Exception as e:
+            log.exception("实盘监控异常退出")
+            if notifier:
+                notifier.text(f"💥 实盘监控异常退出：{type(e).__name__}: {e}")
+            raise
         sleep_until(et_datetime(next_weekday(day), cfg.universe_fetch_time), "等待下一交易日")
 
 
-def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date) -> None:
+def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=None) -> None:
     log.info("=" * 78)
     log.info("交易日 %s 开始", day)
     universe = UniverseFilter(cfg).build(client, day)
@@ -152,8 +173,11 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date) -> None:
         log.warning("今日标的池为空（或预算不足），跳过")
         return
     log.info("今日监控 %d 只：%s", len(universe), ", ".join(e.ticker for e in universe))
+    if notifier:
+        notifier.text(f"📋 **{day}** 今日监控 {len(universe)} 只：" + ", ".join(e.ticker for e in universe))
     detector = SignalDetector(cfg, universe)
     trader = PaperTrader(cfg)
+    trader.notifier = notifier
     engine = SessionEngine(cfg, client, detector, trader)
     pool = [e.ticker for e in universe]
     last_poll: dict[str, dt.datetime] = {}
@@ -196,6 +220,8 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date) -> None:
                     sd = (payload.get("data") or {}).get("session_date_et")
                     if sd and sd != day.isoformat():
                         log.warning("Heatmap 会话日期 %s ≠ 今日 %s，判定今日休市（节假日），结束当日", sd, day)
+                        if notifier:
+                            notifier.text(f"💤 {day} 判定休市（Heatmap 会话日期 {sd}），今日不交易。")
                         return
                     session_verified = True
                 engine.on_snapshot(t, payload, et_now())
@@ -469,6 +495,7 @@ def main(argv=None) -> int:
     mode.add_argument("--replay", action="store_true", help="回放（默认本地模拟数据，0 配额）")
     mode.add_argument("--check", action="store_true", help="免费检查 API Key 与剩余配额")
     mode.add_argument("--premarket", action="store_true", help="盘前研究工作流：生成多头/空头/等待观察名单")
+    mode.add_argument("--notify-test", action="store_true", help="向 config.json 里的 discord_webhook_url 发一条测试消息")
     ap.add_argument("--source", choices=["mock", "history"], default="mock", help="回放数据源")
     ap.add_argument("--date", help="历史回放日期 YYYY-MM-DD（最近 3 个交易日内）")
     ap.add_argument("--tickers", help="历史回放标的，逗号分隔，如 NVDA,TSLA")
@@ -491,6 +518,14 @@ def main(argv=None) -> int:
         if args.check:
             check_quota(YHSClient(cfg))
             return 0
+        if args.notify_test:
+            n = DiscordNotifier(cfg.discord_webhook_url)
+            if not n.enabled:
+                log.error("config.json 里没有有效的 discord_webhook_url（应以 https://discord.com/api/webhooks/ 开头）")
+                return 2
+            ok = n.send("✅ 夜航社 GEX 模拟盘：Discord 通知测试成功。开盘后这里会推送开仓、平仓和收盘复盘。")
+            log.info("Discord 测试消息%s", "已发送，请到频道查看" if ok else "发送失败，见上方日志")
+            return 0 if ok else 1
         if args.replay and args.source == "mock":
             from mock_replay import run_mock_replay
             run_mock_replay(cfg, cfg.trades_csv)

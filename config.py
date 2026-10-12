@@ -193,6 +193,7 @@ class SystemConfig:
 
     # ------------------------------------------------------------------ 输出
     trades_csv: str = "trades_history.csv"
+    discord_webhook_url: str = ""         # Discord 频道 Webhook（只填在 config.json，不要提交 git）；为空则不推送
     # 每日存档（archive.py）：服务端 Heatmap 历史只保留 3 个交易日
     archive_tickers: tuple = ("SPY", "QQQ", "TQQQ", "SOXL", "NVDA", "TSLA", "AAPL", "AMD", "META", "MSFT",
                               "AMZN", "GOOGL", "AVGO", "PLTR", "MSTR", "COIN", "NFLX")

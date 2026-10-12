@@ -1,5 +1,6 @@
 {
   "api_key": "",
+  "discord_webhook_url": "",
   "max_universe_size": 60,
   "strike_mode": "target_node",
   "use_chain_greeks": true,
