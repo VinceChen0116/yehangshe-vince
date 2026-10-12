@@ -22,8 +22,8 @@ import os
 import sys
 import time
 
-from config import (SystemConfig, et_datetime, et_now, hhmm_to_minutes, minutes_of_day, parse_iso,
-                    next_trading_day, poll_interval_min, setup_logging, to_et)
+from config import (SystemConfig, et_datetime, et_now, expiry_candidates, hhmm_to_minutes, minutes_of_day, parse_iso,
+                    poll_interval_min, setup_logging, to_et)
 from detector import (HEATMAP_PATH, FLOW_TRADES_PATH, SignalDetector, UniverseEntry, UniverseFilter,
                       extract_rows, pick, pick_num)
 from archive import get_heatmap_rows
@@ -414,8 +414,9 @@ class HistoryClient:
 def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], expiration: str | None) -> dict:
     real = YHSClient(cfg)
     check_quota(real)
-    # 到期日：有 0DTE 用 0DTE，否则 1DTE（交易日口径）；--expiration 可强制指定
-    candidates = [expiration] if expiration else [date.isoformat(), next_trading_day(date).isoformat()]
+    # 到期日：有 0DTE 用 0DTE，否则最近到期（受 expiry_max_trading_dte 限制）；--expiration 可强制指定
+    candidates = [expiration] if expiration else expiry_candidates(date, cfg.expiry_max_trading_dte,
+                                                                   cfg.expiry_search_trading_days)
     hc = HistoryClient(real, cfg, date)
     cfg.pcr_direction_filter = False  # 历史模式无当日榜单 PCR
     universe = [UniverseEntry(t, i + 1, 0, 0, 0, None, None, None, None, "NEUTRAL", 0.0, ["手动指定"])
@@ -431,7 +432,7 @@ def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], exp
                 log.warning("%s 到期 %s 历史 Heatmap 载入失败：%s（服务端 Heatmap 历史仅保留最近 3 个交易日，"
                             "更早的日期需有 archive.py 存档）", t, exp, e)
         else:
-            log.info("【历史】%s 在 %s 没有 0DTE/1DTE 到期（%s），跳过该标的", t, date, "、".join(candidates))
+            log.info("【历史】%s 在 %s 没有可用到期（已尝试 %s ~ %s），跳过该标的", t, date, candidates[0], candidates[-1])
     if not loaded:
         log.error("没有可回放的标的")
         return {}

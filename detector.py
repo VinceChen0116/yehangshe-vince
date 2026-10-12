@@ -282,8 +282,9 @@ def parse_heatmap(payload: dict, cfg: SystemConfig, ref_date: dt.date) -> Heatma
         except ValueError:
             return 10_000
 
-    # 有 0DTE 用 0DTE，否则 1DTE；都没有则不给信号（不退而求其次去买更远的到期）
-    valid = [e for e in exps if 0 <= dte(e) <= cfg.expiry_max_trading_dte
+    # 有 0DTE 用 0DTE，否则用最近的到期（expiry_max_trading_dte 可限制最远 DTE，超出则不给信号）
+    cap = cfg.expiry_max_trading_dte
+    valid = [e for e in exps if 0 <= dte(e) and (cap is None or dte(e) <= cap)
              and any(c.get("expiration") == e for c in cells)]
     if not valid:
         return None

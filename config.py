@@ -105,7 +105,10 @@ class SystemConfig:
     fast_poll_min: int = 5
     slow_poll_min: int = 12               # 11:30-14:30 午间降频
     poll_open_positions_fast: bool = True # 持仓标的始终按 5 分钟盯市（风控优先）
-    expiry_max_trading_dte: int = 1       # 到期选择：有 0DTE 用 0DTE，否则 1DTE（交易日口径）；都没有则该标的不交易
+    # 到期选择：有 0DTE 用 0DTE，否则用最近的到期日（交易日口径，2026-10-12 用户规则）。
+    #   设为整数 N 则只接受 ≤N 个交易日的到期（如 1 = "0DTE 否则 1DTE"，都没有则该标的不交易）
+    expiry_max_trading_dte: int | None = None
+    expiry_search_trading_days: int = 10  # 历史回放/存档向后探测最近到期日的最大交易日数（覆盖月度到期 + 节假日）
     node_distance_max_pct: float = 0.025  # 现货距正 GEX 节点 ≤ 2.5%
     fatigue_touch_band_pct: float = 0.004 # 距节点 ≤ 0.4% 视为一次"测试回踩"
     fatigue_reset_band_pct: float = 0.008 # 离开 ≥ 0.8% 后再回来才计新的一次
@@ -409,3 +412,14 @@ def trading_dte(expiration: dt.date, today: dt.date) -> int:
         d = next_trading_day(d)
         n += 1
     return n
+
+
+def expiry_candidates(day: dt.date, max_trading_dte: int | None, search: int = 10) -> list[str]:
+    """历史回放/存档按顺序尝试的到期日：当天（0DTE）、下一个交易日（1DTE）……
+    max_trading_dte 为 None 时向后最多探测 search 个交易日，取第一个有数据的（即最近到期）。"""
+    n = search if max_trading_dte is None else min(max_trading_dte, search)
+    out, d = [day], day
+    for _ in range(n):
+        d = next_trading_day(d)
+        out.append(d)
+    return [x.isoformat() for x in out]

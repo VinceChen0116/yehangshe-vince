@@ -11,6 +11,7 @@ Heatmap 走本地存档、期权价格走本地缓存（yhs_data/cache/），同
   python3 experiment.py --name no_midday --set no_new_entries_midday=true # 只改一个变量
   python3 experiment.py --name stop50 --set stop_loss_pct=-50 --baseline baseline
   python3 experiment.py --compare baseline,stop50                         # 只对比已有结果，不跑回测
+  python3 experiment.py --name big --universe heatmap                     # 大样本标的池（212 只）
 输出：backtests/exp/<name>/{trades_<日期>.csv, run.log, summary.json}
 """
 from __future__ import annotations
@@ -159,11 +160,20 @@ def run(args) -> int:
         os.remove(os.path.join(out, fn))
     setup_logging(base.log_level, os.path.join(out, "run.log"))
     dates = args.dates.split(",") if args.dates else archived_dates(base)
-    tickers = args.tickers.split(",") if args.tickers else list(base.archive_tickers)
+    if args.tickers:
+        tickers = args.tickers.split(",")
+    elif args.universe == "heatmap":
+        with open(os.path.join(base.data_dir, "archive", "universe", "heatmap_filtered.json"), encoding="utf-8") as f:
+            tickers = json.load(f)["tickers"]
+    else:
+        tickers = list(base.archive_tickers)
     if not dates:
         log.error("没有可用的存档日期；先运行 archive.py 或用 --dates 指定")
         return 2
     log.info("实验 %s：改动 %s，日期 %s，标的 %d 只", args.name, overrides or "无（基准）", ",".join(dates), len(tickers))
+    overrides_note = dict(overrides)
+    if args.universe != "config" or args.tickers:
+        overrides_note["_标的"] = args.tickers or f"{args.universe}（{len(tickers)} 只）"
 
     from main import run_history_replay   # 延迟导入：避免 --compare 时加载整个回放模块
     for day in dates:
@@ -175,7 +185,7 @@ def run(args) -> int:
         run_history_replay(cfg, dt.date.fromisoformat(day), tickers, None)
 
     rows = load_trades(args.name)
-    summary = {"name": args.name, "run_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "overrides": overrides,
+    summary = {"name": args.name, "run_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "overrides": overrides_note,
                "dates": dates, "tickers": tickers, "overall": metrics(rows), "breakdown": breakdown(rows)}
     with open(os.path.join(out, "summary.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
@@ -192,6 +202,8 @@ def main(argv=None) -> int:
     ap.add_argument("--set", action="append", metavar="KEY=VALUE", help="相对默认配置改动的参数，可重复")
     ap.add_argument("--dates", help="逗号分隔的日期，默认全部已存档日期")
     ap.add_argument("--tickers", help="逗号分隔的标的，默认 config.archive_tickers")
+    ap.add_argument("--universe", choices=["config", "heatmap"], default="config",
+                    help="heatmap：archive.py --universe heatmap 筛出的大样本标的池")
     ap.add_argument("--baseline", help="跑完后与该实验对比")
     ap.add_argument("--compare", help="只对比已有实验，逗号分隔")
     ap.add_argument("--config", help="JSON 配置文件")

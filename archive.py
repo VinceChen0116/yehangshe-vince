@@ -28,8 +28,8 @@ import logging
 import os
 import sys
 
-from config import (INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, et_datetime, et_now, is_trading_day,
-                    next_trading_day, prev_trading_day, setup_logging)
+from config import (INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, et_datetime, et_now, expiry_candidates,
+                    is_trading_day, next_trading_day, prev_trading_day, setup_logging)
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
 log = logging.getLogger("yhs.archive")
@@ -190,11 +190,25 @@ def build_heatmap_universe(client, cfg: SystemConfig, refresh: bool = False) -> 
 def archive_day(client, cfg: SystemConfig, day: dt.date, tickers: list[str], today: dt.date,
                 dry_run: bool = False, expiry_mode: str = "full") -> dict:
     """expiry_mode="full"：未来 archive_max_dte 天内全部到期日（每日收盘存档用）；
-    "near"：只存 0DTE 与 1DTE（交易日口径），回测够用、省配额，适合大批量补存。"""
+    "near"：只存 0DTE 与 1DTE（交易日口径），适合大批量补存；
+    "nearest"：从 0DTE 起逐个交易日向后探测，存到第一个有数据的到期为止（回测"0DTE 否则最近到期"所需）。"""
     log.info("===== 存档 %s：%d 只标的（%s）=====", day, len(tickers), "仅 0DTE/1DTE" if expiry_mode == "near" else "全部近端到期")
     summary = {"session_date": day.isoformat(), "tickers": {}, "started_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
     for t in tickers:
         try:
+            if expiry_mode == "nearest":
+                info = {}
+                for e in expiry_candidates(day, None, cfg.expiry_search_trading_days):
+                    rows = load_archived_heatmap(cfg, day, t, e)
+                    if rows is None and not dry_run:
+                        rows = fetch_heatmap_rows(client, t, e, day)
+                        save_heatmap(cfg, day, t, e, rows)
+                    info[e] = len(rows) if rows is not None else "待拉取"
+                    if rows:
+                        break
+                summary["tickers"][t] = info
+                log.info("  %-5s %s", t, "  ".join(f"{e[5:]}:{v}" for e, v in info.items()))
+                continue
             if expiry_mode == "near":
                 exps = [day.isoformat(), next_trading_day(day).isoformat()]
             else:
@@ -266,8 +280,8 @@ def main(argv=None) -> int:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--universe", choices=["config", "heatmap"], default="config",
                     help="config：config.archive_tickers；heatmap：夜航社 Heatmap 全部标的按规格阶段1筛选（指数/白名单外ETF/<$20 剔除）")
-    ap.add_argument("--expiries", choices=["full", "near"], default="full",
-                    help="full：未来 7 天内全部到期日；near：只存 0DTE 与 1DTE")
+    ap.add_argument("--expiries", choices=["full", "near", "nearest"], default="full",
+                    help="full：未来 7 天内全部到期日；near：只存 0DTE 与 1DTE；nearest：0DTE 否则最近一个有数据的到期")
     ap.add_argument("--days", type=int, default=RETENTION_SESSIONS, help="补齐最近 N 个交易日（≤3，服务端只保留 3 天）")
     ap.add_argument("--log-file", default=None)
     args = ap.parse_args(argv)
@@ -294,7 +308,9 @@ def main(argv=None) -> int:
             log.error("%s 不是交易日", days[0])
             return 2
     else:
-        days = [d for d in recent_sessions(last, min(args.days, RETENTION_SESSIONS)) if not is_archived(cfg, d, tickers)]
+        days = recent_sessions(last, min(args.days, RETENTION_SESSIONS))
+        if args.expiries == "full":   # near/nearest 按文件逐个判断是否已存（已存在的读本地，0 配额），不看 manifest
+            days = [d for d in days if not is_archived(cfg, d, tickers)]
         if not days:
             log.info("最近 %d 个交易日（截至 %s）均已存档，无需操作", RETENTION_SESSIONS, last)
             return 0

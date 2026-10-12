@@ -1,4 +1,4 @@
-"""交易规则离线测试：到期选择（0DTE 否则 1DTE）、行权价虚值上限、最低价格、09:45 前不开仓。0 配额。
+"""交易规则离线测试：到期选择（0DTE 否则最近到期）、行权价虚值上限、最低价格、09:45 前不开仓。0 配额。
 
 运行：python -m unittest test_trading_rules -v
 """
@@ -8,7 +8,7 @@ import datetime as dt
 import logging
 import unittest
 
-from config import SystemConfig, et_datetime, trading_dte
+from config import SystemConfig, et_datetime, expiry_candidates, trading_dte
 from detector import FullSignal, FlowConfirmation, StructureSignal, parse_heatmap
 from paper_trader import PaperTrader, SessionEngine
 
@@ -45,8 +45,18 @@ class ExpiryTest(unittest.TestCase):
         s = parse_heatmap(heatmap(WED, ["2026-10-08", "2026-10-09"]), self.cfg, WED)
         self.assertEqual(s.expiration, "2026-10-08")
 
-    def test_no_0dte_or_1dte_means_no_snapshot(self):
+    def test_no_0dte_uses_nearest(self):
+        s = parse_heatmap(heatmap(WED, ["2026-10-16", "2026-10-09"]), self.cfg, WED)
+        self.assertEqual(s.expiration, "2026-10-09")
+
+    def test_max_dte_cap(self):
+        self.cfg.expiry_max_trading_dte = 1   # "0DTE 否则 1DTE"
         self.assertIsNone(parse_heatmap(heatmap(WED, ["2026-10-09", "2026-10-16"]), self.cfg, WED))
+
+    def test_expiry_candidates(self):
+        self.assertEqual(expiry_candidates(WED, 1), ["2026-10-07", "2026-10-08"])
+        c = expiry_candidates(FRI, None, 3)
+        self.assertEqual(c, ["2026-10-09", "2026-10-12", "2026-10-13", "2026-10-14"])
 
 
 def signal(right: str, spot: float, pos: float, neg: float, exp: str = "2026-10-09",
