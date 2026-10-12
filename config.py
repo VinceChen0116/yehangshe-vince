@@ -152,7 +152,7 @@ class SystemConfig:
     hard_take_profit_pct: float = 150.0
     direction_hit_pct: float = 15.0       # 峰值浮盈 ≥ +15% 判定方向正确
 
-    max_open_positions: int = 5
+    max_open_positions: int = 8           # 同时持仓上限（2026-10-12 用户由 5 调为 8）
     max_trades_per_ticker_day: int = 2
     reentry_cooldown_min: int = 30
     no_new_entries_before: str = "09:45"  # 开盘前 15 分钟 Heatmap 噪音大，不开新仓
