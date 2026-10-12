@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-10-12 05:36",
+  "dates": [
+    "2026-10-07",
+    "2026-10-08",
+    "2026-10-09"
+  ],
+  "universe": "heatmap",
+  "n_tickers": 212,
+  "n_with_data": 212,
+  "expiry_rule": "0DTE 否则最近到期",
+  "entry_window": "09:45–15:30（剔除 11:30–14:30）"
+}
