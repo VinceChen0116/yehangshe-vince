@@ -184,6 +184,7 @@ class SystemConfig:
     corridor_min_room_pct: float = 0.02       # 现价到目标 ≥ 2%
     corridor_max_room_pct: float = 0.25       # 现价到目标 ≤ 25%
     corridor_top_n: int = 20                  # Discord 每晚最多推送的候选数
+    corridor_break_buffer_pct: float = 0.005  # 验证时现价需穿过基准（地板/天花板）再多 0.5% 才算"破位"，避免贴着节点的小波动误判
 
     # ------------------------------------------------------------------ 盘前研究工作流（--premarket）
     # 以下均为"待验证研究参数"，不代表已回测的最优值

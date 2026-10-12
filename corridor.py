@@ -170,13 +170,15 @@ def session_spots(cfg: SystemConfig, ticker: str, day: dt.date) -> list:
     return []
 
 
-def evaluate(cand: dict, spots: list) -> dict:
-    """用次日现货验证：开盘、30/60 分钟、收盘方向化收益；是否先到目标 / 先破地板（看跌为天花板）。"""
+def evaluate(cand: dict, spots: list, buffer_pct: float = 0.005) -> dict:
+    """用次日现货验证：开盘、30/60 分钟、收盘方向化收益；是否先到目标 / 先破地板（看跌为天花板）。
+    破位需穿过基准再多 buffer_pct（看涨：低于 地板×(1−buffer)；看跌：高于 天花板×(1+buffer)）。"""
     if not spots:
         return {}
     sgn = 1 if cand["direction"] == "UP" else -1
     prev = float(cand["spot"])
-    base, target = float(cand["base"]), float(cand["target"])
+    target = float(cand["target"])
+    base = float(cand["base"]) * (1 - sgn * buffer_pct)
     t0 = spots[0][0]
 
     def ret(px):
@@ -242,7 +244,7 @@ def evaluate_pending(cfg: SystemConfig, rows: list) -> list:
             continue
         spots = session_spots(cfg, r["ticker"], dt.date.fromisoformat(r["next_session"]))
         if spots:
-            r.update({k: ("" if v is None else v) for k, v in evaluate(r, spots).items()})
+            r.update({k: ("" if v is None else v) for k, v in evaluate(r, spots, cfg.corridor_break_buffer_pct).items()})
             done.append(r)
     return done
 
@@ -322,7 +324,7 @@ def run_backtest(cfg: SystemConfig, client) -> list:
                 continue
             c = best_for_ticker(t, P, S, spot, by_exp, cfg, "archive")
             if c:
-                c.update(evaluate(c, session_spots(cfg, t, S)))
+                c.update(evaluate(c, session_spots(cfg, t, S), cfg.corridor_break_buffer_pct))
                 out.append(c)
     return out
 
