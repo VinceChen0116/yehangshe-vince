@@ -251,7 +251,9 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             finish_day(a.cfg, a.engine, a.trader, client, when, reason)
 
     try:
-        sleep_until(open_t + dt.timedelta(seconds=cfg.poll_offset_s), "等待开盘")
+        # Heatmap 只在常规时段更新，快照标记为 5 分钟段的开始时间、段结束后才可用：
+        # 09:30 段要到 09:35 才出来，之前拉到的仍是上一交易日 15:55 的快照
+        sleep_until(open_t + dt.timedelta(minutes=5, seconds=cfg.poll_offset_s), "等待开盘后第一个 Heatmap 快照")
         while True:
             now = et_now()
             if now >= close_t:
@@ -287,6 +289,10 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
                 last_poll[t] = grid
                 if not session_verified:
                     sd = (payload.get("data") or {}).get("session_date_et")
+                    if sd and sd != day.isoformat() and et_now() < open_t + dt.timedelta(minutes=cfg.holiday_grace_min):
+                        log.info("%s Heatmap 仍是 %s 的快照（今日首个快照尚未生成），本轮停止，下一轮再试", t, sd)
+                        last_poll.pop(t, None)
+                        break   # 其余标的也一定是旧快照，不再浪费配额
                     if sd and sd != day.isoformat():
                         log.warning("Heatmap 会话日期 %s ≠ 今日 %s，判定今日休市（节假日），结束当日", sd, day)
                         if notifier:

@@ -102,6 +102,7 @@ class SystemConfig:
     est_polls_per_ticker_day: int = 57    # 保守估计：5min×24 + 午间 15 次 + 5min×18 ≈ 57 次/标的/日
     flow_chain_budget_share: float = 0.15 # 每日预算中预留给 Flow/期权链的比例
     poll_offset_s: int = 25               # Heatmap 为 5 分钟固定采样，整点后延迟 25s 拉取以确保该段已归档
+    holiday_grace_min: int = 20           # 开盘后这么多分钟内拿到旧日期快照只视为尚未更新；之后仍是旧日期才判定休市
 
     # ------------------------------------------------------------------ 阶段2 Heatmap 轮询
     session_open: str = "09:30"

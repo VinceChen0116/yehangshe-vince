@@ -29,6 +29,7 @@
 |---|---|
 | `/v1/discover`、`/v1/health` | 免费；`--check` 用它们验证 Key 与配额 |
 | `/v1/derived/heatmap/{t}/snapshot` | 返回 `ticker, generated_at, session_date_et, spot_usd, expirations[], cells[{strike_usd, expiration, net_dealer_gex_usd}]`；`expirations` 列出所有可用到期日（SPY/QQQ 每天都有到期日） |
+| Heatmap 更新时间（2026-10-12 实测） | **只在常规时段更新，无盘前/盘后数据**。快照按 5 分钟段标记（`minute_at` = 段开始，09:30…15:55，每天 78 个），段结束后才可用：当天第一个快照约 **09:35 ET** 才出现；之前拉到的都是上一交易日 15:55 的快照。实盘因此从 09:35:25 开始拉取，开盘后 20 分钟内的旧日期快照不判定休市（`holiday_grace_min`） |
 | `/v1/derived/heatmap/{t}/history` | **服务端只保留最近 3 个交易日**。参数 `expiration`(必填)、`from`、`to`、`limit`(24)、`cursor`。**`from`/`to` 只传日期会返回空集，必须传带时区的完整时间**（如 `2026-10-09T09:30:00-04:00`）。每页 24 行，全天 78 个 5 分钟快照≈4 页，最新的在前。**0DTE 全天都有节点，只有收盘前最后一个快照（15:55）cells 为空** |
 | `/v1/flow/trades` 等 Flow 端点 | **当前账户 403 `FLOW_ACCESS_RESTRICTED`**。用户说 Flow API 正在"回炉重修"，尚未修好 |
 | `/v1/options/contract-intraday/{OCC}` | 合约代码**不能带 `O:` 前缀**（如 `NVDA261016P00220000`）。1 分钟 bar（OHLC、IV、Bid/Ask/Mid 各侧成交量与权利金）。**只有最近一个交易日，且只返回最新 150 根（约收盘前 2.5 小时）**，无分页、`limit` 参数会 400。用户说该数据 15 分钟刷新一次 |
