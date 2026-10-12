@@ -165,7 +165,8 @@ class SystemConfig:
     signal_ranking: str = "score"
     max_trades_per_day: int = 15          # 每个账户每天最多开仓笔数；0 = 不限
     min_signal_score: float = 0.5         # 评分 ≥ 此值才开仓（0–1；2026-10-12 用户定为 0.5）；0 = 不设门槛
-    # 打分权重：加速燃料（负节点占比）、地板/天花板厚度（正节点占比）、贴近正节点、目标可达（目标距离≈1 小时波动）、节点新鲜
+    # 打分权重：加速燃料（负节点占比）、地板/天花板厚度（正节点占比）、贴近正节点（proximity）或远离正节点（distance，
+    # 二者互为反向）、目标可达（目标距离≈1 小时波动）、节点新鲜
     score_weights: tuple = (("fuel", 0.30), ("floor", 0.20), ("proximity", 0.20), ("reach", 0.20), ("fresh", 0.10))
     reentry_cooldown_min: int = 30
     no_new_entries_before: str = "09:45"  # 开盘前 15 分钟 Heatmap 噪音大，不开新仓

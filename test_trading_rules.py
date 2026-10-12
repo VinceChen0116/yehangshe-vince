@@ -158,7 +158,8 @@ class RankingTest(unittest.TestCase):
         s = signal("C", 100.0, 99.0, 100.5)
         sc, parts = score_signal(s.snapshot, s.structure, 0, [100, 100.2, 99.9, 100.1, 100.0], self.cfg)
         self.assertTrue(0 <= sc <= 1)
-        self.assertEqual(set(parts), {"fuel", "floor", "proximity", "reach", "fresh"})
+        self.assertEqual(set(parts), {"fuel", "floor", "proximity", "distance", "reach", "fresh"})
+        self.assertAlmostEqual(parts["proximity"] + parts["distance"], 1.0, places=2)
 
 
 if __name__ == "__main__":

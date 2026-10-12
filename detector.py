@@ -529,6 +529,7 @@ def score_signal(snap: HeatmapSnapshot, st: StructureSignal, tests: int, spots: 
         "fuel": min(neg_share / 0.4, 1.0),
         "floor": min(pos_share / 0.4, 1.0),
         "proximity": max(0.0, 1 - st.distance_pct / cfg.node_distance_max_pct),
+        "distance": min(1.0, st.distance_pct / cfg.node_distance_max_pct),   # proximity 的反向：离正节点越远分越高
         "reach": reach,
         "fresh": {0: 1.0, 1: 0.5}.get(tests, 0.0),
     }
