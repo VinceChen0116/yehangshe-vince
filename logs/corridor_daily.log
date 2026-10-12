@@ -110,3 +110,38 @@
 22:16:15 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），4.2s 后重试
 22:16:20 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
 22:16:28 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAOI/snapshot（READ_MODEL_UNAVAILABLE），16.3s 后重试
+22:16:45 [WARNING] yhs.corridor: AAOI 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AAOI is not available yet (/v1/derived/heatmap/AAOI/snapshot)
+22:16:46 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAPL/snapshot（READ_MODEL_UNAVAILABLE），4.3s 后重试
+22:16:51 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAPL/snapshot（READ_MODEL_UNAVAILABLE），8.3s 后重试
+22:16:59 [WARNING] yhs.client: 503 /v1/derived/heatmap/AAPL/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:17:16 [WARNING] yhs.corridor: AAPL 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker AAPL is not available yet (/v1/derived/heatmap/AAPL/snapshot)
+22:17:20 [WARNING] yhs.client: 503 /v1/derived/heatmap/ACN/snapshot（READ_MODEL_UNAVAILABLE），4.1s 后重试
+22:17:24 [WARNING] yhs.client: 503 /v1/derived/heatmap/ACN/snapshot（READ_MODEL_UNAVAILABLE），8.1s 后重试
+22:17:32 [WARNING] yhs.client: 503 /v1/derived/heatmap/ACN/snapshot（READ_MODEL_UNAVAILABLE），16.2s 后重试
+22:17:49 [WARNING] yhs.corridor: ACN 快照失败：HTTP 503 READ_MODEL_UNAVAILABLE: The heatmap snapshot for ticker ACN is not available yet (/v1/derived/heatmap/ACN/snapshot)
+22:17:49 [WARNING] yhs.corridor: 快照接口不可用，改用历史接口取收盘数据
+22:17:49 [INFO] yhs.corridor: 候选 ADSK DOWN 现价 234.07 基准 240 → 目标 222.5（-4.9%，到期 2026-10-16，分 0.66）
+22:17:54 [INFO] yhs.corridor: 候选 APP DOWN 现价 271.24 基准 272.5 → 目标 250（-7.8%，到期 2026-10-16，分 0.85）
+22:17:54 [INFO] yhs.corridor: 候选 ASML DOWN 现价 1755.28 基准 1820 → 目标 1680（-4.3%，到期 2026-10-16，分 0.58）
+22:17:56 [INFO] yhs.corridor: 候选 BA UP 现价 189.63 基准 187.5 → 目标 195（+2.8%，到期 2026-10-16，分 0.73）
+22:17:56 [INFO] yhs.corridor: 候选 BAC UP 现价 54.47 基准 54 → 目标 57（+4.6%，到期 2026-10-16，分 0.69）
+22:17:56 [INFO] yhs.corridor: 候选 CRCL DOWN 现价 83.04 基准 85 → 目标 80（-3.7%，到期 2026-10-16，分 0.64）
+22:17:56 [INFO] yhs.corridor: 候选 CSCO DOWN 现价 115.43 基准 118 → 目标 109（-5.6%，到期 2026-10-16，分 0.68）
+22:17:56 [INFO] yhs.corridor: 候选 DDOG DOWN 现价 287.65 基准 290 → 目标 260（-9.6%，到期 2026-10-16，分 0.77）
+22:17:56 [INFO] yhs.corridor: 候选 DKS DOWN 现价 137.10 基准 139 → 目标 105（-23.4%，到期 2026-10-16，分 0.71）
+22:17:59 [INFO] yhs.corridor: 候选 GS DOWN 现价 891.69 基准 900 → 目标 840（-5.8%，到期 2026-10-16，分 0.85）
+22:18:03 [INFO] yhs.corridor: 候选 MRK UP 现价 145.62 基准 142 → 目标 155（+6.4%，到期 2026-10-16，分 0.72）
+22:18:08 [INFO] yhs.corridor: 候选 NBIS DOWN 现价 208.19 基准 210 → 目标 195（-6.3%，到期 2026-10-16，分 0.63）
+22:18:08 [INFO] yhs.corridor: 候选 NKE UP 现价 35.28 基准 35 → 目标 37.5（+6.3%，到期 2026-10-16，分 0.84）
+22:18:08 [INFO] yhs.corridor: 候选 NOW UP 现价 139.93 基准 139 → 目标 145（+3.6%，到期 2026-10-16，分 0.74）
+22:18:11 [INFO] yhs.corridor: 候选 NVO DOWN 现价 38.65 基准 39.5 → 目标 37.5（-3.0%，到期 2026-10-16，分 0.53）
+22:18:11 [INFO] yhs.corridor: 候选 OKTA UP 现价 226.58 基准 220 → 目标 235（+3.7%，到期 2026-10-16，分 0.59）
+22:18:11 [INFO] yhs.corridor: 候选 PDD UP 现价 80.89 基准 80 → 目标 85（+5.1%，到期 2026-10-16，分 0.76）
+22:18:11 [INFO] yhs.corridor: 候选 PYPL UP 现价 56.09 基准 56 → 目标 60（+7.0%，到期 2026-10-16，分 0.70）
+22:18:12 [INFO] yhs.corridor: 候选 RKLB UP 现价 65.12 基准 65 → 目标 69（+6.0%，到期 2026-10-16，分 0.64）
+22:18:12 [INFO] yhs.corridor: 候选 SHOP DOWN 现价 180.33 基准 185 → 目标 175（-3.0%，到期 2026-10-16，分 0.65）
+22:18:12 [INFO] yhs.corridor: 候选 SNDK DOWN 现价 1489.50 基准 1520 → 目标 1400（-6.0%，到期 2026-10-16，分 0.61）
+22:18:25 [INFO] yhs.corridor: 候选 TSLA DOWN 现价 378.45 基准 380 → 目标 360（-4.9%，到期 2026-10-16，分 0.89）
+22:18:25 [INFO] yhs.corridor: 候选 UBER UP 现价 71.38 基准 71 → 目标 73（+2.3%，到期 2026-10-16，分 0.57）
+22:18:25 [INFO] yhs.corridor: 候选 WMB DOWN 现价 73.90 基准 75 → 目标 70（-5.3%，到期 2026-10-16，分 0.72）
+22:18:25 [INFO] yhs.corridor: 验证 26 个历史候选；扫描到 24 个新候选。本进程计费调用 32 次，免费调用 12 次；服务端剩余配额 88532 / 100000；按端点：{'derived/heatmap/history': 32}
