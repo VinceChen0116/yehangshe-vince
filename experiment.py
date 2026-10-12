@@ -25,6 +25,7 @@ import os
 import sys
 
 from config import SystemConfig, setup_logging
+from notify import experiment_summary, from_config as notify_from_config
 
 log = logging.getLogger("yhs.experiment")
 
@@ -193,6 +194,14 @@ def run(args) -> int:
     log.info("实验 %s 完成：%s", args.name, summary["overall"])
     if args.baseline:
         print_compare([args.baseline, args.name])
+    notifier = notify_from_config(base)
+    if notifier:
+        base_sum = None
+        bp = os.path.join(EXP_DIR, args.baseline or "", "summary.json")
+        if args.baseline and os.path.exists(bp):
+            with open(bp, encoding="utf-8") as f:
+                base_sum = json.load(f)
+        experiment_summary(notifier, summary, base_sum)
     return 0
 
 

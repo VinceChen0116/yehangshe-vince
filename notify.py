@@ -122,6 +122,43 @@ class DiscordNotifier:
         }])
 
 
+def _money(v) -> str:
+    return "—" if v is None else f"{'+' if v >= 0 else '-'}${abs(v):,.0f}"
+
+
+def experiment_summary(n: DiscordNotifier, s: dict, base: dict | None = None) -> None:
+    """回测实验结果（experiment.py 跑完后调用）。base 为对照实验的 summary，用于并排对比。"""
+    o = s["overall"]
+    rows = [("笔数", "trades", str), ("合计", "total_pnl", _money), ("去掉最大一笔", "pnl_ex_best", _money),
+            ("胜率", "win_rate_pct", lambda v: f"{v}%"), ("方向正确", "direction_pct", lambda v: f"{v}%"),
+            ("盈亏比", "profit_factor", str), ("硬止损笔数", "hard_stops", str)]
+    def val(src, k, f):
+        v = src.get(k)
+        return "—" if v is None else f(v)
+    if base:
+        b = base["overall"]
+        w = max(len(s["name"]), len(base["name"]), 8)
+        table = [f"{'':<8}{base['name']:>{w}}  {s['name']:>{w}}"]
+        table += [f"{label:<8}{val(b, k, f):>{w}}  {val(o, k, f):>{w}}" for label, k, f in rows]
+    else:
+        table = [f"{label:<8}{val(o, k, f):>12}" for label, k, f in rows]
+    sess = s.get("breakdown", {}).get("by_session", {})
+    sess_line = "  ".join(f"{k} {_money(v.get('total_pnl'))}（{v.get('trades', 0)} 笔）" for k, v in sess.items())
+    ov = {k: v for k, v in s.get("overrides", {}).items()}
+    n.send(embeds=[{
+        "title": f"🧪 回测完成：{s['name']}" + (f"  vs  {base['name']}" if base else ""),
+        "color": GREEN if (o.get("total_pnl") or 0) >= 0 else RED,
+        "description": "```\n" + "\n".join(table) + "\n```",
+        "fields": [
+            {"name": "改动", "value": f"`{ov}`" if ov else "无（当前默认规则）", "inline": False},
+            {"name": "日期", "value": f"{s['dates'][0]} ~ {s['dates'][-1]}（{len(s['dates'])} 天），标的 {len(s['tickers'])} 只",
+             "inline": False},
+            {"name": "按开仓时段", "value": sess_line or "—", "inline": False},
+        ],
+        "footer": {"text": "历史回放 · 真实期权价格 · 每笔 1 张"},
+    }])
+
+
 def from_config(cfg) -> DiscordNotifier | None:
     n = DiscordNotifier(getattr(cfg, "discord_webhook_url", ""))
     return n if n.enabled else None
