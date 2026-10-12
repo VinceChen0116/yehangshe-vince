@@ -116,7 +116,8 @@ def finish_day(cfg: SystemConfig, engine: SessionEngine, trader: PaperTrader, cl
 # =============================================================================
 # 实盘模式
 # =============================================================================
-def run_live(cfg: SystemConfig) -> None:
+def run_live(cfg: SystemConfig, one_day: bool = False) -> None:
+    """one_day=True：只跑今天这一个交易日，收盘（或判定休市）后退出——给云端每日定时任务用。"""
     client = YHSClient(cfg)
     log.info("实盘监控启动（模拟盘）。API Key=%s，节奏：早盘/尾盘 %d 分钟、午间 %d 分钟，限频 %d RPM / 间隔 %.1fs / 并发 %d",
              cfg.masked_key(), cfg.fast_poll_min, cfg.slow_poll_min, cfg.safe_rpm, cfg.min_request_interval_s,
@@ -134,10 +135,16 @@ def run_live(cfg: SystemConfig) -> None:
         now = et_now()
         day = now.date()
         if day.weekday() >= 5:
+            if one_day:
+                log.info("今天是周末，退出")
+                return
             sleep_until(et_datetime(next_weekday(day), cfg.universe_fetch_time), "周末休市")
             continue
         close_t = et_datetime(day, cfg.session_close)
         if now >= close_t:
+            if one_day:
+                log.info("今日已收盘，退出")
+                return
             sleep_until(et_datetime(next_weekday(day), cfg.universe_fetch_time), "今日已收盘")
             continue
         fetch_t = et_datetime(day, cfg.universe_fetch_time)
@@ -160,6 +167,9 @@ def run_live(cfg: SystemConfig) -> None:
             if notifier:
                 notifier.text(f"💥 实盘监控异常退出：{type(e).__name__}: {e}")
             raise
+        if one_day:
+            log.info("单日模式：今日结束，退出")
+            return
         sleep_until(et_datetime(next_weekday(day), cfg.universe_fetch_time), "等待下一交易日")
 
 
@@ -184,6 +194,7 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
     open_t = et_datetime(day, cfg.session_open)
     close_t = et_datetime(day, cfg.force_close_time)
     session_verified = False
+    next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min or 0)
 
     try:
         sleep_until(open_t + dt.timedelta(seconds=cfg.poll_offset_s), "等待开盘")
@@ -229,6 +240,14 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             log.info("[%s] 本轮完成：持仓 %d 笔，监控 %d 只，配额剩余 %s；下一轮 %s",
                      et_now().strftime("%H:%M:%S"), len(trader.open_positions()), len(pool),
                      client.quota_remaining, nxt.strftime("%H:%M:%S"))
+            if notifier and cfg.discord_heartbeat_min and et_now() >= next_heartbeat:
+                next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min)
+                pos = trader.open_positions()
+                done = [p for p in trader.positions if not p.is_open]
+                notifier.text(f"💓 {et_now().strftime('%H:%M')} ET 运行中｜监控 {len(pool)} 只｜持仓 {len(pos)} 笔"
+                              + ("：" + "，".join(f"{p.ticker} {p.roi_pct:+.0f}%" for p in pos) if pos else "")
+                              + f"｜已平 {len(done)} 笔 ${sum(p.realized_pnl for p in done):+,.0f}"
+                              + f"｜配额剩余 {client.quota_remaining}")
             sleep_until(min(nxt, close_t))
         finish_day(cfg, engine, trader, client, close_t)
     except QuotaExhausted:
@@ -492,6 +511,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="夜航社 Dealer GEX 异动期权捕捉与模拟复盘系统")
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--live", action="store_true", help="实盘盘中自适应监控（模拟盘）")
+    ap.add_argument("--one-day", action="store_true", help="--live：只跑今天一个交易日，收盘后退出（云端定时任务用）")
     mode.add_argument("--replay", action="store_true", help="回放（默认本地模拟数据，0 配额）")
     mode.add_argument("--check", action="store_true", help="免费检查 API Key 与剩余配额")
     mode.add_argument("--premarket", action="store_true", help="盘前研究工作流：生成多头/空头/等待观察名单")
@@ -554,7 +574,7 @@ def main(argv=None) -> int:
             run_history_replay(cfg, dt.date.fromisoformat(args.date),
                                [t.strip().upper() for t in args.tickers.split(",") if t.strip()], args.expiration)
             return 0
-        run_live(cfg)
+        run_live(cfg, one_day=args.one_day)
         return 0
     except KeyboardInterrupt:
         log.warning("用户中断，退出")

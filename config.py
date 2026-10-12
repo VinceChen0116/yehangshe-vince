@@ -193,7 +193,8 @@ class SystemConfig:
 
     # ------------------------------------------------------------------ 输出
     trades_csv: str = "trades_history.csv"
-    discord_webhook_url: str = ""         # Discord 频道 Webhook（只填在 config.json，不要提交 git）；为空则不推送
+    discord_webhook_url: str = ""         # Discord 频道 Webhook（config.json 或环境变量 DISCORD_WEBHOOK_URL，不要提交 git）
+    discord_heartbeat_min: int = 60       # 实盘每 N 分钟推送一次"运行中"心跳（含持仓浮盈）；0 = 关闭
     # 每日存档（archive.py）：服务端 Heatmap 历史只保留 3 个交易日
     archive_tickers: tuple = ("SPY", "QQQ", "TQQQ", "SOXL", "NVDA", "TSLA", "AAPL", "AMD", "META", "MSFT",
                               "AMZN", "GOOGL", "AVGO", "PLTR", "MSTR", "COIN", "NFLX")
@@ -223,6 +224,8 @@ class SystemConfig:
                 setattr(cfg, k, v)
         if not cfg.api_key:
             cfg.api_key = os.environ.get("YHS_API_KEY", "").strip()
+        if not cfg.discord_webhook_url:   # 云端定时任务：密钥放在环境变量里，不放文件
+            cfg.discord_webhook_url = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
         return cfg
 
     def masked_key(self) -> str:
