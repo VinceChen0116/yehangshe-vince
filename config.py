@@ -113,7 +113,7 @@ class SystemConfig:
     max_snapshot_age_min: float = 15.0    # Heatmap 内容时间过旧则跳过本轮
 
     # ------------------------------------------------------------------ 阶段3 Flow 确认
-    require_flow_confirm: bool = True     # False = 仅 Heatmap 模式：跳过阶段3，结构成立即开仓
+    require_flow_confirm: bool = False    # Flow API 修复中，暂时默认关闭。False = 仅 Heatmap 模式：跳过阶段3，结构成立即开仓
     flow_min_premium_usd: float = 50_000.0
     flow_window_min: int = 15
     flow_recheck_min: int = 10            # Flow 未确认后，同一标的 10 分钟内不再重查（< 15 分钟窗口，不会漏单）
@@ -171,7 +171,7 @@ class SystemConfig:
     pm_node_significance: float = 0.25    # |GEX| ≥ 近端最强正节点 × 该比例，视为显著节点
     pm_space_min_atr: float = 0.5         # 运动方向上下一正节点距离 < 0.5 ATR 视为空间过近
     pm_confirm_bars: int = 2              # 开盘确认：完成的 5 分钟 K 线数量
-    pm_require_flow_for_confirm: bool = True  # Flow 不可用时最多到 candidate，不标 confirmed
+    pm_require_flow_for_confirm: bool = False  # Flow API 修复中，暂时默认关闭。True = Flow 不可用时最多到 candidate，不标 confirmed
     pm_flow_min_effective_usd: float = 250_000.0  # 有效方向样本金额低于此值 → flow_support=unknown
     pm_flow_balance_threshold: float = 0.15   # |direction_balance| ≥ 阈值才判 bullish/bearish
     pm_flow_package_share_max: float = 0.5    # 组合占比高于此值降级

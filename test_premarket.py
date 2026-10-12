@@ -219,6 +219,7 @@ class WorkflowTest(unittest.TestCase):
         self.assertIn(utc_micros(et_datetime(TARGET, "09:30")), {p["bucket_start_micros"] for p in buckets})
 
     def test_open_confirmation_without_flow_stays_candidate(self):
+        self.cfg.pm_require_flow_for_confirm = True
         wf, r, report, client = self.run_wf("09:46", flow_forbidden=True)
         self.assertEqual(r["AAA"].status, "candidate")
 

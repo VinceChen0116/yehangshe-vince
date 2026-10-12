@@ -8,5 +8,7 @@
   "flow_require_vol_ge_oi": true,
   "universe_fetch_time": "09:25",
   "trades_csv": "trades_history.csv",
-  "log_level": "INFO"
+  "log_level": "INFO",
+  "require_flow_confirm": false,
+  "pm_require_flow_for_confirm": false
 }
