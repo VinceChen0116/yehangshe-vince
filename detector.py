@@ -17,7 +17,7 @@ import os
 from dataclasses import dataclass, field, asdict
 from typing import Any, Iterable
 
-from config import (INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, parse_iso, to_et)
+from config import INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, parse_iso, to_et, trading_dte
 from yhs_client import YHSApiError
 
 log = logging.getLogger("yhs.detector")
@@ -277,17 +277,16 @@ def parse_heatmap(payload: dict, cfg: SystemConfig, ref_date: dt.date) -> Heatma
 
     def dte(e: str) -> int:
         try:
-            return (dt.date.fromisoformat(e) - base).days
+            return trading_dte(dt.date.fromisoformat(e), base)
         except ValueError:
             return 10_000
 
-    valid = [e for e in exps if cfg.expiry_min_dte <= dte(e) <= cfg.expiry_max_dte
+    # 有 0DTE 用 0DTE，否则 1DTE；都没有则不给信号（不退而求其次去买更远的到期）
+    valid = [e for e in exps if 0 <= dte(e) <= cfg.expiry_max_trading_dte
              and any(c.get("expiration") == e for c in cells)]
     if not valid:
-        valid = [e for e in exps if dte(e) >= 0 and any(c.get("expiration") == e for c in cells)]
-    if not valid:
         return None
-    exp = valid[0]
+    exp = min(valid, key=dte)
     ec = [c for c in cells if c.get("expiration") == exp and _num(c.get("net_dealer_gex_usd")) is not None]
     pos = [c for c in ec if _num(c["net_dealer_gex_usd"]) > 0]
     neg = [c for c in ec if _num(c["net_dealer_gex_usd"]) < 0]

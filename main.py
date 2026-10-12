@@ -22,7 +22,7 @@ import sys
 import time
 
 from config import (SystemConfig, et_datetime, et_now, hhmm_to_minutes, minutes_of_day, parse_iso,
-                    poll_interval_min, setup_logging, to_et)
+                    next_trading_day, poll_interval_min, setup_logging, to_et)
 from detector import (HEATMAP_PATH, FLOW_TRADES_PATH, SignalDetector, UniverseEntry, UniverseFilter,
                       extract_rows, pick, pick_num)
 from paper_trader import CHAIN_PATH, PaperTrader, SessionEngine, bs_price_greeks
@@ -380,26 +380,26 @@ class HistoryClient:
         return self.real.get(path, params)
 
 
-def nearest_friday(d: dt.date) -> dt.date:
-    """回放日所在周的周五（周五当天即 0DTE）"""
-    return d + dt.timedelta(days=(4 - d.weekday()) % 7)
-
-
 def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], expiration: str | None) -> dict:
     real = YHSClient(cfg)
     check_quota(real)
-    exp = expiration or nearest_friday(date).isoformat()
+    # 到期日：有 0DTE 用 0DTE，否则 1DTE（交易日口径）；--expiration 可强制指定
+    candidates = [expiration] if expiration else [date.isoformat(), next_trading_day(date).isoformat()]
     hc = HistoryClient(real, cfg, date)
     cfg.pcr_direction_filter = False  # 历史模式无当日榜单 PCR
     universe = [UniverseEntry(t, i + 1, 0, 0, 0, None, None, None, None, "NEUTRAL", 0.0, ["手动指定"])
                 for i, t in enumerate(tickers)]
     loaded = []
     for t in tickers:
-        try:
-            if hc.load_heatmap(t, exp):
-                loaded.append(t)
-        except YHSApiError as e:
-            log.warning("%s 历史 Heatmap 载入失败：%s（Heatmap 历史仅保留最近 3 个交易日）", t, e)
+        for exp in candidates:
+            try:
+                if hc.load_heatmap(t, exp):
+                    loaded.append(t)
+                    break
+            except YHSApiError as e:
+                log.warning("%s 到期 %s 历史 Heatmap 载入失败：%s（Heatmap 历史仅保留最近 3 个交易日）", t, exp, e)
+        else:
+            log.info("【历史】%s 在 %s 没有 0DTE/1DTE 到期（%s），跳过该标的", t, date, "、".join(candidates))
     if not loaded:
         log.error("没有可回放的标的")
         return {}
@@ -440,7 +440,7 @@ def main(argv=None) -> int:
     ap.add_argument("--source", choices=["mock", "history"], default="mock", help="回放数据源")
     ap.add_argument("--date", help="历史回放日期 YYYY-MM-DD（最近 3 个交易日内）")
     ap.add_argument("--tickers", help="历史回放标的，逗号分隔，如 NVDA,TSLA")
-    ap.add_argument("--expiration", help="历史回放使用的到期日（默认取回放日所在周的周五）")
+    ap.add_argument("--expiration", help="历史回放使用的到期日（默认有 0DTE 用 0DTE，否则 1DTE）")
     ap.add_argument("--config", help="JSON 配置文件（可覆盖 SystemConfig 任意字段）")
     ap.add_argument("--now", help="盘前研究：覆盖当前美东时间（YYYY-MM-DDTHH:MM，仅影响时间判断，数据仍为实时）")
     ap.add_argument("--no-flow", action="store_true", help="盘前研究：不调用 Flow 能力")

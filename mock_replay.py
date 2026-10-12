@@ -43,8 +43,8 @@ from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 log = logging.getLogger("yhs.replay")
 
 REPLAY_DATE = dt.date(2026, 10, 9)          # 周五（夏令时，ET = UTC-4）
-EXP_NEAR = "2026-10-16"
-EXP_FAR = "2026-10-23"
+EXP_NEAR = "2026-10-09"   # 回放日当天到期（0DTE）
+EXP_FAR = "2026-10-16"
 STEPS = 78
 
 

@@ -128,9 +128,13 @@ class PaperTrader:
 
     # ------------------------------------------------------------------ 开仓
     def _choose_strike(self, sig: FullSignal) -> float:
+        spot = sig.snapshot.spot
         if self.cfg.strike_mode == "atm":
-            return sig.snapshot.spot
-        return sig.structure.neg_strike
+            return spot
+        cap = self.cfg.max_otm_pct
+        if sig.structure.right == "C":
+            return min(sig.structure.neg_strike, spot * (1 + cap))
+        return max(sig.structure.neg_strike, spot * (1 - cap))
 
     def _price_from_chain(self, client, sig: FullSignal, want_strike: float):
         """单次期权链调用。返回 (symbol, strike, mid, |delta|, gamma) 或 None。"""
@@ -148,6 +152,7 @@ class PaperTrader:
                 log.warning("期权链获取失败（%s），改用 BS 现货换算", e)
             return None
         rows = extract_rows(payload)
+        spot = sig.snapshot.spot
         best = None
         for r in rows:
             right = str(pick(r, "right", "option_type", "type", "put_call", "contract.right", default="")).upper()[:1]
@@ -159,6 +164,9 @@ class PaperTrader:
             k = pick_num(r, "strike_usd", "strike", "strike_price", "contract.strike")
             if k is None:
                 continue
+            if self.cfg.strike_mode != "atm" and abs(k - spot) / spot > self.cfg.max_otm_pct + 1e-9 and \
+                    ((right == "C" and k > spot) or (right == "P" and k < spot)):
+                continue   # 超出虚值上限
             if best is None or abs(k - want_strike) < abs(best[0] - want_strike):
                 best = (k, r, sym)
         if best is None:
@@ -183,7 +191,7 @@ class PaperTrader:
             sym = "O:" + sym
         return sym, k, mid, (abs(delta) if delta is not None else None), gamma
 
-    def open_position(self, client, sig: FullSignal, now_et: dt.datetime) -> Position:
+    def open_position(self, client, sig: FullSignal, now_et: dt.datetime) -> Position | None:
         cfg = self.cfg
         want = self._choose_strike(sig)
         spot = sig.snapshot.spot
@@ -194,6 +202,12 @@ class PaperTrader:
             src = "chain"
         else:
             strike = _round_strike(want, spot)
+            if cfg.strike_mode != "atm":   # 取整后超出虚值上限时，向现货方向退一档
+                step = _strike_step(spot)
+                if sig.structure.right == "C" and strike > spot * (1 + cfg.max_otm_pct) + 1e-6:
+                    strike = round(strike - step, 2)
+                elif sig.structure.right == "P" and strike < spot * (1 - cfg.max_otm_pct) - 1e-6:
+                    strike = round(strike + step, 2)
             sym = occ_symbol(sig.ticker, exp, sig.structure.right, strike)
             T = max((dt.date.fromisoformat(exp) - now_et.date()).days, 0) / 365 + \
                 max(0, hhmm_to_minutes("16:00") - minutes_of_day(now_et)) / (365 * 24 * 60)
@@ -207,6 +221,10 @@ class PaperTrader:
                     real = self.price_provider(sym, now_et + dt.timedelta(minutes=5))
             if real is not None:
                 mid, src = real, "real_data"   # 真实成交价或真实 IV 定价；δ/γ 仍取 BS 值（仅作兜底）
+        if mid < cfg.min_entry_price_usd:
+            log.info("【阶段4·放弃】%s %s %s 价格 %.3f < $%.2f，合约过于便宜（跳空风险大），不开仓",
+                     sig.ticker, sym, sig.structure.action, mid, cfg.min_entry_price_usd)
+            return None
         if not cfg.use_chain_greeks or delta is None:
             delta = cfg.default_delta
         if not cfg.use_chain_greeks or gamma is None:
@@ -392,8 +410,12 @@ _REASON_CN = {
 }
 
 
+def _strike_step(spot: float) -> float:
+    return 0.5 if spot < 50 else (1.0 if spot < 200 else (2.5 if spot < 500 else 5.0))
+
+
 def _round_strike(k: float, spot: float) -> float:
-    step = 0.5 if spot < 50 else (1.0 if spot < 200 else (2.5 if spot < 500 else 5.0))
+    step = _strike_step(spot)
     return round(round(k / step) * step, 2)
 
 
@@ -417,6 +439,8 @@ class SessionEngine:
 
     def can_enter(self, ticker: str, now_et: dt.datetime) -> tuple[bool, str]:
         cfg = self.cfg
+        if minutes_of_day(now_et) < hhmm_to_minutes(cfg.no_new_entries_before):
+            return False, f"{cfg.no_new_entries_before} 前只观察不开仓"
         if minutes_of_day(now_et) >= hhmm_to_minutes(cfg.no_new_entries_after):
             return False, f"{cfg.no_new_entries_after} 后不再开新仓"
         if len(self.trader.open_positions()) >= cfg.max_open_positions:

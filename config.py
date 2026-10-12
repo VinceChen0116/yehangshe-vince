@@ -104,8 +104,7 @@ class SystemConfig:
     fast_poll_min: int = 5
     slow_poll_min: int = 12               # 11:30-14:30 午间降频
     poll_open_positions_fast: bool = True # 持仓标的始终按 5 分钟盯市（风控优先）
-    expiry_min_dte: int = 0               # "主力近周到期日"选择区间
-    expiry_max_dte: int = 7
+    expiry_max_trading_dte: int = 1       # 到期选择：有 0DTE 用 0DTE，否则 1DTE（交易日口径）；都没有则该标的不交易
     node_distance_max_pct: float = 0.025  # 现货距正 GEX 节点 ≤ 2.5%
     fatigue_touch_band_pct: float = 0.004 # 距节点 ≤ 0.4% 视为一次"测试回踩"
     fatigue_reset_band_pct: float = 0.008 # 离开 ≥ 0.8% 后再回来才计新的一次
@@ -123,7 +122,9 @@ class SystemConfig:
     flow_max_lookups_per_signal: int = 2
 
     # ------------------------------------------------------------------ 阶段4 模拟交易
-    strike_mode: str = "target_node"      # "target_node"：买负 GEX 节点行权价；"atm"：买最近平值
+    strike_mode: str = "target_node"      # "target_node"：买负 GEX 节点行权价（受 max_otm_pct 限制）；"atm"：买最近平值
+    max_otm_pct: float = 0.005            # 行权价最多虚值 0.5%：负节点更远时改买距现货 0.5% 的行权价，避免 0DTE 买到彩票合约
+    min_entry_price_usd: float = 0.20     # 期权价格低于此值不开仓（极便宜合约 5 分钟内就会跳空穿过止损）
     use_chain_greeks: bool = True         # 期权链若返回 delta/gamma 则使用，否则用默认值
     default_delta: float = 0.45
     default_gamma: float = 0.04
@@ -147,6 +148,7 @@ class SystemConfig:
     max_open_positions: int = 5
     max_trades_per_ticker_day: int = 2
     reentry_cooldown_min: int = 30
+    no_new_entries_before: str = "09:40"  # 开盘前 10 分钟（前两根 5 分钟）只观察不开仓
     no_new_entries_after: str = "15:30"
     force_close_time: str = "16:00"
 
@@ -308,3 +310,94 @@ def setup_logging(level: str = "INFO", logfile: str | None = None) -> None:
         datefmt="%H:%M:%S",
         handlers=handlers,
     )
+
+
+# =============================================================================
+# NYSE 交易日历（规则生成，含提前收盘日）
+# =============================================================================
+def _nth_weekday(year: int, month: int, weekday: int, n: int) -> dt.date:
+    d = dt.date(year, month, 1)
+    return d + dt.timedelta(days=(weekday - d.weekday()) % 7 + 7 * (n - 1))
+
+
+def _last_weekday(year: int, month: int, weekday: int) -> dt.date:
+    d = dt.date(year, month + 1, 1) - dt.timedelta(days=1) if month < 12 else dt.date(year, 12, 31)
+    return d - dt.timedelta(days=(d.weekday() - weekday) % 7)
+
+
+def _easter(year: int) -> dt.date:
+    a, b, c = year % 19, year // 100, year % 100
+    d, e = b // 4, b % 4
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i, k = c // 4, c % 4
+    l = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * l) // 451
+    month = (h + l - 7 * m + 114) // 31
+    day = (h + l - 7 * m + 114) % 31 + 1
+    return dt.date(year, month, day)
+
+
+def _observed(d: dt.date) -> dt.date:
+    if d.weekday() == 5:
+        return d - dt.timedelta(days=1)
+    if d.weekday() == 6:
+        return d + dt.timedelta(days=1)
+    return d
+
+
+def nyse_holidays(year: int) -> dict:
+    h = {}
+    ny = dt.date(year, 1, 1)
+    if ny.weekday() == 6:
+        h[ny + dt.timedelta(days=1)] = "New Year's Day (observed)"
+    elif ny.weekday() < 5:
+        h[ny] = "New Year's Day"          # 周六元旦不在前一周五补休
+    h[_nth_weekday(year, 1, 0, 3)] = "Martin Luther King Jr. Day"
+    h[_nth_weekday(year, 2, 0, 3)] = "Washington's Birthday"
+    h[_easter(year) - dt.timedelta(days=2)] = "Good Friday"
+    h[_last_weekday(year, 5, 0)] = "Memorial Day"
+    if year >= 2022:
+        h[_observed(dt.date(year, 6, 19))] = "Juneteenth"
+    h[_observed(dt.date(year, 7, 4))] = "Independence Day"
+    h[_nth_weekday(year, 9, 0, 1)] = "Labor Day"
+    h[_nth_weekday(year, 11, 3, 4)] = "Thanksgiving Day"
+    h[_observed(dt.date(year, 12, 25))] = "Christmas Day"
+    return h
+
+
+def is_trading_day(d: dt.date) -> bool:
+    return d.weekday() < 5 and d not in nyse_holidays(d.year)
+
+
+def next_trading_day(d: dt.date) -> dt.date:
+    d += dt.timedelta(days=1)
+    while not is_trading_day(d):
+        d += dt.timedelta(days=1)
+    return d
+
+
+def prev_trading_day(d: dt.date) -> dt.date:
+    d -= dt.timedelta(days=1)
+    while not is_trading_day(d):
+        d -= dt.timedelta(days=1)
+    return d
+
+
+def session_close_hhmm(d: dt.date) -> str:
+    """13:00 提前收盘：独立日前一交易日（7/3）、感恩节次日、平安夜。"""
+    thanksgiving = _nth_weekday(d.year, 11, 3, 4)
+    early = {thanksgiving + dt.timedelta(days=1), dt.date(d.year, 12, 24), dt.date(d.year, 7, 3)}
+    return "13:00" if d in early and is_trading_day(d) else "16:00"
+
+
+def trading_dte(expiration: dt.date, today: dt.date) -> int:
+    """交易日口径的 DTE：当天到期 = 0，下一个交易日到期 = 1（周五 → 周一也算 1）。"""
+    if expiration < today:
+        return -1
+    n, d = 0, today
+    while d < expiration:
+        d = next_trading_day(d)
+        n += 1
+    return n

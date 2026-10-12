@@ -30,7 +30,9 @@ import re
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-from config import INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, et_datetime, et_now, parse_iso, to_et
+from config import (INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, et_datetime, et_now, is_trading_day,  # noqa: F401
+                    next_trading_day, nyse_holidays, parse_iso, prev_trading_day, session_close_hhmm, to_et,
+                    _nth_weekday)
 from detector import HEATMAP_PATH, extract_rows, pick, pick_num, _row_right
 from yhs_client import QuotaExhausted, YHSApiError
 
@@ -76,86 +78,6 @@ GROUP_LABEL = {"stock": "普通股票", "index_etf": "指数ETF", "leveraged_inv
                "other_etf": "其他ETF"}
 LONG_SETUPS = ("positive_wall_reclaim_long", "negative_node_up_acceleration")
 SHORT_SETUPS = ("positive_wall_loss_short", "negative_node_down_acceleration")
-
-
-# =============================================================================
-# NYSE 交易日历（规则生成，含提前收盘日）
-# =============================================================================
-def _nth_weekday(year: int, month: int, weekday: int, n: int) -> dt.date:
-    d = dt.date(year, month, 1)
-    return d + dt.timedelta(days=(weekday - d.weekday()) % 7 + 7 * (n - 1))
-
-
-def _last_weekday(year: int, month: int, weekday: int) -> dt.date:
-    d = dt.date(year, month + 1, 1) - dt.timedelta(days=1) if month < 12 else dt.date(year, 12, 31)
-    return d - dt.timedelta(days=(d.weekday() - weekday) % 7)
-
-
-def _easter(year: int) -> dt.date:
-    a, b, c = year % 19, year // 100, year % 100
-    d, e = b // 4, b % 4
-    f = (b + 8) // 25
-    g = (b - f + 1) // 3
-    h = (19 * a + b - d - g + 15) % 30
-    i, k = c // 4, c % 4
-    l = (32 + 2 * e + 2 * i - h - k) % 7
-    m = (a + 11 * h + 22 * l) // 451
-    month = (h + l - 7 * m + 114) // 31
-    day = (h + l - 7 * m + 114) % 31 + 1
-    return dt.date(year, month, day)
-
-
-def _observed(d: dt.date) -> dt.date:
-    if d.weekday() == 5:
-        return d - dt.timedelta(days=1)
-    if d.weekday() == 6:
-        return d + dt.timedelta(days=1)
-    return d
-
-
-def nyse_holidays(year: int) -> dict:
-    h = {}
-    ny = dt.date(year, 1, 1)
-    if ny.weekday() == 6:
-        h[ny + dt.timedelta(days=1)] = "New Year's Day (observed)"
-    elif ny.weekday() < 5:
-        h[ny] = "New Year's Day"          # 周六元旦不在前一周五补休
-    h[_nth_weekday(year, 1, 0, 3)] = "Martin Luther King Jr. Day"
-    h[_nth_weekday(year, 2, 0, 3)] = "Washington's Birthday"
-    h[_easter(year) - dt.timedelta(days=2)] = "Good Friday"
-    h[_last_weekday(year, 5, 0)] = "Memorial Day"
-    if year >= 2022:
-        h[_observed(dt.date(year, 6, 19))] = "Juneteenth"
-    h[_observed(dt.date(year, 7, 4))] = "Independence Day"
-    h[_nth_weekday(year, 9, 0, 1)] = "Labor Day"
-    h[_nth_weekday(year, 11, 3, 4)] = "Thanksgiving Day"
-    h[_observed(dt.date(year, 12, 25))] = "Christmas Day"
-    return h
-
-
-def is_trading_day(d: dt.date) -> bool:
-    return d.weekday() < 5 and d not in nyse_holidays(d.year)
-
-
-def next_trading_day(d: dt.date) -> dt.date:
-    d += dt.timedelta(days=1)
-    while not is_trading_day(d):
-        d += dt.timedelta(days=1)
-    return d
-
-
-def prev_trading_day(d: dt.date) -> dt.date:
-    d -= dt.timedelta(days=1)
-    while not is_trading_day(d):
-        d -= dt.timedelta(days=1)
-    return d
-
-
-def session_close_hhmm(d: dt.date) -> str:
-    """13:00 提前收盘：独立日前一交易日（7/3）、感恩节次日、平安夜。"""
-    thanksgiving = _nth_weekday(d.year, 11, 3, 4)
-    early = {thanksgiving + dt.timedelta(days=1), dt.date(d.year, 12, 24), dt.date(d.year, 7, 3)}
-    return "13:00" if d in early and is_trading_day(d) else "16:00"
 
 
 def monthly_opex(year: int, month: int) -> dt.date:
