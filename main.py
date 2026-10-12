@@ -303,6 +303,8 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
                 for a in accounts:   # 同一份快照喂给每个账户，A 不额外消耗配额
                     if t in a.tickers:
                         a.engine.on_snapshot(t, payload, ts)
+            for a in accounts:   # 本轮所有标的处理完，再按信号分数排序开仓
+                a.engine.flush(et_now())
             nxt = grid + dt.timedelta(minutes=5, seconds=cfg.poll_offset_s)
             log.info("[%s] 本轮完成：%s；监控 %d 只，配额剩余 %s；下一轮 %s", et_now().strftime("%H:%M:%S"),
                      "；".join(f"{a.name} 持仓 {len(a.trader.open_positions())}" for a in accounts), len(pool),
@@ -555,6 +557,7 @@ def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], exp
                 continue
             last_poll[t] = now
             engine.on_snapshot(t, frame, now)
+        engine.flush(now)
         # 两个 5 分钟 Heatmap 快照之间，对持仓逐分钟盯市（只用期权价格数据，不产生新的开仓信号，0 额外配额）
         if cfg.intraday_mark_min and cfg.use_real_option_pricing:
             for m in range(cfg.intraday_mark_min, 5, cfg.intraday_mark_min):

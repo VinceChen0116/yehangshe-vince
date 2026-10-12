@@ -402,6 +402,7 @@ def run_mock_replay(cfg: SystemConfig | None = None, csv_path: str | None = None
                 heatmap_calls += 1
                 last_poll[t] = now
                 engine.on_snapshot(t, payload, now)
+            engine.flush(now)
         engine.end_of_day(et_datetime(REPLAY_DATE, "16:00"))
         trader.print_report()
         path = trader.export_trades_csv(csv_path or cfg.trades_csv)

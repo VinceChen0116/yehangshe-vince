@@ -124,5 +124,41 @@ class StrikeAndEntryTest(unittest.TestCase):
         self.assertTrue(eng.can_enter("AAA", et_datetime(FRI, "12:00"))[0])
 
 
+class RankingTest(unittest.TestCase):
+    def setUp(self):
+        self.cfg = SystemConfig()
+        self.cfg.use_real_option_pricing = False
+        self.trader = PaperTrader(self.cfg)
+        self.eng = SessionEngine(self.cfg, None, None, self.trader)
+        self.now = et_datetime(FRI, "10:00")
+
+    def _sig(self, ticker, score):
+        s = signal("C", 100.0, 99.0, 100.5)
+        s.ticker, s.score = ticker, score
+        return s
+
+    def test_higher_score_first_and_daily_cap(self):
+        self.cfg.max_trades_per_day = 2
+        self.eng.pending = {t: self._sig(t, sc) for t, sc in (("LOW", 0.2), ("HIGH", 0.9), ("MID", 0.5))}
+        self.eng.flush(self.now)
+        self.assertEqual([p.ticker for p in self.trader.positions], ["HIGH", "MID"])
+        self.eng.pending = {"NEW": self._sig("NEW", 0.99)}
+        self.eng.flush(self.now)
+        self.assertEqual(len(self.trader.positions), 2)   # 当日上限已满
+
+    def test_min_score(self):
+        self.cfg.min_signal_score = 0.6
+        self.eng.pending = {"A": self._sig("A", 0.5), "B": self._sig("B", 0.7)}
+        self.eng.flush(self.now)
+        self.assertEqual([p.ticker for p in self.trader.positions], ["B"])
+
+    def test_score_range(self):
+        from detector import score_signal
+        s = signal("C", 100.0, 99.0, 100.5)
+        sc, parts = score_signal(s.snapshot, s.structure, 0, [100, 100.2, 99.9, 100.1, 100.0], self.cfg)
+        self.assertTrue(0 <= sc <= 1)
+        self.assertEqual(set(parts), {"fuel", "floor", "proximity", "reach", "fresh"})
+
+
 if __name__ == "__main__":
     unittest.main()

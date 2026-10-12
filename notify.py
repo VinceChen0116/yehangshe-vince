@@ -93,6 +93,7 @@ class DiscordNotifier:
                 {"name": "成本（含滑点）", "value": f"${p.entry_option_price:.2f}", "inline": True},
                 {"name": "目标加速位", "value": f"{p.target_strike:g}", "inline": True},
                 {"name": "δ", "value": f"{p.delta:.2f}", "inline": True},
+                {"name": "信号评分", "value": f"{getattr(p, 'signal_score', 0.0):.2f} / 1.00", "inline": True},
             ],
             "footer": {"text": f"{p.position_id} · 美东 {p.entry_time.strftime('%H:%M')} · 模拟盘"},
         }])

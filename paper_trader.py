@@ -27,7 +27,8 @@ CHAIN_PATH = "/v1/options/chain-snapshot/{ticker}"
 
 CSV_FIELDS = ["position_id", "ticker", "action", "contract_symbol", "strike", "entry_time", "entry_spot",
               "entry_option_price", "exit_time", "exit_spot", "exit_option_price", "realized_pnl",
-              "realized_roi_pct", "peak_roi_pct", "max_adverse_roi_pct", "direction_correct", "exit_reason"]
+              "realized_roi_pct", "peak_roi_pct", "max_adverse_roi_pct", "direction_correct", "exit_reason",
+              "signal_score"]
 
 
 # =============================================================================
@@ -98,6 +99,7 @@ class Position:
     realized_pnl: float = 0.0
     realized_roi_pct: float = 0.0
     marks: int = 0
+    signal_score: float = 0.0
 
     @property
     def is_open(self) -> bool:
@@ -257,6 +259,7 @@ class PaperTrader:
             contracts=cfg.contracts_per_trade, last_spot=spot, last_mid=mid,
             stop_pct=cfg.stop_loss_pct,
         )
+        p.signal_score = getattr(sig, "score", 0.0)
         p.roi_pct = self._roi(p, mid)
         p.peak_roi_pct = p.roi_pct
         p.max_adverse_roi_pct = min(0.0, p.roi_pct)
@@ -420,7 +423,7 @@ class PaperTrader:
                     "realized_pnl": f"{p.realized_pnl:.2f}", "realized_roi_pct": f"{p.realized_roi_pct:.2f}",
                     "peak_roi_pct": f"{p.peak_roi_pct:.2f}", "max_adverse_roi_pct": f"{p.max_adverse_roi_pct:.2f}",
                     "direction_correct": p.peak_roi_pct >= self.cfg.direction_hit_pct,
-                    "exit_reason": p.exit_reason,
+                    "exit_reason": p.exit_reason, "signal_score": f"{p.signal_score:.3f}",
                 })
         log.info("交易明细已导出：%s", os.path.abspath(path))
         return path
@@ -458,6 +461,7 @@ class SessionEngine:
         self.cfg, self.client, self.detector, self.trader = cfg, client, detector, trader
         self.last_spot: dict[str, float] = {}
         self.last_exit_time: dict[str, dt.datetime] = {}
+        self.pending: dict = {}   # 本轮待排序的信号：标的 → FullSignal（signal_ranking="score" 时使用）
 
     def can_enter(self, ticker: str, now_et: dt.datetime) -> tuple[bool, str]:
         cfg = self.cfg
@@ -470,6 +474,9 @@ class SessionEngine:
             return False, f"{blocked[0]}–{blocked[1]} 不开新仓"
         if len(self.trader.open_positions()) >= cfg.max_open_positions:
             return False, "持仓数已达上限"
+        if cfg.max_trades_per_day and \
+                sum(1 for p in self.trader.positions if p.entry_time.date() == now_et.date()) >= cfg.max_trades_per_day:
+            return False, f"当日开仓已达 {cfg.max_trades_per_day} 笔上限"
         if len(self.trader.trades_today(ticker, now_et.date())) >= cfg.max_trades_per_ticker_day:
             return False, "该标的当日开仓次数已达上限"
         le = self.last_exit_time.get(ticker)
@@ -493,8 +500,32 @@ class SessionEngine:
         sig, _snap = self.detector.evaluate_full_signal(self.client, ticker, payload, now_et, allow_flow_check=ok)
         if not ok and _snap is not None and ticker in self.detector.last_structure:
             log.debug("%s 结构成立但不开仓：%s", ticker, why)
-        if sig is not None:
+        if sig is None:
+            return
+        if self.cfg.signal_ranking == "score":
+            self.pending[ticker] = sig   # 先收集，本轮结束后 flush() 统一排序开仓
+        elif sig.score >= self.cfg.min_signal_score:
             self.trader.open_position(self.client, sig, now_et)
+
+    def flush(self, now_et: dt.datetime) -> None:
+        """一轮快照处理完后调用：按信号分数从高到低开仓，直到持仓/当日笔数上限。first_come 模式下无操作。"""
+        if not self.pending:
+            return
+        ranked = sorted(self.pending.values(), key=lambda s: -s.score)
+        self.pending = {}
+        opened, skipped = [], []
+        for sig in ranked:
+            if sig.score < self.cfg.min_signal_score:
+                skipped.append(f"{sig.ticker}({sig.score:.2f}<门槛)")
+                continue
+            ok, why = self.can_enter(sig.ticker, now_et)
+            if not ok:
+                skipped.append(f"{sig.ticker}({sig.score:.2f},{why})")
+                continue
+            if self.trader.open_position(self.client, sig, now_et) is not None:
+                opened.append(f"{sig.ticker}({sig.score:.2f})")
+        log.info("【排序】%s 本轮信号 %d 个 → 开仓 %s%s", now_et.strftime("%H:%M"), len(ranked),
+                 "、".join(opened) or "无", ("；未开：" + "、".join(skipped[:8]) + ("…" if len(skipped) > 8 else "")) if skipped else "")
 
     def end_of_day(self, now_et: dt.datetime) -> None:
         if self.trader.open_positions():

@@ -13,6 +13,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import logging
+import math
 import os
 from dataclasses import dataclass, field, asdict
 from typing import Any, Iterable
@@ -268,6 +269,7 @@ class HeatmapSnapshot:
     king_put_gex: float
     n_cells: int
     strikes: tuple = ()          # 该到期日 Heatmap 中出现的全部挂牌行权价（升序）
+    total_abs_gex: float = 0.0   # 该到期日全部节点 |GEX| 之和（算节点占比用）
 
 
 def parse_heatmap(payload: dict, cfg: SystemConfig, ref_date: dt.date) -> HeatmapSnapshot | None:
@@ -319,6 +321,7 @@ def parse_heatmap(payload: dict, cfg: SystemConfig, ref_date: dt.date) -> Heatma
         king_put_gex=_num(kp["net_dealer_gex_usd"]),
         n_cells=len(ec),
         strikes=tuple(sorted({float(c["strike_usd"]) for c in ec if c.get("strike_usd") is not None})),
+        total_abs_gex=sum(abs(_num(c["net_dealer_gex_usd"])) for c in ec),
     )
 
 
@@ -504,6 +507,34 @@ class FullSignal:
     flow: FlowConfirmation
     bias: str
     fatigue_tests: int
+    score: float = 0.0
+    score_parts: dict = field(default_factory=dict)
+
+
+def score_signal(snap: HeatmapSnapshot, st: StructureSignal, tests: int, spots: list, cfg: SystemConfig) -> tuple:
+    """信号质量分（0–1）与各分项。依据需求文档的跳板/悬崖逻辑，尚未经数据验证（见 backtests/signals）。
+    spots：该标的当日此前的 5 分钟现货序列（含当前），用于估算 1 小时波动。"""
+    total = snap.total_abs_gex or 0.0
+    pos_share = snap.king_call_gex / total if total else 0.0
+    neg_share = abs(snap.king_put_gex) / total if total else 0.0
+    room = abs(st.neg_strike - snap.spot) / snap.spot
+    rets = [math.log(b / a) for a, b in zip(spots, spots[1:]) if a > 0 and b > 0]
+    vol_1h = math.sqrt(sum(r * r for r in rets) / len(rets)) * math.sqrt(12) if len(rets) >= 3 else None
+    if vol_1h:
+        rv = room / vol_1h   # 目标距离 / 1 小时波动；≈1 最好，<0.3 没肉，>2.5 到不了
+        reach = max(0.0, 1 - abs(math.log(max(rv, 1e-6))) / math.log(4)) if rv > 0 else 0.0
+    else:
+        reach = 0.5          # 开盘初期波动样本不足，给中性分
+    parts = {
+        "fuel": min(neg_share / 0.4, 1.0),
+        "floor": min(pos_share / 0.4, 1.0),
+        "proximity": max(0.0, 1 - st.distance_pct / cfg.node_distance_max_pct),
+        "reach": reach,
+        "fresh": {0: 1.0, 1: 0.5}.get(tests, 0.0),
+    }
+    w = dict(cfg.score_weights)
+    score = sum(w.get(k, 0.0) * v for k, v in parts.items()) / (sum(w.values()) or 1.0)
+    return round(score, 4), {k: round(v, 3) for k, v in parts.items()}
 
 
 class SignalDetector:
@@ -517,8 +548,14 @@ class SignalDetector:
         self._last_note: dict[str, str] = {}
         self._flow_next_ok: dict[str, dt.datetime] = {}
         self.flow_disabled = False   # Flow 返回 401/403 权限错误后置 True
+        self.spot_hist: dict[str, list] = {}   # 标的 → 当日 5 分钟现货序列（打分用）
         self.stats = {"snapshots": 0, "structures": 0, "fatigue_reject": 0, "pcr_reject": 0,
                       "flow_calls": 0, "flow_throttled": 0, "flow_reject": 0, "signals": 0, "stale_skip": 0}
+
+    def _scored(self, sig: FullSignal) -> FullSignal:
+        spots = [s for _, s in self.spot_hist.get(sig.ticker, (None, []))[1]]
+        sig.score, sig.score_parts = score_signal(sig.snapshot, sig.structure, sig.fatigue_tests, spots, self.cfg)
+        return sig
 
     def _note(self, ticker: str, key: str, msg: str, *args) -> None:
         """同一标的同类拒绝原因只在首次出现时以 INFO 打印，之后降为 DEBUG，避免刷屏。"""
@@ -554,6 +591,12 @@ class SignalDetector:
                 self.rejected_spot.add(ticker)
                 log.info("【阶段1·股价门槛】%s 现价 $%.2f < $%.2f，移出标的池", ticker, snap.spot, self.cfg.min_spot_usd)
         self.fatigue.update(ticker, snap.king_call_strike, snap.spot)
+        day, hist = self.spot_hist.get(ticker, (None, []))
+        if day != now_et.date():
+            hist = []
+        if not hist or hist[-1][0] != now_et.replace(second=0, microsecond=0):
+            hist.append((now_et.replace(second=0, microsecond=0), snap.spot))
+        self.spot_hist[ticker] = (now_et.date(), hist[-48:])
         return snap
 
     def evaluate_full_signal(self, client, ticker: str, payload: dict, now_et: dt.datetime,
@@ -595,7 +638,7 @@ class SignalDetector:
             self._last_note.pop(ticker, None)
             fc = FlowConfirmation(True, "仅 Heatmap 模式（跳过阶段3 Flow 确认）")
             log.info("【阶段3·跳过】%s %s：仅 Heatmap 模式，结构成立直接开仓", ticker, st.action)
-            return FullSignal(ticker, now_et, snap, st, fc, bias, tests), snap
+            return self._scored(FullSignal(ticker, now_et, snap, st, fc, bias, tests)), snap
         if self.flow_disabled:
             return None, snap
         nxt = self._flow_next_ok.get(ticker)
@@ -623,4 +666,4 @@ class SignalDetector:
         self.stats["signals"] += 1
         self._last_note.pop(ticker, None)
         log.info("【阶段3】✅ %s Flow 确认：%s（%s @ %s）", ticker, fc.reason, fc.contract_symbol, fc.occurred_at)
-        return FullSignal(ticker, now_et, snap, st, fc, bias, tests), snap
+        return self._scored(FullSignal(ticker, now_et, snap, st, fc, bias, tests)), snap
