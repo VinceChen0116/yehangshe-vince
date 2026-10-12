@@ -1,0 +1,4 @@
+06:01:58 [INFO] yhs.corridor: ===== 回测：2026-10-07 收盘 → 2026-10-08 =====
+06:02:01 [INFO] yhs.corridor: ===== 回测：2026-10-08 收盘 → 2026-10-09 =====
+06:02:01 [INFO] yhs.corridor: 回测：39 个候选，{'n': 39, 'first_hour_ok': 18, 'hit_target': 9, 'target_first': 8, 'broke_first': 19, 'avg_60m': 0.19382051282051282, 'avg_close': 0.04648717948717951, 'avg_mfe': 1.8687948717948717}
+06:02:01 [INFO] yhs.corridor: 本进程计费调用 3 次，免费调用 0 次；服务端剩余配额 93376 / 100000；按端点：{'derived/heatmap/history': 3}
