@@ -17,7 +17,7 @@ import math
 import os
 from dataclasses import dataclass, field
 
-from config import SystemConfig, hhmm_to_minutes, minutes_of_day
+from config import SystemConfig, entry_blocked_window, hhmm_to_minutes, minutes_of_day
 from detector import FullSignal, SignalDetector, extract_rows, pick, pick_num
 from yhs_client import QuotaExhausted, YHSApiError
 
@@ -460,6 +460,9 @@ class SessionEngine:
             return False, f"{cfg.no_new_entries_before} 前不开新仓（开盘噪音期）"
         if minutes_of_day(now_et) >= hhmm_to_minutes(cfg.no_new_entries_after):
             return False, f"{cfg.no_new_entries_after} 后不再开新仓"
+        blocked = entry_blocked_window(cfg, now_et)
+        if blocked:
+            return False, f"{blocked[0]}–{blocked[1]} 不开新仓"
         if len(self.trader.open_positions()) >= cfg.max_open_positions:
             return False, "持仓数已达上限"
         if len(self.trader.trades_today(ticker, now_et.date())) >= cfg.max_trades_per_ticker_day:

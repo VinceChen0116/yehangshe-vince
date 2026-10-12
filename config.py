@@ -157,6 +157,8 @@ class SystemConfig:
     reentry_cooldown_min: int = 30
     no_new_entries_before: str = "09:45"  # 开盘前 15 分钟 Heatmap 噪音大，不开新仓
     no_new_entries_after: str = "15:30"
+    # 禁止开新仓的时段（持仓照常盯市与出场）。午间 11:30–14:30 回测持续亏损，2026-10-12 用户决定剔除；设为 [] 可关闭
+    no_entry_windows: tuple = (("11:30", "14:30"),)
     force_close_time: str = "16:00"
 
     # ------------------------------------------------------------------ 盘前研究工作流（--premarket）
@@ -423,3 +425,12 @@ def expiry_candidates(day: dt.date, max_trading_dte: int | None, search: int = 1
         d = next_trading_day(d)
         out.append(d)
     return [x.isoformat() for x in out]
+
+
+def entry_blocked_window(cfg: "SystemConfig", t: dt.datetime) -> tuple | None:
+    """t 落在 no_entry_windows 某个时段内时返回该时段 (开始, 结束)，否则 None。"""
+    m = minutes_of_day(t)
+    for lo, hi in cfg.no_entry_windows:
+        if hhmm_to_minutes(lo) <= m < hhmm_to_minutes(hi):
+            return lo, hi
+    return None

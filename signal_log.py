@@ -30,7 +30,8 @@ import os
 import sys
 
 from archive import load_archived_heatmap, rows_to_frames
-from config import KNOWN_ETFS, SystemConfig, expiry_candidates, hhmm_to_minutes, minutes_of_day, trading_dte
+from config import (KNOWN_ETFS, SystemConfig, entry_blocked_window, expiry_candidates, hhmm_to_minutes,
+                    minutes_of_day, trading_dte)
 from detector import NodeFatigueTracker, detect_structure, parse_heatmap
 
 OUT_DIR = os.path.join("backtests", "signals")
@@ -109,7 +110,8 @@ def scan_ticker_day(cfg: SystemConfig, day: dt.date, ticker: str) -> list[dict]:
             "pos_share": round(snap.king_call_gex / total, 4), "neg_share": round(abs(snap.king_put_gex) / total, 4),
             "pos_neg_ratio": round(snap.king_call_gex / abs(snap.king_put_gex), 4) if snap.king_put_gex else None,
             "total_abs_gex": round(total), "tests": tests, "age": age, "is_new": int(age == 1),
-            "session": session_of(t), "in_entry_window": int(entry_lo <= minutes_of_day(t) < entry_hi),
+            "session": session_of(t),
+            "in_entry_window": int(entry_lo <= minutes_of_day(t) < entry_hi and not entry_blocked_window(cfg, t)),
         }
         # 后续表现（方向化）
         for name, k in FWD_STEPS.items():
@@ -203,6 +205,8 @@ def quantile_groups(rows: list[dict], key: str, q: int = 5) -> list[tuple[str, l
 def write_report(rows: list[dict], path: str, meta: dict) -> None:
     new = [r for r in rows if str(r["is_new"]) == "1"]
     tradable = [r for r in new if str(r["in_entry_window"]) == "1"]
+    lo, hi = meta["entry_window"].split("（")[0].split("–")
+    in_hours = [r for r in new if lo <= r["time"] < hi]   # 时段对比用：含被剔除的时段
     lines = ["# 信号记录报告（排序研究第 1 步）", "",
              f"- 生成时间：{meta['generated_at']}；日期：{', '.join(meta['dates'])}；标的池：{meta['universe']}（{meta['n_tickers']} 只，"
              f"有可用存档 {meta['n_with_data']} 只）",
@@ -212,10 +216,12 @@ def write_report(rows: list[dict], path: str, meta: dict) -> None:
              "- 指标均已方向化（看涨信号用上涨为正，看跌信号用下跌为正）。「先到目标」= 现货先到负节点；「先破支撑」= 现货先反向穿越正节点。",
              "- ⚠️ 样本只有几天，同一天的信号高度相关（大盘一起动），分档差异很可能是噪音，只用于建立假设。", "",
              "## 总体", ""] + table([("全部", tradable)]) + [""]
+    order = {"早盘": 0, "午间": 1, "尾盘": 2}
     for key, label in CATS:
-        order = {"早盘": 0, "午间": 1, "尾盘": 2}
-        vals = sorted({str(r[key]) for r in tradable}, key=lambda v: (order.get(v, 9), v))
-        lines += [f"## 按{label}", ""] + table([(v, [r for r in tradable if str(r[key]) == v]) for v in vals]) + [""]
+        base = in_hours if key == "session" else tradable
+        vals = sorted({str(r[key]) for r in base}, key=lambda v: (order.get(v, 9), v))
+        note = ["（含被剔除时段，供对比）", ""] if key == "session" else []
+        lines += [f"## 按{label}", ""] + note + table([(v, [r for r in base if str(r[key]) == v]) for v in vals]) + [""]
     lines += ["## 按日期", ""] + table([(d, [r for r in tradable if r["day"] == d]) for d in meta["dates"]]) + [""]
     for key, label in FEATURES:
         g = quantile_groups(tradable, key)
@@ -267,7 +273,8 @@ def main(argv=None) -> int:
         meta = {"generated_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "dates": dates,
                 "universe": args.universe, "n_tickers": len(tickers), "n_with_data": len(with_data),
                 "expiry_rule": "0DTE 否则最近到期" if cap is None else f"0DTE 否则 ≤{cap} DTE",
-                "entry_window": f"{cfg.no_new_entries_before}–{cfg.no_new_entries_after}"}
+                "entry_window": f"{cfg.no_new_entries_before}–{cfg.no_new_entries_after}" + (
+                    "（剔除 " + "、".join(f"{a}–{b}" for a, b in cfg.no_entry_windows) + "）" if cfg.no_entry_windows else "")}
         with open(meta_path, "w", encoding="utf-8") as f:
             json.dump(meta, f, ensure_ascii=False, indent=2)
         rows = [{k: ("" if v is None else v) for k, v in r.items()} for r in rows]
