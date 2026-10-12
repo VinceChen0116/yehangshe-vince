@@ -23,6 +23,7 @@ log = logging.getLogger("yhs.notify")
 GREEN, RED, BLUE, GREY, ORANGE = 0x2ECC71, 0xE74C3C, 0x3498DB, 0x95A5A6, 0xE67E22
 TAG_A, TAG_B = "🅰️【A·严格异动】", "🅱️【B】"
 REASON_CN = {"STOP_LOSS": "硬止损", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈",
+             "UNDERLYING_STOP": "标的破节点止损",
              "HARD_TAKE_PROFIT": "硬顶止盈", "EOD_FORCE_CLOSE": "收盘强平", "QUOTA_HALT": "配额熔断",
              "MANUAL_STOP": "手动停止"}
 
@@ -143,7 +144,8 @@ def experiment_summary(n: DiscordNotifier, s: dict, base: dict | None = None) ->
     o = s["overall"]
     rows = [("笔数", "trades", str), ("合计", "total_pnl", _money), ("去掉最大一笔", "pnl_ex_best", _money),
             ("胜率", "win_rate_pct", lambda v: f"{v}%"), ("方向正确", "direction_pct", lambda v: f"{v}%"),
-            ("盈亏比", "profit_factor", str), ("硬止损笔数", "hard_stops", str)]
+            ("盈亏比", "profit_factor", str), ("硬止损笔数", "hard_stops", str),
+            ("标的破位止损", "underlying_stops", str)]
     def val(src, k, f):
         v = src.get(k)
         return "—" if v is None else f(v)

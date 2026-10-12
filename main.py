@@ -464,6 +464,15 @@ class HistoryClient:
         px, _, _ = bs_price_greeks(S, K, T, self.cfg.risk_free_rate, iv, right == "C")
         return px
 
+    def underlying_at(self, contract: str, t: dt.datetime) -> float | None:
+        """t 时刻（含之前 5 分钟内）的真实标的价格，取自该合约的 1 分钟 greeks 序列（0 额外配额）。"""
+        last = None
+        for row in self._load_greeks(contract.split(":")[-1]):
+            if row[0] > t:
+                break
+            last = row
+        return last[1] if last is not None and (t - last[0]).total_seconds() <= 5 * 60 else None
+
     def option_delta(self, contract: str, t: dt.datetime) -> float | None:
         """t 时刻（含 5 分钟内下一个点，与开仓成交口径一致）的真实 |delta|。"""
         rows = self._load_greeks(contract.split(":")[-1])
@@ -566,7 +575,8 @@ def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], exp
                 for p in trader.open_positions():
                     if p.price_source != "real_data":
                         continue
-                    if trader.mark(p, engine.last_spot.get(p.ticker, p.last_spot), tm):
+                    spot = hc.underlying_at(p.contract_symbol, tm) or engine.last_spot.get(p.ticker, p.last_spot)
+                    if trader.mark(p, spot, tm):
                         engine.last_exit_time[p.ticker] = tm
     finish_day(cfg, engine, trader, real, et_datetime(date, "16:00"))
     return trader.stats()

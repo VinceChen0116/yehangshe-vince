@@ -151,6 +151,11 @@ class SystemConfig:
     contract_multiplier: int = 100
 
     stop_loss_pct: float = -35.0
+    # 初始止损方式：option = 期权 ROI ≤ stop_loss_pct；underlying = 标的反向穿越正 GEX 节点（看涨地板/看跌天花板）
+    #   再多 underlying_stop_buffer_pct 才止损，期权另设 disaster_stop_pct 灾难止损兜底。保本/追踪止盈两种方式相同。
+    stop_mode: str = "option"
+    underlying_stop_buffer_pct: float = 0.002
+    disaster_stop_pct: float = -60.0
     breakeven_trigger_pct: float = 35.0
     breakeven_stop_pct: float = 0.0
     trail_trigger_pct: float = 60.0

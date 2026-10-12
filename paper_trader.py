@@ -100,6 +100,7 @@ class Position:
     realized_roi_pct: float = 0.0
     marks: int = 0
     signal_score: float = 0.0
+    base_strike: float = 0.0    # 结构的正 GEX 节点（看涨=地板，看跌=天花板），underlying 止损用
 
     @property
     def is_open(self) -> bool:
@@ -260,6 +261,9 @@ class PaperTrader:
             stop_pct=cfg.stop_loss_pct,
         )
         p.signal_score = getattr(sig, "score", 0.0)
+        p.base_strike = sig.structure.pos_strike
+        if cfg.stop_mode == "underlying":
+            p.stop_pct = cfg.disaster_stop_pct
         p.roi_pct = self._roi(p, mid)
         p.peak_roi_pct = p.roi_pct
         p.max_adverse_roi_pct = min(0.0, p.roi_pct)
@@ -318,6 +322,11 @@ class PaperTrader:
 
         if roi >= cfg.hard_take_profit_pct:
             return self.close(p, spot, now_et, "HARD_TAKE_PROFIT", mid)
+        if cfg.stop_mode == "underlying" and p.stage == "INITIAL" and p.base_strike and spot:
+            b = cfg.underlying_stop_buffer_pct
+            broken = spot < p.base_strike * (1 - b) if p.right == "C" else spot > p.base_strike * (1 + b)
+            if broken:
+                return self.close(p, spot, now_et, "UNDERLYING_STOP", mid)
         if roi <= p.stop_pct:
             reason = {"INITIAL": "STOP_LOSS", "BREAKEVEN": "BREAKEVEN_STOP", "TRAILING": "TRAILING_STOP"}[p.stage]
             return self.close(p, spot, now_et, reason, mid)
@@ -430,7 +439,7 @@ class PaperTrader:
 
 
 _REASON_CN = {
-    "STOP_LOSS": "硬止损-35%", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈",
+    "STOP_LOSS": "硬止损", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈", "UNDERLYING_STOP": "标的破节点止损",
     "HARD_TAKE_PROFIT": "硬顶止盈+150%", "EOD_FORCE_CLOSE": "收盘强平", "QUOTA_HALT": "配额熔断平仓",
 }
 

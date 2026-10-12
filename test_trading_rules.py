@@ -162,5 +162,32 @@ class RankingTest(unittest.TestCase):
         self.assertAlmostEqual(parts["proximity"] + parts["distance"], 1.0, places=2)
 
 
+class UnderlyingStopTest(unittest.TestCase):
+    def setUp(self):
+        self.cfg = SystemConfig()
+        self.cfg.use_real_option_pricing = False
+        self.cfg.stop_mode = "underlying"
+        self.trader = PaperTrader(self.cfg)
+        self.now = et_datetime(FRI, "10:00")
+        # 看涨：地板（正节点）99，现价 100；期权价格由测试指定（模拟真实价格源）
+        self.p = self.trader.open_position(None, signal("C", 100.0, 99.0, 100.5), self.now)
+        self.p.price_source = "real_data"
+        self.opt = self.p.entry_mid * 0.8
+        self.trader.price_provider = lambda sym, t: self.opt
+
+    def test_option_drawdown_alone_does_not_stop(self):
+        self.assertEqual(self.p.stop_pct, self.cfg.disaster_stop_pct)
+        self.opt = self.p.entry_mid * 0.6                                     # 期权 -40%
+        self.assertIsNone(self.trader.mark(self.p, 99.5, self.now))           # 标的仍在地板上方
+        self.opt = self.p.entry_mid * 0.35                                    # 期权 -65% → 灾难止损
+        self.assertEqual(self.trader.mark(self.p, 99.5, self.now).exit_reason, "STOP_LOSS")
+
+    def test_break_below_floor_with_buffer_stops(self):
+        self.assertIsNone(self.trader.mark(self.p, 99.0 * (1 - 0.001), self.now))   # 只穿 0.1%，未过缓冲
+        closed = self.trader.mark(self.p, 99.0 * (1 - 0.003), self.now)             # 穿 0.3% > 0.2% 缓冲
+        self.assertIsNotNone(closed)
+        self.assertEqual(closed.exit_reason, "UNDERLYING_STOP")
+
+
 if __name__ == "__main__":
     unittest.main()

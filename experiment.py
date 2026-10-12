@@ -78,6 +78,7 @@ def metrics(rows: list[dict], hit_pct: float = 15.0) -> dict:
         "avg_roi_pct": round(sum(roi) / len(rows), 1),
         "profit_factor": round(gw / gl, 2) if gl else None,
         "hard_stops": len(stops),
+        "underlying_stops": sum(1 for r in rows if r["exit_reason"] == "UNDERLYING_STOP"),
         "hard_stop_avg_pct": round(sum(stops) / len(stops), 1) if stops else None,
         "hard_stop_worst_pct": round(min(stops), 1) if stops else None,
     }
@@ -110,7 +111,8 @@ def print_compare(names: list[str]) -> None:
             sums[n] = json.load(f)
     keys = [("trades", "笔数"), ("total_pnl", "合计"), ("pnl_ex_best", "去最大一笔"), ("win_rate_pct", "胜率%"),
             ("direction_pct", "方向正确%"), ("avg_peak_pct", "平均峰值%"), ("profit_factor", "盈亏比"),
-            ("hard_stops", "硬止损笔数"), ("hard_stop_avg_pct", "硬止损平均%")]
+            ("hard_stops", "硬止损笔数"), ("hard_stop_avg_pct", "硬止损平均%"),
+            ("underlying_stops", "标的破位止损笔数")]
     w = max(12, *(len(n) + 2 for n in names))
     print("指标".ljust(12) + "".join(n.rjust(w) for n in names))
     for k, label in keys:
