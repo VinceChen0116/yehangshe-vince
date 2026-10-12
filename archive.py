@@ -29,7 +29,7 @@ import os
 import sys
 
 from config import (INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, et_datetime, et_now, expiry_candidates,
-                    is_trading_day, next_trading_day, prev_trading_day, setup_logging)
+                    is_trading_day, next_trading_day, parse_iso, prev_trading_day, setup_logging, to_et)
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
 log = logging.getLogger("yhs.archive")
@@ -100,6 +100,23 @@ def get_heatmap_rows(client, cfg: SystemConfig, ticker: str, expiration: str, da
     rows = fetch_heatmap_rows(client, ticker, expiration, day)
     save_heatmap(cfg, day, ticker, expiration, rows)
     return rows, "api"
+
+
+def rows_to_frames(ticker: str, day: dt.date, expiration: str, rows: list[dict]) -> dict:
+    """存档行 → {美东分钟: 与 /snapshot 同格式的 payload}，供历史回放与信号记录共用。"""
+    frames = {}
+    for row in rows:
+        ts = parse_iso(row.get("minute_at"))
+        if ts is None:
+            continue
+        exp = row.get("expiration") or expiration
+        frames[to_et(ts).replace(second=0, microsecond=0)] = {"data": {
+            "ticker": ticker, "generated_at": row.get("minute_at"),
+            "session_date_et": day.isoformat(), "spot_usd": row.get("spot_usd"), "expirations": [exp],
+            "cells": [{"strike_usd": c.get("strike_usd"), "expiration": exp,
+                       "net_dealer_gex_usd": c.get("net_dealer_gex_usd")} for c in row.get("cells") or []],
+        }}
+    return frames
 
 
 def save_heatmap(cfg: SystemConfig, day: dt.date, ticker: str, expiration: str, rows: list[dict]) -> None:

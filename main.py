@@ -26,7 +26,7 @@ from config import (SystemConfig, et_datetime, et_now, expiry_candidates, hhmm_t
                     poll_interval_min, setup_logging, to_et)
 from detector import (HEATMAP_PATH, FLOW_TRADES_PATH, SignalDetector, UniverseEntry, UniverseFilter,
                       extract_rows, pick, pick_num)
-from archive import get_heatmap_rows
+from archive import get_heatmap_rows, rows_to_frames
 from paper_trader import CHAIN_PATH, PaperTrader, SessionEngine, bs_price_greeks
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
@@ -244,19 +244,7 @@ class HistoryClient:
     def load_heatmap(self, ticker: str, expiration: str) -> int:
         """整日 5 分钟快照：本地存档优先（archive.py），没有则从 API 拉取并顺手存档。"""
         rows, src = get_heatmap_rows(self.real, self.cfg, ticker, expiration, self.date)
-        frames = {}
-        for row in rows:
-            ts = parse_iso(row.get("minute_at"))
-            if ts is None:
-                continue
-            et = to_et(ts)
-            frames[et.replace(second=0, microsecond=0)] = {"data": {
-                "ticker": ticker, "generated_at": row.get("minute_at"),
-                "session_date_et": self.date.isoformat(), "spot_usd": row.get("spot_usd"),
-                "expirations": [row.get("expiration") or expiration],
-                "cells": [{"strike_usd": c.get("strike_usd"), "expiration": row.get("expiration") or expiration,
-                           "net_dealer_gex_usd": c.get("net_dealer_gex_usd")} for c in row.get("cells") or []],
-            }}
+        frames = rows_to_frames(ticker, self.date, expiration, rows)
         self.frames[ticker] = frames
         log.info("【历史】%s 到期 %s 载入 %d 个 5 分钟快照（来源：%s）", ticker, expiration, len(frames),
                  "本地存档" if src == "archive" else "API")
