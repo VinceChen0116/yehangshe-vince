@@ -174,6 +174,70 @@ def run_live(cfg: SystemConfig, one_day: bool = False) -> None:
         sleep_until(et_datetime(next_weekday(day), cfg.universe_fetch_time), "等待下一交易日")
 
 
+def _num(v):
+    try:
+        return None if v is None else float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+class QuoteBook:
+    """实盘期权实时报价（/v1/options/quote(s)，每个返回的报价 1 配额）。
+    每轮开始时用批量接口一次拉齐所有持仓合约（≤50 个/次）；本轮新开仓的合约单独拉一次。同一轮内重复读取走缓存。"""
+    BATCH = 50
+
+    def __init__(self, client):
+        self.client = client
+        self.cache: dict = {}
+        self.calls = 0
+
+    @staticmethod
+    def _core(sym: str) -> str:
+        return sym.split(":")[-1]   # 接口要求纯 OCC 代码，不带 "O:" 前缀
+
+    def _store(self, q: dict) -> None:
+        bid, ask, mid = _num(q.get("bid_usd")), _num(q.get("ask_usd")), _num(q.get("mid_usd"))
+        if ask is None or ask <= 0:
+            return
+        bid = bid or 0.0
+        self.cache[q.get("contract_symbol")] = {"bid": bid, "ask": ask, "mid": mid if mid else (bid + ask) / 2,
+                                                "quoted_at": q.get("quoted_at")}
+
+    def new_round(self, symbols) -> None:
+        self.cache = {}
+        cores = sorted({self._core(s) for s in symbols})
+        for i in range(0, len(cores), self.BATCH):
+            try:
+                p = self.client.get("/v1/options/quotes", {"contracts": ",".join(cores[i:i + self.BATCH])})
+                self.calls += 1
+            except QuotaExhausted:
+                raise
+            except YHSApiError as e:
+                log.warning("持仓报价拉取失败：%s", e)
+                continue
+            data = p.get("data") if isinstance(p, dict) else None
+            for q in (data or {}).get("quotes") or []:
+                self._store(q)
+            for c in cores[i:i + self.BATCH]:
+                self.cache.setdefault(c, None)   # 无报价：本轮不再重复请求
+
+    def get(self, sym: str):
+        core = self._core(sym)
+        if core not in self.cache:
+            self.cache[core] = None
+            try:
+                p = self.client.get(f"/v1/options/quote/{core}")
+                self.calls += 1
+                d = p.get("data") if isinstance(p, dict) else None
+                if isinstance(d, dict):
+                    self._store(d)
+            except QuotaExhausted:
+                raise
+            except YHSApiError as e:
+                log.info("%s 实时报价不可用：%s", core, e)
+        return self.cache.get(core)
+
+
 class LiveAccount:
     """实盘里的一套独立模拟账户（A 或 B）：自己的标的、检测器、持仓上限、交易明细与 Discord 标签。"""
 
@@ -238,6 +302,15 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
     if notifier:
         notifier.text(f"📋 **{day}** 今日监控 {len(universe)} 只（🅰️ = 严格异动 A 池，共 {len(strict_set)} 只）：\n"
                       + ", ".join(("🅰️" if e.ticker in strict_set else "") + e.ticker for e in universe))
+    quotes = QuoteBook(client) if cfg.live_quotes else None
+    if quotes:
+        for a in accounts:
+            a.trader.quote_provider = quotes.get
+
+    def refresh_quotes() -> None:
+        if quotes:
+            quotes.new_round(p.contract_symbol for a in accounts for p in a.trader.open_positions())
+
     pool = [e.ticker for e in universe]
     last_poll: dict[str, dt.datetime] = {}
     open_t = et_datetime(day, cfg.session_open)
@@ -246,6 +319,7 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
     next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min or 0)
 
     def finish_all(when: dt.datetime, reason: str = "EOD_FORCE_CLOSE") -> None:
+        refresh_quotes()   # 收盘平仓用最新报价
         for a in accounts:
             log.info("----- 账户 %s 收盘 -----", a.name)
             finish_day(a.cfg, a.engine, a.trader, client, when, reason)
@@ -261,6 +335,7 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             # 对齐到 5 分钟采样网格
             grid = open_t + dt.timedelta(minutes=5 * ((minutes_of_day(now) - minutes_of_day(open_t)) // 5))
             interval = poll_interval_min(cfg, grid)
+            refresh_quotes()   # 本轮盯市用的持仓报价：一次批量请求
             no_entry = entry_blocked_window(cfg, grid) is not None
             for t in list(pool):
                 if any(t in a.detector.rejected_spot for a in accounts):

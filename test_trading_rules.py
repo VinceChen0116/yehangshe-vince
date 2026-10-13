@@ -212,5 +212,67 @@ class UnderlyingStopTest(unittest.TestCase):
         self.assertEqual(closed.exit_reason, "UNDERLYING_STOP")
 
 
+class QuotePricingTest(unittest.TestCase):
+    """实盘实时报价：按 ask 开仓、按 bid 盯市与平仓；bid 为 0 时退回中间价减滑点。"""
+    def setUp(self):
+        self.cfg = SystemConfig()
+        self.cfg.use_real_option_pricing = False
+        self.trader = PaperTrader(self.cfg)
+        self.q = {"bid": 1.00, "ask": 1.10, "mid": 1.05}
+        self.trader.quote_provider = lambda sym: dict(self.q)
+        self.now = et_datetime(FRI, "10:00")
+        self.p = self.trader.open_position(None, signal("C", 100.0, 99.0, 100.5), self.now)
+
+    def test_entry_at_ask(self):
+        self.assertEqual(self.p.price_source, "quote")
+        self.assertEqual(self.p.entry_option_price, 1.10)
+        self.assertEqual((self.p.entry_bid, self.p.entry_ask), (1.00, 1.10))
+        self.assertAlmostEqual(self.p.roi_pct, (1.00 / 1.10 - 1) * 100, places=4)   # 刚开仓即亏一个价差
+
+    def test_mark_and_close_at_bid(self):
+        self.q = {"bid": 1.50, "ask": 1.60, "mid": 1.55}
+        self.assertIsNone(self.trader.mark(self.p, 100.2, et_datetime(FRI, "10:05")))
+        self.assertAlmostEqual(self.p.roi_pct, (1.50 / 1.10 - 1) * 100, places=4)
+        closed = self.trader.close(self.p, 100.2, et_datetime(FRI, "10:10"), "MANUAL_STOP")
+        self.assertEqual(closed.exit_option_price, 1.50)
+
+    def test_zero_bid_falls_back_to_mid(self):
+        self.q = {"bid": 0.0, "ask": 1.20, "mid": 0.60}
+        self.trader.mark(self.p, 100.0, et_datetime(FRI, "10:05"))
+        self.assertAlmostEqual(self.p.roi_pct, (0.60 * (1 - self.cfg.slippage_pct) / 1.10 - 1) * 100, places=4)
+
+    def test_missing_quote_keeps_last_price(self):
+        self.trader.quote_provider = lambda sym: None
+        self.trader.mark(self.p, 100.0, et_datetime(FRI, "10:05"))
+        self.assertAlmostEqual(self.p.roi_pct, (1.00 / 1.10 - 1) * 100, places=4)
+
+
+class QuoteBookTest(unittest.TestCase):
+    def test_batch_then_cache(self):
+        from main import QuoteBook
+
+        class FakeClient:
+            def __init__(self):
+                self.paths = []
+
+            def get(self, path, params=None):
+                self.paths.append((path, params))
+                if path == "/v1/options/quotes":
+                    return {"data": {"quotes": [{"contract_symbol": "AAA261009C00100000", "bid_usd": 1.0,
+                                                 "ask_usd": 1.2, "mid_usd": 1.1}], "unavailable": []}}
+                return {"data": {"contract_symbol": "AAA261009C00101000", "bid_usd": 0.5, "ask_usd": 0.6}}
+
+        c = FakeClient()
+        qb = QuoteBook(c)
+        qb.new_round(["O:AAA261009C00100000", "AAA261009C00100000"])
+        self.assertEqual(c.paths[0][1]["contracts"], "AAA261009C00100000")   # 去掉 O: 前缀并去重
+        self.assertEqual(qb.get("O:AAA261009C00100000")["ask"], 1.2)
+        self.assertEqual(qb.get("O:AAA261009C00101000")["mid"], 0.55)        # 新合约单独请求
+        qb.get("O:AAA261009C00101000")
+        self.assertEqual(len(c.paths), 2)                                     # 同一轮内走缓存
+        qb.new_round([])
+        self.assertEqual(len(c.paths), 2)                                     # 无持仓不请求
+
+
 if __name__ == "__main__":
     unittest.main()

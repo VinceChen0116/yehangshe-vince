@@ -28,7 +28,7 @@ CHAIN_PATH = "/v1/options/chain-snapshot/{ticker}"
 CSV_FIELDS = ["position_id", "ticker", "action", "contract_symbol", "strike", "entry_time", "entry_spot",
               "entry_option_price", "exit_time", "exit_spot", "exit_option_price", "realized_pnl",
               "realized_roi_pct", "peak_roi_pct", "max_adverse_roi_pct", "direction_correct", "exit_reason",
-              "signal_score"]
+              "signal_score", "price_source", "entry_bid", "entry_ask", "entry_spread_pct"]
 
 
 # =============================================================================
@@ -101,6 +101,9 @@ class Position:
     marks: int = 0
     signal_score: float = 0.0
     base_strike: float = 0.0    # 结构的正 GEX 节点（看涨=地板，看跌=天花板），underlying 止损用
+    entry_bid: float = 0.0      # 实盘报价（price_source="quote"）：开仓时的 bid/ask
+    entry_ask: float = 0.0
+    last_bid: float = 0.0       # 最近一次报价的 bid，作为平仓/盯市的可卖价
 
     @property
     def is_open(self) -> bool:
@@ -116,6 +119,9 @@ class PaperTrader:
         # 可选的真实期权价格源：callable(contract_symbol, now_et) -> 价格 | None（历史回放接入 contract-intraday）
         self.price_provider = None
         self.delta_provider = None   # 可选：callable(contract_symbol, now_et) -> 真实 |delta| | None
+        # 可选的实时报价源（仅实盘）：callable(contract_symbol) -> {"bid","ask","mid"} | None。
+        # 设置后按 ask 开仓、按 bid 盯市与平仓，不再加滑点估算
+        self.quote_provider = None
         self.notifier = None         # 可选：notify.DiscordNotifier（仅实盘模式设置）
 
     # ------------------------------------------------------------------ 查询
@@ -238,6 +244,14 @@ class PaperTrader:
                 real_delta = self.delta_provider(sym, now_et) if self.delta_provider else None
                 if real_delta is not None:
                     delta = real_delta
+        bid = ask = 0.0
+        if self.quote_provider:
+            q = self.quote_provider(sym)
+            if q and (q.get("ask") or 0) > 0:
+                bid, ask = q.get("bid") or 0.0, q["ask"]
+                mid, src = q.get("mid") or (bid + ask) / 2, "quote"
+            else:
+                log.info("%s 无实时报价，沿用 %s 定价", sym, src)
         if not cfg.use_chain_greeks or delta is None:
             delta = cfg.default_delta
         if not cfg.use_chain_greeks or gamma is None:
@@ -250,7 +264,7 @@ class PaperTrader:
             log.warning("【阶段4·放弃】%s %s 期权价 %.3f < $%.2f，报价不可信或流动性不足，不开仓",
                         sig.ticker, sym, mid, cfg.min_option_price)
             return None
-        cost = mid * (1 + cfg.slippage_pct)
+        cost = ask if src == "quote" else mid * (1 + cfg.slippage_pct)
         p = Position(
             position_id=f"P{now_et.strftime('%Y%m%d')}-{next(self._ids):04d}",
             ticker=sig.ticker, action=sig.structure.action, right=sig.structure.right,
@@ -262,27 +276,40 @@ class PaperTrader:
         )
         p.signal_score = getattr(sig, "score", 0.0)
         p.base_strike = sig.structure.pos_strike
+        p.entry_bid, p.entry_ask, p.last_bid = bid, ask, bid
         if cfg.stop_mode == "underlying":
             p.stop_pct = cfg.disaster_stop_pct
         p.roi_pct = self._roi(p, mid)
         p.peak_roi_pct = p.roi_pct
         p.max_adverse_roi_pct = min(0.0, p.roi_pct)
         self.positions.append(p)
-        log.info("【阶段4·开仓】%s %s %s | 行权价 %.2f 到期 %s | 现货 %.2f | 中间价 %.3f → 成本 %.3f（含滑点 %.0f%%）"
+        cost_note = f"按 ask 成交（bid {bid:.3f} / ask {ask:.3f}）" if src == "quote" else f"含滑点 {cfg.slippage_pct * 100:.0f}%"
+        log.info("【阶段4·开仓】%s %s %s | 行权价 %.2f 到期 %s | 现货 %.2f | 中间价 %.3f → 成本 %.3f（%s）"
                  " | δ=%.3f γ=%.4f | 定价来源=%s | 目标加速位 %.2f",
-                 p.position_id, p.ticker, p.action, strike, exp, spot, mid, cost, cfg.slippage_pct * 100,
+                 p.position_id, p.ticker, p.action, strike, exp, spot, mid, cost, cost_note,
                  delta, gamma, src, p.target_strike)
         if self.notifier:
             self.notifier.position_opened(p)
         return p
 
     # ------------------------------------------------------------------ 盯市与出场
+    def _exit_value(self, p: Position, mid: float) -> float:
+        """可卖价：实时报价持仓用 bid（bid 缺失或为 0 时退回中间价减滑点，避免坏报价误触止损），其余用中间价减滑点。"""
+        if p.price_source == "quote" and p.last_bid > 0:
+            return p.last_bid
+        return mid * (1 - self.cfg.slippage_pct)
+
     def _roi(self, p: Position, mid: float) -> float:
-        exit_val = mid * (1 - self.cfg.slippage_pct)
-        return (exit_val / p.entry_option_price - 1.0) * 100.0
+        return (self._exit_value(p, mid) / p.entry_option_price - 1.0) * 100.0
 
     def current_mid(self, p: Position, spot: float, now_et: dt.datetime) -> float:
         """真实价格源优先；开仓用的是真实价但此刻无成交时沿用上一次价格，否则用 Delta-Gamma 估算。"""
+        if p.price_source == "quote" and self.quote_provider:
+            q = self.quote_provider(p.contract_symbol)
+            if q and (q.get("ask") or 0) > 0:
+                p.last_bid = q.get("bid") or 0.0
+                return q.get("mid") or (p.last_bid + q["ask"]) / 2
+            return p.last_mid   # 本轮无报价：沿用上次价格
         if p.price_source == "real_data" and self.price_provider:
             real = self.price_provider(p.contract_symbol, now_et)
             return real if real is not None else p.last_mid
@@ -336,7 +363,7 @@ class PaperTrader:
         cfg = self.cfg
         if mid is None:
             mid = self.current_mid(p, spot, now_et)
-        exit_px = mid * (1 - cfg.slippage_pct)
+        exit_px = self._exit_value(p, mid)
         p.exit_time, p.exit_spot, p.exit_option_price, p.exit_reason = now_et, spot, round(exit_px, 4), reason
         p.realized_roi_pct = (exit_px / p.entry_option_price - 1) * 100
         p.realized_pnl = (exit_px - p.entry_option_price) * cfg.contract_multiplier * p.contracts
@@ -433,6 +460,11 @@ class PaperTrader:
                     "peak_roi_pct": f"{p.peak_roi_pct:.2f}", "max_adverse_roi_pct": f"{p.max_adverse_roi_pct:.2f}",
                     "direction_correct": p.peak_roi_pct >= self.cfg.direction_hit_pct,
                     "exit_reason": p.exit_reason, "signal_score": f"{p.signal_score:.3f}",
+                    "price_source": p.price_source,
+                    "entry_bid": f"{p.entry_bid:.4f}" if p.entry_ask else "",
+                    "entry_ask": f"{p.entry_ask:.4f}" if p.entry_ask else "",
+                    "entry_spread_pct": f"{100 * (p.entry_ask - p.entry_bid) / ((p.entry_ask + p.entry_bid) / 2):.2f}"
+                    if p.entry_ask and p.entry_bid > 0 else "",
                 })
         log.info("交易明细已导出：%s", os.path.abspath(path))
         return path

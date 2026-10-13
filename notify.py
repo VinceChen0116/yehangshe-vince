@@ -91,7 +91,9 @@ class DiscordNotifier:
                 {"name": "结构", "value": "跳板（看涨）" if p.structure == "SPRINGBOARD" else "悬崖（看跌）", "inline": True},
                 {"name": "到期", "value": p.expiration, "inline": True},
                 {"name": "现货", "value": f"{p.entry_spot:.2f}", "inline": True},
-                {"name": "成本（含滑点）", "value": f"${p.entry_option_price:.2f}", "inline": True},
+                {"name": "成本（按 ask）" if getattr(p, "entry_ask", 0) else "成本（含滑点）",
+                 "value": f"${p.entry_option_price:.2f}" + (f"（bid {p.entry_bid:.2f} / ask {p.entry_ask:.2f}）"
+                                                           if getattr(p, "entry_ask", 0) else ""), "inline": True},
                 {"name": "目标加速位", "value": f"{p.target_strike:g}", "inline": True},
                 {"name": "δ", "value": f"{p.delta:.2f}", "inline": True},
                 {"name": "信号评分", "value": f"{getattr(p, 'signal_score', 0.0):.2f} / 1.00", "inline": True},
