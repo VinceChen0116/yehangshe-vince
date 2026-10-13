@@ -5,3 +5,27 @@
 16:15:06 [INFO] yhs.overnight: 2026-10-07 AAPL SPRINGBOARD O:AAPL261009C00337500 成本 2.10 | 跳空 0.019% | 09:35 -20.22% / 09:45 -17.02% / 收盘 82.78%
 16:15:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/ALAB261009P00375000，5.2s 后免费重试（第 1 轮）
 16:15:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ALAB261009P00375000，5.3s 后免费重试（第 1 轮）
+16:15:20 [INFO] yhs.main: 【历史】ALAB261009P00375000 真实 IV 序列 390 个点（1m）
+16:15:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ALAB261009P00375000，5.1s 后免费重试（第 1 轮）
+16:15:26 [INFO] yhs.main: 【历史】ALAB261009P00375000 真实 IV 序列 367 个点（1m）
+16:15:27 [INFO] yhs.overnight: 2026-10-07 ALAB CLIFF O:ALAB261009P00375000 成本 7.55 | 跳空 0.387% | 09:35 -22.1% / 09:45 -13.4% / 收盘 289.83%
+16:15:29 [INFO] yhs.main: 【历史】ANET261009P00215000 真实 IV 序列 390 个点（1m）
+16:15:29 [INFO] yhs.main: 【历史】ANET261009P00215000 真实 IV 序列 387 个点（1m）
+16:15:30 [INFO] yhs.overnight: 2026-10-07 ANET CLIFF O:ANET261009P00215000 成本 2.64 | 跳空 -0.181% | 09:35 16.13% / 09:45 0.13% / 收盘 94.77%
+16:15:31 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/APP261009C00282500，5.1s 后免费重试（第 1 轮）
+16:15:38 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/APP261009C00282500，5.2s 后免费重试（第 1 轮）
+16:15:43 [INFO] yhs.main: 【历史】APP261009C00282500 真实 IV 序列 390 个点（1m）
+16:15:44 [INFO] yhs.main: 【历史】APP261009C00282500 真实 IV 序列 390 个点（1m）
+16:15:46 [INFO] yhs.overnight: 2026-10-07 APP SPRINGBOARD O:APP261009C00282500 成本 3.93 | 跳空 -2.323% | 09:35 -63.33% / 09:45 -69.58% / 收盘 -40.85%
+16:15:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AVAV261009C00139000，5.2s 后免费重试（第 1 轮）
+16:15:52 [INFO] yhs.main: 【历史】AVAV261009C00139000 真实 IV 序列 390 个点（1m）
+16:15:52 [INFO] yhs.main: 【历史】AVAV261009C00139000 真实 IV 序列 390 个点（1m）
+16:15:53 [INFO] yhs.overnight: 2026-10-07 AVAV SPRINGBOARD O:AVAV261009C00139000 成本 1.50 | 跳空 -0.654% | 09:35 7.76% / 09:45 7.81% / 收盘 -20.31%
+16:15:55 [INFO] yhs.main: 【历史】BAC261009P00053000 分钟线为 2026-10-06（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+16:15:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BAC261009P00053000，5.1s 后免费重试（第 1 轮）
+16:16:01 [INFO] yhs.main: 【历史】BAC261009P00053000 真实 IV 序列 390 个点（1m）
+16:16:01 [INFO] yhs.main: 【历史】BAC261009P00053000 真实 IV 序列 390 个点（1m）
+16:16:03 [INFO] yhs.overnight: 2026-10-07 BAC CLIFF O:BAC261009P00053000 成本 0.21 | 跳空 -1.074% | 09:35 88.31% / 09:45 83.77% / 收盘 -21.9%
+16:16:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CAT261009C00812500，5.1s 后免费重试（第 1 轮）
+16:16:09 [INFO] yhs.main: 【历史】CAT261009C00812500 真实 IV 序列 390 个点（1m）
+16:16:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CAT261009C00812500，5.1s 后免费重试（第 1 轮）
