@@ -1,0 +1,4 @@
+﻿position_id,ticker,action,contract_symbol,strike,entry_time,entry_spot,entry_option_price,exit_time,exit_spot,exit_option_price,realized_pnl,realized_roi_pct,peak_roi_pct,max_adverse_roi_pct,direction_correct,exit_reason,signal_score,price_source,entry_bid,entry_ask,entry_spread_pct
+P20261013-0001,KO,BUY_PUT,O:KO261016P00090000,90.00,2026-10-13T11:40-04:00,90.32,0.5394,2026-10-13T16:00-04:00,90.11,0.5488,0.94,1.74,23.54,-21.88,True,EOD_FORCE_CLOSE,0.801,real_data,,,
+P20261013-0002,AMZN,BUY_PUT,O:AMZN261014P00260000,260.00,2026-10-13T13:55-04:00,259.47,2.2440,2026-10-13T16:00-04:00,258.70,2.6460,40.20,17.91,19.66,-11.35,True,EOD_FORCE_CLOSE,0.829,real_data,,,
+P20261013-0003,SPY,BUY_PUT,O:SPY261013P00777000,777.00,2026-10-13T15:05-04:00,778.22,0.1020,2026-10-13T15:34-04:00,778.41,0.0392,-6.28,-61.57,-3.92,-61.57,False,STOP_LOSS,0.827,real_data,,,
