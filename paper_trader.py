@@ -257,8 +257,11 @@ class PaperTrader:
         bid = ask = 0.0
         if self.quote_provider:
             q = self.quote_provider(sym)
+            if q and (q.get("ask") or 0) > 0 and (q.get("bid") or 0) <= 0:
+                log.warning("【阶段4·放弃】%s %s bid 为 0（没有买盘，买了卖不掉），不开仓", sig.ticker, sym)
+                return None
             if q and (q.get("ask") or 0) > 0:
-                bid, ask = q.get("bid") or 0.0, q["ask"]
+                bid, ask = q["bid"], q["ask"]
                 mid, src = q.get("mid") or (bid + ask) / 2, "quote"
             elif cfg.require_live_quote:
                 log.warning("【阶段4·放弃】%s %s 无实时报价，不用估算价开仓", sig.ticker, sym)
@@ -307,8 +310,8 @@ class PaperTrader:
 
     # ------------------------------------------------------------------ 盯市与出场
     def _exit_value(self, p: Position, mid: float) -> float:
-        """可卖价：实时报价持仓用 bid（bid 缺失或为 0 时退回中间价减滑点，避免坏报价误触止损），其余用中间价减滑点。"""
-        if p.price_source == "quote" and p.last_bid > 0:
+        """可卖价：实时报价持仓一律用真实 bid（bid 为 0 就按 0 计，不再用中间价估算），其余用中间价减滑点。"""
+        if p.price_source == "quote":
             return p.last_bid
         return mid * (1 - self.cfg.slippage_pct)
 

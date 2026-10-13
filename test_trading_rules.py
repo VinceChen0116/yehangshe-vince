@@ -221,7 +221,7 @@ class UnderlyingStopTest(unittest.TestCase):
 
 
 class QuotePricingTest(unittest.TestCase):
-    """实盘实时报价：按 ask 开仓、按 bid 盯市与平仓；bid 为 0 时退回中间价减滑点。"""
+    """实盘实时报价：按 ask 开仓、按 bid 盯市与平仓；bid 为 0 不开仓，持仓中 bid 为 0 按 0 计。"""
     def setUp(self):
         self.cfg = SystemConfig()
         self.cfg.use_real_option_pricing = False
@@ -244,10 +244,15 @@ class QuotePricingTest(unittest.TestCase):
         closed = self.trader.close(self.p, 100.2, et_datetime(FRI, "10:10"), "MANUAL_STOP")
         self.assertEqual(closed.exit_option_price, 1.50)
 
-    def test_zero_bid_falls_back_to_mid(self):
-        self.q = {"bid": 0.0, "ask": 1.20, "mid": 0.60}
-        self.trader.mark(self.p, 100.0, et_datetime(FRI, "10:05"))
-        self.assertAlmostEqual(self.p.roi_pct, (0.60 * (1 - self.cfg.slippage_pct) / 1.10 - 1) * 100, places=4)
+    def test_zero_bid_marks_at_zero(self):
+        self.q = {"bid": 0.0, "ask": 1.20, "mid": 0.60}                   # 持仓中 bid 变 0：按 0 计，触发灾难止损
+        closed = self.trader.mark(self.p, 100.0, et_datetime(FRI, "10:05"))
+        self.assertEqual(closed.exit_reason, "STOP_LOSS")
+        self.assertEqual(closed.exit_option_price, 0.0)
+
+    def test_zero_bid_no_entry(self):
+        self.q = {"bid": 0.0, "ask": 0.05, "mid": 0.025}
+        self.assertIsNone(self.trader.open_position(None, signal("C", 100.0, 99.0, 100.5), self.now))
 
     def test_no_quote_no_entry(self):
         self.trader.quote_provider = lambda sym: None
