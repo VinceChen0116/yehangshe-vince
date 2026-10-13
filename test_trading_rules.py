@@ -249,6 +249,10 @@ class QuotePricingTest(unittest.TestCase):
         self.trader.mark(self.p, 100.0, et_datetime(FRI, "10:05"))
         self.assertAlmostEqual(self.p.roi_pct, (0.60 * (1 - self.cfg.slippage_pct) / 1.10 - 1) * 100, places=4)
 
+    def test_no_quote_no_entry(self):
+        self.trader.quote_provider = lambda sym: None
+        self.assertIsNone(self.trader.open_position(None, signal("C", 100.0, 99.0, 100.5), self.now))
+
     def test_missing_quote_keeps_last_price(self):
         self.trader.quote_provider = lambda sym: None
         self.trader.mark(self.p, 100.0, et_datetime(FRI, "10:05"))

@@ -114,6 +114,7 @@ class SystemConfig:
     # 实盘用 /v1/options/quote(s) 的实时 bid/ask：按 ask 开仓、按 bid 盯市与平仓（每轮 1 次批量请求，
     # 每个返回的报价 1 配额）。仅实盘生效；历史回放没有历史报价，仍用分钟成交价 + 滑点
     live_quotes: bool = True
+    require_live_quote: bool = True       # 实盘拿不到实时报价就不开仓（不用期权链中间价或公式估算）
     # 到期选择：有 0DTE 用 0DTE，否则用最近的到期日（交易日口径，2026-10-12 用户规则）。
     #   设为整数 N 则只接受 ≤N 个交易日的到期（如 1 = "0DTE 否则 1DTE"，都没有则该标的不交易）
     expiry_max_trading_dte: int | None = None

@@ -260,6 +260,9 @@ class PaperTrader:
             if q and (q.get("ask") or 0) > 0:
                 bid, ask = q.get("bid") or 0.0, q["ask"]
                 mid, src = q.get("mid") or (bid + ask) / 2, "quote"
+            elif cfg.require_live_quote:
+                log.warning("【阶段4·放弃】%s %s 无实时报价，不用估算价开仓", sig.ticker, sym)
+                return None
             else:
                 log.info("%s 无实时报价，沿用 %s 定价", sym, src)
         if not cfg.use_chain_greeks or delta is None:

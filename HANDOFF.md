@@ -202,6 +202,7 @@ python3 archive.py --dry-run                 # 只看计划
 夜航社新开放 `/v1/options/quote/{OCC}`（单个）与 `/v1/options/quotes?contracts=a,b,…`（≤50 个），返回最新 bid/ask/mid 与 `quoted_at`，**每个返回的报价 1 配额**；合约代码不能带 `O:` 前缀；只有最新报价、没有历史，所以只用于实盘，回测不变。
 
 - `config.live_quotes=True`：实盘按 **ask 开仓**、按 **bid 盯市与平仓**（不再加 2% 滑点）；bid 为 0 时退回中间价减滑点，避免坏报价误触止损；本轮无报价则沿用上次价格。
+- `config.require_live_quote=True`（用户 2026-10-13 要求"不要用估算"）：开仓时拿不到实时报价就**不开仓**，不再退回期权链中间价或公式估算；因此实盘所有持仓都按实时报价盯市，某一轮没报价时沿用上一次的真实报价。
 - `main.QuoteBook`：每轮开始用批量接口一次拉齐 A、B 两个账户所有持仓合约；新开仓的合约单独拉一次；同一轮内走缓存。最多 8 笔持仓 × 2 个账户 × 78 轮，一天上限约 1,250 次，通常远低于此。
 - 交易 CSV 新增 `price_source`（quote / chain / real_data / bs_fallback）、`entry_bid`、`entry_ask`、`entry_spread_pct`，用于 11 月评估时校准回测的 2% 滑点假设、并决定是否加"价差过大不开仓"的规则（目前只记录，不过滤）。
 - 改动前后用 10/12 重放核对：回测结果完全一致（15 笔，+$220.66）。
