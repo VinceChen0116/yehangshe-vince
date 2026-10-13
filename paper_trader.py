@@ -146,6 +146,14 @@ class PaperTrader:
         spot = sig.snapshot.spot
         if self.cfg.strike_mode == "atm":
             return spot, False
+        if self.cfg.strike_mode == "itm":
+            # 实值：挂牌行权价中离 现价×(1∓itm_depth_pct) 最近、且确实在价内的那个（看涨低于现价，看跌高于现价）
+            is_call = sig.structure.right == "C"
+            want = spot * (1 - self.cfg.itm_depth_pct) if is_call else spot * (1 + self.cfg.itm_depth_pct)
+            ok = [k for k in sig.snapshot.strikes if (k < spot if is_call else k > spot)]
+            if ok:
+                return min(ok, key=lambda k: abs(k - want)), True
+            return want, False
         node, is_call = sig.structure.neg_strike, sig.structure.right == "C"
         limit = spot * (1 + self.cfg.max_otm_pct) if is_call else spot * (1 - self.cfg.max_otm_pct)
         ok = [k for k in sig.snapshot.strikes

@@ -135,7 +135,8 @@ class SystemConfig:
     flow_max_lookups_per_signal: int = 2
 
     # ------------------------------------------------------------------ 阶段4 模拟交易
-    strike_mode: str = "target_node"      # "target_node"：买负 GEX 节点行权价（受 max_otm_pct 限制）；"atm"：买最近平值
+    strike_mode: str = "target_node"      # "target_node"：买负 GEX 节点行权价（受 max_otm_pct 限制）；"atm"：买最近平值；"itm"：买价内约 itm_depth_pct 的挂牌行权价
+    itm_depth_pct: float = 0.01           # strike_mode="itm"（实验）：买价内约 1% 的挂牌行权价
     max_otm_pct: float = 0.005            # 行权价最多虚值 0.5%：负节点更远时，改买 Heatmap 挂牌行权价中虚值 ≤0.5% 且离节点最近的
     use_chain_greeks: bool = True         # 期权链若返回 delta/gamma 则使用，否则用默认值
     default_delta: float = 0.45

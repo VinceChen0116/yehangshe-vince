@@ -105,6 +105,14 @@ class StrikeAndEntryTest(unittest.TestCase):
                                       self.now)
         self.assertEqual(p.strike, 192.5)
 
+    def test_itm_strike(self):
+        self.cfg.strike_mode = "itm"
+        self.cfg.itm_depth_pct = 0.01
+        p = self.trader.open_position(None, signal("C", 768.66, 765.0, 780.0), self.now)
+        self.assertEqual(p.strike, 760.0)          # 现价 768.66 × 0.99 ≈ 761，挂牌网格步长 5 → 760
+        q = self.trader.open_position(None, signal("P", 761.84, 765.0, 745.0), self.now)
+        self.assertEqual(q.strike, 770.0)          # 看跌：价内 = 高于现价（761.84 × 1.01 ≈ 769.5 → 770）
+
     def test_min_entry_price(self):
         self.cfg.min_option_price = 1_000.0
         self.assertIsNone(self.trader.open_position(None, signal("C", 100.0, 99.0, 100.5), self.now))
