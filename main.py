@@ -252,7 +252,7 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
 
     try:
         # Heatmap 只在常规时段更新，快照标记为 5 分钟段的开始时间、段结束后才可用：
-        # 09:30 段要到 09:35 才出来，之前拉到的仍是上一交易日 15:55 的快照
+        # 09:30 段要到 09:35 才出来；之前 snapshot 返回 503 READ_MODEL_UNAVAILABLE（2026-10-13 开盘实测）
         sleep_until(open_t + dt.timedelta(minutes=5, seconds=cfg.poll_offset_s), "等待开盘后第一个 Heatmap 快照")
         while True:
             now = et_now()
