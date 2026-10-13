@@ -196,7 +196,7 @@ def run(args) -> int:
     log.info("实验 %s 完成：%s", args.name, summary["overall"])
     if args.baseline:
         print_compare([args.baseline, args.name])
-    notifier = notify_from_config(base)
+    notifier = None if args.no_post else notify_from_config(base)
     if notifier:
         base_sum = None
         bp = os.path.join(EXP_DIR, args.baseline or "", "summary.json")
@@ -219,6 +219,7 @@ def main(argv=None) -> int:
     ap.add_argument("--compare", help="只对比已有实验，逗号分隔")
     ap.add_argument("--config", help="JSON 配置文件")
     ap.add_argument("--force", action="store_true", help="覆盖同名实验")
+    ap.add_argument("--no-post", action="store_true", help="不单独发 Discord（批量跑完后统一发汇总）")
     args = ap.parse_args(argv)
     if args.compare:
         print_compare(args.compare.split(","))
