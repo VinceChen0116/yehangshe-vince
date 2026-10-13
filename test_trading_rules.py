@@ -274,5 +274,34 @@ class QuoteBookTest(unittest.TestCase):
         self.assertEqual(len(c.paths), 2)                                     # 无持仓不请求
 
 
+class UnderlyingTrailTest(unittest.TestCase):
+    def setUp(self):
+        self.cfg = SystemConfig()
+        self.cfg.use_real_option_pricing = False
+        self.cfg.trail_mode = "underlying"
+        self.cfg.underlying_trail_pct = 0.003
+        self.trader = PaperTrader(self.cfg)
+        self.now = et_datetime(FRI, "10:00")
+        self.p = self.trader.open_position(None, signal("C", 100.0, 99.0, 100.5), self.now)
+        self.p.price_source = "real_data"
+        self.opt = self.p.entry_mid
+        self.trader.price_provider = lambda sym, t: self.opt
+
+    def test_trail_after_profit(self):
+        self.opt = self.p.entry_mid * 1.2                                   # +20%：未激活
+        self.assertIsNone(self.trader.mark(self.p, 100.5, self.now))
+        self.assertFalse(self.p.und_trail_active)
+        self.opt = self.p.entry_mid * 1.6                                   # 峰值 ≥ +35%：激活
+        self.assertIsNone(self.trader.mark(self.p, 101.0, self.now))
+        self.assertTrue(self.p.und_trail_active)
+        self.assertIsNone(self.trader.mark(self.p, 101.0 * (1 - 0.002), self.now))   # 回撤 0.2% < 0.3%
+        closed = self.trader.mark(self.p, 101.0 * (1 - 0.004), self.now)              # 回撤 0.4%
+        self.assertEqual(closed.exit_reason, "UNDERLYING_TRAIL")
+
+    def test_node_stop_before_activation(self):
+        closed = self.trader.mark(self.p, 99.0 * (1 - 0.006), self.now)
+        self.assertEqual(closed.exit_reason, "UNDERLYING_STOP")
+
+
 if __name__ == "__main__":
     unittest.main()

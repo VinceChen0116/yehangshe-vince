@@ -165,6 +165,10 @@ class SystemConfig:
     trail_trigger_pct: float = 60.0
     trail_giveback_pct: float = 20.0      # 从峰值 ROI 回撤 20 个百分点（如峰值 +80% → +60% 止盈）
     hard_take_profit_pct: float = 150.0
+    # 盈利后的保护方式（实验）："option" = 现行的期权 ROI 保本/追踪；"underlying" = 期权峰值浮盈 ≥ breakeven_trigger_pct
+    # 后改为按标的价格追踪：记录开仓后对我们最有利的现货价，回撤超过 underlying_trail_pct 即平仓（UNDERLYING_TRAIL）
+    trail_mode: str = "option"
+    underlying_trail_pct: float = 0.003
     direction_hit_pct: float = 15.0       # 峰值浮盈 ≥ +15% 判定方向正确
 
     max_open_positions: int = 8           # 同时持仓上限（2026-10-12 用户由 5 调为 8）

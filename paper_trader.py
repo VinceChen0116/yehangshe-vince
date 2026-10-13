@@ -104,6 +104,8 @@ class Position:
     entry_bid: float = 0.0      # 实盘报价（price_source="quote"）：开仓时的 bid/ask
     entry_ask: float = 0.0
     last_bid: float = 0.0       # 最近一次报价的 bid，作为平仓/盯市的可卖价
+    best_spot: float = 0.0      # trail_mode="underlying"：开仓后对我们最有利的现货价
+    und_trail_active: bool = False
 
     @property
     def is_open(self) -> bool:
@@ -332,6 +334,27 @@ class PaperTrader:
         p.peak_roi_pct = max(p.peak_roi_pct, roi)
         p.max_adverse_roi_pct = min(p.max_adverse_roi_pct, roi)
 
+        if cfg.trail_mode == "underlying" and spot:
+            bull = p.right == "C"
+            p.best_spot = spot if not p.best_spot else (max(p.best_spot, spot) if bull else min(p.best_spot, spot))
+            if not p.und_trail_active and p.peak_roi_pct >= cfg.breakeven_trigger_pct:
+                p.und_trail_active = True
+                log.info("   ⤴ %s 峰值浮盈 %.1f%% ≥ %.0f%%，改为按标的追踪（最有利价 %.2f，回撤 %.1f%% 平仓）",
+                         p.ticker, p.peak_roi_pct, cfg.breakeven_trigger_pct, p.best_spot, cfg.underlying_trail_pct * 100)
+            if roi >= cfg.hard_take_profit_pct:
+                return self.close(p, spot, now_et, "HARD_TAKE_PROFIT", mid)
+            if p.und_trail_active:
+                t = cfg.underlying_trail_pct
+                if (spot < p.best_spot * (1 - t)) if bull else (spot > p.best_spot * (1 + t)):
+                    return self.close(p, spot, now_et, "UNDERLYING_TRAIL", mid)
+            elif cfg.stop_mode == "underlying" and p.base_strike:
+                b = cfg.underlying_stop_buffer_pct
+                if (spot < p.base_strike * (1 - b)) if bull else (spot > p.base_strike * (1 + b)):
+                    return self.close(p, spot, now_et, "UNDERLYING_STOP", mid)
+            if roi <= p.stop_pct:
+                return self.close(p, spot, now_et, "STOP_LOSS", mid)
+            return None
+
         # 状态机：止损线只升不降
         if p.peak_roi_pct >= cfg.trail_trigger_pct:
             new_stop = max(p.stop_pct, p.peak_roi_pct - cfg.trail_giveback_pct, cfg.breakeven_stop_pct)
@@ -473,7 +496,7 @@ class PaperTrader:
 _REASON_CN = {
     "STOP_LOSS": "硬止损", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈", "UNDERLYING_STOP": "标的破节点止损",
     "HARD_TAKE_PROFIT": "硬顶止盈+150%", "EOD_FORCE_CLOSE": "收盘强平", "QUOTA_HALT": "配额熔断平仓",
-    "REPLACED": "被更高分信号替换",
+    "REPLACED": "被更高分信号替换", "UNDERLYING_TRAIL": "标的追踪止盈",
 }
 
 
