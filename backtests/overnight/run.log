@@ -29,3 +29,869 @@
 16:16:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CAT261009C00812500，5.1s 后免费重试（第 1 轮）
 16:16:09 [INFO] yhs.main: 【历史】CAT261009C00812500 真实 IV 序列 390 个点（1m）
 16:16:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CAT261009C00812500，5.1s 后免费重试（第 1 轮）
+16:16:16 [INFO] yhs.main: 【历史】CAT261009C00812500 真实 IV 序列 390 个点（1m）
+16:16:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CAT261009C00812500，5.2s 后免费重试（第 1 轮）
+16:16:23 [INFO] yhs.overnight: 2026-10-07 CAT SPRINGBOARD O:CAT261009C00812500 成本 9.13 | 跳空 0.181% | 09:35 -3.39% / 09:45 -6.93% / 收盘 -84.33%
+16:16:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CEG261009C00300000，5.3s 后免费重试（第 1 轮）
+16:16:30 [INFO] yhs.main: 【历史】CEG261009C00300000 真实 IV 序列 390 个点（1m）
+16:16:31 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CEG261009C00300000，5.3s 后免费重试（第 1 轮）
+16:16:37 [INFO] yhs.main: 【历史】CEG261009C00300000 真实 IV 序列 390 个点（1m）
+16:16:38 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CEG261009C00300000，5.1s 后免费重试（第 1 轮）
+16:16:43 [INFO] yhs.overnight: 2026-10-07 CEG SPRINGBOARD O:CEG261009C00300000 成本 4.33 | 跳空 -1.337% | 09:35 -31.73% / 09:45 14.16% / 收盘 -93.21%
+16:16:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CELH261009C00027000，5.1s 后免费重试（第 1 轮）
+16:16:50 [INFO] yhs.main: 【历史】CELH261009C00027000 真实 IV 序列 390 个点（1m）
+16:16:50 [INFO] yhs.main: 【历史】CELH261009C00027000 真实 IV 序列 390 个点（1m）
+16:16:51 [INFO] yhs.overnight: 2026-10-07 CELH SPRINGBOARD O:CELH261009C00027000 成本 0.43 | 跳空 -0.093% | 09:35 -26.83% / 09:45 -38.07% / 收盘 19.36%
+16:16:51 [INFO] yhs.main: 【历史】CIEN261009P00442500 真实 IV 序列 390 个点（1m）
+16:16:52 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CIEN261009P00442500，5.3s 后免费重试（第 1 轮）
+16:16:58 [INFO] yhs.main: 【历史】CIEN261009P00442500 真实 IV 序列 322 个点（1m）
+16:16:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CIEN261009P00442500，5.1s 后免费重试（第 1 轮）
+16:17:04 [INFO] yhs.overnight: 2026-10-07 CIEN CLIFF O:CIEN261009P00442500 成本 9.08 | 跳空 -1.024% | 09:35 27.95% / 09:45 22.01% / 收盘 101.91%
+16:17:06 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/COHR261009P00332500，5.3s 后免费重试（第 1 轮）
+16:17:11 [INFO] yhs.main: 【历史】COHR261009P00332500 真实 IV 序列 390 个点（1m）
+16:17:12 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/COHR261009P00332500，5.2s 后免费重试（第 1 轮）
+16:17:18 [INFO] yhs.main: 【历史】COHR261009P00332500 真实 IV 序列 277 个点（1m）
+16:17:19 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/COHR261009P00332500，5.2s 后免费重试（第 1 轮）
+16:17:25 [INFO] yhs.overnight: 2026-10-07 COHR CLIFF O:COHR261009P00332500 成本 6.27 | 跳空 -3.887% | 09:35 119.54% / 09:45 65.63% / 收盘 403.93%
+16:17:26 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/COIN261009P00172500，5.3s 后免费重试（第 1 轮）
+16:17:32 [INFO] yhs.main: 【历史】COIN261009P00172500 真实 IV 序列 390 个点（1m）
+16:17:33 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/COIN261009P00172500，5.3s 后免费重试（第 1 轮）
+16:17:38 [INFO] yhs.main: 【历史】COIN261009P00172500 真实 IV 序列 390 个点（1m）
+16:17:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/COIN261009P00172500，5.3s 后免费重试（第 1 轮）
+16:17:45 [INFO] yhs.overnight: 2026-10-07 COIN CLIFF O:COIN261009P00172500 成本 1.23 | 跳空 -1.645% | 09:35 41.49% / 09:45 59.73% / 收盘 30.34%
+16:17:46 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRM261009P00222500，5.2s 后免费重试（第 1 轮）
+16:17:52 [INFO] yhs.main: 【历史】CRM261009P00222500 真实 IV 序列 390 个点（1m）
+16:17:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRM261009P00222500，5.2s 后免费重试（第 1 轮）
+16:17:59 [INFO] yhs.main: 【历史】CRM261009P00222500 真实 IV 序列 390 个点（1m）
+16:18:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CRM261009P00222500，5.1s 后免费重试（第 1 轮）
+16:18:06 [INFO] yhs.overnight: 2026-10-07 CRM CLIFF O:CRM261009P00222500 成本 1.62 | 跳空 1.326% | 09:35 -56.47% / 09:45 -47.38% / 收盘 -71.64%
+16:18:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRWD261009C00265000，5.2s 后免费重试（第 1 轮）
+16:18:12 [INFO] yhs.main: 【历史】CRWD261009C00265000 真实 IV 序列 390 个点（1m）
+16:18:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRWD261009C00265000，5.3s 后免费重试（第 1 轮）
+16:18:23 [INFO] yhs.main: 【历史】CRWD261009C00265000 真实 IV 序列 390 个点（1m）
+16:18:23 [INFO] yhs.main: 【历史】CRWD261009C00265000 真实成交 bar 150 根（09:39–15:59）
+16:18:23 [INFO] yhs.overnight: 2026-10-07 CRWD SPRINGBOARD O:CRWD261009C00265000 成本 4.20 | 跳空 1.102% | 09:35 25.22% / 09:45 -2.07% / 收盘 -47.07%
+16:18:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CVNA261009C00063000，5.1s 后免费重试（第 1 轮）
+16:18:30 [INFO] yhs.main: 【历史】CVNA261009C00063000 真实 IV 序列 390 个点（1m）
+16:18:31 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CVNA261009C00063000，5.1s 后免费重试（第 1 轮）
+16:18:36 [INFO] yhs.main: 【历史】CVNA261009C00063000 真实 IV 序列 390 个点（1m）
+16:18:37 [INFO] yhs.overnight: 2026-10-07 CVNA SPRINGBOARD O:CVNA261009C00063000 成本 1.16 | 跳空 -0.795% | 09:35 -30.04% / 09:45 -20.78% / 收盘 -28.32%
+16:18:38 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CVX261009C00207500，5.1s 后免费重试（第 1 轮）
+16:18:44 [INFO] yhs.main: 【历史】CVX261009C00207500 真实 IV 序列 390 个点（1m）
+16:18:45 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CVX261009C00207500，5.2s 后免费重试（第 1 轮）
+16:18:51 [INFO] yhs.main: 【历史】CVX261009C00207500 真实 IV 序列 372 个点（1m）
+16:18:52 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CVX261009C00207500，5.3s 后免费重试（第 1 轮）
+16:18:58 [INFO] yhs.overnight: 2026-10-07 CVX SPRINGBOARD O:CVX261009C00207500 成本 0.97 | 跳空 2.358% | 09:35 261.15% / 09:45 253.92% / 收盘 341.89%
+16:18:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DASH261009C00192500，5.2s 后免费重试（第 1 轮）
+16:19:05 [INFO] yhs.main: 【历史】DASH261009C00192500 真实 IV 序列 390 个点（1m）
+16:19:06 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DASH261009C00192500，5.1s 后免费重试（第 1 轮）
+16:19:11 [INFO] yhs.main: 【历史】DASH261009C00192500 真实 IV 序列 390 个点（1m）
+16:19:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/DASH261009C00192500，5.2s 后免费重试（第 1 轮）
+16:19:18 [INFO] yhs.overnight: 2026-10-07 DASH SPRINGBOARD O:DASH261009C00192500 成本 2.17 | 跳空 0.168% | 09:35 -20.15% / 09:45 -36.84% / 收盘 -10.63%
+16:19:19 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DE261009C00657500，5.1s 后免费重试（第 1 轮）
+16:19:25 [INFO] yhs.main: 【历史】DE261009C00657500 真实 IV 序列 390 个点（1m）
+16:19:25 [INFO] yhs.main: 【历史】DE261009C00657500 真实 IV 序列 390 个点（1m）
+16:19:26 [INFO] yhs.overnight: 2026-10-07 DE SPRINGBOARD O:DE261009C00657500 成本 8.93 | 跳空 -0.557% | 09:35 -55.53% / 09:45 -55.31% / 收盘 -62.12%
+16:19:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DELL261009C00580000，5.0s 后免费重试（第 1 轮）
+16:19:33 [INFO] yhs.main: 【历史】DELL261009C00580000 真实 IV 序列 388 个点（1m）
+16:19:34 [INFO] yhs.main: 【历史】DELL261009C00580000 真实 IV 序列 390 个点（1m）
+16:19:35 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/DELL261009C00580000，5.2s 后免费重试（第 1 轮）
+16:19:41 [INFO] yhs.overnight: 2026-10-07 DELL SPRINGBOARD O:DELL261009C00580000 成本 9.71 | 跳空 -1.773% | 09:35 -57.62% / 09:45 -51.36% / 收盘 -49.35%
+16:19:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DIS261009P00104000，5.1s 后免费重试（第 1 轮）
+16:19:47 [INFO] yhs.main: 【历史】DIS261009P00104000 真实 IV 序列 390 个点（1m）
+16:19:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DIS261009P00104000，5.0s 后免费重试（第 1 轮）
+16:19:54 [INFO] yhs.main: 【历史】DIS261009P00104000 真实 IV 序列 390 个点（1m）
+16:19:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/DIS261009P00104000，5.3s 后免费重试（第 1 轮）
+16:20:01 [INFO] yhs.overnight: 2026-10-07 DIS CLIFF O:DIS261009P00104000 成本 0.54 | 跳空 0.368% | 09:35 -18.43% / 09:45 -34.73% / 收盘 -94.71%
+16:20:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ENPH261009C00033500，5.1s 后免费重试（第 1 轮）
+16:20:07 [INFO] yhs.main: 【历史】ENPH261009C00033500 真实 IV 序列 390 个点（1m）
+16:20:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ENPH261009C00033500，5.2s 后免费重试（第 1 轮）
+16:20:14 [INFO] yhs.main: 【历史】ENPH261009C00033500 真实 IV 序列 390 个点（1m）
+16:20:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/ENPH261009C00033500，5.1s 后免费重试（第 1 轮）
+16:20:21 [INFO] yhs.overnight: 2026-10-07 ENPH SPRINGBOARD O:ENPH261009C00033500 成本 0.47 | 跳空 -1.83% | 09:35 -18.63% / 09:45 -18.62% / 收盘 -39.57%
+16:20:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/FTNT261009C00190000，5.2s 后免费重试（第 1 轮）
+16:20:28 [INFO] yhs.main: 【历史】FTNT261009C00190000 真实 IV 序列 390 个点（1m）
+16:20:28 [INFO] yhs.main: 【历史】FTNT261009C00190000 真实 IV 序列 390 个点（1m）
+16:20:29 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/FTNT261009C00190000，5.1s 后免费重试（第 1 轮）
+16:20:34 [INFO] yhs.overnight: 2026-10-07 FTNT SPRINGBOARD O:FTNT261009C00190000 成本 2.36 | 跳空 0.526% | 09:35 18.54% / 09:45 18.55% / 收盘 -35.97%
+16:20:35 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261009C00165000，5.1s 后免费重试（第 1 轮）
+16:20:41 [INFO] yhs.main: 【历史】GLW261009C00165000 真实 IV 序列 390 个点（1m）
+16:20:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261009C00165000，5.2s 后免费重试（第 1 轮）
+16:20:48 [INFO] yhs.main: 【历史】GLW261009C00165000 真实 IV 序列 389 个点（1m）
+16:20:49 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/GLW261009C00165000，5.1s 后免费重试（第 1 轮）
+16:20:54 [INFO] yhs.overnight: 2026-10-07 GLW SPRINGBOARD O:GLW261009C00165000 成本 2.23 | 跳空 -3.704% | 09:35 -83.33% / 09:45 -78.11% / 收盘 -99.12%
+16:20:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261009C00892500，5.0s 后免费重试（第 1 轮）
+16:21:01 [INFO] yhs.main: 【历史】GS261009C00892500 真实 IV 序列 390 个点（1m）
+16:21:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261009C00892500，5.2s 后免费重试（第 1 轮）
+16:21:08 [INFO] yhs.main: 【历史】GS261009C00892500 真实 IV 序列 390 个点（1m）
+16:21:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/GS261009C00892500，5.2s 后免费重试（第 1 轮）
+16:21:15 [INFO] yhs.overnight: 2026-10-07 GS SPRINGBOARD O:GS261009C00892500 成本 5.26 | 跳空 -0.921% | 09:35 -40.71% / 09:45 -40.67% / 收盘 -68.85%
+16:21:16 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HPE261009C00073000，5.0s 后免费重试（第 1 轮）
+16:21:21 [INFO] yhs.main: 【历史】HPE261009C00073000 真实 IV 序列 390 个点（1m）
+16:21:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HPE261009C00073000，5.1s 后免费重试（第 1 轮）
+16:21:28 [INFO] yhs.main: 【历史】HPE261009C00073000 真实 IV 序列 390 个点（1m）
+16:21:29 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/HPE261009C00073000，5.2s 后免费重试（第 1 轮）
+16:21:35 [INFO] yhs.overnight: 2026-10-07 HPE SPRINGBOARD O:HPE261009C00073000 成本 1.09 | 跳空 -2.015% | 09:35 -56.99% / 09:45 -56.91% / 收盘 -74.91%
+16:21:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ICE261009C00152500，5.1s 后免费重试（第 1 轮）
+16:21:41 [INFO] yhs.main: 【历史】ICE261009C00152500 真实 IV 序列 390 个点（1m）
+16:21:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ICE261009C00152500，5.3s 后免费重试（第 1 轮）
+16:21:48 [INFO] yhs.main: 【历史】ICE261009C00152500 真实 IV 序列 232 个点（1m）
+16:21:49 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/ICE261009C00152500，5.1s 后免费重试（第 1 轮）
+16:21:56 [INFO] yhs.overnight: 2026-10-07 ICE SPRINGBOARD O:ICE261009C00152500 成本 1.28 | 跳空 -0.216% | 09:35 -2.37% / 09:45 -2.33% / 收盘 %
+16:21:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/JNJ261009C00260000，5.2s 后免费重试（第 1 轮）
+16:22:02 [INFO] yhs.main: 【历史】JNJ261009C00260000 真实 IV 序列 390 个点（1m）
+16:22:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/JNJ261009C00260000，5.0s 后免费重试（第 1 轮）
+16:22:09 [INFO] yhs.main: 【历史】JNJ261009C00260000 真实 IV 序列 390 个点（1m）
+16:22:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/JNJ261009C00260000，5.1s 后免费重试（第 1 轮）
+16:22:15 [INFO] yhs.overnight: 2026-10-07 JNJ SPRINGBOARD O:JNJ261009C00260000 成本 1.49 | 跳空 -0.667% | 09:35 -46.05% / 09:45 -64.4% / 收盘 -74.29%
+16:22:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/LRCX261009P00325000，5.3s 后免费重试（第 1 轮）
+16:22:22 [INFO] yhs.main: 【历史】LRCX261009P00325000 真实 IV 序列 390 个点（1m）
+16:22:23 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/LRCX261009P00325000，5.1s 后免费重试（第 1 轮）
+16:22:29 [INFO] yhs.main: 【历史】LRCX261009P00325000 真实 IV 序列 390 个点（1m）
+16:22:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/LRCX261009P00325000，5.1s 后免费重试（第 1 轮）
+16:22:35 [INFO] yhs.overnight: 2026-10-07 LRCX CLIFF O:LRCX261009P00325000 成本 3.72 | 跳空 -2.257% | 09:35 70.32% / 09:45 65.87% / 收盘 109.32%
+16:22:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MCD261009P00230000，5.0s 后免费重试（第 1 轮）
+16:22:42 [INFO] yhs.main: 【历史】MCD261009P00230000 真实 IV 序列 390 个点（1m）
+16:22:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MCD261009P00230000，5.2s 后免费重试（第 1 轮）
+16:22:49 [INFO] yhs.main: 【历史】MCD261009P00230000 真实 IV 序列 390 个点（1m）
+16:22:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/MCD261009P00230000，5.0s 后免费重试（第 1 轮）
+16:22:56 [INFO] yhs.overnight: 2026-10-07 MCD CLIFF O:MCD261009P00230000 成本 1.08 | 跳空 0.015% | 09:35 -11.13% / 09:45 -66.47% / 收盘 -97.26%
+16:22:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MDB261009P00357500，5.2s 后免费重试（第 1 轮）
+16:23:02 [INFO] yhs.main: 【历史】MDB261009P00357500 真实 IV 序列 390 个点（1m）
+16:23:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MDB261009P00357500，5.2s 后免费重试（第 1 轮）
+16:23:09 [INFO] yhs.main: 【历史】MDB261009P00357500 真实 IV 序列 390 个点（1m）
+16:23:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/MDB261009P00357500，5.2s 后免费重试（第 1 轮）
+16:23:16 [INFO] yhs.overnight: 2026-10-07 MDB CLIFF O:MDB261009P00357500 成本 3.90 | 跳空 0.509% | 09:35 -14.97% / 09:45 18.72% / 收盘 -70.81%
+16:23:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NFLX261009C00070000，5.3s 后免费重试（第 1 轮）
+16:23:23 [INFO] yhs.main: 【历史】NFLX261009C00070000 真实 IV 序列 390 个点（1m）
+16:23:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NFLX261009C00070000，5.2s 后免费重试（第 1 轮）
+16:23:30 [INFO] yhs.main: 【历史】NFLX261009C00070000 真实 IV 序列 390 个点（1m）
+16:23:31 [INFO] yhs.main: 【历史】NFLX261009C00070000 真实成交 bar 150 根（13:04–15:59）
+16:23:31 [INFO] yhs.overnight: 2026-10-07 NFLX SPRINGBOARD O:NFLX261009C00070000 成本 0.54 | 跳空 0.66% | 09:35 23.29% / 09:45 66.74% / 收盘 195.41%
+16:23:32 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261009C00034500，5.3s 后免费重试（第 1 轮）
+16:23:38 [INFO] yhs.main: 【历史】NKE261009C00034500 真实 IV 序列 390 个点（1m）
+16:23:38 [INFO] yhs.main: 【历史】NKE261009C00034500 真实 IV 序列 390 个点（1m）
+16:23:39 [INFO] yhs.main: 【历史】NKE261009C00034500 分钟线为 2026-10-09（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+16:23:39 [INFO] yhs.overnight: 2026-10-07 NKE SPRINGBOARD O:NKE261009C00034500 成本 0.33 | 跳空 -0.853% | 09:35 -51.88% / 09:45 -51.85% / 收盘 41.27%
+16:23:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261009P00038000，5.0s 后免费重试（第 1 轮）
+16:23:45 [INFO] yhs.main: 【历史】NVO261009P00038000 真实 IV 序列 390 个点（1m）
+16:23:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261009P00038000，5.1s 后免费重试（第 1 轮）
+16:23:52 [INFO] yhs.main: 【历史】NVO261009P00038000 真实 IV 序列 390 个点（1m）
+16:23:52 [INFO] yhs.overnight: 2026-10-07 NVO CLIFF O:NVO261009P00038000 成本 0.22 | 跳空 -1.372% | 09:35 101.39% / 09:45 131.82% / 收盘 -25.28%
+16:23:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PANW261009P00405000，5.2s 后免费重试（第 1 轮）
+16:23:59 [INFO] yhs.main: 【历史】PANW261009P00405000 真实 IV 序列 390 个点（1m）
+16:24:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PANW261009P00405000，5.0s 后免费重试（第 1 轮）
+16:24:05 [INFO] yhs.main: 【历史】PANW261009P00405000 真实 IV 序列 390 个点（1m）
+16:24:05 [INFO] yhs.overnight: 2026-10-07 PANW CLIFF O:PANW261009P00405000 成本 5.61 | 跳空 1.082% | 09:35 -20.15% / 09:45 -10.91% / 收盘 53.76%
+16:24:06 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PG261009P00147000，5.3s 后免费重试（第 1 轮）
+16:24:12 [INFO] yhs.main: 【历史】PG261009P00147000 真实 IV 序列 390 个点（1m）
+16:24:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PG261009P00147000，5.2s 后免费重试（第 1 轮）
+16:24:19 [INFO] yhs.main: 【历史】PG261009P00147000 真实 IV 序列 390 个点（1m）
+16:24:19 [INFO] yhs.overnight: 2026-10-07 PG CLIFF O:PG261009P00147000 成本 0.48 | 跳空 -0.406% | 09:35 26.76% / 09:45 16.65% / 收盘 -93.83%
+16:24:20 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PYPL261009C00055000，5.1s 后免费重试（第 1 轮）
+16:24:26 [INFO] yhs.main: 【历史】PYPL261009C00055000 真实 IV 序列 390 个点（1m）
+16:24:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PYPL261009C00055000，5.3s 后免费重试（第 1 轮）
+16:24:32 [INFO] yhs.main: 【历史】PYPL261009C00055000 真实 IV 序列 390 个点（1m）
+16:24:32 [INFO] yhs.overnight: 2026-10-07 PYPL SPRINGBOARD O:PYPL261009C00055000 成本 0.56 | 跳空 -0.592% | 09:35 -37.16% / 09:45 -45.99% / 收盘 -33.75%
+16:24:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QCOM261009P00175000，5.1s 后免费重试（第 1 轮）
+16:24:39 [INFO] yhs.main: 【历史】QCOM261009P00175000 真实 IV 序列 390 个点（1m）
+16:24:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QCOM261009P00175000，5.0s 后免费重试（第 1 轮）
+16:24:46 [INFO] yhs.main: 【历史】QCOM261009P00175000 真实 IV 序列 390 个点（1m）
+16:24:46 [INFO] yhs.overnight: 2026-10-07 QCOM CLIFF O:QCOM261009P00175000 成本 1.50 | 跳空 -1.454% | 09:35 52.43% / 09:45 39.29% / 收盘 11.14%
+16:24:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QQQ261008C00758000，5.2s 后免费重试（第 1 轮）
+16:24:52 [INFO] yhs.main: 【历史】QQQ261008C00758000 真实 IV 序列 390 个点（1m）
+16:24:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QQQ261008C00758000，5.0s 后免费重试（第 1 轮）
+16:24:59 [INFO] yhs.main: 【历史】QQQ261008C00758000 真实 IV 序列 311 个点（1m）
+16:24:59 [INFO] yhs.overnight: 2026-10-07 QQQ SPRINGBOARD O:QQQ261008C00758000 成本 2.20 | 跳空 -0.389% | 09:35 -72.32% / 09:45 -87.02% / 收盘 %
+16:24:59 [INFO] yhs.main: 【历史】SHEL261009C00097000 真实 IV 序列 390 个点（1m）
+16:25:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SHEL261009C00097000，5.1s 后免费重试（第 1 轮）
+16:25:05 [INFO] yhs.main: 【历史】SHEL261009C00097000 真实 IV 序列 112 个点（1m）
+16:25:05 [INFO] yhs.overnight: 2026-10-07 SHEL SPRINGBOARD O:SHEL261009C00097000 成本 0.66 | 跳空 2.937% | 09:35 306.79% / 09:45 321.46% / 收盘 %
+16:25:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SHOP261009P00165000，5.2s 后免费重试（第 1 轮）
+16:25:12 [INFO] yhs.main: 【历史】SHOP261009P00165000 真实 IV 序列 390 个点（1m）
+16:25:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SHOP261009P00165000，5.1s 后免费重试（第 1 轮）
+16:25:19 [INFO] yhs.main: 【历史】SHOP261009P00165000 真实 IV 序列 390 个点（1m）
+16:25:19 [INFO] yhs.overnight: 2026-10-07 SHOP CLIFF O:SHOP261009P00165000 成本 2.08 | 跳空 0.012% | 09:35 -13.33% / 09:45 -31.73% / 收盘 0.34%
+16:25:20 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SLB261009C00048500，5.3s 后免费重试（第 1 轮）
+16:25:26 [INFO] yhs.main: 【历史】SLB261009C00048500 真实 IV 序列 389 个点（1m）
+16:25:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SLB261009C00048500，5.2s 后免费重试（第 1 轮）
+16:25:32 [INFO] yhs.main: 【历史】SLB261009C00048500 真实 IV 序列 390 个点（1m）
+16:25:32 [INFO] yhs.overnight: 2026-10-07 SLB SPRINGBOARD O:SLB261009C00048500 成本 0.40 | 跳空 1.061% | 09:35 -8.71% / 09:45 15.49% / 收盘 72.25%
+16:25:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNDK261009P01695000，5.2s 后免费重试（第 1 轮）
+16:25:40 [INFO] yhs.main: 【历史】SNDK261009P01695000 真实 IV 序列 390 个点（1m）
+16:25:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNDK261009P01695000，5.1s 后免费重试（第 1 轮）
+16:25:46 [INFO] yhs.main: 【历史】SNDK261009P01695000 真实 IV 序列 349 个点（1m）
+16:25:46 [INFO] yhs.overnight: 2026-10-07 SNDK CLIFF O:SNDK261009P01695000 成本 29.42 | 跳空 -1.725% | 09:35 41.72% / 09:45 95.03% / 收盘 212.46%
+16:25:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261008P00777000，5.2s 后免费重试（第 1 轮）
+16:25:53 [INFO] yhs.main: 【历史】SPY261008P00777000 真实 IV 序列 390 个点（1m）
+16:25:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261008P00777000，5.1s 后免费重试（第 1 轮）
+16:26:00 [INFO] yhs.main: 【历史】SPY261008P00777000 真实 IV 序列 365 个点（1m）
+16:26:00 [INFO] yhs.overnight: 2026-10-07 SPY CLIFF O:SPY261008P00777000 成本 1.48 | 跳空 -0.266% | 09:35 55.99% / 09:45 80.56% / 收盘 139.67%
+16:26:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SYM261009C00043500，5.1s 后免费重试（第 1 轮）
+16:26:07 [INFO] yhs.main: 【历史】SYM261009C00043500 真实 IV 序列 390 个点（1m）
+16:26:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SYM261009C00043500，5.1s 后免费重试（第 1 轮）
+16:26:13 [INFO] yhs.main: 【历史】SYM261009C00043500 真实 IV 序列 390 个点（1m）
+16:26:13 [INFO] yhs.overnight: 2026-10-07 SYM SPRINGBOARD O:SYM261009C00043500 成本 0.77 | 跳空 -1.858% | 09:35 -48.86% / 09:45 -48.71% / 收盘 -87.2%
+16:26:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TER261009P00410000，5.0s 后免费重试（第 1 轮）
+16:26:20 [INFO] yhs.main: 【历史】TER261009P00410000 真实 IV 序列 390 个点（1m）
+16:26:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TER261009P00410000，5.0s 后免费重试（第 1 轮）
+16:26:27 [INFO] yhs.main: 【历史】TER261009P00410000 真实 IV 序列 382 个点（1m）
+16:26:27 [INFO] yhs.overnight: 2026-10-07 TER CLIFF O:TER261009P00410000 成本 7.34 | 跳空 -1.702% | 09:35 30.78% / 09:45 46.14% / 收盘 110.88%
+16:26:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSEM261009P00247500，5.2s 后免费重试（第 1 轮）
+16:26:33 [INFO] yhs.main: 【历史】TSEM261009P00247500 真实 IV 序列 390 个点（1m）
+16:26:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSEM261009P00247500，5.1s 后免费重试（第 1 轮）
+16:26:40 [INFO] yhs.main: 【历史】TSEM261009P00247500 真实 IV 序列 254 个点（1m）
+16:26:40 [INFO] yhs.overnight: 2026-10-07 TSEM CLIFF O:TSEM261009P00247500 成本 5.20 | 跳空 -3.007% | 09:35 76.15% / 09:45 70.48% / 收盘 %
+16:26:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSLA261009C00380000，5.0s 后免费重试（第 1 轮）
+16:26:47 [INFO] yhs.main: 【历史】TSLA261009C00380000 真实 IV 序列 390 个点（1m）
+16:26:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSLA261009C00380000，5.2s 后免费重试（第 1 轮）
+16:26:54 [INFO] yhs.main: 【历史】TSLA261009C00380000 真实 IV 序列 390 个点（1m）
+16:26:54 [INFO] yhs.overnight: 2026-10-07 TSLA SPRINGBOARD O:TSLA261009C00380000 成本 3.47 | 跳空 -1.286% | 09:35 -60.14% / 09:45 -51.13% / 收盘 -74.0%
+16:26:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TXN261009C00290000，5.2s 后免费重试（第 1 轮）
+16:27:01 [INFO] yhs.main: 【历史】TXN261009C00290000 真实 IV 序列 390 个点（1m）
+16:27:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TXN261009C00290000，5.0s 后免费重试（第 1 轮）
+16:27:08 [INFO] yhs.main: 【历史】TXN261009C00290000 真实 IV 序列 390 个点（1m）
+16:27:08 [INFO] yhs.overnight: 2026-10-07 TXN SPRINGBOARD O:TXN261009C00290000 成本 3.64 | 跳空 -1.528% | 09:35 -67.97% / 09:45 -74.18% / 收盘 -67.95%
+16:27:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/U261009C00045500，5.1s 后免费重试（第 1 轮）
+16:27:14 [INFO] yhs.main: 【历史】U261009C00045500 真实 IV 序列 390 个点（1m）
+16:27:16 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/U261009C00045500，5.2s 后免费重试（第 1 轮）
+16:27:21 [INFO] yhs.main: 【历史】U261009C00045500 真实 IV 序列 390 个点（1m）
+16:27:21 [INFO] yhs.overnight: 2026-10-07 U SPRINGBOARD O:U261009C00045500 成本 0.75 | 跳空 3.788% | 09:35 146.73% / 09:45 149.37% / 收盘 -9.12%
+16:27:21 [INFO] yhs.main: 【历史】UBER261009C00069000 真实 IV 序列 390 个点（1m）
+16:27:21 [INFO] yhs.main: 【历史】UBER261009C00069000 真实 IV 序列 390 个点（1m）
+16:27:21 [INFO] yhs.overnight: 2026-10-07 UBER SPRINGBOARD O:UBER261009C00069000 成本 0.43 | 跳空 0.592% | 09:35 21.49% / 09:45 12.3% / 收盘 220.72%
+16:27:23 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/UCTT261016C00075000，5.3s 后免费重试（第 1 轮）
+16:27:29 [INFO] yhs.main: 【历史】UCTT261016C00075000 真实 IV 序列 390 个点（1m）
+16:27:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/UCTT261016C00075000，5.3s 后免费重试（第 1 轮）
+16:27:36 [INFO] yhs.main: 【历史】UCTT261016C00075000 真实 IV 序列 390 个点（1m）
+16:27:36 [INFO] yhs.overnight: 2026-10-07 UCTT SPRINGBOARD O:UCTT261016C00075000 成本 2.04 | 跳空 -2.879% | 09:35 -26.98% / 09:45 -30.48% / 收盘 -66.38%
+16:27:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WFC261009P00080000，5.1s 后免费重试（第 1 轮）
+16:27:42 [INFO] yhs.main: 【历史】WFC261009P00080000 真实 IV 序列 390 个点（1m）
+16:27:43 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WFC261009P00080000，5.1s 后免费重试（第 1 轮）
+16:27:49 [INFO] yhs.main: 【历史】WFC261009P00080000 真实 IV 序列 390 个点（1m）
+16:27:49 [INFO] yhs.overnight: 2026-10-07 WFC CLIFF O:WFC261009P00080000 成本 0.54 | 跳空 -0.467% | 09:35 12.32% / 09:45 -11.41% / 收盘 -87.34%
+16:27:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/XOM261009C00165000，5.1s 后免费重试（第 1 轮）
+16:27:55 [INFO] yhs.main: 【历史】XOM261009C00165000 真实 IV 序列 388 个点（1m）
+16:27:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/XOM261009C00165000，5.2s 后免费重试（第 1 轮）
+16:28:02 [INFO] yhs.main: 【历史】XOM261009C00165000 真实 IV 序列 390 个点（1m）
+16:28:02 [INFO] yhs.overnight: 2026-10-07 XOM SPRINGBOARD O:XOM261009C00165000 成本 1.22 | 跳空 2.11% | 09:35 151.65% / 09:45 179.9% / 收盘 210.5%
+16:28:02 [INFO] yhs.overnight: ===== 隔夜 2026-10-08 → 2026-10-09 =====
+16:28:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AAPL261009P00340000，5.0s 后免费重试（第 1 轮）
+16:28:09 [INFO] yhs.main: 【历史】AAPL261009P00340000 真实 IV 序列 390 个点（1m）
+16:28:11 [INFO] yhs.main: 【历史】AAPL261009P00340000 真实 IV 序列 217 个点（1m）
+16:28:11 [INFO] yhs.overnight: 2026-10-08 AAPL CLIFF O:AAPL261009P00340000 成本 1.33 | 跳空 -2.465% | 09:35 481.61% / 09:45 429.89% / 收盘 142.49%
+16:28:12 [INFO] yhs.main: 【历史】AFRM261009C00077000 真实 IV 序列 390 个点（1m）
+16:28:12 [INFO] yhs.main: 【历史】AFRM261009C00077000 真实 IV 序列 167 个点（1m）
+16:28:13 [INFO] yhs.overnight: 2026-10-08 AFRM SPRINGBOARD O:AFRM261009C00077000 成本 0.78 | 跳空 0.763% | 09:35 16.37% / 09:45 22.66% / 收盘 367.56%
+16:28:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/ALAB261009C00347500，5.1s 后免费重试（第 1 轮）
+16:28:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ALAB261009C00347500，5.2s 后免费重试（第 1 轮）
+16:28:27 [INFO] yhs.main: 【历史】ALAB261009C00347500 真实 IV 序列 373 个点（1m）
+16:28:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ALAB261009C00347500，5.1s 后免费重试（第 1 轮）
+16:28:34 [INFO] yhs.main: 【历史】ALAB261009C00347500 真实 IV 序列 390 个点（1m）
+16:28:35 [INFO] yhs.overnight: 2026-10-08 ALAB SPRINGBOARD O:ALAB261009C00347500 成本 5.99 | 跳空 -0.74% | 09:35 -40.1% / 09:45 -88.37% / 收盘 -92.62%
+16:28:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AMZN261009C00255000，5.2s 后免费重试（第 1 轮）
+16:28:42 [INFO] yhs.main: 【历史】AMZN261009C00255000 真实 IV 序列 390 个点（1m）
+16:28:43 [INFO] yhs.main: 【历史】AMZN261009C00255000 真实 IV 序列 229 个点（1m）
+16:28:44 [INFO] yhs.overnight: 2026-10-08 AMZN SPRINGBOARD O:AMZN261009C00255000 成本 1.69 | 跳空 1.459% | 09:35 121.18% / 09:45 82.41% / 收盘 339.98%
+16:28:45 [INFO] yhs.main: 【历史】APP261009C00280000 分钟线为 2026-10-09（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+16:28:46 [INFO] yhs.main: 【历史】APP261009C00280000 真实 IV 序列 390 个点（1m）
+16:28:46 [INFO] yhs.main: 【历史】APP261009C00280000 真实 IV 序列 390 个点（1m）
+16:28:46 [INFO] yhs.main: 【历史】APP261009C00280000 真实成交 bar 150 根（10:23–15:54）
+16:28:46 [INFO] yhs.overnight: 2026-10-08 APP SPRINGBOARD O:APP261009C00280000 成本 3.47 | 跳空 -0.142% | 09:35 -40.1% / 09:45 -30.21% / 收盘 -98.59%
+16:28:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ARM261009P00272500，5.2s 后免费重试（第 1 轮）
+16:28:53 [INFO] yhs.main: 【历史】ARM261009P00272500 真实 IV 序列 390 个点（1m）
+16:28:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ARM261009P00272500，5.3s 后免费重试（第 1 轮）
+16:29:00 [INFO] yhs.main: 【历史】ARM261009P00272500 真实 IV 序列 286 个点（1m）
+16:29:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/ARM261009P00272500，5.1s 后免费重试（第 1 轮）
+16:29:06 [INFO] yhs.overnight: 2026-10-08 ARM CLIFF O:ARM261009P00272500 成本 3.14 | 跳空 1.153% | 09:35 -67.87% / 09:45 19.16% / 收盘 94.06%
+16:29:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ASML261009P01760000，5.0s 后免费重试（第 1 轮）
+16:29:13 [INFO] yhs.main: 【历史】ASML261009P01760000 真实 IV 序列 390 个点（1m）
+16:29:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ASML261009P01760000，5.3s 后免费重试（第 1 轮）
+16:29:20 [INFO] yhs.main: 【历史】ASML261009P01760000 真实 IV 序列 390 个点（1m）
+16:29:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/ASML261009P01760000，5.1s 后免费重试（第 1 轮）
+16:29:27 [INFO] yhs.overnight: 2026-10-08 ASML CLIFF O:ASML261009P01760000 成本 15.09 | 跳空 3.211% | 09:35 -96.62% / 09:45 -95.13% / 收盘 -99.55%
+16:29:29 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AXTI261009C00072000，5.2s 后免费重试（第 1 轮）
+16:29:35 [INFO] yhs.main: 【历史】AXTI261009C00072000 真实 IV 序列 390 个点（1m）
+16:29:35 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AXTI261009C00072000，5.1s 后免费重试（第 1 轮）
+16:29:41 [INFO] yhs.main: 【历史】AXTI261009C00072000 真实 IV 序列 389 个点（1m）
+16:29:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AXTI261009C00072000，5.1s 后免费重试（第 1 轮）
+16:29:48 [INFO] yhs.overnight: 2026-10-08 AXTI SPRINGBOARD O:AXTI261009C00072000 成本 1.38 | 跳空 5.029% | 09:35 142.13% / 09:45 -10.94% / 收盘 -98.62%
+16:29:48 [INFO] yhs.main: 【历史】BA261009P00185000 真实 IV 序列 390 个点（1m）
+16:29:49 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BA261009P00185000，5.3s 后免费重试（第 1 轮）
+16:29:55 [INFO] yhs.main: 【历史】BA261009P00185000 真实 IV 序列 361 个点（1m）
+16:29:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/BA261009P00185000，5.0s 后免费重试（第 1 轮）
+16:30:01 [INFO] yhs.overnight: 2026-10-08 BA CLIFF O:BA261009P00185000 成本 0.38 | 跳空 0.315% | 09:35 -60.98% / 09:45 -84.25% / 收盘 %
+16:30:01 [INFO] yhs.main: 【历史】BABA261009C00106000 真实 IV 序列 388 个点（1m）
+16:30:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BABA261009C00106000，5.2s 后免费重试（第 1 轮）
+16:30:08 [INFO] yhs.main: 【历史】BABA261009C00106000 真实 IV 序列 190 个点（1m）
+16:30:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/BABA261009C00106000，5.1s 后免费重试（第 1 轮）
+16:30:14 [INFO] yhs.overnight: 2026-10-08 BABA SPRINGBOARD O:BABA261009C00106000 成本 0.89 | 跳空 % | 09:35 % / 09:45 402.86% / 收盘 507.7%
+16:30:14 [INFO] yhs.main: 【历史】BAC261009P00053000 真实 IV 序列 390 个点（1m）
+16:30:16 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BAC261009P00053000，5.2s 后免费重试（第 1 轮）
+16:30:22 [INFO] yhs.main: 【历史】BAC261009P00053000 真实 IV 序列 152 个点（1m）
+16:30:22 [INFO] yhs.overnight: 2026-10-08 BAC CLIFF O:BAC261009P00053000 成本 0.17 | 跳空 0.281% | 09:35 -60.11% / 09:45 -83.29% / 收盘 %
+16:30:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BOX261016P00036000，5.1s 后免费重试（第 1 轮）
+16:30:30 [INFO] yhs.main: 【历史】BOX261016P00036000 真实 IV 序列 390 个点（1m）
+16:30:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BOX261016P00036000，5.2s 后免费重试（第 1 轮）
+16:30:36 [INFO] yhs.main: 【历史】BOX261016P00036000 真实 IV 序列 390 个点（1m）
+16:30:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/BOX261016P00036000，5.2s 后免费重试（第 1 轮）
+16:30:43 [INFO] yhs.overnight: 2026-10-08 BOX CLIFF O:BOX261016P00036000 成本 0.66 | 跳空 1.713% | 09:35 -43.46% / 09:45 -39.09% / 收盘 -25.94%
+16:30:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BSX261009P00041500，5.2s 后免费重试（第 1 轮）
+16:30:49 [INFO] yhs.main: 【历史】BSX261009P00041500 真实 IV 序列 390 个点（1m）
+16:30:51 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BSX261009P00041500，5.1s 后免费重试（第 1 轮）
+16:30:56 [INFO] yhs.main: 【历史】BSX261009P00041500 真实 IV 序列 390 个点（1m）
+16:30:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/BSX261009P00041500，5.3s 后免费重试（第 1 轮）
+16:31:03 [INFO] yhs.overnight: 2026-10-08 BSX CLIFF O:BSX261009P00041500 成本 0.20 | 跳空 0.417% | 09:35 -52.2% / 09:45 -52.06% / 收盘 -27.75%
+16:31:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/C261009C00128000，5.2s 后免费重试（第 1 轮）
+16:31:10 [INFO] yhs.main: 【历史】C261009C00128000 真实 IV 序列 390 个点（1m）
+16:31:10 [INFO] yhs.main: 【历史】C261009C00128000 真实 IV 序列 291 个点（1m）
+16:31:10 [INFO] yhs.main: 【历史】C261009C00128000 真实成交 bar 46 根（09:33–13:22）
+16:31:10 [INFO] yhs.overnight: 2026-10-08 C SPRINGBOARD O:C261009C00128000 成本 0.74 | 跳空 0.172% | 09:35 -20.04% / 09:45 -14.73% / 收盘 121.23%
+16:31:10 [INFO] yhs.main: 【历史】CCJ261009P00087000 真实 IV 序列 390 个点（1m）
+16:31:10 [INFO] yhs.main: 【历史】CCJ261009P00087000 真实 IV 序列 390 个点（1m）
+16:31:10 [INFO] yhs.main: 【历史】CCJ261009P00087000 真实成交 bar 12 根（09:30–15:40）
+16:31:10 [INFO] yhs.overnight: 2026-10-08 CCJ CLIFF O:CCJ261009P00087000 成本 1.01 | 跳空 -0.195% | 09:35 -2.92% / 09:45 -43.7% / 收盘 -92.27%
+16:31:11 [INFO] yhs.main: 【历史】COIN261009P00170000 真实 IV 序列 390 个点（1m）
+16:31:12 [INFO] yhs.main: 【历史】COIN261009P00170000 真实 IV 序列 265 个点（1m）
+16:31:13 [INFO] yhs.main: 【历史】COIN261009P00170000 真实成交 bar 134 根（09:30–15:58）
+16:31:13 [INFO] yhs.overnight: 2026-10-08 COIN CLIFF O:COIN261009P00170000 成本 0.84 | 跳空 -0.61% | 09:35 -2.77% / 09:45 -53.14% / 收盘 %
+16:31:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/COST261009P00945000，5.1s 后免费重试（第 1 轮）
+16:31:20 [INFO] yhs.main: 【历史】COST261009P00945000 真实 IV 序列 390 个点（1m）
+16:31:20 [INFO] yhs.main: 【历史】COST261009P00945000 真实 IV 序列 390 个点（1m）
+16:31:21 [INFO] yhs.overnight: 2026-10-08 COST CLIFF O:COST261009P00945000 成本 2.50 | 跳空 -0.034% | 09:35 -12.15% / 09:45 -52.18% / 收盘 -94.94%
+16:31:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CVNA261009C00064000，5.0s 后免费重试（第 1 轮）
+16:31:28 [INFO] yhs.main: 【历史】CVNA261009C00064000 真实 IV 序列 390 个点（1m）
+16:31:29 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CVNA261009C00064000，5.3s 后免费重试（第 1 轮）
+16:31:34 [INFO] yhs.main: 【历史】CVNA261009C00064000 真实 IV 序列 390 个点（1m）
+16:31:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CVNA261009C00064000，5.2s 后免费重试（第 1 轮）
+16:31:41 [INFO] yhs.overnight: 2026-10-08 CVNA SPRINGBOARD O:CVNA261009C00064000 成本 0.44 | 跳空 0.135% | 09:35 -21.77% / 09:45 -59.83% / 收盘 -95.71%
+16:31:41 [INFO] yhs.main: 【历史】DASH261009C00192500 真实 IV 序列 390 个点（1m）
+16:31:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DASH261009C00192500，5.1s 后免费重试（第 1 轮）
+16:31:48 [INFO] yhs.main: 【历史】DASH261009C00192500 真实 IV 序列 225 个点（1m）
+16:31:49 [INFO] yhs.overnight: 2026-10-08 DASH SPRINGBOARD O:DASH261009C00192500 成本 2.02 | 跳空 -0.463% | 09:35 -58.82% / 09:45 -28.2% / 收盘 96.87%
+16:31:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DKS261009C00136000，5.3s 后免费重试（第 1 轮）
+16:31:56 [INFO] yhs.main: 【历史】DKS261009C00136000 真实 IV 序列 390 个点（1m）
+16:31:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DKS261009C00136000，5.2s 后免费重试（第 1 轮）
+16:32:03 [INFO] yhs.main: 【历史】DKS261009C00136000 真实 IV 序列 385 个点（1m）
+16:32:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/DKS261009C00136000，5.2s 后免费重试（第 1 轮）
+16:32:09 [INFO] yhs.overnight: 2026-10-08 DKS SPRINGBOARD O:DKS261009C00136000 成本 1.30 | 跳空 -0.407% | 09:35 -47.09% / 09:45 -60.67% / 收盘 -54.65%
+16:32:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DVN261009P00048500，5.2s 后免费重试（第 1 轮）
+16:32:16 [INFO] yhs.main: 【历史】DVN261009P00048500 真实 IV 序列 390 个点（1m）
+16:32:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DVN261009P00048500，5.2s 后免费重试（第 1 轮）
+16:32:23 [INFO] yhs.main: 【历史】DVN261009P00048500 真实 IV 序列 379 个点（1m）
+16:32:24 [INFO] yhs.overnight: 2026-10-08 DVN CLIFF O:DVN261009P00048500 成本 0.21 | 跳空 -0.092% | 09:35 68.61% / 09:45 31.9% / 收盘 37.14%
+16:32:25 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ES261016C00070000，5.2s 后免费重试（第 1 轮）
+16:32:31 [INFO] yhs.main: 【历史】ES261016C00070000 真实 IV 序列 390 个点（1m）
+16:32:32 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/FIG261009P00022500，5.3s 后免费重试（第 1 轮）
+16:32:38 [INFO] yhs.main: 【历史】FIG261009P00022500 真实 IV 序列 389 个点（1m）
+16:32:38 [INFO] yhs.main: 【历史】FIG261009P00022500 真实 IV 序列 362 个点（1m）
+16:32:38 [INFO] yhs.overnight: 2026-10-08 FIG CLIFF O:FIG261009P00022500 成本 0.25 | 跳空 0.775% | 09:35 -19.05% / 09:45 -69.48% / 收盘 -38.66%
+16:32:38 [INFO] yhs.main: 【历史】FTNT261009C00190000 真实 IV 序列 390 个点（1m）
+16:32:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/FTNT261009C00190000，5.0s 后免费重试（第 1 轮）
+16:32:46 [INFO] yhs.main: 【历史】FTNT261009C00190000 真实 IV 序列 247 个点（1m）
+16:32:47 [INFO] yhs.overnight: 2026-10-08 FTNT SPRINGBOARD O:FTNT261009C00190000 成本 1.57 | 跳空 1.77% | 09:35 81.01% / 09:45 49.74% / 收盘 185.2%
+16:32:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GFS261016P00045000，5.3s 后免费重试（第 1 轮）
+16:32:54 [INFO] yhs.main: 【历史】GFS261016P00045000 真实 IV 序列 390 个点（1m）
+16:32:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GFS261016P00045000，5.1s 后免费重试（第 1 轮）
+16:33:01 [INFO] yhs.main: 【历史】GFS261016P00045000 真实 IV 序列 390 个点（1m）
+16:33:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/GFS261016P00045000，5.1s 后免费重试（第 1 轮）
+16:33:07 [INFO] yhs.main: 【历史】GFS261016P00045000 分钟线为 2026-10-13（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+16:33:07 [INFO] yhs.overnight: 2026-10-08 GFS CLIFF O:GFS261016P00045000 成本 0.28 | 跳空 0.244% | 09:35 -24.0% / 09:45 -17.06% / 收盘 13.72%
+16:33:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261009C00152500，5.2s 后免费重试（第 1 轮）
+16:33:15 [INFO] yhs.main: 【历史】GLW261009C00152500 真实 IV 序列 380 个点（1m）
+16:33:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261009C00152500，5.0s 后免费重试（第 1 轮）
+16:33:21 [INFO] yhs.main: 【历史】GLW261009C00152500 真实 IV 序列 233 个点（1m）
+16:33:21 [INFO] yhs.overnight: 2026-10-08 GLW SPRINGBOARD O:GLW261009C00152500 成本 1.83 | 跳空 4.478% | 09:35 255.21% / 09:45 64.21% / 收盘 133.99%
+16:33:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HPE261009P00070000，5.0s 后免费重试（第 1 轮）
+16:33:27 [INFO] yhs.main: 【历史】HPE261009P00070000 真实 IV 序列 390 个点（1m）
+16:33:29 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HPE261009P00070000，5.1s 后免费重试（第 1 轮）
+16:33:34 [INFO] yhs.main: 【历史】HPE261009P00070000 真实 IV 序列 361 个点（1m）
+16:33:34 [INFO] yhs.overnight: 2026-10-08 HPE CLIFF O:HPE261009P00070000 成本 0.53 | 跳空 2.607% | 09:35 -74.0% / 09:45 -62.96% / 收盘 %
+16:33:35 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HPQ261009P00032000，5.1s 后免费重试（第 1 轮）
+16:33:41 [INFO] yhs.main: 【历史】HPQ261009P00032000 真实 IV 序列 390 个点（1m）
+16:33:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HPQ261009P00032000，5.3s 后免费重试（第 1 轮）
+16:33:47 [INFO] yhs.main: 【历史】HPQ261009P00032000 真实 IV 序列 233 个点（1m）
+16:33:47 [INFO] yhs.overnight: 2026-10-08 HPQ CLIFF O:HPQ261009P00032000 成本 0.20 | 跳空 -3.123% | 09:35 182.55% / 09:45 181.8% / 收盘 901.96%
+16:33:49 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HSBC261009C00093000，5.1s 后免费重试（第 1 轮）
+16:33:54 [INFO] yhs.main: 【历史】HSBC261009C00093000 真实 IV 序列 390 个点（1m）
+16:33:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HSBC261009C00093000，5.3s 后免费重试（第 1 轮）
+16:34:02 [INFO] yhs.main: 【历史】HSBC261009C00093000 真实 IV 序列 389 个点（1m）
+16:34:02 [INFO] yhs.overnight: 2026-10-08 HSBC SPRINGBOARD O:HSBC261009C00093000 成本 0.51 | 跳空 0.173% | 09:35 -3.86% / 09:45 -32.64% / 收盘 -77.1%
+16:34:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HUT261009P00079000，5.3s 后免费重试（第 1 轮）
+16:34:08 [INFO] yhs.main: 【历史】HUT261009P00079000 真实 IV 序列 390 个点（1m）
+16:34:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HUT261009P00079000，5.2s 后免费重试（第 1 轮）
+16:34:15 [INFO] yhs.main: 【历史】HUT261009P00079000 真实 IV 序列 324 个点（1m）
+16:34:15 [INFO] yhs.overnight: 2026-10-08 HUT CLIFF O:HUT261009P00079000 成本 1.56 | 跳空 -0.962% | 09:35 -29.65% / 09:45 -14.57% / 收盘 %
+16:34:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ICE261009C00157500，5.1s 后免费重试（第 1 轮）
+16:34:22 [INFO] yhs.main: 【历史】ICE261009C00157500 真实 IV 序列 390 个点（1m）
+16:34:23 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ICE261009C00157500，5.1s 后免费重试（第 1 轮）
+16:34:29 [INFO] yhs.main: 【历史】ICE261009C00157500 真实 IV 序列 390 个点（1m）
+16:34:29 [INFO] yhs.overnight: 2026-10-08 ICE SPRINGBOARD O:ICE261009C00157500 成本 0.53 | 跳空 0.145% | 09:35 -26.35% / 09:45 -25.97% / 收盘 -62.96%
+16:34:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/INTU261009C00305000，5.2s 后免费重试（第 1 轮）
+16:34:35 [INFO] yhs.main: 【历史】INTU261009C00305000 真实 IV 序列 390 个点（1m）
+16:34:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/INTU261009C00305000，5.3s 后免费重试（第 1 轮）
+16:34:42 [INFO] yhs.main: 【历史】INTU261009C00305000 真实 IV 序列 390 个点（1m）
+16:34:42 [INFO] yhs.overnight: 2026-10-08 INTU SPRINGBOARD O:INTU261009C00305000 成本 2.30 | 跳空 2.006% | 09:35 113.42% / 09:45 113.47% / 收盘 -86.37%
+16:34:43 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/IONQ261009P00039000，5.2s 后免费重试（第 1 轮）
+16:34:50 [INFO] yhs.main: 【历史】IONQ261009P00039000 真实 IV 序列 390 个点（1m）
+16:34:51 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/IONQ261009P00039000，5.1s 后免费重试（第 1 轮）
+16:34:57 [INFO] yhs.main: 【历史】IONQ261009P00039000 真实 IV 序列 383 个点（1m）
+16:34:57 [INFO] yhs.overnight: 2026-10-08 IONQ CLIFF O:IONQ261009P00039000 成本 0.36 | 跳空 -0.215% | 09:35 -31.15% / 09:45 -34.21% / 收盘 -96.99%
+16:34:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/LLY261009C01165000，5.1s 后免费重试（第 1 轮）
+16:35:03 [INFO] yhs.main: 【历史】LLY261009C01165000 真实 IV 序列 390 个点（1m）
+16:35:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/LLY261009C01165000，5.3s 后免费重试（第 1 轮）
+16:35:10 [INFO] yhs.main: 【历史】LLY261009C01165000 真实 IV 序列 312 个点（1m）
+16:35:10 [INFO] yhs.overnight: 2026-10-08 LLY SPRINGBOARD O:LLY261009C01165000 成本 9.00 | 跳空 -0.002% | 09:35 2.07% / 09:45 -46.95% / 收盘 24.73%
+16:35:10 [INFO] yhs.main: 【历史】LMT261009C00507500 真实 IV 序列 390 个点（1m）
+16:35:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/LMT261009C00507500，5.1s 后免费重试（第 1 轮）
+16:35:16 [INFO] yhs.main: 【历史】LMT261009C00507500 真实 IV 序列 381 个点（1m）
+16:35:16 [INFO] yhs.overnight: 2026-10-08 LMT SPRINGBOARD O:LMT261009C00507500 成本 3.06 | 跳空 -0.691% | 09:35 -47.21% / 09:45 -68.94% / 收盘 -18.38%
+16:35:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MCD261009C00237500，5.2s 后免费重试（第 1 轮）
+16:35:23 [INFO] yhs.main: 【历史】MCD261009C00237500 真实 IV 序列 390 个点（1m）
+16:35:23 [INFO] yhs.main: 【历史】MCD261009C00237500 真实 IV 序列 366 个点（1m）
+16:35:23 [INFO] yhs.overnight: 2026-10-08 MCD SPRINGBOARD O:MCD261009C00237500 成本 0.97 | 跳空 -0.1% | 09:35 -43.28% / 09:45 -28.19% / 收盘 -98.99%
+16:35:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MRK261009P00142000，5.0s 后免费重试（第 1 轮）
+16:35:30 [INFO] yhs.main: 【历史】MRK261009P00142000 真实 IV 序列 352 个点（1m）
+16:35:31 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MRK261009P00142000，5.2s 后免费重试（第 1 轮）
+16:35:36 [INFO] yhs.main: 【历史】MRK261009P00142000 真实 IV 序列 390 个点（1m）
+16:35:36 [INFO] yhs.overnight: 2026-10-08 MRK CLIFF O:MRK261009P00142000 成本 0.81 | 跳空 0.056% | 09:35 22.83% / 09:45 15.63% / 收盘 28.9%
+16:35:37 [INFO] yhs.main: 【历史】MSTR261009P00150000 真实 IV 序列 390 个点（1m）
+16:35:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MSTR261009P00150000，5.2s 后免费重试（第 1 轮）
+16:35:44 [INFO] yhs.main: 【历史】MSTR261009P00150000 真实 IV 序列 246 个点（1m）
+16:35:44 [INFO] yhs.overnight: 2026-10-08 MSTR CLIFF O:MSTR261009P00150000 成本 1.49 | 跳空 0.067% | 09:35 -43.5% / 09:45 -34.89% / 收盘 %
+16:35:45 [INFO] yhs.main: 【历史】MU261009C01040000 真实 IV 序列 390 个点（1m）
+16:35:47 [INFO] yhs.main: 【历史】MU261009C01040000 真实 IV 序列 385 个点（1m）
+16:35:47 [INFO] yhs.overnight: 2026-10-08 MU SPRINGBOARD O:MU261009C01040000 成本 9.97 | 跳空 0.81% | 09:35 -0.67% / 09:45 -27.22% / 收盘 -99.8%
+16:35:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NASA261009C00024500，5.1s 后免费重试（第 1 轮）
+16:35:54 [INFO] yhs.main: 【历史】NASA261009C00024500 真实 IV 序列 390 个点（1m）
+16:35:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NASA261009C00024500，5.2s 后免费重试（第 1 轮）
+16:36:00 [INFO] yhs.main: 【历史】NASA261009C00024500 真实 IV 序列 390 个点（1m）
+16:36:00 [INFO] yhs.overnight: 2026-10-08 NASA SPRINGBOARD O:NASA261009C00024500 成本 0.20 | 跳空 0.853% | 09:35 92.73% / 09:45 92.63% / 收盘 -76.21%
+16:36:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261009C00116000，5.3s 后免费重试（第 1 轮）
+16:36:07 [INFO] yhs.main: 【历史】NEM261009C00116000 真实 IV 序列 390 个点（1m）
+16:36:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261009C00116000，5.1s 后免费重试（第 1 轮）
+16:36:13 [INFO] yhs.main: 【历史】NEM261009C00116000 真实 IV 序列 252 个点（1m）
+16:36:13 [INFO] yhs.overnight: 2026-10-08 NEM SPRINGBOARD O:NEM261009C00116000 成本 0.66 | 跳空 1.813% | 09:35 161.43% / 09:45 234.99% / 收盘 189.24%
+16:36:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261009C00035000，5.0s 后免费重试（第 1 轮）
+16:36:20 [INFO] yhs.main: 【历史】NKE261009C00035000 真实 IV 序列 390 个点（1m）
+16:36:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261009C00035000，5.1s 后免费重试（第 1 轮）
+16:36:27 [INFO] yhs.main: 【历史】NKE261009C00035000 真实 IV 序列 368 个点（1m）
+16:36:27 [INFO] yhs.overnight: 2026-10-08 NKE SPRINGBOARD O:NKE261009C00035000 成本 0.20 | 跳空 -1.723% | 09:35 -90.61% / 09:45 -75.65% / 收盘 -95.18%
+16:36:27 [INFO] yhs.main: 【历史】NVO261009P00038000 真实 IV 序列 390 个点（1m）
+16:36:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261009P00038000，5.2s 后免费重试（第 1 轮）
+16:36:33 [INFO] yhs.main: 【历史】NVO261009P00038000 真实 IV 序列 379 个点（1m）
+16:36:33 [INFO] yhs.overnight: 2026-10-08 NVO CLIFF O:NVO261009P00038000 成本 0.17 | 跳空 0.38% | 09:35 -60.63% / 09:45 -83.36% / 收盘 -94.37%
+16:36:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ON261009C00080000，5.2s 后免费重试（第 1 轮）
+16:36:40 [INFO] yhs.main: 【历史】ON261009C00080000 真实 IV 序列 390 个点（1m）
+16:36:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ON261009C00080000，5.1s 后免费重试（第 1 轮）
+16:36:47 [INFO] yhs.main: 【历史】ON261009C00080000 真实 IV 序列 150 个点（1m）
+16:36:47 [INFO] yhs.overnight: 2026-10-08 ON SPRINGBOARD O:ON261009C00080000 成本 0.55 | 跳空 2.076% | 09:35 100.68% / 09:45 61.56% / 收盘 %
+16:36:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PANW261009P00397500，5.3s 后免费重试（第 1 轮）
+16:36:54 [INFO] yhs.main: 【历史】PANW261009P00397500 真实 IV 序列 390 个点（1m）
+16:36:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PANW261009P00397500，5.2s 后免费重试（第 1 轮）
+16:37:01 [INFO] yhs.main: 【历史】PANW261009P00397500 真实 IV 序列 385 个点（1m）
+16:37:01 [INFO] yhs.overnight: 2026-10-08 PANW CLIFF O:PANW261009P00397500 成本 3.94 | 跳空 2.467% | 09:35 -77.09% / 09:45 -74.85% / 收盘 -99.52%
+16:37:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PEP261009P00127000，5.2s 后免费重试（第 1 轮）
+16:37:07 [INFO] yhs.main: 【历史】PEP261009P00127000 真实 IV 序列 389 个点（1m）
+16:37:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PEP261009P00127000，5.1s 后免费重试（第 1 轮）
+16:37:14 [INFO] yhs.main: 【历史】PEP261009P00127000 真实 IV 序列 310 个点（1m）
+16:37:14 [INFO] yhs.overnight: 2026-10-08 PEP CLIFF O:PEP261009P00127000 成本 0.45 | 跳空 -1.276% | 09:35 133.86% / 09:45 260.47% / 收盘 131.72%
+16:37:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PG261009C00152500，5.0s 后免费重试（第 1 轮）
+16:37:21 [INFO] yhs.main: 【历史】PG261009C00152500 真实 IV 序列 390 个点（1m）
+16:37:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PG261009C00152500，5.2s 后免费重试（第 1 轮）
+16:37:27 [INFO] yhs.main: 【历史】PG261009C00152500 真实 IV 序列 199 个点（1m）
+16:37:27 [INFO] yhs.overnight: 2026-10-08 PG SPRINGBOARD O:PG261009C00152500 成本 0.13 | 跳空 0.107% | 09:35 -12.35% / 09:45 -19.22% / 收盘 -92.64%
+16:37:27 [INFO] yhs.main: 【历史】PYPL261009C00055000 真实 IV 序列 390 个点（1m）
+16:37:29 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PYPL261009C00055000，5.2s 后免费重试（第 1 轮）
+16:37:35 [INFO] yhs.main: 【历史】PYPL261009C00055000 真实 IV 序列 340 个点（1m）
+16:37:35 [INFO] yhs.overnight: 2026-10-08 PYPL SPRINGBOARD O:PYPL261009C00055000 成本 0.39 | 跳空 -0.356% | 09:35 -44.45% / 09:45 -41.68% / 收盘 21.54%
+16:37:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QSR261016C00072500，5.3s 后免费重试（第 1 轮）
+16:37:41 [INFO] yhs.main: 【历史】QSR261016C00072500 真实 IV 序列 390 个点（1m）
+16:37:43 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QSR261016C00072500，5.2s 后免费重试（第 1 轮）
+16:37:48 [INFO] yhs.main: 【历史】QSR261016C00072500 真实 IV 序列 390 个点（1m）
+16:37:48 [INFO] yhs.overnight: 2026-10-08 QSR SPRINGBOARD O:QSR261016C00072500 成本 0.43 | 跳空 -0.314% | 09:35 -4.43% / 09:45 -11.72% / 收盘 -15.33%
+16:37:49 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/RBLX261009C00046000，5.1s 后免费重试（第 1 轮）
+16:37:55 [INFO] yhs.main: 【历史】RBLX261009C00046000 真实 IV 序列 390 个点（1m）
+16:37:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/RBLX261009C00046000，5.3s 后免费重试（第 1 轮）
+16:38:02 [INFO] yhs.main: 【历史】RBLX261009C00046000 真实 IV 序列 215 个点（1m）
+16:38:02 [INFO] yhs.overnight: 2026-10-08 RBLX SPRINGBOARD O:RBLX261009C00046000 成本 0.50 | 跳空 2.317% | 09:35 93.89% / 09:45 131.3% / 收盘 297.65%
+16:38:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SAP261009C00212500，5.3s 后免费重试（第 1 轮）
+16:38:09 [INFO] yhs.main: 【历史】SAP261009C00212500 真实 IV 序列 390 个点（1m）
+16:38:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SAP261009C00212500，5.2s 后免费重试（第 1 轮）
+16:38:15 [INFO] yhs.main: 【历史】SAP261009C00212500 真实 IV 序列 297 个点（1m）
+16:38:15 [INFO] yhs.overnight: 2026-10-08 SAP SPRINGBOARD O:SAP261009C00212500 成本 1.43 | 跳空 0.98% | 09:35 35.19% / 09:45 57.78% / 收盘 66.06%
+16:38:16 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SBUX261009P00091000，5.0s 后免费重试（第 1 轮）
+16:38:22 [INFO] yhs.main: 【历史】SBUX261009P00091000 真实 IV 序列 382 个点（1m）
+16:38:22 [INFO] yhs.main: 【历史】SBUX261009P00091000 真实 IV 序列 390 个点（1m）
+16:38:22 [INFO] yhs.overnight: 2026-10-08 SBUX CLIFF O:SBUX261009P00091000 成本 0.34 | 跳空 -1.007% | 09:35 28.28% / 09:45 -41.84% / 收盘 -44.84%
+16:38:22 [INFO] yhs.main: 【历史】SCHW261009C00097000 真实 IV 序列 390 个点（1m）
+16:38:23 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SCHW261009C00097000，5.2s 后免费重试（第 1 轮）
+16:38:28 [INFO] yhs.main: 【历史】SCHW261009C00097000 真实 IV 序列 390 个点（1m）
+16:38:28 [INFO] yhs.overnight: 2026-10-08 SCHW SPRINGBOARD O:SCHW261009C00097000 成本 0.52 | 跳空 0.168% | 09:35 -11.26% / 09:45 3.82% / 收盘 -96.18%
+16:38:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SLB261009C00049000，5.2s 后免费重试（第 1 轮）
+16:38:35 [INFO] yhs.main: 【历史】SLB261009C00049000 真实 IV 序列 390 个点（1m）
+16:38:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SLB261009C00049000，5.1s 后免费重试（第 1 轮）
+16:38:42 [INFO] yhs.main: 【历史】SLB261009C00049000 真实 IV 序列 390 个点（1m）
+16:38:42 [INFO] yhs.overnight: 2026-10-08 SLB SPRINGBOARD O:SLB261009C00049000 成本 0.33 | 跳空 0.02% | 09:35 -6.81% / 09:45 -6.99% / 收盘 -82.05%
+16:38:43 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPOT261009C00527500，5.3s 后免费重试（第 1 轮）
+16:38:49 [INFO] yhs.main: 【历史】SPOT261009C00527500 真实 IV 序列 390 个点（1m）
+16:38:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPOT261009C00527500，5.1s 后免费重试（第 1 轮）
+16:38:56 [INFO] yhs.main: 【历史】SPOT261009C00527500 真实 IV 序列 377 个点（1m）
+16:38:56 [INFO] yhs.overnight: 2026-10-08 SPOT SPRINGBOARD O:SPOT261009C00527500 成本 4.05 | 跳空 2.23% | 09:35 132.27% / 09:45 189.14% / 收盘 -41.92%
+16:38:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261009P00773000，5.2s 后免费重试（第 1 轮）
+16:39:02 [INFO] yhs.main: 【历史】SPY261009P00773000 真实 IV 序列 390 个点（1m）
+16:39:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261009P00773000，5.2s 后免费重试（第 1 轮）
+16:39:09 [INFO] yhs.main: 【历史】SPY261009P00773000 真实 IV 序列 380 个点（1m）
+16:39:09 [INFO] yhs.overnight: 2026-10-08 SPY CLIFF O:SPY261009P00773000 成本 1.57 | 跳空 0.402% | 09:35 -81.88% / 09:45 -70.03% / 收盘 -99.38%
+16:39:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/T261009C00025000，5.3s 后免费重试（第 1 轮）
+16:39:16 [INFO] yhs.main: 【历史】T261009C00025000 真实 IV 序列 374 个点（1m）
+16:39:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TEAM261009C00205000，5.2s 后免费重试（第 1 轮）
+16:39:23 [INFO] yhs.main: 【历史】TEAM261009C00205000 真实 IV 序列 390 个点（1m）
+16:39:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TEAM261009C00205000，5.2s 后免费重试（第 1 轮）
+16:39:29 [INFO] yhs.main: 【历史】TEAM261009C00205000 真实 IV 序列 383 个点（1m）
+16:39:29 [INFO] yhs.overnight: 2026-10-08 TEAM SPRINGBOARD O:TEAM261009C00205000 成本 2.42 | 跳空 1.57% | 09:35 33.73% / 09:45 -14.09% / 收盘 -42.47%
+16:39:30 [INFO] yhs.main: 【历史】TGT261009P00155000 真实 IV 序列 385 个点（1m）
+16:39:31 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TGT261009P00155000，5.3s 后免费重试（第 1 轮）
+16:39:36 [INFO] yhs.main: 【历史】TGT261009P00155000 真实 IV 序列 361 个点（1m）
+16:39:36 [INFO] yhs.overnight: 2026-10-08 TGT CLIFF O:TGT261009P00155000 成本 0.95 | 跳空 -0.707% | 09:35 61.23% / 09:45 31.33% / 收盘 28.15%
+16:39:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TQQQ261009P00079000，5.0s 后免费重试（第 1 轮）
+16:39:43 [INFO] yhs.main: 【历史】TQQQ261009P00079000 真实 IV 序列 390 个点（1m）
+16:39:44 [INFO] yhs.main: 【历史】TQQQ261009P00079000 真实 IV 序列 360 个点（1m）
+16:39:44 [INFO] yhs.overnight: 2026-10-08 TQQQ CLIFF O:TQQQ261009P00079000 成本 0.58 | 跳空 1.995% | 09:35 -89.83% / 09:45 -74.56% / 收盘 %
+16:39:45 [INFO] yhs.main: 【历史】TSLA261009C00375000 真实 IV 序列 390 个点（1m）
+16:39:47 [INFO] yhs.main: 【历史】TSLA261009C00375000 真实 IV 序列 333 个点（1m）
+16:39:47 [INFO] yhs.overnight: 2026-10-08 TSLA SPRINGBOARD O:TSLA261009C00375000 成本 2.58 | 跳空 2.833% | 09:35 279.8% / 09:45 348.17% / 收盘 242.57%
+16:39:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSM261009C00457500，5.1s 后免费重试（第 1 轮）
+16:39:53 [INFO] yhs.main: 【历史】TSM261009C00457500 真实 IV 序列 380 个点（1m）
+16:39:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSM261009C00457500，5.2s 后免费重试（第 1 轮）
+16:40:00 [INFO] yhs.main: 【历史】TSM261009C00457500 真实 IV 序列 368 个点（1m）
+16:40:00 [INFO] yhs.overnight: 2026-10-08 TSM SPRINGBOARD O:TSM261009C00457500 成本 2.90 | 跳空 1.029% | 09:35 53.95% / 09:45 -24.51% / 收盘 -99.33%
+16:40:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TXN261009P00285000，5.0s 后免费重试（第 1 轮）
+16:40:06 [INFO] yhs.main: 【历史】TXN261009P00285000 真实 IV 序列 390 个点（1m）
+16:40:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TXN261009P00285000，5.1s 后免费重试（第 1 轮）
+16:40:13 [INFO] yhs.main: 【历史】TXN261009P00285000 真实 IV 序列 381 个点（1m）
+16:40:13 [INFO] yhs.overnight: 2026-10-08 TXN CLIFF O:TXN261009P00285000 成本 1.64 | 跳空 0.641% | 09:35 -46.88% / 09:45 -54.04% / 收盘 -13.99%
+16:40:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/U261009C00046000，5.3s 后免费重试（第 1 轮）
+16:40:20 [INFO] yhs.main: 【历史】U261009C00046000 真实 IV 序列 390 个点（1m）
+16:40:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/U261009C00046000，5.0s 后免费重试（第 1 轮）
+16:40:26 [INFO] yhs.main: 【历史】U261009C00046000 真实 IV 序列 334 个点（1m）
+16:40:26 [INFO] yhs.overnight: 2026-10-08 U SPRINGBOARD O:U261009C00046000 成本 0.49 | 跳空 2.199% | 09:35 82.18% / 09:45 116.42% / 收盘 62.21%
+16:40:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WDAY261009P00187500，5.0s 后免费重试（第 1 轮）
+16:40:33 [INFO] yhs.main: 【历史】WDAY261009P00187500 真实 IV 序列 390 个点（1m）
+16:40:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WDAY261009P00187500，5.3s 后免费重试（第 1 轮）
+16:40:40 [INFO] yhs.main: 【历史】WDAY261009P00187500 真实 IV 序列 383 个点（1m）
+16:40:40 [INFO] yhs.overnight: 2026-10-08 WDAY CLIFF O:WDAY261009P00187500 成本 1.86 | 跳空 0.954% | 09:35 -55.15% / 09:45 -60.41% / 收盘 -11.8%
+16:40:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WFC261009C00082000，5.1s 后免费重试（第 1 轮）
+16:40:47 [INFO] yhs.main: 【历史】WFC261009C00082000 真实 IV 序列 390 个点（1m）
+16:40:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WFC261009C00082000，5.0s 后免费重试（第 1 轮）
+16:40:53 [INFO] yhs.main: 【历史】WFC261009C00082000 真实 IV 序列 181 个点（1m）
+16:40:53 [INFO] yhs.overnight: 2026-10-08 WFC SPRINGBOARD O:WFC261009C00082000 成本 0.57 | 跳空 0.14% | 09:35 -22.96% / 09:45 -4.08% / 收盘 220.48%
+16:40:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WMT261009C00111000，5.2s 后免费重试（第 1 轮）
+16:41:00 [INFO] yhs.main: 【历史】WMT261009C00111000 真实 IV 序列 390 个点（1m）
+16:41:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WMT261009C00111000，5.2s 后免费重试（第 1 轮）
+16:41:07 [INFO] yhs.main: 【历史】WMT261009C00111000 真实 IV 序列 386 个点（1m）
+16:41:07 [INFO] yhs.overnight: 2026-10-08 WMT SPRINGBOARD O:WMT261009C00111000 成本 0.50 | 跳空 0.23% | 09:35 -15.73% / 09:45 -5.72% / 收盘 -15.6%
+16:41:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ZS261009C00220000，5.2s 后免费重试（第 1 轮）
+16:41:13 [INFO] yhs.main: 【历史】ZS261009C00220000 真实 IV 序列 390 个点（1m）
+16:41:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ZS261009C00220000，5.0s 后免费重试（第 1 轮）
+16:41:22 [INFO] yhs.main: 【历史】ZS261009C00220000 真实 IV 序列 196 个点（1m）
+16:41:22 [INFO] yhs.overnight: 2026-10-08 ZS SPRINGBOARD O:ZS261009C00220000 成本 1.65 | 跳空 2.84% | 09:35 178.68% / 09:45 64.3% / 收盘 653.04%
+16:41:22 [INFO] yhs.overnight: ===== 隔夜 2026-10-09 → 2026-10-12 =====
+16:41:22 [INFO] yhs.main: 【历史】AAPL261012C00337500 分钟线为 2026-10-12（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+16:41:23 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AAPL261012C00337500，5.2s 后免费重试（第 1 轮）
+16:41:29 [INFO] yhs.main: 【历史】AAPL261012C00337500 真实 IV 序列 390 个点（1m）
+16:41:30 [INFO] yhs.main: 【历史】AAPL261012C00337500 真实 IV 序列 324 个点（1m）
+16:41:31 [INFO] yhs.overnight: 2026-10-09 AAPL SPRINGBOARD O:AAPL261012C00337500 成本 1.62 | 跳空 1.458% | 09:35 173.04% / 09:45 150.76% / 收盘 89.11%
+16:41:32 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AMZN261012C00265000，5.2s 后免费重试（第 1 轮）
+16:41:38 [INFO] yhs.main: 【历史】AMZN261012C00265000 真实 IV 序列 390 个点（1m）
+16:41:39 [INFO] yhs.main: 【历史】AMZN261012C00265000 真实 IV 序列 208 个点（1m）
+16:41:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AMZN261012C00265000，5.3s 后免费重试（第 1 轮）
+16:41:46 [INFO] yhs.overnight: 2026-10-09 AMZN SPRINGBOARD O:AMZN261012C00265000 成本 0.83 | 跳空 -0.128% | 09:35 -67.86% / 09:45 -76.25% / 收盘 %
+16:41:46 [INFO] yhs.main: 【历史】BOX261016P00036000 真实 IV 序列 390 个点（1m）
+16:41:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BOX261016P00036000，5.1s 后免费重试（第 1 轮）
+16:41:53 [INFO] yhs.main: 【历史】BOX261016P00036000 真实 IV 序列 390 个点（1m）
+16:41:54 [INFO] yhs.overnight: 2026-10-09 BOX CLIFF O:BOX261016P00036000 成本 0.51 | 跳空 2.171% | 09:35 -51.86% / 09:45 -57.8% / 收盘 -51.94%
+16:41:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ES261016C00070000，5.1s 后免费重试（第 1 轮）
+16:42:01 [INFO] yhs.main: 【历史】ES261016C00070000 真实 IV 序列 390 个点（1m）
+16:42:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/FN261016C00490000，5.1s 后免费重试（第 1 轮）
+16:42:08 [INFO] yhs.main: 【历史】FN261016C00490000 真实 IV 序列 390 个点（1m）
+16:42:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/FN261016C00490000，5.0s 后免费重试（第 1 轮）
+16:42:14 [INFO] yhs.main: 【历史】FN261016C00490000 真实 IV 序列 390 个点（1m）
+16:42:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/FN261016C00490000，5.2s 后免费重试（第 1 轮）
+16:42:21 [INFO] yhs.main: 【历史】FN261016C00490000 分钟线为 2026-10-13（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+16:42:21 [INFO] yhs.overnight: 2026-10-09 FN SPRINGBOARD O:FN261016C00490000 成本 15.72 | 跳空 -4.684% | 09:35 -43.25% / 09:45 -55.09% / 收盘 -84.4%
+16:42:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOGL261012P00350000，5.1s 后免费重试（第 1 轮）
+16:42:27 [INFO] yhs.main: 【历史】GOOGL261012P00350000 真实 IV 序列 390 个点（1m）
+16:42:29 [INFO] yhs.main: 【历史】GOOGL261012P00350000 真实 IV 序列 355 个点（1m）
+16:42:29 [INFO] yhs.overnight: 2026-10-09 GOOGL CLIFF O:GOOGL261012P00350000 成本 2.04 | 跳空 0.413% | 09:35 -71.14% / 09:45 -89.89% / 收盘 -99.52%
+16:42:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MSFT261012C00535000，5.1s 后免费重试（第 1 轮）
+16:42:36 [INFO] yhs.main: 【历史】MSFT261012C00535000 真实 IV 序列 390 个点（1m）
+16:42:36 [INFO] yhs.main: 【历史】MSFT261012C00535000 真实 IV 序列 258 个点（1m）
+16:42:36 [INFO] yhs.overnight: 2026-10-09 MSFT SPRINGBOARD O:MSFT261012C00535000 成本 3.12 | 跳空 0.729% | 09:35 46.52% / 09:45 64.77% / 收盘 66.94%
+16:42:38 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QQQ261012C00752000，5.1s 后免费重试（第 1 轮）
+16:42:43 [INFO] yhs.main: 【历史】QQQ261012C00752000 真实 IV 序列 390 个点（1m）
+16:42:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QQQ261012C00752000，5.1s 后免费重试（第 1 轮）
+16:42:50 [INFO] yhs.main: 【历史】QQQ261012C00752000 真实 IV 序列 354 个点（1m）
+16:42:50 [INFO] yhs.overnight: 2026-10-09 QQQ SPRINGBOARD O:QQQ261012C00752000 成本 2.05 | 跳空 -0.475% | 09:35 -86.64% / 09:45 -88.04% / 收盘 -99.52%
+16:42:50 [INFO] yhs.main: 【历史】QSR261016C00072500 真实 IV 序列 390 个点（1m）
+16:42:51 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QSR261016C00072500，5.1s 后免费重试（第 1 轮）
+16:42:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QSR261016C00072500，7.7s 后免费重试（第 2 轮）
+16:43:04 [INFO] yhs.main: 【历史】QSR261016C00072500 真实 IV 序列 390 个点（1m）
+16:43:04 [INFO] yhs.overnight: 2026-10-09 QSR SPRINGBOARD O:QSR261016C00072500 成本 0.38 | 跳空 -0.169% | 09:35 3.99% / 09:45 -22.13% / 收盘 -17.08%
+16:43:06 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261012C00780000，5.2s 后免费重试（第 1 轮）
+16:43:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261012C00780000，7.8s 后免费重试（第 2 轮）
+16:43:19 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261012C00780000，11.5s 后免费重试（第 3 轮）
+16:43:31 [INFO] yhs.main: 【历史】SPY261012C00780000 真实 IV 序列 390 个点（1m）
+16:43:32 [INFO] yhs.main: 【历史】SPY261012C00780000 真实 IV 序列 390 个点（1m）
+16:43:32 [INFO] yhs.overnight: 2026-10-09 SPY SPRINGBOARD O:SPY261012C00780000 成本 0.91 | 跳空 0.064% | 09:35 -41.79% / 09:45 -51.56% / 收盘 -98.86%
+16:43:33 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/YPF261016P00046000，5.0s 后免费重试（第 1 轮）
+16:43:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/YPF261016P00046000，7.8s 后免费重试（第 2 轮）
+16:43:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/YPF261016P00046000，11.3s 后免费重试（第 3 轮）
+16:43:59 [INFO] yhs.main: 【历史】YPF261016P00046000 真实 IV 序列 390 个点（1m）
+16:44:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/YPF261016P00046000，5.1s 后免费重试（第 1 轮）
+16:44:05 [INFO] yhs.main: 【历史】YPF261016P00046000 真实 IV 序列 390 个点（1m）
+16:44:05 [INFO] yhs.overnight: 2026-10-09 YPF CLIFF O:YPF261016P00046000 成本 0.07 | 跳空 0.34% | 09:35 403.16% / 09:45 402.21% / 收盘 239.96%
+16:44:05 [INFO] yhs.overnight: ===== 隔夜 2026-10-12 → 2026-10-13 =====
+16:44:05 [INFO] yhs.main: 【历史】ADI261016P00405000 真实成交 bar 3 根（10:04–15:36）
+16:44:05 [INFO] yhs.main: 【历史】ADI261016P00405000 真实 IV 序列 390 个点（1m）
+16:44:06 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ADI261016P00405000，5.1s 后免费重试（第 1 轮）
+16:44:12 [INFO] yhs.main: 【历史】ADI261016P00405000 真实 IV 序列 194 个点（1m）
+16:44:13 [INFO] yhs.main: 【历史】ADI261016P00405000 分钟线为 2026-10-12（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+16:44:13 [INFO] yhs.overnight: 2026-10-12 ADI CLIFF O:ADI261016P00405000 成本 6.01 | 跳空 -0.07% | 09:35 9.94% / 09:45 -1.47% / 收盘 %
+16:44:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AEHR261016P00078000，5.1s 后免费重试（第 1 轮）
+16:44:19 [INFO] yhs.main: 【历史】AEHR261016P00078000 分钟线为 2026-10-13（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+16:44:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AEHR261016P00078000，5.3s 后免费重试（第 1 轮）
+16:44:26 [INFO] yhs.main: 【历史】AEHR261016P00078000 真实 IV 序列 390 个点（1m）
+16:44:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AEHR261016P00078000，5.2s 后免费重试（第 1 轮）
+16:44:33 [INFO] yhs.main: 【历史】AEHR261016P00078000 真实 IV 序列 194 个点（1m）
+16:44:33 [INFO] yhs.overnight: 2026-10-12 AEHR CLIFF O:AEHR261016P00078000 成本 3.42 | 跳空 -3.562% | 09:35 39.16% / 09:45 7.56% / 收盘 %
+16:44:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BAC261016C00055000，5.1s 后免费重试（第 1 轮）
+16:44:39 [INFO] yhs.main: 【历史】BAC261016C00055000 真实 IV 序列 390 个点（1m）
+16:44:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BAC261016C00055000，5.0s 后免费重试（第 1 轮）
+16:44:46 [INFO] yhs.main: 【历史】BAC261016C00055000 真实 IV 序列 194 个点（1m）
+16:44:46 [INFO] yhs.overnight: 2026-10-12 BAC SPRINGBOARD O:BAC261016C00055000 成本 0.81 | 跳空 0.177% | 09:35 -6.31% / 09:45 -19.65% / 收盘 %
+16:44:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BKNG261016P00158000，5.1s 后免费重试（第 1 轮）
+16:44:53 [INFO] yhs.main: 【历史】BKNG261016P00158000 真实 IV 序列 390 个点（1m）
+16:44:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BKNG261016P00158000，5.1s 后免费重试（第 1 轮）
+16:44:59 [INFO] yhs.main: 【历史】BKNG261016P00158000 真实 IV 序列 194 个点（1m）
+16:44:59 [INFO] yhs.overnight: 2026-10-12 BKNG CLIFF O:BKNG261016P00158000 成本 2.40 | 跳空 1.102% | 09:35 88.9% / 09:45 57.43% / 收盘 %
+16:44:59 [INFO] yhs.main: 【历史】BOX261016P00036000 真实 IV 序列 390 个点（1m）
+16:45:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BOX261016P00036000，5.0s 后免费重试（第 1 轮）
+16:45:06 [INFO] yhs.main: 【历史】BOX261016P00036000 真实 IV 序列 195 个点（1m）
+16:45:06 [INFO] yhs.overnight: 2026-10-12 BOX CLIFF O:BOX261016P00036000 成本 0.26 | 跳空 0.87% | 09:35 -4.44% / 09:45 -15.55% / 收盘 %
+16:45:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BRKB261016C00517500，5.1s 后免费重试（第 1 轮）
+16:45:13 [INFO] yhs.main: 【历史】BRKB261016C00517500 真实 IV 序列 390 个点（1m）
+16:45:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BRKB261016C00517500，5.1s 后免费重试（第 1 轮）
+16:45:19 [INFO] yhs.main: 【历史】BRKB261016C00517500 真实 IV 序列 195 个点（1m）
+16:45:19 [INFO] yhs.overnight: 2026-10-12 BRKB SPRINGBOARD O:BRKB261016C00517500 成本 2.93 | 跳空 0.808% | 09:35 76.42% / 09:45 67.37% / 收盘 %
+16:45:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CBRS261016C00150000，5.1s 后免费重试（第 1 轮）
+16:45:26 [INFO] yhs.main: 【历史】CBRS261016C00150000 真实 IV 序列 390 个点（1m）
+16:45:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CBRS261016C00150000，5.2s 后免费重试（第 1 轮）
+16:45:33 [INFO] yhs.main: 【历史】CBRS261016C00150000 真实 IV 序列 195 个点（1m）
+16:45:33 [INFO] yhs.overnight: 2026-10-12 CBRS SPRINGBOARD O:CBRS261016C00150000 成本 4.18 | 跳空 -1.343% | 09:35 -28.51% / 09:45 -29.23% / 收盘 %
+16:45:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CDNS261016P00347500，5.2s 后免费重试（第 1 轮）
+16:45:40 [INFO] yhs.main: 【历史】CDNS261016P00347500 真实 IV 序列 390 个点（1m）
+16:45:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CDNS261016P00347500，5.2s 后免费重试（第 1 轮）
+16:45:47 [INFO] yhs.main: 【历史】CDNS261016P00347500 真实 IV 序列 195 个点（1m）
+16:45:47 [INFO] yhs.overnight: 2026-10-12 CDNS CLIFF O:CDNS261016P00347500 成本 5.51 | 跳空 -1.443% | 09:35 48.59% / 09:45 51.26% / 收盘 %
+16:45:47 [INFO] yhs.main: 【历史】CELH261016C00028500 真实 IV 序列 390 个点（1m）
+16:45:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CELH261016C00028500，5.3s 后免费重试（第 1 轮）
+16:45:53 [INFO] yhs.main: 【历史】CELH261016C00028500 真实 IV 序列 195 个点（1m）
+16:45:53 [INFO] yhs.overnight: 2026-10-12 CELH SPRINGBOARD O:CELH261016C00028500 成本 0.58 | 跳空 -0.565% | 09:35 -12.26% / 09:45 -17.35% / 收盘 %
+16:45:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/COST261016C00965000，5.0s 后免费重试（第 1 轮）
+16:46:00 [INFO] yhs.main: 【历史】COST261016C00965000 真实 IV 序列 390 个点（1m）
+16:46:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/COST261016C00965000，5.2s 后免费重试（第 1 轮）
+16:46:06 [INFO] yhs.main: 【历史】COST261016C00965000 真实 IV 序列 196 个点（1m）
+16:46:06 [INFO] yhs.overnight: 2026-10-12 COST SPRINGBOARD O:COST261016C00965000 成本 5.46 | 跳空 0.535% | 09:35 24.26% / 09:45 10.41% / 收盘 %
+16:46:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRCL261016P00082000，5.3s 后免费重试（第 1 轮）
+16:46:14 [INFO] yhs.main: 【历史】CRCL261016P00082000 真实 IV 序列 390 个点（1m）
+16:46:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRCL261016P00082000，5.2s 后免费重试（第 1 轮）
+16:46:20 [INFO] yhs.main: 【历史】CRCL261016P00082000 真实 IV 序列 196 个点（1m）
+16:46:20 [INFO] yhs.overnight: 2026-10-12 CRCL CLIFF O:CRCL261016P00082000 成本 1.94 | 跳空 -0.616% | 09:35 -0.83% / 09:45 -7.93% / 收盘 %
+16:46:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRM261016P00232500，5.1s 后免费重试（第 1 轮）
+16:46:27 [INFO] yhs.main: 【历史】CRM261016P00232500 真实 IV 序列 390 个点（1m）
+16:46:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRM261016P00232500，5.2s 后免费重试（第 1 轮）
+16:46:33 [INFO] yhs.main: 【历史】CRM261016P00232500 真实 IV 序列 196 个点（1m）
+16:46:33 [INFO] yhs.overnight: 2026-10-12 CRM CLIFF O:CRM261016P00232500 成本 3.57 | 跳空 2.189% | 09:35 -55.52% / 09:45 -76.11% / 收盘 %
+16:46:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DIS261016C00109000，5.0s 后免费重试（第 1 轮）
+16:46:40 [INFO] yhs.main: 【历史】DIS261016C00109000 真实 IV 序列 390 个点（1m）
+16:46:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DIS261016C00109000，5.2s 后免费重试（第 1 轮）
+16:46:47 [INFO] yhs.main: 【历史】DIS261016C00109000 真实 IV 序列 193 个点（1m）
+16:46:47 [INFO] yhs.overnight: 2026-10-12 DIS SPRINGBOARD O:DIS261016C00109000 成本 1.11 | 跳空 0.575% | 09:35 21.84% / 09:45 28.0% / 收盘 %
+16:46:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DKS261016P00137000，5.2s 后免费重试（第 1 轮）
+16:46:53 [INFO] yhs.main: 【历史】DKS261016P00137000 真实 IV 序列 390 个点（1m）
+16:46:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DKS261016P00137000，5.2s 后免费重试（第 1 轮）
+16:47:00 [INFO] yhs.main: 【历史】DKS261016P00137000 真实 IV 序列 196 个点（1m）
+16:47:00 [INFO] yhs.overnight: 2026-10-12 DKS CLIFF O:DKS261016P00137000 成本 2.52 | 跳空 0.708% | 09:35 -22.22% / 09:45 -16.39% / 收盘 %
+16:47:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/FCX261016C00074000，5.0s 后免费重试（第 1 轮）
+16:47:06 [INFO] yhs.main: 【历史】FCX261016C00074000 真实 IV 序列 390 个点（1m）
+16:47:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/FCX261016C00074000，5.0s 后免费重试（第 1 轮）
+16:47:13 [INFO] yhs.main: 【历史】FCX261016C00074000 真实 IV 序列 197 个点（1m）
+16:47:13 [INFO] yhs.overnight: 2026-10-12 FCX SPRINGBOARD O:FCX261016C00074000 成本 1.16 | 跳空 -1.023% | 09:35 -25.09% / 09:45 -23.41% / 收盘 %
+16:47:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GEV261016C01000000，5.1s 后免费重试（第 1 轮）
+16:47:19 [INFO] yhs.main: 【历史】GEV261016C01000000 真实 IV 序列 390 个点（1m）
+16:47:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GEV261016C01000000，5.1s 后免费重试（第 1 轮）
+16:47:26 [INFO] yhs.main: 【历史】GEV261016C01000000 真实 IV 序列 197 个点（1m）
+16:47:26 [INFO] yhs.overnight: 2026-10-12 GEV SPRINGBOARD O:GEV261016C01000000 成本 19.69 | 跳空 -1.888% | 09:35 -46.72% / 09:45 -2.17% / 收盘 %
+16:47:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261016P00146000，5.1s 后免费重试（第 1 轮）
+16:47:33 [INFO] yhs.main: 【历史】GLW261016P00146000 真实 IV 序列 389 个点（1m）
+16:47:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261016P00146000，5.2s 后免费重试（第 1 轮）
+16:47:39 [INFO] yhs.main: 【历史】GLW261016P00146000 真实 IV 序列 197 个点（1m）
+16:47:39 [INFO] yhs.overnight: 2026-10-12 GLW CLIFF O:GLW261016P00146000 成本 3.36 | 跳空 -2.904% | 09:35 60.18% / 09:45 22.89% / 收盘 %
+16:47:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GNRC261016P00217500，5.1s 后免费重试（第 1 轮）
+16:47:46 [INFO] yhs.main: 【历史】GNRC261016P00217500 真实 IV 序列 390 个点（1m）
+16:47:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GNRC261016P00217500，5.1s 后免费重试（第 1 轮）
+16:47:53 [INFO] yhs.main: 【历史】GNRC261016P00217500 真实 IV 序列 197 个点（1m）
+16:47:53 [INFO] yhs.overnight: 2026-10-12 GNRC CLIFF O:GNRC261016P00217500 成本 4.54 | 跳空 -2.201% | 09:35 57.63% / 09:45 9.03% / 收盘 %
+16:47:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOG261016P00347500，5.1s 后免费重试（第 1 轮）
+16:47:59 [INFO] yhs.main: 【历史】GOOG261016P00347500 真实 IV 序列 390 个点（1m）
+16:48:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOG261016P00347500，5.1s 后免费重试（第 1 轮）
+16:48:06 [INFO] yhs.main: 【历史】GOOG261016P00347500 真实 IV 序列 198 个点（1m）
+16:48:06 [INFO] yhs.overnight: 2026-10-12 GOOG CLIFF O:GOOG261016P00347500 成本 3.97 | 跳空 0.189% | 09:35 -14.99% / 09:45 -23.6% / 收盘 %
+16:48:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016P00887500，5.2s 后免费重试（第 1 轮）
+16:48:13 [INFO] yhs.main: 【历史】GS261016P00887500 真实 IV 序列 390 个点（1m）
+16:48:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016P00887500，5.1s 后免费重试（第 1 轮）
+16:48:19 [INFO] yhs.main: 【历史】GS261016P00887500 真实 IV 序列 198 个点（1m）
+16:48:19 [INFO] yhs.overnight: 2026-10-12 GS CLIFF O:GS261016P00887500 成本 16.38 | 跳空 2.428% | 09:35 -74.48% / 09:45 -58.94% / 收盘 %
+16:48:20 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HD261016C00292500，5.3s 后免费重试（第 1 轮）
+16:48:26 [INFO] yhs.main: 【历史】HD261016C00292500 真实 IV 序列 390 个点（1m）
+16:48:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HD261016C00292500，5.2s 后免费重试（第 1 轮）
+16:48:32 [INFO] yhs.main: 【历史】HD261016C00292500 真实 IV 序列 198 个点（1m）
+16:48:32 [INFO] yhs.overnight: 2026-10-12 HD SPRINGBOARD O:HD261016C00292500 成本 3.18 | 跳空 1.463% | 09:35 75.5% / 09:45 18.55% / 收盘 %
+16:48:35 [INFO] yhs.main: 【历史】HOOD261016P00109000 真实 IV 序列 390 个点（1m）
+16:48:35 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HOOD261016P00109000，5.1s 后免费重试（第 1 轮）
+16:48:40 [INFO] yhs.main: 【历史】HOOD261016P00109000 真实 IV 序列 198 个点（1m）
+16:48:40 [INFO] yhs.overnight: 2026-10-12 HOOD CLIFF O:HOOD261016P00109000 成本 2.66 | 跳空 -0.147% | 09:35 -8.36% / 09:45 -18.63% / 收盘 %
+16:48:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ICE261016P00155000，5.2s 后免费重试（第 1 轮）
+16:48:47 [INFO] yhs.main: 【历史】ICE261016P00155000 真实 IV 序列 390 个点（1m）
+16:48:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ICE261016P00155000，5.3s 后免费重试（第 1 轮）
+16:48:54 [INFO] yhs.main: 【历史】ICE261016P00155000 真实 IV 序列 198 个点（1m）
+16:48:54 [INFO] yhs.overnight: 2026-10-12 ICE CLIFF O:ICE261016P00155000 成本 1.02 | 跳空 0.115% | 09:35 -26.04% / 09:45 -26.04% / 收盘 %
+16:48:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/JPM261016C00335000，5.2s 后免费重试（第 1 轮）
+16:49:01 [INFO] yhs.main: 【历史】JPM261016C00335000 真实 IV 序列 390 个点（1m）
+16:49:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/JPM261016C00335000，5.1s 后免费重试（第 1 轮）
+16:49:08 [INFO] yhs.main: 【历史】JPM261016C00335000 真实 IV 序列 199 个点（1m）
+16:49:08 [INFO] yhs.overnight: 2026-10-12 JPM SPRINGBOARD O:JPM261016C00335000 成本 5.20 | 跳空 1.793% | 09:35 36.97% / 09:45 -4.82% / 收盘 %
+16:49:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MDT261016C00092000，5.2s 后免费重试（第 1 轮）
+16:49:14 [INFO] yhs.main: 【历史】MDT261016C00092000 真实 IV 序列 390 个点（1m）
+16:49:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MDT261016C00092000，5.2s 后免费重试（第 1 轮）
+16:49:21 [INFO] yhs.main: 【历史】MDT261016C00092000 真实 IV 序列 199 个点（1m）
+16:49:21 [INFO] yhs.overnight: 2026-10-12 MDT SPRINGBOARD O:MDT261016C00092000 成本 0.85 | 跳空 0.714% | 09:35 56.05% / 09:45 36.4% / 收盘 %
+16:49:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MS261016P00187500，5.0s 后免费重试（第 1 轮）
+16:49:27 [INFO] yhs.main: 【历史】MS261016P00187500 真实 IV 序列 390 个点（1m）
+16:49:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MS261016P00187500，5.2s 后免费重试（第 1 轮）
+16:49:34 [INFO] yhs.main: 【历史】MS261016P00187500 真实 IV 序列 199 个点（1m）
+16:49:34 [INFO] yhs.overnight: 2026-10-12 MS CLIFF O:MS261016P00187500 成本 3.00 | 跳空 0.886% | 09:35 -29.41% / 09:45 -12.74% / 收盘 %
+16:49:35 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00078000，5.1s 后免费重试（第 1 轮）
+16:49:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00078000，7.5s 后免费重试（第 2 轮）
+16:49:49 [INFO] yhs.main: 【历史】NEE261016P00078000 真实 IV 序列 390 个点（1m）
+16:49:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00078000，5.2s 后免费重试（第 1 轮）
+16:49:56 [INFO] yhs.main: 【历史】NEE261016P00078000 真实 IV 序列 199 个点（1m）
+16:49:56 [INFO] yhs.overnight: 2026-10-12 NEE CLIFF O:NEE261016P00078000 成本 0.47 | 跳空 -0.067% | 09:35 29.79% / 09:45 38.29% / 收盘 %
+16:49:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00117000，5.1s 后免费重试（第 1 轮）
+16:50:02 [INFO] yhs.main: 【历史】NEM261016P00117000 真实 IV 序列 390 个点（1m）
+16:50:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00117000，5.2s 后免费重试（第 1 轮）
+16:50:09 [INFO] yhs.main: 【历史】NEM261016P00117000 真实 IV 序列 200 个点（1m）
+16:50:09 [INFO] yhs.overnight: 2026-10-12 NEM CLIFF O:NEM261016P00117000 成本 1.89 | 跳空 0.162% | 09:35 -4.94% / 09:45 -4.42% / 收盘 %
+16:50:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NET261016P00350000，5.1s 后免费重试（第 1 轮）
+16:50:16 [INFO] yhs.main: 【历史】NET261016P00350000 真实 IV 序列 390 个点（1m）
+16:50:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NET261016P00350000，5.3s 后免费重试（第 1 轮）
+16:50:22 [INFO] yhs.main: 【历史】NET261016P00350000 真实 IV 序列 200 个点（1m）
+16:50:22 [INFO] yhs.overnight: 2026-10-12 NET CLIFF O:NET261016P00350000 成本 7.87 | 跳空 -0.67% | 09:35 12.91% / 09:45 -24.7% / 收盘 %
+16:50:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NFLX261016P00070000，5.2s 后免费重试（第 1 轮）
+16:50:29 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NFLX261016P00070000，7.8s 后免费重试（第 2 轮）
+16:50:38 [INFO] yhs.main: 【历史】NFLX261016P00070000 真实 IV 序列 390 个点（1m）
+16:50:38 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NFLX261016P00070000，5.2s 后免费重试（第 1 轮）
+16:50:44 [INFO] yhs.main: 【历史】NFLX261016P00070000 真实 IV 序列 200 个点（1m）
+16:50:44 [INFO] yhs.overnight: 2026-10-12 NFLX CLIFF O:NFLX261016P00070000 成本 0.66 | 跳空 0.608% | 09:35 -30.4% / 09:45 -39.39% / 收盘 %
+16:50:46 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PDD261016C00081000，5.1s 后免费重试（第 1 轮）
+16:50:51 [INFO] yhs.main: 【历史】PDD261016C00081000 真实 IV 序列 390 个点（1m）
+16:50:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PDD261016C00081000，5.2s 后免费重试（第 1 轮）
+16:50:59 [INFO] yhs.main: 【历史】PDD261016C00081000 真实 IV 序列 200 个点（1m）
+16:50:59 [INFO] yhs.overnight: 2026-10-12 PDD SPRINGBOARD O:PDD261016C00081000 成本 1.10 | 跳空 0.31% | 09:35 4.07% / 09:45 39.6% / 收盘 %
+16:50:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PEP261016C00127000，5.3s 后免费重试（第 1 轮）
+16:51:06 [INFO] yhs.main: 【历史】PEP261016C00127000 真实 IV 序列 390 个点（1m）
+16:51:06 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PEP261016C00127000，5.2s 后免费重试（第 1 轮）
+16:51:12 [INFO] yhs.main: 【历史】PEP261016C00127000 真实 IV 序列 201 个点（1m）
+16:51:12 [INFO] yhs.overnight: 2026-10-12 PEP SPRINGBOARD O:PEP261016C00127000 成本 1.17 | 跳空 0.752% | 09:35 36.22% / 09:45 -19.86% / 收盘 %
+16:51:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PFE261016P00028000，5.0s 后免费重试（第 1 轮）
+16:51:18 [INFO] yhs.main: 【历史】PFE261016P00028000 真实 IV 序列 390 个点（1m）
+16:51:20 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PFE261016P00028000，5.0s 后免费重试（第 1 轮）
+16:51:26 [INFO] yhs.main: 【历史】PFE261016P00028000 真实 IV 序列 200 个点（1m）
+16:51:26 [INFO] yhs.overnight: 2026-10-12 PFE CLIFF O:PFE261016P00028000 成本 0.11 | 跳空 0.447% | 09:35 -30.62% / 09:45 -12.9% / 收盘 %
+16:51:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PYPL261016C00057000，5.3s 后免费重试（第 1 轮）
+16:51:33 [INFO] yhs.main: 【历史】PYPL261016C00057000 真实 IV 序列 390 个点（1m）
+16:51:33 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PYPL261016C00057000，5.1s 后免费重试（第 1 轮）
+16:51:39 [INFO] yhs.main: 【历史】PYPL261016C00057000 真实 IV 序列 201 个点（1m）
+16:51:39 [INFO] yhs.overnight: 2026-10-12 PYPL SPRINGBOARD O:PYPL261016C00057000 成本 0.48 | 跳空 0.169% | 09:35 -14.11% / 09:45 -14.41% / 收盘 %
+16:51:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QQQ261013C00746000，5.0s 后免费重试（第 1 轮）
+16:51:46 [INFO] yhs.main: 【历史】QQQ261013C00746000 真实 IV 序列 390 个点（1m）
+16:51:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QQQ261013C00746000，5.1s 后免费重试（第 1 轮）
+16:51:53 [INFO] yhs.main: 【历史】QQQ261013C00746000 真实 IV 序列 201 个点（1m）
+16:51:53 [INFO] yhs.overnight: 2026-10-12 QQQ SPRINGBOARD O:QQQ261013C00746000 成本 2.23 | 跳空 -0.756% | 09:35 -93.43% / 09:45 -74.11% / 收盘 %
+16:51:53 [INFO] yhs.main: 【历史】QSR261016C00072500 真实 IV 序列 390 个点（1m）
+16:51:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QSR261016C00072500，5.0s 后免费重试（第 1 轮）
+16:51:59 [INFO] yhs.main: 【历史】QSR261016C00072500 真实 IV 序列 201 个点（1m）
+16:51:59 [INFO] yhs.overnight: 2026-10-12 QSR SPRINGBOARD O:QSR261016C00072500 成本 0.33 | 跳空 0.422% | 09:35 11.35% / 09:45 11.61% / 收盘 %
+16:52:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/RKLB261016C00066000，5.1s 后免费重试（第 1 轮）
+16:52:07 [INFO] yhs.main: 【历史】RKLB261016C00066000 真实 IV 序列 390 个点（1m）
+16:52:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/RKLB261016C00066000，5.3s 后免费重试（第 1 轮）
+16:52:14 [INFO] yhs.main: 【历史】RKLB261016C00066000 真实 IV 序列 202 个点（1m）
+16:52:14 [INFO] yhs.overnight: 2026-10-12 RKLB SPRINGBOARD O:RKLB261016C00066000 成本 1.47 | 跳空 -2.971% | 09:35 -53.88% / 09:45 -33.85% / 收盘 %
+16:52:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNDK261016P01485000，5.2s 后免费重试（第 1 轮）
+16:52:22 [INFO] yhs.main: 【历史】SNDK261016P01485000 真实 IV 序列 390 个点（1m）
+16:52:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNDK261016P01485000，5.3s 后免费重试（第 1 轮）
+16:52:28 [INFO] yhs.main: 【历史】SNDK261016P01485000 真实 IV 序列 202 个点（1m）
+16:52:28 [INFO] yhs.overnight: 2026-10-12 SNDK CLIFF O:SNDK261016P01485000 成本 37.52 | 跳空 -4.627% | 09:35 107.2% / 09:45 85.01% / 收盘 %
+16:52:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNOW261016P00355000，5.3s 后免费重试（第 1 轮）
+16:52:35 [INFO] yhs.main: 【历史】SNOW261016P00355000 真实 IV 序列 390 个点（1m）
+16:52:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNOW261016P00355000，5.2s 后免费重试（第 1 轮）
+16:52:43 [INFO] yhs.main: 【历史】SNOW261016P00355000 真实 IV 序列 202 个点（1m）
+16:52:43 [INFO] yhs.overnight: 2026-10-12 SNOW CLIFF O:SNOW261016P00355000 成本 5.20 | 跳空 -0.708% | 09:35 7.76% / 09:45 -44.83% / 收盘 %
+16:52:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261013C00778000，5.1s 后免费重试（第 1 轮）
+16:52:50 [INFO] yhs.main: 【历史】SPY261013C00778000 真实 IV 序列 390 个点（1m）
+16:52:51 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261013C00778000，5.0s 后免费重试（第 1 轮）
+16:52:57 [INFO] yhs.main: 【历史】SPY261013C00778000 真实 IV 序列 202 个点（1m）
+16:52:57 [INFO] yhs.overnight: 2026-10-12 SPY SPRINGBOARD O:SPY261013C00778000 成本 1.45 | 跳空 -0.021% | 09:35 -41.79% / 09:45 -18.85% / 收盘 %
+16:52:58 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TGT261016C00155000，5.2s 后免费重试（第 1 轮）
+16:53:04 [INFO] yhs.main: 【历史】TGT261016C00155000 真实 IV 序列 390 个点（1m）
+16:53:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TGT261016C00155000，5.1s 后免费重试（第 1 轮）
+16:53:10 [INFO] yhs.main: 【历史】TGT261016C00155000 真实 IV 序列 203 个点（1m）
+16:53:10 [INFO] yhs.overnight: 2026-10-12 TGT SPRINGBOARD O:TGT261016C00155000 成本 1.34 | 跳空 0.645% | 09:35 23.14% / 09:45 18.78% / 收盘 %
+16:53:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSM261016C00450000，5.3s 后免费重试（第 1 轮）
+16:53:17 [INFO] yhs.main: 【历史】TSM261016C00450000 真实 IV 序列 390 个点（1m）
+16:53:18 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSM261016C00450000，5.2s 后免费重试（第 1 轮）
+16:53:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSM261016C00450000，7.6s 后免费重试（第 2 轮）
+16:53:33 [INFO] yhs.main: 【历史】TSM261016C00450000 真实 IV 序列 203 个点（1m）
+16:53:33 [INFO] yhs.overnight: 2026-10-12 TSM SPRINGBOARD O:TSM261016C00450000 成本 7.26 | 跳空 -1.317% | 09:35 -37.67% / 09:45 -24.17% / 收盘 %
+16:53:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TXN261016P00280000，5.2s 后免费重试（第 1 轮）
+16:53:40 [INFO] yhs.main: 【历史】TXN261016P00280000 真实 IV 序列 390 个点（1m）
+16:53:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TXN261016P00280000，5.1s 后免费重试（第 1 轮）
+16:53:47 [INFO] yhs.main: 【历史】TXN261016P00280000 真实 IV 序列 203 个点（1m）
+16:53:47 [INFO] yhs.overnight: 2026-10-12 TXN CLIFF O:TXN261016P00280000 成本 4.00 | 跳空 -0.295% | 09:35 26.74% / 09:45 5.89% / 收盘 %
+16:53:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/UMAC261016P00019500，5.2s 后免费重试（第 1 轮）
+16:53:54 [INFO] yhs.main: 【历史】UMAC261016P00019500 真实 IV 序列 390 个点（1m）
+16:53:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/UMAC261016P00019500，5.2s 后免费重试（第 1 轮）
+16:54:01 [INFO] yhs.main: 【历史】UMAC261016P00019500 真实 IV 序列 201 个点（1m）
+16:54:01 [INFO] yhs.overnight: 2026-10-12 UMAC CLIFF O:UMAC261016P00019500 成本 0.61 | 跳空 -5.017% | 09:35 44.4% / 09:45 52.36% / 收盘 %
+16:54:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/UNH261016P00377500，5.0s 后免费重试（第 1 轮）
+16:54:08 [INFO] yhs.main: 【历史】UNH261016P00377500 真实 IV 序列 390 个点（1m）
+16:54:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/UNH261016P00377500，5.1s 后免费重试（第 1 轮）
+16:54:15 [INFO] yhs.main: 【历史】UNH261016P00377500 真实 IV 序列 204 个点（1m）
+16:54:15 [INFO] yhs.overnight: 2026-10-12 UNH CLIFF O:UNH261016P00377500 成本 12.41 | 跳空 3.071% | 09:35 -75.07% / 09:45 -64.33% / 收盘 %
+16:54:16 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WMB261016P00073000，5.1s 后免费重试（第 1 轮）
+16:54:22 [INFO] yhs.main: 【历史】WMB261016P00073000 真实 IV 序列 390 个点（1m）
+16:54:23 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WMB261016P00073000，5.2s 后免费重试（第 1 轮）
+16:54:29 [INFO] yhs.main: 【历史】WMB261016P00073000 真实 IV 序列 204 个点（1m）
+16:54:29 [INFO] yhs.overnight: 2026-10-12 WMB CLIFF O:WMB261016P00073000 成本 0.56 | 跳空 0.313% | 09:35 -26.51% / 09:45 -26.67% / 收盘 %
+16:54:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WMT261016P00112000，5.2s 后免费重试（第 1 轮）
+16:54:35 [INFO] yhs.main: 【历史】WMT261016P00112000 真实 IV 序列 390 个点（1m）
+16:54:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WMT261016P00112000，5.0s 后免费重试（第 1 轮）
+16:54:43 [INFO] yhs.main: 【历史】WMT261016P00112000 真实 IV 序列 204 个点（1m）
+16:54:43 [INFO] yhs.overnight: 2026-10-12 WMT CLIFF O:WMT261016P00112000 成本 0.72 | 跳空 1.505% | 09:35 -59.3% / 09:45 -53.95% / 收盘 %
+16:54:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/XOM261016C00172500，5.2s 后免费重试（第 1 轮）
+16:54:50 [INFO] yhs.main: 【历史】XOM261016C00172500 真实 IV 序列 388 个点（1m）
+16:54:51 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/XOM261016C00172500，5.1s 后免费重试（第 1 轮）
+16:54:57 [INFO] yhs.main: 【历史】XOM261016C00172500 真实 IV 序列 204 个点（1m）
+16:54:57 [INFO] yhs.overnight: 2026-10-12 XOM SPRINGBOARD O:XOM261016C00172500 成本 1.78 | 跳空 0.913% | 09:35 30.34% / 09:45 37.5% / 收盘 %
+16:54:57 [INFO] yhs.overnight: 配额剩余 86277
