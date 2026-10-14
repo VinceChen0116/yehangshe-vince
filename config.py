@@ -131,6 +131,8 @@ class SystemConfig:
     flow_window_min: int = 15
     flow_recheck_min: int = 10            # Flow 未确认后，同一标的 10 分钟内不再重查（< 15 分钟窗口，不会漏单）
     flow_page_limit: int = 25             # /v1/flow/trades 的 limit 上限是 25
+    flow_max_dte: int = 0                 # >0：只认到期天数 ≤ 此值的大单（0 = 不限）
+    flow_max_moneyness_pct: float = 0.0   # >0：只认 |价内外程度| ≤ 此值的大单（接口字段 min_moneyness_pct，0.02 = 2%）
     flow_require_vol_ge_oi: bool = True
     flow_contract_lookup_fallback: bool = True   # 行内缺少 volume/OI 时调用 contracts/lookup 补查（每笔 1 次配额）
     flow_max_lookups_per_signal: int = 2

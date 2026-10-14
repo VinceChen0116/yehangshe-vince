@@ -458,6 +458,15 @@ class FlowConfirmer:
                 continue
             if _row_right(r) != right or not _row_is_ask(r):
                 continue
+            # 可选：只认近期到期、行权价贴近现价的大单（远期/深度虚实值多为对冲或调仓，和日内方向无关）
+            if cfg.flow_max_dte:
+                dte = pick_num(r, "min_dte", "dte")
+                if dte is None or dte > cfg.flow_max_dte:
+                    continue
+            if cfg.flow_max_moneyness_pct:
+                mny = pick_num(r, "min_moneyness_pct", "moneyness_pct")
+                if mny is None or abs(mny) > cfg.flow_max_moneyness_pct:
+                    continue
             cands.append((ts, prem, r))
         if not cands:
             return FlowConfirmation(False, f"近 {cfg.flow_window_min} 分钟无 ≥${cfg.flow_min_premium_usd:,.0f} 的 Ask 侧{'Call' if right == 'C' else 'Put'}大单")
