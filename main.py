@@ -416,7 +416,7 @@ class HistoryClient:
        * 期权链：历史时点无快照 → 抛错使交易器回退到 BS 现货换算（0 配额）
     """
 
-    def __init__(self, real: YHSClient, cfg: SystemConfig, date: dt.date, max_flow_pages: int = 20):
+    def __init__(self, real: YHSClient, cfg: SystemConfig, date: dt.date, max_flow_pages: int = 120):
         self.real, self.cfg, self.date = real, cfg, date
         self.now: dt.datetime = et_datetime(date, "09:30")
         self.frames: dict[str, dict[dt.datetime, dict]] = {}
@@ -568,12 +568,18 @@ class HistoryClient:
             raise YHSApiError(0, "HISTORY_NO_CHAIN", "历史回放不使用实时期权链，改用 BS 换算", path)
         if path == FLOW_TRADES_PATH:
             t = params.get("tickers", "")
+            prem = params.get("min_premium_usd")
+            fp = os.path.join(self.cfg.data_dir, "cache", "flow", self.date.isoformat(), f"{t}_{int(prem or 0)}_ask.json")
+            if t not in self.flow_cache and os.path.exists(fp):   # 已收盘交易日的 Flow 不会再变：本地缓存，重跑 0 配额
+                with open(fp, encoding="utf-8") as f:
+                    self.flow_cache[t] = json.load(f)
             if t not in self.flow_cache:
                 rows, cursor, pages = [], None, 0
                 while pages < self.max_flow_pages:
+                    # 只拉 Ask 侧（A = at_ask，AA = above_ask）：Flow 确认只认主动买入的大单；接口 limit 上限 25
                     p = {"tickers": t, "kind": "order", "min_premium_usd": params.get("min_premium_usd"),
-                         "session_date": self.date.isoformat(), "sort_by": "occurredAt", "direction": "asc",
-                         "limit": 100, "cursor": cursor}
+                         "sides": "A,AA", "session_date": self.date.isoformat(), "sort_by": "occurredAt",
+                         "direction": "asc", "limit": 25, "cursor": cursor}
                     payload = self.real.get(FLOW_TRADES_PATH, p)
                     pages += 1
                     rows += extract_rows(payload)
@@ -581,7 +587,14 @@ class HistoryClient:
                     if not cursor:
                         break
                 self.flow_cache[t] = rows
-                log.info("【历史】%s 当日 ≥$%s 大单 %d 笔已缓存（%d 页）", t, params.get("min_premium_usd"), len(rows), pages)
+                if cursor:
+                    log.warning("【历史】%s 当日 Flow 超过 %d 页，后段被截断", t, self.max_flow_pages)
+                log.info("【历史】%s 当日 ≥$%s 大单 %d 笔已缓存（%d 页）", t, prem, len(rows), pages)
+                closed = self.date < et_now().date() or et_now() >= et_datetime(self.date, "16:30")
+                if closed and not cursor:
+                    os.makedirs(os.path.dirname(fp), exist_ok=True)
+                    with open(fp, "w", encoding="utf-8") as f:
+                        json.dump(rows, f, ensure_ascii=False)
             out = []
             for r in self.flow_cache[t]:
                 ts = parse_iso(pick(r, "occurred_at", "occurredAt", "executed_at", "timestamp", "time"))

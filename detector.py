@@ -427,7 +427,7 @@ class FlowConfirmer:
         }
         if self._param_style_ok is not False:
             try:
-                p = dict(base, sides="ask", rights=right)
+                p = dict(base, sides="A,AA", rights=right)   # 接口的方向代码：A = at_ask，AA = above_ask
                 rows = extract_rows(client.get(FLOW_TRADES_PATH, p))
                 self._param_style_ok = True
                 return rows
