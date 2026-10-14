@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-10-13 23:23",
+  "run_at": "2026-10-14 15:47",
   "days": [
     "2026-10-07",
     "2026-10-08",
@@ -7,54 +7,93 @@
     "2026-10-12",
     "2026-10-13"
   ],
-  "old": {
-    "trades": 74,
-    "total_pnl": 1464.6,
-    "pnl_ex_best": 937.79,
-    "win_rate_pct": 51.4,
-    "direction_pct": 60.8,
-    "avg_peak_pct": 51.0,
-    "avg_roi_pct": 20.7,
-    "profit_factor": 1.96,
-    "hard_stops": 12,
-    "underlying_stops": 8,
-    "hard_stop_avg_pct": -62.5,
-    "hard_stop_worst_pct": -67.5
-  },
-  "new": {
-    "trades": 75,
-    "total_pnl": 1597.34,
-    "pnl_ex_best": 1070.53,
-    "win_rate_pct": 45.3,
-    "direction_pct": 62.7,
-    "avg_peak_pct": 50.1,
-    "avg_roi_pct": 16.6,
-    "profit_factor": 1.96,
-    "hard_stops": 12,
-    "underlying_stops": 15,
-    "hard_stop_avg_pct": -62.6,
-    "hard_stop_worst_pct": -65.8
+  "groups": {
+    "旧规则": {
+      "name": "daily_old",
+      "overrides": [
+        "--set",
+        "node_distance_max_pct=0.025"
+      ],
+      "overall": {
+        "trades": 74,
+        "total_pnl": 1464.6,
+        "pnl_ex_best": 937.79,
+        "win_rate_pct": 51.4,
+        "direction_pct": 60.8,
+        "avg_peak_pct": 51.0,
+        "avg_roi_pct": 20.7,
+        "profit_factor": 1.96,
+        "hard_stops": 12,
+        "underlying_stops": 8,
+        "hard_stop_avg_pct": -62.5,
+        "hard_stop_worst_pct": -67.5
+      }
+    },
+    "新规则": {
+      "name": "daily_new",
+      "overrides": [],
+      "overall": {
+        "trades": 75,
+        "total_pnl": 1597.34,
+        "pnl_ex_best": 1070.53,
+        "win_rate_pct": 45.3,
+        "direction_pct": 62.7,
+        "avg_peak_pct": 50.1,
+        "avg_roi_pct": 16.6,
+        "profit_factor": 1.96,
+        "hard_stops": 12,
+        "underlying_stops": 15,
+        "hard_stop_avg_pct": -62.6,
+        "hard_stop_worst_pct": -65.8
+      }
+    },
+    "Flow加分": {
+      "name": "daily_flowbonus",
+      "overrides": [
+        "--set",
+        "flow_mode=\"bonus\""
+      ],
+      "overall": {
+        "trades": 75,
+        "total_pnl": 2383.04,
+        "pnl_ex_best": 1907.15,
+        "win_rate_pct": 48.0,
+        "direction_pct": 69.3,
+        "avg_peak_pct": 49.2,
+        "avg_roi_pct": 15.0,
+        "profit_factor": 2.26,
+        "hard_stops": 11,
+        "underlying_stops": 14,
+        "hard_stop_avg_pct": -63.4,
+        "hard_stop_worst_pct": -69.9
+      }
+    }
   },
   "by_day": {
     "2026-10-07": {
-      "old": 445.87,
-      "new": 173.52
+      "旧规则": 445.87,
+      "新规则": 173.52,
+      "Flow加分": 249.42
     },
     "2026-10-08": {
-      "old": 1221.58,
-      "new": 1210.44
+      "旧规则": 1221.58,
+      "新规则": 1210.44,
+      "Flow加分": 1388.34
     },
     "2026-10-09": {
-      "old": -350.61,
-      "new": 52.3
+      "旧规则": -350.61,
+      "新规则": 52.3,
+      "Flow加分": 746.02
     },
     "2026-10-12": {
-      "old": 220.66,
-      "new": -12.37
+      "旧规则": 220.66,
+      "新规则": -12.37,
+      "Flow加分": -376.3
     },
     "2026-10-13": {
-      "old": -72.9,
-      "new": 173.45
+      "旧规则": -72.9,
+      "新规则": 173.45,
+      "Flow加分": 375.56
     }
   },
   "live_today": [
