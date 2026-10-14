@@ -219,8 +219,9 @@ def main(argv=None) -> int:
     ap.add_argument("--set", action="append", metavar="KEY=VALUE", help="相对默认配置改动的参数，可重复")
     ap.add_argument("--dates", help="逗号分隔的日期，默认全部已存档日期")
     ap.add_argument("--tickers", help="逗号分隔的标的，默认 config.archive_tickers")
-    ap.add_argument("--universe", choices=["config", "heatmap", "live"], default="config",
-                    help="heatmap：archive.py --universe heatmap 筛出的大样本标的池；live：每天用当天实盘 B 账户的监控标的")
+    ap.add_argument("--universe", choices=["config", "heatmap", "live"], default="live",
+                    help="live（默认，真实回测）：每天用当天实盘 B 账户的监控标的，没有实盘日志的日子退回 212 只；"
+                         "heatmap：212 只大样本标的池；config：config.archive_tickers")
     ap.add_argument("--baseline", help="跑完后与该实验对比")
     ap.add_argument("--compare", help="只对比已有实验，逗号分隔")
     ap.add_argument("--config", help="JSON 配置文件")

@@ -153,7 +153,9 @@ class SystemConfig:
     default_gamma: float = 0.04
     fallback_iv: float = 0.45             # 期权链不可用时，用 BS 由现货换算权利金
     risk_free_rate: float = 0.04
-    slippage_pct: float = 0.02            # 买入 +2%，卖出 -2%
+    # 单边滑点（仅在拿不到真实报价时兜底）：2.7% ≈ 实盘实测买卖价差中位 5.3% 的一半（2026-10-14 校准）。
+    # 实盘只用实时报价不估算；回放优先用历史 NBBO 的真实价差
+    slippage_pct: float = 0.027
     # 历史回放：用真实期权数据开仓与盯市（每个合约 2 次配额）——
     #   contract-intraday 真实成交价（仅最近 150 分钟）优先，其余时段用 contract-greeks-series 的真实 IV + BS
     use_real_option_pricing: bool = True
@@ -164,7 +166,8 @@ class SystemConfig:
     # 回放用 /v1/options/chain-history 的真实历史 NBBO（30 分钟 / 1 小时粒度）：按开仓时的真实买卖价差算单边滑点，
     # 当时 bid 为 0 不开仓；查不到报价时退回 slippage_pct
     replay_hist_spread: bool = True
-    intraday_mark_min: int = 1            # 历史回放持仓盯市间隔（分钟）；0 = 只在 5 分钟 Heatmap 快照时盯市
+    # 历史回放持仓盯市间隔（分钟）；0 = 只在 5 分钟 Heatmap 快照时盯市 = 与实盘每 5 分钟一轮一致（2026-10-14 起默认）
+    intraday_mark_min: int = 0
     min_entry_delta: float = 0.0          # 开仓合约 |delta| 低于此值不开仓（0 = 关闭；2026-10-12 用户决定关闭）；历史回放用真实 delta
     min_option_price: float = 0.05       # 期权价低于此值不开仓（防异常报价导致 ROI 失真）
     contracts_per_trade: int = 1
