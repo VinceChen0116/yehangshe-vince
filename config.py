@@ -188,9 +188,9 @@ class SystemConfig:
     signal_ranking: str = "score"
     # 名额分配（实验，默认关闭）：max_trades_before=("12:00", 10) → 12:00 前最多开 10 笔，剩余名额留给下午；
     # max_same_direction=5 → 同方向（Call 或 Put）同时最多 5 笔，给反方向（如尾盘反弹的 Call）留位置
-    max_trades_before: tuple = ()
+    max_trades_before: tuple = ("12:00", 15)   # 2026-10-15 起实盘（组合 A）：12:00 前最多 15 笔
     max_same_direction: int = 0
-    max_trades_per_day: int = 15          # 每个账户每天最多开仓笔数；0 = 不限
+    max_trades_per_day: int = 25          # 2026-10-15 起实盘（组合 A）：每天最多 25 笔（旧 15）         # 每个账户每天最多开仓笔数；0 = 不限
     # 持仓满时的替换（实验，默认关闭）：新信号分数 ≥ 某持仓开仓分数 + margin，且该持仓 ROI ≤ max_roi，则平掉分数最低者换入
     rank_replace_margin: float = 0.0
     rank_replace_max_roi: float = 0.0
