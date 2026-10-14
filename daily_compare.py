@@ -4,6 +4,8 @@ daily_compare.py —— 每日收盘后：多组规则在全部存档日上的�
   * 旧规则 = 2026-10-13 以前的实盘规则：现价距正节点 ≤ 2.5%
   * 新规则 = 当前 config 默认值（2026-10-14 起实盘）：现价距正节点 ≤ 1%（其余相同）
   * Flow加分 = 新规则 + Flow 只作排序加分（近 15 分钟有 ≥$5 万 Ask 侧同向大单、当日量 ≥ OI → 分数 +0.2），不拦信号
+  * 午前≤10 = 新规则 + 12:00 前最多开 10 笔（每天仍 15 笔，名额留给下午）
+  * 上限25 = 新规则 + 每天最多 25 笔（同时持仓仍 8 笔）
 各组都在全部已存档交易日上跑（Heatmap 存档 + 期权价格 / Flow 缓存，已跑过的日期基本 0 配额），
 输出到 backtests/exp/daily_<组>，并把"今天 + 累计 + 逐日"对比发到 Discord；
 如有当天实盘交易明细（live/trades_<日期>.csv，B 账户），一并列出。
@@ -26,6 +28,8 @@ GROUPS = [  # (实验名, 显示名, 相对当前默认配置的改动)
     ("daily_old", "旧规则", ["--set", "node_distance_max_pct=0.025"]),
     ("daily_new", "新规则", []),
     ("daily_flowbonus", "Flow加分", ["--set", 'flow_mode="bonus"']),
+    ("daily_morning10", "午前≤10", ["--set", 'max_trades_before=["12:00",10]']),
+    ("daily_cap25", "上限25", ["--set", "max_trades_per_day=25"]),
 ]
 EXP = os.path.join("backtests", "exp")
 
@@ -63,11 +67,11 @@ def main(argv=None) -> int:
     day_pnl = lambda lb, d: bd[lb].get(d, {}).get("total_pnl")
     rows = [("笔数", "trades", str), ("合计", "total_pnl", money), ("去最大一笔", "pnl_ex_best", money),
             ("胜率", "win_rate_pct", lambda v: f"{v}%"), ("盈亏比", "profit_factor", str)]
-    table = [f"{'':<8}" + "".join(f"{lb:>10}" for lb in labels)]
+    table = [f"{'':<6}" + "".join(f"{lb:>9}" for lb in labels)]
     for label, k, f in rows:
-        table.append(f"{label:<8}" + "".join(f"{('—' if ov[lb].get(k) is None else f(ov[lb].get(k))):>10}" for lb in labels))
-    table.append(f"{'亏损天数':<8}" + "".join(
-        f"{f'{sum(1 for d in days if (day_pnl(lb, d) or 0) < 0)}/{len(days)}':>10}" for lb in labels))
+        table.append(f"{label:<6}" + "".join(f"{('—' if ov[lb].get(k) is None else f(ov[lb].get(k))):>9}" for lb in labels))
+    table.append(f"{'亏损天':<6}" + "".join(
+        f"{f'{sum(1 for d in days if (day_pnl(lb, d) or 0) < 0)}/{len(days)}':>9}" for lb in labels))
     per_day = "\n".join(f"{d[5:]} " + " ".join(f"{money(day_pnl(lb, d)):>8}" for lb in labels) for d in days)
     per_day = f"{'':6}" + " ".join(f"{lb:>8}" for lb in labels) + "\n" + per_day
     live = live_result(today)
@@ -82,7 +86,7 @@ def main(argv=None) -> int:
     notifier = None if args.no_post else from_config(SystemConfig.load(None))
     if notifier:
         notifier.send(embeds=[{
-            "title": f"📈 {today} 收盘：旧规则 / 新规则（离节点≤1%，实盘）/ Flow加分",
+            "title": f"📈 {today} 收盘：多组规则对比（新规则 = 实盘现行）",
             "color": 0x3498DB,
             "description": "```\n" + "\n".join(table) + "\n```",
             "fields": [
@@ -90,7 +94,7 @@ def main(argv=None) -> int:
                                                    + f"\n{live_line}", "inline": False},
                 {"name": f"逐日（累计 {len(days)} 天）", "value": "```\n" + per_day[-1000:] + "\n```", "inline": False},
             ],
-            "footer": {"text": "历史回放 · 真实期权价格 · 每笔 1 张；实盘从 10/14 起用新规则；Flow加分 观察中"},
+            "footer": {"text": "历史回放 · 真实期权价格 · 每笔 1 张；实盘从 10/14 起用新规则；其余组观察中"},
         }])
     return 0
 
