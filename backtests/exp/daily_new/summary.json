@@ -1,7 +1,9 @@
 {
   "name": "daily_new",
-  "run_at": "2026-10-14 19:46",
+  "run_at": "2026-10-14 19:56",
   "overrides": {
+    "max_trades_per_day": 15,
+    "max_trades_before": [],
     "_标的": "heatmap（212 只）"
   },
   "dates": [
