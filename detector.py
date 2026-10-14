@@ -438,10 +438,11 @@ class FlowConfirmer:
                 self._param_style_ok = False
         return extract_rows(client.get(FLOW_TRADES_PATH, base))
 
-    def confirm(self, client, ticker: str, right: str, now_et: dt.datetime) -> FlowConfirmation:
+    def confirm(self, client, ticker: str, right: str, now_et: dt.datetime,
+                window_min: int | None = None) -> FlowConfirmation:
         cfg = self.cfg
         rows = self._fetch(client, ticker, right, now_et.date())
-        win_start = now_et - dt.timedelta(minutes=cfg.flow_window_min)
+        win_start = now_et - dt.timedelta(minutes=window_min or cfg.flow_window_min)
         cands = []
         for r in rows:
             ts = parse_iso(pick(r, "occurred_at", "occurredAt", "executed_at", "timestamp", "time", "ts"))
@@ -558,6 +559,7 @@ class SignalDetector:
         self._last_note: dict[str, str] = {}
         self._flow_next_ok: dict[str, dt.datetime] = {}
         self.flow_disabled = False   # Flow 返回 401/403 权限错误后置 True
+        self._flow_rejected: dict[str, tuple] = {}   # flow_mode="lookback"：已被否决的结构，同一结构不再等后来的大单
         self.spot_hist: dict[str, list] = {}   # 标的 → 当日 5 分钟现货序列（打分用）
         self.stats = {"snapshots": 0, "structures": 0, "fatigue_reject": 0, "pcr_reject": 0,
                       "flow_calls": 0, "flow_throttled": 0, "flow_reject": 0, "signals": 0, "stale_skip": 0}
@@ -648,9 +650,26 @@ class SignalDetector:
             self._last_note.pop(ticker, None)
             fc = FlowConfirmation(True, "仅 Heatmap 模式（跳过阶段3 Flow 确认）")
             log.info("【阶段3·跳过】%s %s：仅 Heatmap 模式，结构成立直接开仓", ticker, st.action)
-            return self._scored(FullSignal(ticker, now_et, snap, st, fc, bias, tests)), snap
+            sig = self._scored(FullSignal(ticker, now_et, snap, st, fc, bias, tests))
+            if self.cfg.flow_mode == "bonus" and self.cfg.flow_bonus and not self.flow_disabled:
+                # Flow 只作排序加分：不拦信号，近 flow_window_min 分钟内有符合规则的大单就给分数加 flow_bonus
+                try:
+                    bfc = self.flow.confirm(client, ticker, st.right, now_et)
+                    self.stats["flow_calls"] += 1
+                    if bfc.ok:
+                        sig.flow, sig.score = bfc, sig.score + self.cfg.flow_bonus
+                        sig.score_parts["flow_bonus"] = self.cfg.flow_bonus
+                        log.info("【阶段3·加分】%s Flow 大单 +%.2f：%s", ticker, self.cfg.flow_bonus, bfc.reason)
+                except YHSApiError as e:
+                    if e.status in (401, 403):
+                        self.flow_disabled = True
+                    log.warning("【阶段3·加分】%s Flow 查询失败：%s", ticker, e)
+            return sig, snap
         if self.flow_disabled:
             return None, snap
+        key = (st.structure, st.pos_strike, st.neg_strike)
+        if self.cfg.flow_mode == "lookback" and self._flow_rejected.get(ticker) == key:
+            return None, snap   # 同一结构首次出现时没有先行大单 → 不等后来的大单
         nxt = self._flow_next_ok.get(ticker)
         if nxt and now_et < nxt:
             self.stats["flow_throttled"] += 1
@@ -658,7 +677,8 @@ class SignalDetector:
 
         self.stats["flow_calls"] += 1
         try:
-            fc = self.flow.confirm(client, ticker, st.right, now_et)
+            fc = self.flow.confirm(client, ticker, st.right, now_et,
+                                   self.cfg.flow_lookback_min if self.cfg.flow_mode == "lookback" else None)
         except YHSApiError as e:
             if e.status in (401, 403):
                 # 权限类错误重试无意义：本会话内停用 Flow，避免每轮重复失败
@@ -670,6 +690,8 @@ class SignalDetector:
             return None, snap
         if not fc.ok:
             self.stats["flow_reject"] += 1
+            if self.cfg.flow_mode == "lookback":
+                self._flow_rejected[ticker] = key
             self._flow_next_ok[ticker] = now_et + dt.timedelta(minutes=self.cfg.flow_recheck_min)
             self._note(ticker, "flow:" + fc.reason, "【阶段3】%s Flow 未确认：%s", ticker, fc.reason)
             return None, snap

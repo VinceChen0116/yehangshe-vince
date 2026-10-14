@@ -131,6 +131,12 @@ class SystemConfig:
     flow_window_min: int = 15
     flow_recheck_min: int = 10            # Flow 未确认后，同一标的 10 分钟内不再重查（< 15 分钟窗口，不会漏单）
     flow_page_limit: int = 25             # /v1/flow/trades 的 limit 上限是 25
+    # Flow 的用法（实验）："gate" = 规格原文（结构成立后近 15 分钟内要有大单，没有就等后面的大单）；
+    #   "lookback" = 结构出现时往回看 flow_lookback_min 分钟要有大单，没有就放弃这个结构（不再等）；
+    #   "bonus" = 不拦信号（需 require_flow_confirm=false），有大单的信号排序时加 flow_bonus 分
+    flow_mode: str = "gate"
+    flow_lookback_min: int = 30
+    flow_bonus: float = 0.2
     flow_max_dte: int = 0                 # >0：只认到期天数 ≤ 此值的大单（0 = 不限）
     flow_max_moneyness_pct: float = 0.0   # >0：只认 |价内外程度| ≤ 此值的大单（接口字段 min_moneyness_pct，0.02 = 2%）
     flow_require_vol_ge_oi: bool = True
