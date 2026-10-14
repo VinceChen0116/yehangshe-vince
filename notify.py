@@ -97,6 +97,9 @@ class DiscordNotifier:
                 {"name": "目标加速位", "value": f"{p.target_strike:g}", "inline": True},
                 {"name": "δ", "value": f"{p.delta:.2f}", "inline": True},
                 {"name": "信号评分", "value": f"{getattr(p, 'signal_score', 0.0):.2f} / 1.00", "inline": True},
+                {"name": "Flow 大单（仅记录）", "value": ("—" if getattr(p, "flow_ok", None) is None else
+                                                     (f"🐋 有 ${p.flow_premium_usd:,.0f}" if p.flow_ok else "无") + f"：{p.flow_note[:80]}"),
+                 "inline": False},
             ],
             "footer": {"text": f"{p.position_id} · 美东 {p.entry_time.strftime('%H:%M')} · 模拟盘"},
         }])

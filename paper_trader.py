@@ -28,7 +28,8 @@ CHAIN_PATH = "/v1/options/chain-snapshot/{ticker}"
 CSV_FIELDS = ["position_id", "ticker", "action", "contract_symbol", "strike", "entry_time", "entry_spot",
               "entry_option_price", "exit_time", "exit_spot", "exit_option_price", "realized_pnl",
               "realized_roi_pct", "peak_roi_pct", "max_adverse_roi_pct", "direction_correct", "exit_reason",
-              "signal_score", "price_source", "entry_bid", "entry_ask", "entry_spread_pct"]
+              "signal_score", "price_source", "entry_bid", "entry_ask", "entry_spread_pct",
+              "flow_confirmed", "flow_premium_usd", "flow_note"]
 
 
 # =============================================================================
@@ -101,6 +102,9 @@ class Position:
     marks: int = 0
     signal_score: float = 0.0
     base_strike: float = 0.0    # 结构的正 GEX 节点（看涨=地板，看跌=天花板），underlying 止损用
+    flow_ok: bool | None = None  # 开仓时近 15 分钟是否有符合规则的同向 Ask 侧大单（只记录，不影响决策）
+    flow_premium_usd: float = 0.0
+    flow_note: str = ""
     entry_bid: float = 0.0      # 实盘报价（price_source="quote"）：开仓时的 bid/ask
     entry_ask: float = 0.0
     last_bid: float = 0.0       # 最近一次报价的 bid，作为平仓/盯市的可卖价
@@ -307,6 +311,9 @@ class PaperTrader:
         p.signal_score = getattr(sig, "score", 0.0)
         p.base_strike = sig.structure.pos_strike
         p.entry_bid, p.entry_ask, p.last_bid = bid, ask, bid
+        fl = getattr(sig, "flow", None)
+        if fl is not None and not (fl.reason or "").startswith("仅 Heatmap"):
+            p.flow_ok, p.flow_premium_usd, p.flow_note = fl.ok, fl.premium_usd or 0.0, fl.reason
         if src == "real_data":
             p.slip = slip
         if cfg.stop_mode == "underlying":
@@ -518,6 +525,9 @@ class PaperTrader:
                     "entry_ask": f"{p.entry_ask:.4f}" if p.entry_ask else "",
                     "entry_spread_pct": f"{100 * (p.entry_ask - p.entry_bid) / ((p.entry_ask + p.entry_bid) / 2):.2f}"
                     if p.entry_ask and p.entry_bid > 0 else "",
+                    "flow_confirmed": "" if p.flow_ok is None else int(p.flow_ok),
+                    "flow_premium_usd": f"{p.flow_premium_usd:.0f}" if p.flow_premium_usd else "",
+                    "flow_note": p.flow_note,
                 })
         log.info("交易明细已导出：%s", os.path.abspath(path))
         return path
@@ -625,10 +635,27 @@ class SessionEngine:
             if not ok:
                 skipped.append(f"{sig.ticker}({sig.score:.2f},{why})")
                 continue
+            self._record_flow(sig, now_et)
             if self.trader.open_position(self.client, sig, now_et) is not None:
                 opened.append(f"{sig.ticker}({sig.score:.2f})")
         log.info("【排序】%s 本轮信号 %d 个 → 开仓 %s%s", now_et.strftime("%H:%M"), len(ranked),
                  "、".join(opened) or "无", ("；未开：" + "、".join(skipped[:8]) + ("…" if len(skipped) > 8 else "")) if skipped else "")
+
+    def _record_flow(self, sig, now_et: dt.datetime) -> None:
+        """只记录不决策：开仓前查一次近 flow_window_min 分钟有没有符合规则的同向 Ask 侧大单，写进持仓/交易明细/Discord。"""
+        if not self.cfg.flow_record or self.cfg.require_flow_confirm or self.client is None:
+            return
+        if not (sig.flow.reason or "").startswith("仅 Heatmap"):
+            return   # 已经由 Flow 门槛或加分模式查过
+        flow = getattr(self.detector, "flow", None)
+        if flow is None or getattr(self.detector, "flow_disabled", False):
+            return
+        try:
+            sig.flow = flow.confirm(self.client, sig.ticker, sig.structure.right, now_et)
+        except YHSApiError as e:
+            log.info("【Flow 记录】%s 查询失败：%s", sig.ticker, e)
+            return
+        log.info("【Flow 记录】%s %s：%s", sig.ticker, "有大单" if sig.flow.ok else "无大单", sig.flow.reason)
 
     def _replace_weakest(self, sig, now_et: dt.datetime) -> bool:
         """持仓已满时：若新信号分数比某个未盈利持仓的开仓分数高出 rank_replace_margin，平掉分数最低的那个腾位。"""

@@ -135,6 +135,7 @@ class SystemConfig:
     #   "lookback" = 结构出现时往回看 flow_lookback_min 分钟要有大单，没有就放弃这个结构（不再等）；
     #   "bonus" = 不拦信号（需 require_flow_confirm=false），有大单的信号排序时加 flow_bonus 分
     flow_mode: str = "gate"
+    flow_record: bool = True              # 只记录不决策：每笔开仓前查一次 Flow，结果写进交易明细与 Discord（每笔 1–2 次配额）
     flow_lookback_min: int = 30
     flow_bonus: float = 0.2
     flow_max_dte: int = 0                 # >0：只认到期天数 ≤ 此值的大单（0 = 不限）
