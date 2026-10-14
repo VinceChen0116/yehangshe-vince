@@ -26,6 +26,7 @@ import datetime as dt
 import json
 import logging
 import os
+import re
 import sys
 
 from config import (INDEX_BLACKLIST, KNOWN_ETFS, SystemConfig, et_datetime, et_now, expiry_candidates,
@@ -289,6 +290,20 @@ def is_archived(cfg: SystemConfig, day: dt.date, tickers: list[str]) -> bool:
     return bool(m.get("complete")) and set(tickers) <= set(m.get("tickers", {}))
 
 
+def live_universe(day: dt.date, base: str | None = None) -> list[str]:
+    """当天实盘 B 账户的监控标的（从 logs/live_<日期>.log 的"账户 B 监控 N 只：..."一行读取）；没有日志则返回空列表。"""
+    base = base or os.path.dirname(os.path.abspath(__file__))
+    fp = os.path.join(base, "logs", f"live_{day.isoformat()}.log")
+    if not os.path.exists(fp):
+        return []
+    with open(fp, encoding="utf-8", errors="replace") as f:
+        for line in f:
+            m = re.search(r"账户 B 监控 \d+ 只：(.+)$", line)
+            if m:
+                return [t.strip() for t in m.group(1).split(",") if t.strip()]
+    return []
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Heatmap 每日存档（服务端仅保留 3 个交易日）")
     ap.add_argument("--date", help="只存档指定交易日 YYYY-MM-DD")
@@ -335,7 +350,13 @@ def main(argv=None) -> int:
     ok = True
     try:
         for d in days:
-            ok &= archive_day(client, cfg, d, tickers, today, args.dry_run, args.expiries)["complete"]
+            day_tickers = tickers
+            if args.universe == "heatmap" and not args.tickers:
+                extra = [t for t in live_universe(d, base) if t not in tickers]
+                if extra:   # 实盘当天监控、但不在 212 只里的标的也存档，回测才能复刻实盘
+                    log.info("%s 追加实盘标的 %d 只：%s", d, len(extra), ",".join(extra))
+                    day_tickers = tickers + extra
+            ok &= archive_day(client, cfg, d, day_tickers, today, args.dry_run, args.expiries)["complete"]
     except QuotaExhausted as e:
         log.critical("配额熔断，停止存档：%s", e)
         return 3

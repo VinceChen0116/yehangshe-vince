@@ -165,7 +165,7 @@ def run(args) -> int:
     dates = args.dates.split(",") if args.dates else archived_dates(base)
     if args.tickers:
         tickers = args.tickers.split(",")
-    elif args.universe == "heatmap":
+    elif args.universe in ("heatmap", "live"):
         with open(os.path.join(base.data_dir, "archive", "universe", "heatmap_filtered.json"), encoding="utf-8") as f:
             tickers = json.load(f)["tickers"]
     else:
@@ -176,7 +176,8 @@ def run(args) -> int:
     log.info("实验 %s：改动 %s，日期 %s，标的 %d 只", args.name, overrides or "无（基准）", ",".join(dates), len(tickers))
     overrides_note = dict(overrides)
     if args.universe != "config" or args.tickers:
-        overrides_note["_标的"] = args.tickers or f"{args.universe}（{len(tickers)} 只）"
+        overrides_note["_标的"] = args.tickers or ("每天用当天实盘监控标的" if args.universe == "live"
+                                                  else f"{args.universe}（{len(tickers)} 只）")
 
     from main import run_history_replay   # 延迟导入：避免 --compare 时加载整个回放模块
     for day in dates:
@@ -185,7 +186,12 @@ def run(args) -> int:
             cur = getattr(cfg, k)
             setattr(cfg, k, tuple(v) if isinstance(cur, tuple) and isinstance(v, list) else v)
         cfg.trades_csv = os.path.join(out, f"trades_{day}.csv")
-        run_history_replay(cfg, dt.date.fromisoformat(day), tickers, None)
+        day_tickers = tickers
+        if args.universe == "live":   # 复刻实盘：用当天实盘 B 账户的监控标的（没有实盘日志的日子退回 212 只）
+            from archive import live_universe
+            day_tickers = live_universe(dt.date.fromisoformat(day)) or tickers
+            log.info("%s 标的：%s（%d 只）", day, "实盘当天监控" if day_tickers is not tickers else "212 只存档", len(day_tickers))
+        run_history_replay(cfg, dt.date.fromisoformat(day), day_tickers, None)
 
     rows = load_trades(args.name)
     summary = {"name": args.name, "run_at": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "overrides": overrides_note,
@@ -213,8 +219,8 @@ def main(argv=None) -> int:
     ap.add_argument("--set", action="append", metavar="KEY=VALUE", help="相对默认配置改动的参数，可重复")
     ap.add_argument("--dates", help="逗号分隔的日期，默认全部已存档日期")
     ap.add_argument("--tickers", help="逗号分隔的标的，默认 config.archive_tickers")
-    ap.add_argument("--universe", choices=["config", "heatmap"], default="config",
-                    help="heatmap：archive.py --universe heatmap 筛出的大样本标的池")
+    ap.add_argument("--universe", choices=["config", "heatmap", "live"], default="config",
+                    help="heatmap：archive.py --universe heatmap 筛出的大样本标的池；live：每天用当天实盘 B 账户的监控标的")
     ap.add_argument("--baseline", help="跑完后与该实验对比")
     ap.add_argument("--compare", help="只对比已有实验，逗号分隔")
     ap.add_argument("--config", help="JSON 配置文件")

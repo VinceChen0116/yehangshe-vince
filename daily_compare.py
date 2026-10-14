@@ -9,6 +9,8 @@ daily_compare.py —— 每日收盘后：所有候选规则在全部存档日�
   * 组合C      = 每天 20 笔、12:00 前最多 10 笔
   * 午前≤10    = 每天 15 笔、12:00 前最多 10 笔
   * 上限25     = 每天 25 笔、上午不设配额
+  * 实盘复刻   = 实盘A，但按实盘的方式回测：当天实盘监控的标的（logs/live_<日期>.log）、5 分钟盯市、单边滑点 2.7%；
+                 并与当天实盘交易明细逐笔对账（同标的同方向的笔数）
 各组都在全部已存档交易日上跑（存档 + 期权价格 / Flow 缓存，已跑过的日期基本 0 配额），输出到 backtests/exp/daily_<组>，
 并把"累计 + 今天 + 逐日"对比发到 Discord；如有当天实盘交易明细（live/trades_<日期>.csv，B 账户），一并列出。
 一个月后（约 11 月中）用这些累计结果做最终决定。
@@ -32,6 +34,8 @@ GROUPS = [  # (实验名, 显示名, 相对当前默认配置（= 实盘，2026-
                            "--set", "max_trades_before=[]"]),
     ("daily_new", "10/14规则", ["--set", "max_trades_per_day=15", "--set", "max_trades_before=[]"]),
     ("daily_live", "实盘A", []),
+    # 复刻实盘：当天实盘监控的标的、每 5 分钟盯市（与实盘一致）、单边滑点 2.7%（≈ 实盘实测买卖价差中位 5.3% 的一半）
+    ("daily_replica", "实盘复刻", ["--universe", "live", "--set", "intraday_mark_min=0", "--set", "slippage_pct=0.027"]),
     ("daily_flowbonus", "A+Flow加分", ["--set", 'flow_mode="bonus"']),
     ("daily_comboC", "组合C", ["--set", "max_trades_per_day=20", "--set", 'max_trades_before=["12:00",10]']),
     ("daily_morning10", "午前≤10", ["--set", "max_trades_per_day=15", "--set", 'max_trades_before=["12:00",10]']),
@@ -60,6 +64,22 @@ def live_result(day: str):
     return len(rows), sum(float(r["realized_pnl"]) for r in rows)
 
 
+def reconcile(day: str) -> str:
+    """当天实盘 vs 实盘复刻回测：笔数、盈亏、按（标的, 方向）对上的笔数。"""
+    lp, rp = os.path.join("live", f"trades_{day}.csv"), os.path.join(EXP, "daily_replica", f"trades_{day}.csv")
+    if not (os.path.exists(lp) and os.path.exists(rp)):
+        return "（当天实盘或复刻回测明细缺失，无法对账）"
+    def load(p):
+        with open(p, encoding="utf-8-sig") as f:
+            return list(csv.DictReader(f))
+    live, rep = load(lp), load(rp)
+    key = lambda r: (r["ticker"], r["action"])
+    lk, rk = {key(r) for r in live}, {key(r) for r in rep}
+    pnl = lambda rows: sum(float(r["realized_pnl"]) for r in rows)
+    return (f"实盘 {len(live)} 笔 {money(pnl(live))} ｜ 复刻回测 {len(rep)} 笔 {money(pnl(rep))} ｜ "
+            f"同标的同方向 {len(lk & rk)} 笔（只在实盘 {len(lk - rk)}，只在回测 {len(rk - lk)}）")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="多组规则每日回测对比")
     ap.add_argument("--no-post", action="store_true")
@@ -85,13 +105,14 @@ def main(argv=None) -> int:
     per_day = head + "\n" + "\n".join(lines)
     live = live_result(today)
     live_line = f"实盘（B 账户）{live[0]} 笔 {money(live[1])}" if live else "实盘交易明细未找到"
+    recon = reconcile(today)
     summary = {"run_at": et_now().strftime("%Y-%m-%d %H:%M"), "days": days,
                "groups": {lb: {"name": name, "overrides": extra, "overall": ov[lb]} for name, lb, extra in GROUPS},
                "by_day": {d: {lb: day_pnl(lb, d) for lb in labels} for d in days}, "live_today": live}
     os.makedirs(os.path.join("backtests", "daily_compare"), exist_ok=True)
     with open(os.path.join("backtests", "daily_compare", f"{today}.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
-    print("\n".join(table)); print(per_day); print(live_line)
+    print("\n".join(table)); print(per_day); print(live_line); print(recon)
     notifier = None if args.no_post else from_config(SystemConfig.load(None))
     if notifier:
         notifier.send(embeds=[{
@@ -101,6 +122,7 @@ def main(argv=None) -> int:
             "fields": [
                 {"name": f"今天（{today}）", "value": "回测：" + " / ".join(f"{lb} {money(day_pnl(lb, today))}" for lb in labels)
                                                    + f"\n{live_line}", "inline": False},
+                {"name": "实盘 vs 实盘复刻（对账）", "value": recon, "inline": False},
                 {"name": f"逐日（最近 {len(lines)} 天 / 累计 {len(days)} 天）", "value": "```\n" + per_day + "\n```", "inline": False},
             ],
             "footer": {"text": "历史回放 · 真实期权价格 · 每笔 1 张；实盘 10/15 起用组合 A；约 11 月中做最终决定"},
