@@ -559,6 +559,9 @@ class SessionEngine:
         if cfg.max_trades_per_day and \
                 sum(1 for p in self.trader.positions if p.entry_time.date() == now_et.date()) >= cfg.max_trades_per_day:
             return False, f"当日开仓已达 {cfg.max_trades_per_day} 笔上限"
+        if cfg.max_trades_before and minutes_of_day(now_et) < hhmm_to_minutes(cfg.max_trades_before[0]) and \
+                sum(1 for p in self.trader.positions if p.entry_time.date() == now_et.date()) >= cfg.max_trades_before[1]:
+            return False, f"{cfg.max_trades_before[0]} 前已开 {cfg.max_trades_before[1]} 笔（名额留给下午）"
         if len(self.trader.trades_today(ticker, now_et.date())) >= cfg.max_trades_per_ticker_day:
             return False, "该标的当日开仓次数已达上限"
         le = self.last_exit_time.get(ticker)
@@ -601,6 +604,9 @@ class SessionEngine:
                 skipped.append(f"{sig.ticker}({sig.score:.2f}<门槛)")
                 continue
             ok, why = self.can_enter(sig.ticker, now_et)
+            if ok and self.cfg.max_same_direction and sum(
+                    1 for p in self.trader.open_positions() if p.right == sig.structure.right) >= self.cfg.max_same_direction:
+                ok, why = False, f"同方向持仓已达 {self.cfg.max_same_direction} 笔"
             if not ok and why == "持仓数已达上限" and self._replace_weakest(sig, now_et):
                 ok, why = self.can_enter(sig.ticker, now_et)
             if not ok:

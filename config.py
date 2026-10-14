@@ -186,6 +186,10 @@ class SystemConfig:
     # 信号筛选（2026-10-12 用户要求每天只做 10–20 笔优质信号）：
     #   score = 每轮先收集所有信号，按 signal_score 从高到低填空位；first_come = 先到先得（旧行为）
     signal_ranking: str = "score"
+    # 名额分配（实验，默认关闭）：max_trades_before=("12:00", 10) → 12:00 前最多开 10 笔，剩余名额留给下午；
+    # max_same_direction=5 → 同方向（Call 或 Put）同时最多 5 笔，给反方向（如尾盘反弹的 Call）留位置
+    max_trades_before: tuple = ()
+    max_same_direction: int = 0
     max_trades_per_day: int = 15          # 每个账户每天最多开仓笔数；0 = 不限
     # 持仓满时的替换（实验，默认关闭）：新信号分数 ≥ 某持仓开仓分数 + margin，且该持仓 ROI ≤ max_roi，则平掉分数最低者换入
     rank_replace_margin: float = 0.0

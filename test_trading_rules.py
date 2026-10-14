@@ -185,6 +185,17 @@ class RankingTest(unittest.TestCase):
         self.eng.flush(et_datetime(FRI, "10:05"))
         self.assertEqual([p.ticker for p in self.trader.open_positions()], ["LOW"])
 
+    def test_morning_quota_and_direction_cap(self):
+        self.cfg.max_trades_before = ("12:00", 1)
+        self.eng.pending = {t: self._sig(t, sc) for t, sc in (("A1", 0.9), ("A2", 0.8))}
+        self.eng.flush(self.now)
+        self.assertEqual(len(self.trader.positions), 1)                 # 12:00 前只开 1 笔
+        self.cfg.max_trades_before = ()
+        self.cfg.max_same_direction = 2
+        self.eng.pending = {t: self._sig(t, sc) for t, sc in (("B1", 0.9), ("B2", 0.8))}
+        self.eng.flush(et_datetime(FRI, "10:05"))
+        self.assertEqual(len(self.trader.open_positions()), 2)          # 都是 Call：同方向最多 2 笔
+
     def test_min_score(self):
         self.cfg.min_signal_score = 0.6
         self.eng.pending = {"A": self._sig("A", 0.5), "B": self._sig("B", 0.7)}
