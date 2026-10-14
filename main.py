@@ -649,7 +649,8 @@ def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], exp
             lp = last_poll.get(t)
             if not has_pos and lp is not None and (now - lp).total_seconds() < interval * 60:
                 continue
-            frame = hc.frame_at(t, now)
+            # 实盘在 T 段结束（T+5 分钟）后才拿得到标记为 T 的快照：回放同样延后 replay_bar_delay_min 分钟使用
+            frame = hc.frame_at(t, now - dt.timedelta(minutes=cfg.replay_bar_delay_min))
             if frame is None:
                 continue
             last_poll[t] = now

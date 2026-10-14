@@ -157,6 +157,9 @@ class SystemConfig:
     #   contract-intraday 真实成交价（仅最近 150 分钟）优先，其余时段用 contract-greeks-series 的真实 IV + BS
     use_real_option_pricing: bool = True
     greeks_interval: str = "1m"           # contract-greeks-series 粒度：1m 一次请求即全天 391 点，配额与 5m 相同
+    # 回放时 Heatmap 快照的可用延迟：标记为 T 的 5 分钟段要到 T+5 才拿得到（2026-10-13 实测）。
+    # 5 = 与实盘一致（2026-10-14 起默认）；0 = 旧回测口径（在 T 时刻就用 T 段数据，比实盘早 5 分钟）
+    replay_bar_delay_min: int = 5
     intraday_mark_min: int = 1            # 历史回放持仓盯市间隔（分钟）；0 = 只在 5 分钟 Heatmap 快照时盯市
     min_entry_delta: float = 0.0          # 开仓合约 |delta| 低于此值不开仓（0 = 关闭；2026-10-12 用户决定关闭）；历史回放用真实 delta
     min_option_price: float = 0.05       # 期权价低于此值不开仓（防异常报价导致 ROI 失真）
