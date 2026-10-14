@@ -1,0 +1,64 @@
+{
+  "run_at": "2026-10-13 23:23",
+  "days": [
+    "2026-10-07",
+    "2026-10-08",
+    "2026-10-09",
+    "2026-10-12",
+    "2026-10-13"
+  ],
+  "old": {
+    "trades": 74,
+    "total_pnl": 1464.6,
+    "pnl_ex_best": 937.79,
+    "win_rate_pct": 51.4,
+    "direction_pct": 60.8,
+    "avg_peak_pct": 51.0,
+    "avg_roi_pct": 20.7,
+    "profit_factor": 1.96,
+    "hard_stops": 12,
+    "underlying_stops": 8,
+    "hard_stop_avg_pct": -62.5,
+    "hard_stop_worst_pct": -67.5
+  },
+  "new": {
+    "trades": 75,
+    "total_pnl": 1597.34,
+    "pnl_ex_best": 1070.53,
+    "win_rate_pct": 45.3,
+    "direction_pct": 62.7,
+    "avg_peak_pct": 50.1,
+    "avg_roi_pct": 16.6,
+    "profit_factor": 1.96,
+    "hard_stops": 12,
+    "underlying_stops": 15,
+    "hard_stop_avg_pct": -62.6,
+    "hard_stop_worst_pct": -65.8
+  },
+  "by_day": {
+    "2026-10-07": {
+      "old": 445.87,
+      "new": 173.52
+    },
+    "2026-10-08": {
+      "old": 1221.58,
+      "new": 1210.44
+    },
+    "2026-10-09": {
+      "old": -350.61,
+      "new": 52.3
+    },
+    "2026-10-12": {
+      "old": 220.66,
+      "new": -12.37
+    },
+    "2026-10-13": {
+      "old": -72.9,
+      "new": 173.45
+    }
+  },
+  "live_today": [
+    15,
+    -81.44000000000001
+  ]
+}

@@ -96,11 +96,13 @@ class StrikeAndEntryTest(unittest.TestCase):
         self.assertGreaterEqual(p.strike, 386.5 * 0.995)
 
     def test_near_node_kept(self):
+        self.cfg.strike_mode = "target_node"
         p = self.trader.open_position(None, signal("C", 1000.0, 995.0, 1005.0), self.now)
         self.assertEqual(p.strike, 1005.0)
 
     def test_listed_strike_not_rounded(self):
         # COIN 192.5：挂牌行权价不能被取整成不存在的 192
+        self.cfg.strike_mode = "target_node"
         p = self.trader.open_position(None, signal("C", 192.0, 190.0, 200.0, strikes=[185.0, 190.0, 192.5, 195.0, 200.0]),
                                       self.now)
         self.assertEqual(p.strike, 192.5)
@@ -112,6 +114,12 @@ class StrikeAndEntryTest(unittest.TestCase):
         self.assertEqual(p.strike, 760.0)          # 现价 768.66 × 0.99 ≈ 761，挂牌网格步长 5 → 760
         q = self.trader.open_position(None, signal("P", 761.84, 765.0, 745.0), self.now)
         self.assertEqual(q.strike, 770.0)          # 看跌：价内 = 高于现价（761.84 × 1.01 ≈ 769.5 → 770）
+
+    def test_atm_uses_listed_strike(self):
+        self.cfg.strike_mode = "atm"
+        p = self.trader.open_position(None, signal("C", 192.0, 190.0, 200.0, strikes=[185.0, 190.0, 192.5, 195.0, 200.0]),
+                                      self.now)
+        self.assertEqual(p.strike, 192.5)          # 离 192.0 最近的挂牌价，不取整成 192
 
     def test_min_entry_price(self):
         self.cfg.min_option_price = 1_000.0

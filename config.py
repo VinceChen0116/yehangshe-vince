@@ -119,7 +119,7 @@ class SystemConfig:
     #   设为整数 N 则只接受 ≤N 个交易日的到期（如 1 = "0DTE 否则 1DTE"，都没有则该标的不交易）
     expiry_max_trading_dte: int | None = None
     expiry_search_trading_days: int = 10  # 历史回放/存档向后探测最近到期日的最大交易日数（覆盖月度到期 + 节假日）
-    node_distance_max_pct: float = 0.025  # 现货距正 GEX 节点 ≤ 2.5%
+    node_distance_max_pct: float = 0.01   # 现货距正 GEX 节点 ≤ 1%（2026-10-14 起实盘；旧规则 2.5%，5 天回测见 5d_dist10）
     fatigue_touch_band_pct: float = 0.004 # 距节点 ≤ 0.4% 视为一次"测试回踩"
     fatigue_reset_band_pct: float = 0.008 # 离开 ≥ 0.8% 后再回来才计新的一次
     fatigue_max_tests: int = 3            # 测试次数 > 3 视为节点疲劳

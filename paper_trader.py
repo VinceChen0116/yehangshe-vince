@@ -145,6 +145,9 @@ class PaperTrader:
         优先在 Heatmap 当前到期的挂牌行权价中选离节点最近的，避免造出不存在的合约。"""
         spot = sig.snapshot.spot
         if self.cfg.strike_mode == "atm":
+            # 平值：Heatmap 挂牌行权价中离现价最近的那个（避免取整出不存在的合约，如 192.5 → 192）
+            if sig.snapshot.strikes:
+                return min(sig.snapshot.strikes, key=lambda k: (abs(k - spot), k)), True
             return spot, False
         if self.cfg.strike_mode == "itm":
             # 实值：挂牌行权价中离 现价×(1∓itm_depth_pct) 最近、且确实在价内的那个（看涨低于现价，看跌高于现价）
