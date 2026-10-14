@@ -295,6 +295,11 @@ def live_universe(day: dt.date, base: str | None = None) -> list[str]:
     base = base or os.path.dirname(os.path.abspath(__file__))
     fp = os.path.join(base, "logs", f"live_{day.isoformat()}.log")
     if not os.path.exists(fp):
+        # 没有实盘日志（如 10/12 日志丢失）：用 yhs_data/archive/universe/live_<日期>.json（可能是近似名单，见其 source 字段）
+        jp = os.path.join(base, "yhs_data", "archive", "universe", f"live_{day.isoformat()}.json")
+        if os.path.exists(jp):
+            with open(jp, encoding="utf-8") as f:
+                return json.load(f).get("tickers") or []
         return []
     with open(fp, encoding="utf-8", errors="replace") as f:
         for line in f:
