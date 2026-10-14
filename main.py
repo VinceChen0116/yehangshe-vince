@@ -446,9 +446,10 @@ class HistoryClient:
         closed = self.date < et_now().date() or et_now() >= et_datetime(self.date, "16:30")
         if closed and isinstance(payload, dict) and (keep is None or keep(payload)):
             os.makedirs(os.path.dirname(fp), exist_ok=True)
-            with open(fp + ".tmp", "w", encoding="utf-8") as f:
+            tmp = f"{fp}.{os.getpid()}.tmp"   # 多个回测并行跑时各写各的临时文件
+            with open(tmp, "w", encoding="utf-8") as f:
                 json.dump(payload, f, ensure_ascii=False)
-            os.replace(fp + ".tmp", fp)
+            os.replace(tmp, fp)
         return payload
 
     def _load_intraday(self, core: str) -> list[tuple[dt.datetime, float]]:
@@ -630,8 +631,10 @@ class HistoryClient:
                 closed = self.date < et_now().date() or et_now() >= et_datetime(self.date, "16:30")
                 if closed and not cursor:
                     os.makedirs(os.path.dirname(fp), exist_ok=True)
-                    with open(fp, "w", encoding="utf-8") as f:
+                    tmp = f"{fp}.{os.getpid()}.tmp"
+                    with open(tmp, "w", encoding="utf-8") as f:
                         json.dump(rows, f, ensure_ascii=False)
+                    os.replace(tmp, fp)
             out = []
             for r in self.flow_cache[t]:
                 ts = parse_iso(pick(r, "occurred_at", "occurredAt", "executed_at", "timestamp", "time"))

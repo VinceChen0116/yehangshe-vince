@@ -59,7 +59,7 @@ def manifest_path(cfg: SystemConfig, day: dt.date) -> str:
 
 def _write_json(path: str, obj) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    tmp = path + ".tmp"
+    tmp = f"{path}.{os.getpid()}.tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False)
     os.replace(tmp, path)   # 原子替换，避免中断留下半个文件
