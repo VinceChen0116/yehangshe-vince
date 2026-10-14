@@ -104,6 +104,7 @@ class Position:
     entry_bid: float = 0.0      # 实盘报价（price_source="quote"）：开仓时的 bid/ask
     entry_ask: float = 0.0
     last_bid: float = 0.0       # 最近一次报价的 bid，作为平仓/盯市的可卖价
+    slip: float = -1.0          # 回放：按当时真实买卖价差算出的单边滑点（-1 = 用 cfg.slippage_pct）
     best_spot: float = 0.0      # trail_mode="underlying"：开仓后对我们最有利的现货价
     und_trail_active: bool = False
 
@@ -124,6 +125,8 @@ class PaperTrader:
         # 可选的实时报价源（仅实盘）：callable(contract_symbol) -> {"bid","ask","mid"} | None。
         # 设置后按 ask 开仓、按 bid 盯市与平仓，不再加滑点估算
         self.quote_provider = None
+        # 回放可选：callable(contract_symbol, now_et) -> (bid, ask) | None，用当时真实 NBBO 定单边滑点、bid 为 0 不开仓
+        self.spread_provider = None
         self.notifier = None         # 可选：notify.DiscordNotifier（仅实盘模式设置）
 
     # ------------------------------------------------------------------ 查询
@@ -225,6 +228,7 @@ class PaperTrader:
         want, listed = self._choose_strike(sig)
         spot = sig.snapshot.spot
         exp = sig.snapshot.expiration
+        bid = ask = 0.0
         quote = self._price_from_chain(client, sig, want) if client is not None else None
         if quote:
             sym, strike, mid, delta, gamma = quote
@@ -252,12 +256,18 @@ class PaperTrader:
                 real = self.price_provider(sym, now_et)
                 if real is None:   # 此刻无报价（如开盘首个 5 分钟）：按 5 分钟内下一个可用报价成交
                     real = self.price_provider(sym, now_et + dt.timedelta(minutes=5))
+            if real is not None and self.spread_provider:
+                hq = self.spread_provider(sym, now_et)
+                if hq and hq[0] <= 0:
+                    log.info("【阶段4·放弃】%s %s 当时 bid 为 0（没有买盘），不开仓", sig.ticker, sym)
+                    return None
+                if hq and hq[1] > 0:
+                    bid, ask = hq
             if real is not None:
                 mid, src = real, "real_data"   # 真实成交价或真实 IV 定价；γ 仍取 BS 值（仅作兜底）
                 real_delta = self.delta_provider(sym, now_et) if self.delta_provider else None
                 if real_delta is not None:
                     delta = real_delta
-        bid = ask = 0.0
         if self.quote_provider:
             q = self.quote_provider(sym)
             if q and (q.get("ask") or 0) > 0 and (q.get("bid") or 0) <= 0:
@@ -283,7 +293,8 @@ class PaperTrader:
             log.warning("【阶段4·放弃】%s %s 期权价 %.3f < $%.2f，报价不可信或流动性不足，不开仓",
                         sig.ticker, sym, mid, cfg.min_option_price)
             return None
-        cost = ask if src == "quote" else mid * (1 + cfg.slippage_pct)
+        slip = (ask - bid) / (ask + bid) if (src == "real_data" and ask > 0 and bid > 0) else cfg.slippage_pct
+        cost = ask if src == "quote" else mid * (1 + slip)
         p = Position(
             position_id=f"P{now_et.strftime('%Y%m%d')}-{next(self._ids):04d}",
             ticker=sig.ticker, action=sig.structure.action, right=sig.structure.right,
@@ -296,6 +307,8 @@ class PaperTrader:
         p.signal_score = getattr(sig, "score", 0.0)
         p.base_strike = sig.structure.pos_strike
         p.entry_bid, p.entry_ask, p.last_bid = bid, ask, bid
+        if src == "real_data":
+            p.slip = slip
         if cfg.stop_mode == "underlying":
             p.stop_pct = cfg.disaster_stop_pct
         p.roi_pct = self._roi(p, mid)
@@ -316,7 +329,7 @@ class PaperTrader:
         """可卖价：实时报价持仓一律用真实 bid（bid 为 0 就按 0 计，不再用中间价估算），其余用中间价减滑点。"""
         if p.price_source == "quote":
             return p.last_bid
-        return mid * (1 - self.cfg.slippage_pct)
+        return mid * (1 - (p.slip if p.slip >= 0 else self.cfg.slippage_pct))
 
     def _roi(self, p: Position, mid: float) -> float:
         return (self._exit_value(p, mid) / p.entry_option_price - 1.0) * 100.0

@@ -539,6 +539,43 @@ class HistoryClient:
         px, _, _ = bs_price_greeks(S, K, T, self.cfg.risk_free_rate, iv, right == "C")
         return px
 
+    def hist_quote(self, contract: str, t: dt.datetime):
+        """离 t 最近（前后 60 分钟内）的真实 NBBO (bid, ask)：/v1/options/chain-history 按 标的+到期+方向 拉一天的报价。
+        接口每次最多约 780 行、从最低行权价开始截断，所以先取 30 分钟粒度，平值合约不在返回里再取 1 小时粒度。
+        找不到返回 None（交易器退回固定滑点）。"""
+        core = contract.split(":")[-1]
+        ticker, exp = core[:-15], "20" + core[-15:-13] + "-" + core[-13:-11] + "-" + core[-11:-9]
+        right, strike = core[-9], int(core[-8:]) / 1000
+        for iv in ("30m", "1h"):
+            key = f"{ticker}_{exp}_{right}"
+            try:
+                payload = self._cached_get(f"nbbo_{iv}", key, f"/v1/options/chain-history/{ticker}",
+                                           {"expiration": exp, "right": right, "from": self.date.isoformat(),
+                                            "to": self.date.isoformat(), "interval": iv})
+            except QuotaExhausted:
+                raise
+            except YHSApiError as e:
+                log.info("【历史】%s 历史报价获取失败：%s", core, e)
+                return None
+            data = payload.get("data") if isinstance(payload, dict) else None
+            hit = next((c for c in (data or {}).get("contracts") or [] if abs(float(c.get("strike_usd") or 0) - strike) < 1e-6), None)
+            if hit is None:
+                continue
+            # 只用来估计买卖价差和"有没有买盘"（不用作成交价），所以取离 t 最近的一个报价（前后 60 分钟内）：
+            # 开盘后第一个有效报价在 10:00 / 10:30，09:45 的开仓需要用之后的报价估计价差
+            best, gap = None, None
+            for q in hit.get("quotes") or []:
+                ts = (q.get("quoted_at") or "")[:16]
+                if not ts:
+                    continue
+                if (q.get("bid_usd") or 0) == 0 and (q.get("ask_usd") or 0) == 0:
+                    continue   # 开盘前的空报价
+                g = abs((et_datetime(self.date, ts[11:16]) - t).total_seconds())
+                if g <= 3600 and (gap is None or g < gap):
+                    best, gap = (float(q.get("bid_usd") or 0), float(q.get("ask_usd") or 0)), g
+            return best
+        return None
+
     def underlying_at(self, contract: str, t: dt.datetime) -> float | None:
         """t 时刻（含之前 5 分钟内）的真实标的价格，取自该合约的 1 分钟 greeks 序列（0 额外配额）。"""
         last = None
@@ -636,6 +673,8 @@ def run_history_replay(cfg: SystemConfig, date: dt.date, tickers: list[str], exp
     if cfg.use_real_option_pricing:
         trader.price_provider = hc.option_price
         trader.delta_provider = hc.option_delta
+        if cfg.replay_hist_spread:
+            trader.spread_provider = hc.hist_quote
     engine = SessionEngine(cfg, hc, detector, trader)
     last_poll: dict[str, dt.datetime] = {}
     for i in range(78):
