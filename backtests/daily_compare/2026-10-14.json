@@ -1,0 +1,227 @@
+{
+  "run_at": "2026-10-14 22:00",
+  "days": [
+    "2026-10-07",
+    "2026-10-08",
+    "2026-10-09",
+    "2026-10-12",
+    "2026-10-13",
+    "2026-10-14"
+  ],
+  "groups": {
+    "旧规则": {
+      "name": "daily_old",
+      "overrides": [
+        "--set",
+        "node_distance_max_pct=0.025",
+        "--set",
+        "max_trades_per_day=15",
+        "--set",
+        "max_trades_before=[]"
+      ],
+      "overall": {
+        "trades": 90,
+        "total_pnl": -4686.08,
+        "pnl_ex_best": -5086.61,
+        "win_rate_pct": 23.3,
+        "direction_pct": 38.9,
+        "avg_peak_pct": 15.3,
+        "avg_roi_pct": -16.4,
+        "profit_factor": 0.28,
+        "hard_stops": 32,
+        "underlying_stops": 10,
+        "hard_stop_avg_pct": -67.4,
+        "hard_stop_worst_pct": -90.3
+      }
+    },
+    "10/14规则": {
+      "name": "daily_new",
+      "overrides": [
+        "--set",
+        "max_trades_per_day=15",
+        "--set",
+        "max_trades_before=[]"
+      ],
+      "overall": {
+        "trades": 90,
+        "total_pnl": -4263.67,
+        "pnl_ex_best": -4822.23,
+        "win_rate_pct": 22.2,
+        "direction_pct": 36.7,
+        "avg_peak_pct": 14.9,
+        "avg_roi_pct": -18.8,
+        "profit_factor": 0.44,
+        "hard_stops": 29,
+        "underlying_stops": 20,
+        "hard_stop_avg_pct": -68.4,
+        "hard_stop_worst_pct": -83.1
+      }
+    },
+    "实盘A": {
+      "name": "daily_live",
+      "overrides": [],
+      "overall": {
+        "trades": 145,
+        "total_pnl": -4944.21,
+        "pnl_ex_best": -5502.77,
+        "win_rate_pct": 25.5,
+        "direction_pct": 41.4,
+        "avg_peak_pct": 21.0,
+        "avg_roi_pct": -12.9,
+        "profit_factor": 0.48,
+        "hard_stops": 49,
+        "underlying_stops": 24,
+        "hard_stop_avg_pct": -67.8,
+        "hard_stop_worst_pct": -83.4
+      }
+    },
+    "A+Flow加分": {
+      "name": "daily_flowbonus",
+      "overrides": [
+        "--set",
+        "flow_mode=\"bonus\""
+      ],
+      "overall": {
+        "trades": 141,
+        "total_pnl": -6080.25,
+        "pnl_ex_best": -7001.92,
+        "win_rate_pct": 31.2,
+        "direction_pct": 50.4,
+        "avg_peak_pct": 30.1,
+        "avg_roi_pct": -5.7,
+        "profit_factor": 0.5,
+        "hard_stops": 45,
+        "underlying_stops": 18,
+        "hard_stop_avg_pct": -66.4,
+        "hard_stop_worst_pct": -95.4
+      }
+    },
+    "组合C": {
+      "name": "daily_comboC",
+      "overrides": [
+        "--set",
+        "max_trades_per_day=20",
+        "--set",
+        "max_trades_before=[\"12:00\",10]"
+      ],
+      "overall": {
+        "trades": 119,
+        "total_pnl": -4775.18,
+        "pnl_ex_best": -5200.82,
+        "win_rate_pct": 26.1,
+        "direction_pct": 42.9,
+        "avg_peak_pct": 18.2,
+        "avg_roi_pct": -17.7,
+        "profit_factor": 0.37,
+        "hard_stops": 45,
+        "underlying_stops": 15,
+        "hard_stop_avg_pct": -67.5,
+        "hard_stop_worst_pct": -86.8
+      }
+    },
+    "午前≤10": {
+      "name": "daily_morning10",
+      "overrides": [
+        "--set",
+        "max_trades_per_day=15",
+        "--set",
+        "max_trades_before=[\"12:00\",10]"
+      ],
+      "overall": {
+        "trades": 90,
+        "total_pnl": -4324.34,
+        "pnl_ex_best": -4749.98,
+        "win_rate_pct": 25.6,
+        "direction_pct": 41.1,
+        "avg_peak_pct": 17.8,
+        "avg_roi_pct": -14.6,
+        "profit_factor": 0.35,
+        "hard_stops": 31,
+        "underlying_stops": 14,
+        "hard_stop_avg_pct": -67.6,
+        "hard_stop_worst_pct": -83.1
+      }
+    },
+    "上限25": {
+      "name": "daily_cap25",
+      "overrides": [
+        "--set",
+        "max_trades_before=[]"
+      ],
+      "overall": {
+        "trades": 145,
+        "total_pnl": -4897.55,
+        "pnl_ex_best": -5456.11,
+        "win_rate_pct": 26.9,
+        "direction_pct": 44.1,
+        "avg_peak_pct": 25.7,
+        "avg_roi_pct": -9.6,
+        "profit_factor": 0.52,
+        "hard_stops": 43,
+        "underlying_stops": 28,
+        "hard_stop_avg_pct": -68.8,
+        "hard_stop_worst_pct": -83.4
+      }
+    }
+  },
+  "by_day": {
+    "2026-10-07": {
+      "旧规则": -496.03,
+      "10/14规则": -1053.07,
+      "实盘A": -884.26,
+      "A+Flow加分": -1180.12,
+      "组合C": -690.24,
+      "午前≤10": -638.8,
+      "上限25": -884.26
+    },
+    "2026-10-08": {
+      "旧规则": -1635.18,
+      "10/14规则": -1857.64,
+      "实盘A": -2446.28,
+      "A+Flow加分": -2982.38,
+      "组合C": -1574.87,
+      "午前≤10": -1610.79,
+      "上限25": -2063.8
+    },
+    "2026-10-09": {
+      "旧规则": -1707.92,
+      "10/14规则": -1368.15,
+      "实盘A": -1993.79,
+      "A+Flow加分": -1167.07,
+      "组合C": -1658.48,
+      "午前≤10": -1290.27,
+      "上限25": -1774.93
+    },
+    "2026-10-12": {
+      "旧规则": -734.49,
+      "10/14规则": -820.07,
+      "实盘A": -519.58,
+      "A+Flow加分": -347.39,
+      "组合C": -250.89,
+      "午前≤10": -130.88,
+      "上限25": -646.51
+    },
+    "2026-10-13": {
+      "旧规则": -600.87,
+      "10/14规则": -1480.94,
+      "实盘A": -1629.46,
+      "A+Flow加分": -2169.19,
+      "组合C": -1830.23,
+      "午前≤10": -1803.49,
+      "上限25": -2024.07
+    },
+    "2026-10-14": {
+      "旧规则": 488.41,
+      "10/14规则": 2316.2,
+      "实盘A": 2529.16,
+      "A+Flow加分": 1765.9,
+      "组合C": 1229.53,
+      "午前≤10": 1149.89,
+      "上限25": 2496.02
+    }
+  },
+  "live_today": [
+    15,
+    2251.0
+  ]
+}
