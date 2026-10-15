@@ -7383,3 +7383,7 @@
 20:29:59 [INFO] yhs.main: 【历史】QQQ261013C00745000 真实 IV 序列 390 个点（1m）
 20:29:59 [INFO] yhs.trader: 【阶段4·开仓】P20261013-0004 QQQ BUY_CALL | 行权价 745.00 到期 2026-10-13 | 现货 743.15 | 中间价 0.890 → 成本 0.901（含滑点 3%） | δ=0.366 γ=0.0438 | 定价来源=real_data | 目标加速位 745.00
 20:29:59 [INFO] yhs.trader: 【Flow 记录】AMZN 有大单：Ask 侧大单 $71,400，合约当日量 2,770 ≥ OI 2,398（日内主动建仓）
+20:30:57 [INFO] yhs.main: 【历史】AMZN261014C00262500 真实 IV 序列 390 个点（1m）
+20:30:58 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AMZN，5.1s 后免费重试（第 1 轮）
+20:31:03 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AMZN，7.5s 后免费重试（第 2 轮）
+20:31:12 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AMZN，11.4s 后免费重试（第 3 轮）

@@ -7556,3 +7556,6 @@
 20:30:46 [INFO] yhs.main: 【历史】CRWV 当日 ≥$50000 大单 143 笔已缓存（6 页）
 20:30:46 [INFO] yhs.trader: 【Flow 记录】CRWV 无大单：O:CRWV261120P00075000 当日量 397 < OI 10,735（疑似平仓）
 20:30:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CRWV261016P00077500，5.0s 后免费重试（第 1 轮）
+20:30:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CRWV261016P00077500，7.7s 后免费重试（第 2 轮）
+20:31:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CRWV261016P00077500，11.5s 后免费重试（第 3 轮）
+20:31:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CRWV261016P00077500，17.1s 后免费重试（第 4 轮）

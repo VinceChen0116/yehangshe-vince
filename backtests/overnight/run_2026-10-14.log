@@ -760,3 +760,5 @@
 20:29:57 [INFO] yhs.overnight: 2026-10-14 GOOG CLIFF O:GOOG261016P00320000 距 1.0% | 成本 0.17 | 跳空 -1.05% | 09:35 -39.1% / 09:45 -54.0% / 09:55 -59.0%
 20:29:58 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00880000，5.2s 后免费重试（第 1 轮）
 20:30:04 [INFO] yhs.main: 【历史】GS261016C00880000 真实 IV 序列 390 个点（1m）
+20:31:02 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，5.3s 后免费重试（第 1 轮）
+20:31:08 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，7.6s 后免费重试（第 2 轮）

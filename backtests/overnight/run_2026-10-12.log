@@ -946,3 +946,5 @@
 20:29:58 [INFO] yhs.overnight: 2026-10-12 NET CLIFF O:NET261016P00332500 距 2.4% | 成本 2.45 | 跳空 -0.702% | 09:35 -10.4% / 09:45 -27.0% / 09:55 -49.4%
 20:29:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NET261016P00320000，5.1s 后免费重试（第 1 轮）
 20:30:05 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NET261016P00320000，7.8s 后免费重试（第 2 轮）
+20:31:04 [INFO] yhs.main: 【历史】NET261016P00320000 真实 IV 序列 390 个点（1m）
+20:31:05 [WARNING] yhs.client: 429 /v1/options/contract-greeks-series/NET261016P00320000（RATE_LIMITED），按 Retry-After 等待 30.0s
