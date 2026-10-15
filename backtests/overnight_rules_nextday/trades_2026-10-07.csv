@@ -1,0 +1,2 @@
+night,ticker,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,pnl_usd,roi_pct
+2026-10-07→2026-10-08,SPY,CLIFF,local,O:SPY261008P00776000,776.93,781.0,775.0,0.52,46,7460300,1.084,1.709,09:35,-0.21,True,62.5,57.7
