@@ -87,6 +87,15 @@ def reconcile(day: str) -> str:
 def overnight_compare():
     """隔夜规则（overnight_rules_bt.py，与隔夜实盘同一套规则）全部存档晚上的真实回测 + 最近一晚与隔夜实盘对账。"""
     subprocess.run([sys.executable, "overnight_rules_bt.py"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # 对照：只买次日到期的合约
+    nd_dir = os.path.join("backtests", "overnight_rules_nextday")
+    subprocess.run([sys.executable, "overnight_rules_bt.py", "--next-day-only", "--out", nd_dir,
+                    "--log-file", os.path.join(nd_dir, "run.log")], check=False,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    nd = None
+    if os.path.exists(os.path.join(nd_dir, "summary.json")):
+        with open(os.path.join(nd_dir, "summary.json"), encoding="utf-8") as f:
+            nd = json.load(f)
     d = os.path.join("backtests", "overnight_rules")
     rows = []
     for fn in sorted(os.listdir(d)):
@@ -117,7 +126,10 @@ def overnight_compare():
         recon = f"{P} 晚没有隔夜实盘账本（隔夜实盘 10/16 尾盘起）"
     summary = {"nights": nights, "trades": len(pnl), "total_pnl": round(sum(pnl)),
                "win_pct": round(100 * sum(x > 0 for x in pnl) / len(pnl), 1), "recon": recon}
-    return summary, head + "\n```\n" + "\n".join(per[-8:]) + "\n```\n" + recon
+    nd_line = (f"\n对照·只买次日到期：{nd['trades']} 笔，胜率 {nd['win_pct']}%，合计 {money(nd['total_pnl'])}"
+               if nd and nd.get("trades") else "")
+    summary["next_day_only"] = nd and {k: nd.get(k) for k in ("trades", "total_pnl", "win_pct")}
+    return summary, head + nd_line + "\n```\n" + "\n".join(per[-8:]) + "\n```\n" + recon
 
 
 def main(argv=None) -> int:
