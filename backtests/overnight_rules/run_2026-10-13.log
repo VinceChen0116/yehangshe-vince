@@ -2,3 +2,159 @@
 21:44:08 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
 21:44:12 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
 21:44:20 [INFO] yhs.overnight_rules: 2026-10-13 AAPL SPRINGBOARD（local）340.00→342.50 距 0.51% | 15:00 后大单 18 笔
+21:44:26 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:28 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:29 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:31 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:32 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:34 [INFO] yhs.overnight_rules: 2026-10-13 ACN CLIFF（local）215.00→205.00 距 0.97% | 15:00 后大单 0 笔
+21:44:36 [INFO] yhs.overnight_rules: 2026-10-13 ADBE CLIFF（local）237.50→232.50 距 0.15% | 15:00 后大单 0 笔
+21:44:38 [INFO] yhs.overnight_rules: 2026-10-13 ADI CLIFF（local）415.00→402.50 距 0.26% | 15:00 后大单 1 笔
+21:44:38 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:39 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:42 [INFO] yhs.overnight_rules: 2026-10-13 AFRM CLIFF（local）78.00→77.50 距 0.07% | 15:00 后大单 0 笔
+21:44:43 [INFO] yhs.overnight_rules: 2026-10-13 ALAB CLIFF（local）325.00→310.00 距 0.83% | 15:00 后大单 3 笔
+21:44:44 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:46 [INFO] yhs.overnight_rules: 2026-10-13 AMKR CLIFF（local）47.50→47.00 距 0.47% | 15:00 后大单 0 笔
+21:44:48 [INFO] yhs.overnight_rules: 2026-10-13 AMZN CLIFF（local）260.00→257.50 距 0.13% | 15:00 后大单 7 笔
+21:44:50 [INFO] yhs.overnight_rules: 2026-10-13 APP CLIFF（local）272.50→270.00 距 0.41% | 15:00 后大单 1 笔
+21:44:50 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:55 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:56 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:58 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:01 [INFO] yhs.overnight_rules: 2026-10-13 ARM SPRINGBOARD（local）252.50→260.00 距 0.64% | 15:00 后大单 0 笔
+21:45:03 [INFO] yhs.overnight_rules: 2026-10-13 BAC SPRINGBOARD（local）54.00→55.00 距 0.25% | 15:00 后大单 3 笔
+21:45:04 [INFO] yhs.overnight_rules: 2026-10-13 BRKB SPRINGBOARD（local）520.00→525.00 距 0.21% | 15:00 后大单 0 笔
+21:45:05 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:08 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:12 [INFO] yhs.overnight_rules: 2026-10-13 CAT CLIFF（local）780.00→770.00 距 0.98% | 15:00 后大单 6 笔
+21:45:13 [INFO] yhs.overnight_rules: 2026-10-13 CMCSA CLIFF（local）21.00→20.00 距 0.33% | 15:00 后大单 0 笔
+21:45:13 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:15 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:16 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:19 [INFO] yhs.overnight_rules: 2026-10-13 COIN SPRINGBOARD（local）180.00→187.50 距 0.46% | 15:00 后大单 1 笔
+21:45:20 [INFO] yhs.overnight_rules: 2026-10-13 COST SPRINGBOARD（king）950.00→965.00 距 0.56% | 15:00 后大单 0 笔
+21:45:21 [INFO] yhs.overnight_rules: 2026-10-13 CRWV CLIFF（local）78.00→75.00 距 0.86% | 15:00 后大单 18 笔
+21:45:22 [INFO] yhs.overnight_rules: 2026-10-13 CSCO CLIFF（local）116.00→114.00 距 0.78% | 15:00 后大单 0 笔
+21:45:23 [INFO] yhs.overnight_rules: 2026-10-13 CVX CLIFF（local）220.00→217.50 距 0.73% | 15:00 后大单 0 笔
+21:45:24 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:26 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:27 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:45:35 [INFO] yhs.overnight_rules: 2026-10-13 DDOG CLIFF（local）285.00→275.00 距 0.32% | 15:00 后大单 0 笔
+21:45:40 [INFO] yhs.overnight_rules: 2026-10-13 FSLR SPRINGBOARD（local）185.00→190.00 距 0.46% | 15:00 后大单 0 笔
+21:45:49 [INFO] yhs.overnight_rules: 2026-10-13 GOOG SPRINGBOARD（local）350.00→352.50 距 0.26% | 15:00 后大单 1 笔
+21:46:00 [INFO] yhs.overnight_rules: 2026-10-13 GS CLIFF（local）900.00→880.00 距 0.94% | 15:00 后大单 4 笔
+21:46:02 [INFO] yhs.overnight_rules: 2026-10-13 HD SPRINGBOARD（local）292.50→297.50 距 0.63% | 15:00 后大单 0 笔
+21:46:04 [INFO] yhs.overnight_rules: 2026-10-13 HOOD CLIFF（local）111.00→110.00 距 0.59% | 15:00 后大单 4 笔
+21:46:05 [INFO] yhs.overnight_rules: 2026-10-13 HPQ CLIFF（king）31.00→29.00 距 0.69% | 15:00 后大单 0 笔
+21:46:06 [INFO] yhs.overnight_rules: 2026-10-13 HSBC SPRINGBOARD（local）95.00→96.00 距 0.03% | 15:00 后大单 0 笔
+21:46:07 [INFO] yhs.overnight_rules: 2026-10-13 IBM SPRINGBOARD（king）230.00→235.00 距 0.56% | 15:00 后大单 0 笔
+21:46:27 [WARNING] yhs.client: 网络异常 /v1/flow/trades：<urlopen error _ssl.c:1015: The handshake operation timed out>，4.1s 后第 1 次重试
+21:46:32 [INFO] yhs.overnight_rules: 2026-10-13 ICE CLIFF（local）157.50→155.00 距 0.57% | 15:00 后大单 0 笔
+21:46:33 [INFO] yhs.overnight_rules: 2026-10-13 INTC CLIFF（local）103.00→102.00 距 0.64% | 15:00 后大单 16 笔
+21:46:35 [INFO] yhs.overnight_rules: 2026-10-13 ISRG CLIFF（local）425.00→420.00 距 0.55% | 15:00 后大单 0 笔
+21:46:36 [INFO] yhs.overnight_rules: 2026-10-13 KO CLIFF（local）91.00→90.00 距 0.79% | 15:00 后大单 0 笔
+21:46:37 [INFO] yhs.overnight_rules: 2026-10-13 LITE SPRINGBOARD（local）980.00→1040.00 距 0.04% | 15:00 后大单 14 笔
+21:46:38 [INFO] yhs.overnight_rules: 2026-10-13 MCD SPRINGBOARD（king）235.00→237.50 距 0.69% | 15:00 后大单 0 笔
+21:46:40 [INFO] yhs.overnight_rules: 2026-10-13 MRNA CLIFF（local）215.00→210.00 距 0.60% | 15:00 后大单 4 笔
+21:46:41 [INFO] yhs.overnight_rules: 2026-10-13 MRVL SPRINGBOARD（local）265.00→272.50 距 0.91% | 15:00 后大单 8 笔
+21:46:43 [INFO] yhs.overnight_rules: 2026-10-13 MSTR CLIFF（local）152.50→149.00 距 0.80% | 15:00 后大单 1 笔
+21:46:44 [INFO] yhs.overnight_rules: 2026-10-13 NEE CLIFF（local）79.00→75.00 距 0.89% | 15:00 后大单 0 笔
+21:46:44 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:46:46 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:46:49 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:46:50 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:46:52 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:46:54 [INFO] yhs.overnight_rules: 2026-10-13 NFLX CLIFF（local）71.00→70.00 距 0.45% | 15:00 后大单 1 笔
+21:46:55 [INFO] yhs.overnight_rules: 2026-10-13 NKTR SPRINGBOARD（local）38.00→39.00 距 0.31% | 15:00 后大单 0 笔
+21:46:56 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:46:58 [INFO] yhs.overnight_rules: 2026-10-13 NVDA CLIFF（king）230.00→220.00 距 0.87% | 15:00 后大单 16 笔
+21:46:58 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:47:00 [INFO] yhs.overnight_rules: 2026-10-13 ON CLIFF（local）77.00→76.00 距 0.59% | 15:00 后大单 0 笔
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-13 PFE CLIFF（local）28.50→28.00 距 0.44% | 15:00 后大单 0 笔
+21:47:03 [INFO] yhs.overnight_rules: 2026-10-13 PYPL SPRINGBOARD（local）56.00→57.00 距 0.33% | 15:00 后大单 0 笔
+21:47:05 [INFO] yhs.overnight_rules: 2026-10-13 QQQ CLIFF（local）748.00→743.00 距 0.63% | 15:00 后大单 47 笔
+21:47:07 [INFO] yhs.overnight_rules: 2026-10-13 QURE SPRINGBOARD（local）21.00→22.00 距 0.33% | 15:00 后大单 0 笔
+21:47:08 [INFO] yhs.overnight_rules: 2026-10-13 RBLX CLIFF（local）50.00→45.00 距 0.62% | 15:00 后大单 0 笔
+21:47:08 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:47:11 [INFO] yhs.overnight_rules: 2026-10-13 SCCO CLIFF（local）207.50→205.00 距 0.33% | 15:00 后大单 0 笔
+21:47:12 [INFO] yhs.overnight_rules: 2026-10-13 SCHW SPRINGBOARD（king）96.00→97.00 距 0.25% | 15:00 后大单 0 笔
+21:47:13 [INFO] yhs.overnight_rules: 2026-10-13 SMCI CLIFF（local）39.50→39.00 距 0.89% | 15:00 后大单 0 笔
+21:47:14 [INFO] yhs.overnight_rules: 2026-10-13 SNOW CLIFF（local）360.00→340.00 距 0.55% | 15:00 后大单 1 笔
+21:48:12 [INFO] yhs.overnight_rules: 2026-10-13 SNPS CLIFF（local）500.00→480.00 距 0.57% | 15:00 后大单 0 笔
+21:48:13 [INFO] yhs.overnight_rules: 2026-10-13 SOXL CLIFF（local）127.00→110.00 距 0.47% | 15:00 后大单 1 笔
+21:48:17 [INFO] yhs.overnight_rules: 2026-10-13 SPY CLIFF（local）781.00→778.00 距 0.34% | 15:00 后大单 88 笔
+21:48:19 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:48:20 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:48:22 [INFO] yhs.overnight_rules: 2026-10-13 TEAM CLIFF（local）210.00→207.50 距 0.30% | 15:00 后大单 0 笔
+21:48:25 [INFO] yhs.overnight_rules: 2026-10-13 TLT SPRINGBOARD（local）78.00→78.50 距 0.47% | 15:00 后大单 1 笔
+21:48:26 [INFO] yhs.overnight_rules: 2026-10-13 UBER SPRINGBOARD（local）71.00→72.50 距 0.41% | 15:00 后大单 0 笔
+21:48:27 [INFO] yhs.overnight_rules: 2026-10-13 UNH CLIFF（local）380.00→365.00 距 0.39% | 15:00 后大单 1 笔
+21:48:28 [INFO] yhs.overnight_rules: 2026-10-13 V SPRINGBOARD（local）392.50→395.00 距 0.37% | 15:00 后大单 0 笔
+21:48:29 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:48:30 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:48:32 [INFO] yhs.overnight_rules: 2026-10-13 WDAY CLIFF（local）187.50→175.00 距 0.78% | 15:00 后大单 1 笔
+21:48:34 [INFO] yhs.overnight_rules: 2026-10-13 WDC CLIFF（local）380.00→370.00 距 0.71% | 15:00 后大单 0 笔
+21:48:35 [INFO] yhs.overnight_rules: 2026-10-13 WFC CLIFF（local）82.00→81.00 距 0.86% | 15:00 后大单 2 笔
+21:48:35 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:48:37 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:48:39 [INFO] yhs.overnight_rules: 2026-10-13 WMB CLIFF（local）75.00→73.00 距 0.79% | 15:00 后大单 0 笔
+21:48:40 [INFO] yhs.overnight_rules: 2026-10-13 WMT CLIFF（local）113.00→112.00 距 0.31% | 15:00 后大单 0 笔
+21:48:41 [INFO] yhs.main: 【历史】SPY261014P00778000 分钟线为 2026-10-14（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+21:48:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261014P00778000，5.2s 后免费重试（第 1 轮）
+21:48:47 [INFO] yhs.main: 【历史】SPY261014P00778000 真实 IV 序列 390 个点（1m）
+21:48:49 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SPY，5.3s 后免费重试（第 1 轮）
+21:48:55 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SPY，5.1s 后免费重试（第 1 轮）
+21:49:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261014P00778000，5.1s 后免费重试（第 1 轮）
+21:49:09 [INFO] yhs.main: 【历史】SPY261014P00778000 真实 IV 序列 318 个点（1m）
+21:49:09 [INFO] yhs.overnight_rules: 2026-10-13 开 SPY O:SPY261014P00778000 成本 2.00 → 09:35 卖 3.32（+65.5%）跳空 -0.43%
+21:49:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QQQ261014P00743000，5.3s 后免费重试（第 1 轮）
+21:49:16 [INFO] yhs.main: 【历史】QQQ261014P00743000 真实 IV 序列 390 个点（1m）
+21:49:17 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/QQQ，5.3s 后免费重试（第 1 轮）
+21:49:24 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/QQQ，5.2s 后免费重试（第 1 轮）
+21:49:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/QQQ261014P00743000，5.2s 后免费重试（第 1 轮）
+21:49:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/QQQ261014P00743000，5.1s 后免费重试（第 1 轮）
+21:49:43 [INFO] yhs.main: 【历史】QQQ261014P00743000 真实 IV 序列 340 个点（1m）
+21:49:43 [INFO] yhs.overnight_rules: 2026-10-13 开 QQQ O:QQQ261014P00743000 成本 3.08 → 09:35 卖 5.52（+79.2%）跳空 -0.72%
+21:49:43 [INFO] yhs.main: 【历史】NVDA261014P00227500 真实 IV 序列 390 个点（1m）
+21:49:44 [INFO] yhs.main: 【历史】NVDA261014P00227500 真实成交 bar 150 根（11:41–15:58）
+21:49:44 [INFO] yhs.main: 【历史】NVDA261014P00227500 真实 IV 序列 324 个点（1m）
+21:49:44 [INFO] yhs.overnight_rules: 2026-10-13 开 NVDA O:NVDA261014P00227500 成本 1.67 → 09:35 卖 2.98（+78.9%）跳空 -1.37%
+21:49:45 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRWV261016P00077000，5.3s 后免费重试（第 1 轮）
+21:49:51 [INFO] yhs.main: 【历史】CRWV261016P00077000 真实 IV 序列 390 个点（1m）
+21:49:52 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CRWV261016P00077000，5.2s 后免费重试（第 1 轮）
+21:49:57 [INFO] yhs.main: 【历史】CRWV261016P00077000 分钟线为 2026-10-15（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+21:49:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRWV261016P00077000，5.1s 后免费重试（第 1 轮）
+21:50:04 [INFO] yhs.main: 【历史】CRWV261016P00077000 真实 IV 序列 352 个点（1m）
+21:50:04 [INFO] yhs.overnight_rules: 2026-10-13 开 CRWV O:CRWV261016P00077000 成本 2.00 → 09:35 卖 8.45（+323.3%）跳空 -11.25%
+21:50:04 [INFO] yhs.main: 【历史】AAPL261014C00342500 真实 IV 序列 390 个点（1m）
+21:50:04 [INFO] yhs.main: 【历史】AAPL261014C00342500 真实 IV 序列 387 个点（1m）
+21:50:04 [INFO] yhs.overnight_rules: 2026-10-13 开 AAPL O:AAPL261014C00342500 成本 1.32 → 09:35 卖 3.49（+163.6%）跳空 1.14%
+21:50:05 [INFO] yhs.main: 【历史】INTC261014P00102000 真实 IV 序列 390 个点（1m）
+21:50:06 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/INTC，5.1s 后免费重试（第 1 轮）
+21:50:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/INTC261014P00102000，5.3s 后免费重试（第 1 轮）
+21:50:19 [INFO] yhs.main: 【历史】INTC261014P00102000 真实 IV 序列 298 个点（1m）
+21:50:20 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/INTC，5.0s 后免费重试（第 1 轮）
+21:50:25 [INFO] yhs.overnight_rules: 2026-10-13 开 INTC O:INTC261014P00102000 成本 1.37 → 09:35 卖 2.00（+45.4%）跳空 -1.89%
+21:50:25 [INFO] yhs.main: 【历史】LITE261016C01000000 真实 IV 序列 12 个点（1m）
+21:50:25 [INFO] yhs.overnight_rules: 2026-10-13 O:LITE261016C01000000 放弃：无价格或 bid 为 0
+21:50:26 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MRVL261016C00270000，5.2s 后免费重试（第 1 轮）
+21:50:32 [INFO] yhs.main: 【历史】MRVL261016C00270000 真实 IV 序列 390 个点（1m）
+21:50:33 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/MRVL，5.2s 后免费重试（第 1 轮）
+21:50:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MRVL261016C00270000，5.1s 后免费重试（第 1 轮）
+21:50:45 [INFO] yhs.main: 【历史】MRVL261016C00270000 真实 IV 序列 390 个点（1m）
+21:50:45 [INFO] yhs.overnight_rules: 2026-10-13 开 MRVL O:MRVL261016C00270000 成本 6.30 → 09:35 卖 3.08（-51.2%）跳空 -2.59%
+21:50:46 [INFO] yhs.main: 【历史】CAT261016P00770000 真实 IV 序列 390 个点（1m）
+21:50:46 [INFO] yhs.main: 【历史】CAT261016P00770000 真实 IV 序列 390 个点（1m）
+21:50:46 [INFO] yhs.overnight_rules: 2026-10-13 开 CAT O:CAT261016P00770000 成本 12.38 → 09:35 卖 11.37（-8.1%）跳空 -0.99%
+21:50:46 [INFO] yhs.main: 【历史】AMZN261014P00257500 真实 IV 序列 390 个点（1m）
+21:50:46 [INFO] yhs.main: 【历史】AMZN261014P00257500 真实 IV 序列 329 个点（1m）
+21:50:46 [INFO] yhs.overnight_rules: 2026-10-13 开 AMZN O:AMZN261014P00257500 成本 1.25 → 09:35 卖 1.02（-18.4%）跳空 -0.58%
+21:50:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/APP261016P00270000，5.2s 后免费重试（第 1 轮）
+21:50:52 [INFO] yhs.main: 【历史】APP261016P00270000 真实 IV 序列 390 个点（1m）
+21:50:53 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/APP，5.1s 后免费重试（第 1 轮）
+21:51:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/APP261016P00270000，5.1s 后免费重试（第 1 轮）
+21:51:05 [INFO] yhs.main: 【历史】APP261016P00270000 真实 IV 序列 390 个点（1m）
+21:51:07 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/APP，5.1s 后免费重试（第 1 轮）
+21:51:12 [INFO] yhs.overnight_rules: 2026-10-13 开 APP O:APP261016P00270000 成本 5.67 → 09:35 卖 5.47（-3.4%）跳空 -0.66%
+21:51:12 [INFO] yhs.overnight_rules: 配额剩余 61680
