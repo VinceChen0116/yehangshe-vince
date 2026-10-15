@@ -929,3 +929,16 @@
 20:38:56 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，11.5s 后免费重试（第 3 轮）
 20:39:14 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，17.1s 后免费重试（第 4 轮）
 20:39:31 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，25.5s 后免费重试（第 5 轮）
+21:09:57 [WARNING] yhs.client: 429 /v1/options/contract-greeks-series/NVO261016C00038500（RATE_LIMITED），按 Retry-After 等待 30.0s
+21:10:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00038500，5.1s 后免费重试（第 1 轮）
+21:10:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00038500，7.7s 后免费重试（第 2 轮）
+21:10:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00038500，11.3s 后免费重试（第 3 轮）
+21:10:54 [INFO] yhs.main: 【历史】NVO261016C00038500 真实 IV 序列 390 个点（1m）
+21:10:56 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，5.3s 后免费重试（第 1 轮）
+21:11:02 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，7.7s 后免费重试（第 2 轮）
+21:11:10 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，11.3s 后免费重试（第 3 轮）
+21:11:23 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，16.9s 后免费重试（第 4 轮）
+21:11:41 [INFO] yhs.overnight: 2026-10-13 NVO SPRINGBOARD O:NVO261016C00038500 距 1.5% | 成本 0.33 | 跳空 0.197% | 09:35 -19.8% / 09:45 -5.2% / 09:55 -5.2%
+21:11:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00040000，5.1s 后免费重试（第 1 轮）
+21:11:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00040000，7.7s 后免费重试（第 2 轮）
+21:11:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00040000，11.5s 后免费重试（第 3 轮）
