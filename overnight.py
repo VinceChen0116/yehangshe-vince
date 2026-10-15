@@ -191,15 +191,32 @@ def main(argv=None) -> int:
     if args.nights:
         pairs = [(p, s) for p, s in pairs if p.isoformat() in args.nights.split(",")]
     client = YHSClient(cfg)
-    rows = run(cfg, client, tickers, pairs)
     fields = ["night", "ticker", "in_live", "structure", "right", "expiration", "strike_kind", "contract", "strike",
               "spot_close", "pos_node", "neg_node", "dist_pct", "dist_bucket", "otm_pct", "entry", "gap_pct"] + \
              [f"{k}_{n}" for n, _ in EXITS for k in ("roi", "pnl")]
+    for P, S in pairs:   # 每晚单独一个文件：可以按晚并行跑（--nights），最后合并
+        night_rows = run(cfg, client, tickers, [(P, S)])
+        if not args.tickers:
+            with open(os.path.join(OUT_DIR, f"trades_{P}.csv"), "w", newline="", encoding="utf-8") as f:
+                w = csv.DictWriter(f, fieldnames=fields)
+                w.writeheader()
+                w.writerows(night_rows)
+    rows = []
+    for fn in sorted(os.listdir(OUT_DIR)):
+        if fn.startswith("trades_2") and fn.endswith(".csv"):
+            with open(os.path.join(OUT_DIR, fn), encoding="utf-8") as f:
+                for r in csv.DictReader(f):
+                    for k in r:
+                        if k.startswith(("roi_", "pnl_")) and r[k] != "":
+                            r[k] = float(r[k])
+                    r["in_live"] = r["in_live"] == "True"
+                    rows.append(r)
     with open(os.path.join(OUT_DIR, "trades.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(rows)
-    summ = {"nights": [f"{p}→{s}" for p, s in pairs], "tickers": len(tickers), "result": summarize(rows)}
+    nights = sorted({r["night"] for r in rows})
+    summ = {"nights": nights, "tickers": len(tickers), "result": summarize(rows)}
     with open(os.path.join(OUT_DIR, "summary.json"), "w", encoding="utf-8") as f:
         json.dump(summ, f, ensure_ascii=False, indent=2)
     print(json.dumps(summ, ensure_ascii=False, indent=2))
