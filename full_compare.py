@@ -33,6 +33,8 @@ GROUPS = [  # (类别, 实验名, 显示名, 改动)
     ("规则组", "cap25", "25笔不限午前", S("max_trades_before=[]")),
     ("规则组", "m12", "25笔+午前≤12", S('max_trades_before=["12:00",12]')),
     ("规则组", "nocap", "不限笔数", S("max_trades_per_day=0", "max_trades_before=[]")),
+    ("节点", "local", "局部节点", S('node_mode="local"')),
+    ("节点", "local_s0", "局部节点+评分不设门槛", S('node_mode="local"', "min_signal_score=0")),
     ("离节点", "dist05", "离节点≤0.5%", S("node_distance_max_pct=0.005")),
     ("离节点", "dist25", "离节点≤2.5%", S("node_distance_max_pct=0.025")),
     ("行权价", "atm", "平值ATM", S('strike_mode="atm"')),

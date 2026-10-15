@@ -270,6 +270,7 @@ class HeatmapSnapshot:
     n_cells: int
     strikes: tuple = ()          # 该到期日 Heatmap 中出现的全部挂牌行权价（升序）
     total_abs_gex: float = 0.0   # 该到期日全部节点 |GEX| 之和（算节点占比用）
+    cells: tuple = ()            # ((行权价, 净 GEX), ...) 升序，局部节点识别用
 
 
 def parse_heatmap(payload: dict, cfg: SystemConfig, ref_date: dt.date) -> HeatmapSnapshot | None:
@@ -322,6 +323,8 @@ def parse_heatmap(payload: dict, cfg: SystemConfig, ref_date: dt.date) -> Heatma
         n_cells=len(ec),
         strikes=tuple(sorted({float(c["strike_usd"]) for c in ec if c.get("strike_usd") is not None})),
         total_abs_gex=sum(abs(_num(c["net_dealer_gex_usd"])) for c in ec),
+        cells=tuple(sorted((float(c["strike_usd"]), _num(c["net_dealer_gex_usd"])) for c in ec
+                           if c.get("strike_usd") is not None)),
     )
 
 
@@ -334,9 +337,45 @@ class StructureSignal:
     neg_strike: float
     spot: float
     distance_pct: float   # 现货距正节点距离（小数）
+    pos_gex: float | None = None   # 局部节点模式下正 / 负节点自身的 GEX（评分用）；None = 用全局最大节点
+    neg_gex: float | None = None
+
+
+def detect_local_structure(s: HeatmapSnapshot, cfg: SystemConfig) -> StructureSignal | None:
+    """局部节点：现货 ±node_distance_max_pct 内最大的显著正 GEX 为地板（下方）/ 天花板（上方），
+    地板到上方下一个显著正节点之间最强的负 GEX 为加速区（跳板）；天花板到下方上一个显著正节点之间最强的负 GEX 为深渊（悬崖）。
+    上下都成立时取离现货更近的正节点。"""
+    spot, w = s.spot, cfg.node_distance_max_pct
+    cells = list(s.cells)
+    if not cells or not spot:
+        return None
+    sig_min = cfg.local_min_share * (s.total_abs_gex or 0.0)
+    walls = [(k, g) for k, g in cells if g > 0 and g >= sig_min]
+    out = []
+    floor = max(((k, g) for k, g in walls if spot * (1 - w) <= k <= spot), key=lambda x: x[1], default=None)
+    if floor:
+        nxt = min((k for k, _ in walls if k > spot), default=float("inf"))
+        negs = [(k, g) for k, g in cells if spot < k < nxt and g < 0]
+        if negs:
+            nk, ng = min(negs, key=lambda x: x[1])
+            out.append(StructureSignal("SPRINGBOARD", "BUY_CALL", "C", floor[0], nk, spot, (spot - floor[0]) / floor[0],
+                                       floor[1], ng))
+    ceil = max(((k, g) for k, g in walls if spot <= k <= spot * (1 + w)), key=lambda x: x[1], default=None)
+    if ceil:
+        prv = max((k for k, _ in walls if k < spot), default=float("-inf"))
+        negs = [(k, g) for k, g in cells if prv < k < spot and g < 0]
+        if negs:
+            nk, ng = min(negs, key=lambda x: x[1])
+            out.append(StructureSignal("CLIFF", "BUY_PUT", "P", ceil[0], nk, spot, (ceil[0] - spot) / ceil[0],
+                                       ceil[1], ng))
+    if not out:
+        return None
+    return min(out, key=lambda x: (x.distance_pct, -(x.pos_gex or 0)))
 
 
 def detect_structure(s: HeatmapSnapshot, cfg: SystemConfig) -> StructureSignal | None:
+    if getattr(cfg, "node_mode", "king") == "local":
+        return detect_local_structure(s, cfg)
     pos, neg, spot = s.king_call_strike, s.king_put_strike, s.spot
     dist = abs(spot - pos) / pos
     if dist > cfg.node_distance_max_pct:
@@ -525,8 +564,10 @@ def score_signal(snap: HeatmapSnapshot, st: StructureSignal, tests: int, spots: 
     """信号质量分（0–1）与各分项。依据需求文档的跳板/悬崖逻辑，尚未经数据验证（见 backtests/signals）。
     spots：该标的当日此前的 5 分钟现货序列（含当前），用于估算 1 小时波动。"""
     total = snap.total_abs_gex or 0.0
-    pos_share = snap.king_call_gex / total if total else 0.0
-    neg_share = abs(snap.king_put_gex) / total if total else 0.0
+    pg = st.pos_gex if st.pos_gex is not None else snap.king_call_gex
+    ng = st.neg_gex if st.neg_gex is not None else snap.king_put_gex
+    pos_share = pg / total if total else 0.0
+    neg_share = abs(ng) / total if total else 0.0
     room = abs(st.neg_strike - snap.spot) / snap.spot
     rets = [math.log(b / a) for a, b in zip(spots, spots[1:]) if a > 0 and b > 0]
     vol_1h = math.sqrt(sum(r * r for r in rets) / len(rets)) * math.sqrt(12) if len(rets) >= 3 else None

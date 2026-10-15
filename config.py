@@ -120,6 +120,11 @@ class SystemConfig:
     expiry_max_trading_dte: int | None = None
     expiry_search_trading_days: int = 10  # 历史回放/存档向后探测最近到期日的最大交易日数（覆盖月度到期 + 节假日）
     node_distance_max_pct: float = 0.01   # 现货距正 GEX 节点 ≤ 1%（2026-10-14 起实盘；旧规则 2.5%，5 天回测见 5d_dist10）
+    # 节点定义：king = 全到期日最大正 / 最大负 GEX（现行）；
+    # local = 局部节点（2026-10-15 加入回测对比）：现货 ±node_distance_max_pct 内最大的正 GEX 作地板/天花板，
+    #   再取它与下一个显著正节点之间最强的负 GEX 作加速区/深渊；显著 = 占该到期 |GEX| 合计 ≥ local_min_share
+    node_mode: str = "king"
+    local_min_share: float = 0.03
     fatigue_touch_band_pct: float = 0.004 # 距节点 ≤ 0.4% 视为一次"测试回踩"
     fatigue_reset_band_pct: float = 0.008 # 离开 ≥ 0.8% 后再回来才计新的一次
     fatigue_max_tests: int = 3            # 测试次数 > 3 视为节点疲劳

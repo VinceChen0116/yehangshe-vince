@@ -9,6 +9,7 @@ daily_compare.py —— 每日收盘后：所有候选规则在全部存档日�
   * 组合C      = 每天 20 笔、12:00 前最多 10 笔
   * 午前≤10    = 每天 15 笔、12:00 前最多 10 笔
   * 上限25     = 每天 25 笔、上午不设配额
+  * 局部节点   = 实盘A，但用现货附近的局部正/负 GEX 节点识别跳板/悬崖（2026-10-15 加入，见 config.node_mode）
 所有组都是"真实回测"（2026-10-14 起的硬规则：回测必须尽量复刻每日模拟交易）：
   当天实盘监控的标的（logs/live_<日期>.log，缺失时退回 212 只）、Heatmap 晚 5 分钟可用、每 5 分钟盯市、
   开平仓按历史 NBBO 真实买卖价差（当时 bid 为 0 不开仓；查不到时单边 2.7%）；实盘A 与当天实盘逐笔对账。
@@ -39,6 +40,7 @@ GROUPS = [  # (实验名, 显示名, 相对当前默认配置（= 实盘，2026-
     ("daily_comboC", "组合C", ["--set", "max_trades_per_day=20", "--set", 'max_trades_before=["12:00",10]']),
     ("daily_morning10", "午前≤10", ["--set", "max_trades_per_day=15", "--set", 'max_trades_before=["12:00",10]']),
     ("daily_cap25", "上限25", ["--set", 'max_trades_before=[]']),
+    ("daily_local", "局部节点", ["--set", 'node_mode="local"']),
 ]
 EXP = os.path.join("backtests", "exp")
 
