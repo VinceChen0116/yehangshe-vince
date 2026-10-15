@@ -17,3 +17,102 @@
 21:45:02 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
 21:45:03 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
 21:45:06 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 AAPL CLIFF（king）342.50→337.50 距 0.34% | 15:00 后大单 14 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 ADI CLIFF（local）407.50→405.00 距 0.60% | 15:00 后大单 2 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 AFRM SPRINGBOARD（local）76.00→77.00 距 0.71% | 15:00 后大单 0 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 AMAT SPRINGBOARD（local）505.00→512.50 距 0.18% | 15:00 后大单 0 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 AMD SPRINGBOARD（local）615.00→617.50 距 0.22% | 15:00 后大单 28 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 AMZN SPRINGBOARD（local）252.50→257.50 距 0.94% | 15:00 后大单 6 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 ANET CLIFF（local）212.50→210.00 距 0.96% | 15:00 后大单 3 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 APP SPRINGBOARD（local）277.50→280.00 距 0.50% | 15:00 后大单 1 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 ASML CLIFF（local）1770.00→1750.00 距 0.12% | 15:00 后大单 2 笔
+21:58:32 [INFO] yhs.overnight_rules: 2026-10-08 AVAV CLIFF（local）138.00→136.00 距 0.08% | 15:00 后大单 0 笔
+21:58:33 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:58:35 [INFO] yhs.overnight_rules: 2026-10-08 AVGO SPRINGBOARD（local）357.50→360.00 距 0.38% | 15:00 后大单 12 笔
+21:58:36 [INFO] yhs.overnight_rules: 2026-10-08 BABA SPRINGBOARD（king）105.00→107.00 距 0.60% | 15:00 后大单 1 笔
+21:58:37 [INFO] yhs.overnight_rules: 2026-10-08 BSX CLIFF（king）42.00→41.00 距 0.19% | 15:00 后大单 0 笔
+21:58:38 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:58:40 [INFO] yhs.overnight_rules: 2026-10-08 C SPRINGBOARD（local）127.00→128.00 距 0.68% | 15:00 后大单 0 笔
+21:58:42 [INFO] yhs.overnight_rules: 2026-10-08 CAT SPRINGBOARD（local）790.00→797.50 距 0.43% | 15:00 后大单 1 笔
+21:58:42 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:58:44 [INFO] yhs.overnight_rules: 2026-10-08 CIEN SPRINGBOARD（local）422.50→425.00 距 0.52% | 15:00 后大单 1 笔
+21:58:46 [INFO] yhs.overnight_rules: 2026-10-08 COST CLIFF（local）955.00→945.00 距 0.51% | 15:00 后大单 0 笔
+21:58:47 [INFO] yhs.overnight_rules: 2026-10-08 CRCL CLIFF（local）81.00→80.00 距 0.18% | 15:00 后大单 1 笔
+21:58:49 [INFO] yhs.overnight_rules: 2026-10-08 CRDO SPRINGBOARD（local）207.50→210.00 距 0.57% | 15:00 后大单 4 笔
+21:58:50 [INFO] yhs.overnight_rules: 2026-10-08 CRWV SPRINGBOARD（local）81.00→82.00 距 0.74% | 15:00 后大单 3 笔
+21:58:51 [INFO] yhs.overnight_rules: 2026-10-08 CSCO SPRINGBOARD（local）114.00→115.00 距 0.71% | 15:00 后大单 1 笔
+21:58:52 [INFO] yhs.overnight_rules: 2026-10-08 CVX CLIFF（local）212.50→210.00 距 0.31% | 15:00 后大单 0 笔
+21:58:54 [INFO] yhs.overnight_rules: 2026-10-08 DASH SPRINGBOARD（local）190.00→192.50 距 0.99% | 15:00 后大单 1 笔
+21:58:55 [INFO] yhs.overnight_rules: 2026-10-08 DDOG CLIFF（local）275.00→267.50 距 0.23% | 15:00 后大单 0 笔
+21:58:56 [INFO] yhs.overnight_rules: 2026-10-08 DE CLIFF（local）652.50→650.00 距 0.11% | 15:00 后大单 0 笔
+21:58:57 [INFO] yhs.overnight_rules: 2026-10-08 DELL CLIFF（local）575.00→570.00 距 0.55% | 15:00 后大单 4 笔
+21:58:58 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:58:59 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:02 [INFO] yhs.overnight_rules: 2026-10-08 DKS SPRINGBOARD（king）135.00→138.00 距 0.20% | 15:00 后大单 0 笔
+21:59:03 [INFO] yhs.overnight_rules: 2026-10-08 DUOL CLIFF（local）152.50→149.00 距 0.94% | 15:00 后大单 0 笔
+21:59:04 [INFO] yhs.overnight_rules: 2026-10-08 DVN CLIFF（local）49.00→48.00 距 0.13% | 15:00 后大单 0 笔
+21:59:04 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:07 [INFO] yhs.overnight_rules: 2026-10-08 ENPH CLIFF（local）33.00→32.00 距 0.45% | 15:00 后大单 0 笔
+21:59:08 [INFO] yhs.overnight_rules: 2026-10-08 ES SPRINGBOARD（local）65.00→70.00 距 0.91% | 15:00 后大单 0 笔
+21:59:08 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:11 [INFO] yhs.overnight_rules: 2026-10-08 FISV SPRINGBOARD（local）45.50→46.00 距 0.60% | 15:00 后大单 0 笔
+21:59:12 [INFO] yhs.overnight_rules: 2026-10-08 FTNT SPRINGBOARD（local）187.50→190.00 距 1.01% | 15:00 后大单 0 笔
+21:59:13 [INFO] yhs.overnight_rules: 2026-10-08 GEV CLIFF（local）1000.00→960.00 距 0.52% | 15:00 后大单 0 笔
+21:59:14 [INFO] yhs.overnight_rules: 2026-10-08 GOOGL CLIFF（local）350.00→347.50 距 0.53% | 15:00 后大单 3 笔
+21:59:15 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:17 [INFO] yhs.overnight_rules: 2026-10-08 HOOD SPRINGBOARD（local）107.00→108.00 距 0.92% | 15:00 后大单 4 笔
+21:59:18 [INFO] yhs.overnight_rules: 2026-10-08 HPE CLIFF（local）71.00→70.00 距 0.31% | 15:00 后大单 0 笔
+21:59:20 [INFO] yhs.overnight_rules: 2026-10-08 HPQ CLIFF（king）32.50→31.50 距 0.14% | 15:00 后大单 0 笔
+21:59:21 [INFO] yhs.overnight_rules: 2026-10-08 ICE SPRINGBOARD（local）155.00→157.50 距 0.36% | 15:00 后大单 0 笔
+21:59:22 [INFO] yhs.overnight_rules: 2026-10-08 INTC CLIFF（local）107.00→105.00 距 0.24% | 15:00 后大单 21 笔
+21:59:23 [INFO] yhs.overnight_rules: 2026-10-08 LLY CLIFF（local）1170.00→1150.00 距 0.48% | 15:00 后大单 0 笔
+21:59:24 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:25 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:28 [INFO] yhs.overnight_rules: 2026-10-08 LMND SPRINGBOARD（local）46.50→47.00 距 0.47% | 15:00 后大单 0 笔
+21:59:29 [INFO] yhs.overnight_rules: 2026-10-08 LMT SPRINGBOARD（local）505.00→510.00 距 0.59% | 15:00 后大单 0 笔
+21:59:30 [INFO] yhs.overnight_rules: 2026-10-08 LRCX CLIFF（local）320.00→315.00 距 0.76% | 15:00 后大单 1 笔
+21:59:31 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:32 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:35 [INFO] yhs.overnight_rules: 2026-10-08 MCD SPRINGBOARD（local）235.00→242.50 距 0.84% | 15:00 后大单 0 笔
+21:59:36 [INFO] yhs.overnight_rules: 2026-10-08 MDB CLIFF（king）370.00→355.00 距 0.23% | 15:00 后大单 0 笔
+21:59:37 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:39 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:41 [INFO] yhs.overnight_rules: 2026-10-08 META SPRINGBOARD（local）720.00→725.00 距 0.17% | 15:00 后大单 27 笔
+21:59:42 [INFO] yhs.overnight_rules: 2026-10-08 MRVL CLIFF（local）272.50→270.00 距 0.04% | 15:00 后大单 18 笔
+21:59:43 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:47 [INFO] yhs.overnight_rules: 2026-10-08 MU SPRINGBOARD（king）1025.00→1050.00 距 0.95% | 15:00 后大单 73 笔
+21:59:48 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:50 [INFO] yhs.overnight_rules: 2026-10-08 NASA SPRINGBOARD（king）24.00→25.50 距 0.42% | 15:00 后大单 0 笔
+21:59:52 [INFO] yhs.overnight_rules: 2026-10-08 NEM SPRINGBOARD（local）115.00→116.00 距 0.18% | 15:00 后大单 0 笔
+21:59:53 [INFO] yhs.overnight_rules: 2026-10-08 NOW CLIFF（local）140.00→135.00 距 0.21% | 15:00 后大单 0 笔
+21:59:54 [INFO] yhs.overnight_rules: 2026-10-08 ON CLIFF（local）79.00→74.00 距 0.23% | 15:00 后大单 0 笔
+21:59:55 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:56 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:59:59 [INFO] yhs.overnight_rules: 2026-10-08 PANW CLIFF（local）400.00→390.00 距 0.46% | 15:00 后大单 0 笔
+22:00:00 [INFO] yhs.overnight_rules: 2026-10-08 PEP SPRINGBOARD（local）127.00→128.00 距 0.54% | 15:00 后大单 0 笔
+22:00:01 [INFO] yhs.overnight_rules: 2026-10-08 PG SPRINGBOARD（local）150.00→152.50 距 0.29% | 15:00 后大单 1 笔
+22:00:02 [INFO] yhs.overnight_rules: 2026-10-08 PLTR SPRINGBOARD（local）197.50→200.00 距 0.54% | 15:00 后大单 20 笔
+22:00:07 [INFO] yhs.overnight_rules: 2026-10-08 QQQ SPRINGBOARD（local）743.00→752.00 距 0.52% | 15:00 后大单 85 笔
+22:00:08 [INFO] yhs.overnight_rules: 2026-10-08 RDDT CLIFF（local）157.50→152.50 距 0.60% | 15:00 后大单 0 笔
+22:00:09 [INFO] yhs.overnight_rules: 2026-10-08 SHEL CLIFF（local）101.00→100.00 距 0.78% | 15:00 后大单 0 笔
+22:00:11 [INFO] yhs.overnight_rules: 2026-10-08 SKHY SPRINGBOARD（local）170.00→172.50 距 0.02% | 15:00 后大单 4 笔
+22:00:13 [INFO] yhs.overnight_rules: 2026-10-08 SNOW CLIFF（local）345.00→342.50 距 0.27% | 15:00 后大单 2 笔
+22:00:14 [INFO] yhs.overnight_rules: 2026-10-08 SPOT SPRINGBOARD（local）520.00→525.00 距 0.89% | 15:00 后大单 1 笔
+22:00:18 [INFO] yhs.overnight_rules: 2026-10-08 SPY SPRINGBOARD（local）771.00→774.00 距 0.33% | 15:00 后大单 82 笔
+22:00:20 [INFO] yhs.overnight_rules: 2026-10-08 STM CLIFF（local）53.00→52.00 距 0.85% | 15:00 后大单 0 笔
+22:00:21 [INFO] yhs.overnight_rules: 2026-10-08 STX CLIFF（local）775.00→770.00 距 0.07% | 15:00 后大单 2 笔
+22:00:22 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+22:00:24 [INFO] yhs.overnight_rules: 2026-10-08 TEM CLIFF（local）69.00→68.00 距 0.38% | 15:00 后大单 0 笔
+22:00:25 [INFO] yhs.overnight_rules: 2026-10-08 TQQQ CLIFF（local）80.00→79.00 距 0.06% | 15:00 后大单 2 笔
+22:00:27 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+22:00:29 [INFO] yhs.overnight_rules: 2026-10-08 TSLA SPRINGBOARD（king）370.00→400.00 距 0.95% | 15:00 后大单 30 笔
+22:00:31 [INFO] yhs.overnight_rules: 2026-10-08 TTWO CLIFF（local）210.00→207.50 距 0.25% | 15:00 后大单 0 笔
+22:00:32 [INFO] yhs.overnight_rules: 2026-10-08 TXN CLIFF（local）287.50→285.00 距 0.23% | 15:00 后大单 0 笔
+22:00:32 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+22:00:34 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+22:00:36 [INFO] yhs.overnight_rules: 2026-10-08 U SPRINGBOARD（local）45.50→46.00 距 0.26% | 15:00 后大单 0 笔
+22:00:38 [INFO] yhs.overnight_rules: 2026-10-08 VRT SPRINGBOARD（local）242.50→245.00 距 0.22% | 15:00 后大单 0 笔
+22:00:40 [INFO] yhs.overnight_rules: 2026-10-08 WDC CLIFF（local）392.50→390.00 距 0.19% | 15:00 后大单 2 笔
+22:00:41 [INFO] yhs.overnight_rules: 2026-10-08 WMB SPRINGBOARD（local）72.00→74.00 距 0.55% | 15:00 后大单 0 笔
+22:00:42 [INFO] yhs.overnight_rules: 2026-10-08 YPF CLIFF（local）50.00→39.00 距 0.18% | 15:00 后大单 0 笔
+22:00:43 [INFO] yhs.overnight_rules: 2026-10-08 ZM CLIFF（local）95.00→94.00 距 0.71% | 15:00 后大单 0 笔
