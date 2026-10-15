@@ -978,3 +978,6 @@
 21:16:25 [INFO] yhs.main: 【历史】ORCL261016C00155000 真实 IV 序列 390 个点（1m）
 21:16:25 [INFO] yhs.overnight: 2026-10-13 ORCL SPRINGBOARD O:ORCL261016C00155000 距 2.1% | 成本 0.43 | 跳空 -4.819% | 09:35 -83.5% / 09:45 -91.7% / 09:55 -91.7%
 21:16:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OSCR261016C00034000，5.2s 后免费重试（第 1 轮）
+21:16:39 [INFO] yhs.main: 【历史】OSCR261016C00034000 真实 IV 序列 390 个点（1m）
+21:16:39 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OSCR，5.2s 后免费重试（第 1 轮）
+21:16:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OSCR261016C00034000，5.2s 后免费重试（第 1 轮）
