@@ -41,8 +41,10 @@ FLOW_SINCE, FLOW_UNTIL, FLOW_MIN = "15:00", "15:50", 50000   # 实盘 15:44 起�
 MAX_SPREAD, MAX_POS = 0.25, 10
 
 
-def structure_at_close(cfg, lcfg, day: dt.date, ticker: str):
-    for exp in expiry_candidates(day, None, cfg.expiry_search_trading_days)[1:]:
+def structure_at_close(cfg, lcfg, day: dt.date, ticker: str, next_day_only: bool = False):
+    """next_day_only：只用次日到期的合约（次日卖出时是 0DTE）；该标的没有次日到期就跳过。"""
+    exps = expiry_candidates(day, None, cfg.expiry_search_trading_days)[1:]
+    for exp in (exps[:1] if next_day_only else exps):
         rows = load_archived_heatmap(cfg, day, ticker, exp)
         if not rows:
             continue
@@ -93,13 +95,13 @@ def first_otm(snap, right: str):
     return (min(side) if right == "C" else max(side)) if side else None
 
 
-def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = ENTRY) -> list:
+def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = ENTRY, next_day_only: bool = False) -> list:
     lcfg = copy.copy(cfg)
     lcfg.node_mode = "local"
     hp, hs = HistoryClient(client, cfg, P), HistoryClient(client, cfg, S)
     cands = []
     for t in tickers:
-        r = structure_at_close(cfg, lcfg, P, t)
+        r = structure_at_close(cfg, lcfg, P, t, next_day_only)
         if r is None:
             continue
         exp, snap, st, mode = r
@@ -163,6 +165,7 @@ def main(argv=None) -> int:
     ap.add_argument("--post", action="store_true")
     ap.add_argument("--entry", default=ENTRY, help="P 日买入时刻（默认 15:55）")
     ap.add_argument("--out", default=OUT, help="输出目录")
+    ap.add_argument("--next-day-only", action="store_true", help="只买次日到期的合约")
     ap.add_argument("--log-file", default=os.path.join(OUT, "run.log"))
     args = ap.parse_args(argv)
     cfg = SystemConfig.load(None)
@@ -181,7 +184,7 @@ def main(argv=None) -> int:
     client = YHSClient(cfg)
     for P, S in pairs:
         tickers = base + [t for t in (live_universe(P) or []) if t not in base]
-        rows = run_night(cfg, client, P, S, tickers, args.entry)
+        rows = run_night(cfg, client, P, S, tickers, args.entry, args.next_day_only)
         with open(os.path.join(OUT, f"trades_{P}.csv"), "w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0]) if rows else ["night"])
             w.writeheader()
