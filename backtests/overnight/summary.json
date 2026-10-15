@@ -1,110 +1,181 @@
 {
   "nights": [
-    "2026-10-07→2026-10-08",
-    "2026-10-08→2026-10-09",
-    "2026-10-09→2026-10-12",
-    "2026-10-12→2026-10-13"
+    "2026-10-14→2026-10-15"
   ],
-  "tickers": 212,
+  "tickers": 2,
   "result": {
-    "SPRINGBOARD": {
-      "n": 98,
-      "open_0935": {
-        "n": 97,
-        "avg_roi": 15.2,
-        "win_pct": 42.3,
-        "pnl_per_contract_usd": -664.0
+    "CLIFF|all|2.5–5%|atm": {
+      "x0935": {
+        "n": 1,
+        "pnl": 3894,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 171.9,
+        "nights_up": 1,
+        "nights": 1
       },
-      "open_0945": {
-        "n": 98,
-        "avg_roi": 13.4,
-        "win_pct": 37.8,
-        "pnl_per_contract_usd": -1552.0
+      "x0945": {
+        "n": 1,
+        "pnl": 4978,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 219.8,
+        "nights_up": 1,
+        "nights": 1
       },
-      "close": {
-        "n": 72,
-        "avg_roi": 25.9,
-        "win_pct": 36.1,
-        "pnl_per_contract_usd": -3194.0
-      },
-      "gap_in_favor_pct": 56.7,
-      "avg_gap_pct": 0.194,
-      "open_beats_close_pct": 59.2,
-      "by_night": {
-        "2026-10-07→2026-10-08": {
-          "n": 32,
-          "avg_roi_0935": 1.0,
-          "win_pct": 28.1,
-          "avg_gap_pct": -0.337
-        },
-        "2026-10-08→2026-10-09": {
-          "n": 37,
-          "avg_roi_0935": 38.3,
-          "win_pct": 48.6,
-          "avg_gap_pct": 0.903
-        },
-        "2026-10-09→2026-10-12": {
-          "n": 7,
-          "avg_roi_0935": -2.3,
-          "win_pct": 42.9,
-          "avg_gap_pct": -0.458
-        },
-        "2026-10-12→2026-10-13": {
-          "n": 21,
-          "avg_roi_0935": 1.7,
-          "win_pct": 52.4,
-          "avg_gap_pct": -0.029
-        }
+      "x0955": {
+        "n": 1,
+        "pnl": 5410,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 238.9,
+        "nights_up": 1,
+        "nights": 1
       }
     },
-    "CLIFF": {
-      "n": 79,
-      "open_0935": {
-        "n": 79,
-        "avg_roi": 11.4,
-        "win_pct": 43.0,
-        "pnl_per_contract_usd": 3773.0
+    "CLIFF|all|2.5–5%|otm5": {
+      "x0935": {
+        "n": 1,
+        "pnl": 3222,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 410.2,
+        "nights_up": 1,
+        "nights": 1
       },
-      "open_0945": {
-        "n": 79,
-        "avg_roi": 5.2,
-        "win_pct": 39.2,
-        "pnl_per_contract_usd": 3424.0
+      "x0945": {
+        "n": 1,
+        "pnl": 2910,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 370.5,
+        "nights_up": 1,
+        "nights": 1
       },
-      "close": {
-        "n": 44,
-        "avg_roi": 36.9,
-        "win_pct": 47.7,
-        "pnl_per_contract_usd": 11332.0
+      "x0955": {
+        "n": 1,
+        "pnl": 4139,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 527.0,
+        "nights_up": 1,
+        "nights": 1
+      }
+    },
+    "CLIFF|all|2.5–5%|otm10": {
+      "x0935": {
+        "n": 1,
+        "pnl": 2626,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 395.9,
+        "nights_up": 1,
+        "nights": 1
       },
-      "gap_in_favor_pct": 48.1,
-      "avg_gap_pct": -0.185,
-      "open_beats_close_pct": 59.1,
-      "by_night": {
-        "2026-10-07→2026-10-08": {
-          "n": 21,
-          "avg_roi_0935": 28.8,
-          "win_pct": 66.7,
-          "avg_gap_pct": -0.798
-        },
-        "2026-10-08→2026-10-09": {
-          "n": 28,
-          "avg_roi_0935": -1.9,
-          "win_pct": 25.0,
-          "avg_gap_pct": 0.25
-        },
-        "2026-10-09→2026-10-12": {
-          "n": 3,
-          "avg_roi_0935": 93.4,
-          "win_pct": 33.3,
-          "avg_gap_pct": 0.975
-        },
-        "2026-10-12→2026-10-13": {
-          "n": 27,
-          "avg_roi_0935": 2.6,
-          "win_pct": 44.4,
-          "avg_gap_pct": -0.286
-        }
+      "x0945": {
+        "n": 1,
+        "pnl": 2432,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 366.7,
+        "nights_up": 1,
+        "nights": 1
+      },
+      "x0955": {
+        "n": 1,
+        "pnl": 3598,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 542.4,
+        "nights_up": 1,
+        "nights": 1
+      }
+    },
+    "CLIFF|all|全部|atm": {
+      "x0935": {
+        "n": 1,
+        "pnl": 3894,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 171.9,
+        "nights_up": 1,
+        "nights": 1
+      },
+      "x0945": {
+        "n": 1,
+        "pnl": 4978,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 219.8,
+        "nights_up": 1,
+        "nights": 1
+      },
+      "x0955": {
+        "n": 1,
+        "pnl": 5410,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 238.9,
+        "nights_up": 1,
+        "nights": 1
+      }
+    },
+    "CLIFF|all|全部|otm5": {
+      "x0935": {
+        "n": 1,
+        "pnl": 3222,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 410.2,
+        "nights_up": 1,
+        "nights": 1
+      },
+      "x0945": {
+        "n": 1,
+        "pnl": 2910,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 370.5,
+        "nights_up": 1,
+        "nights": 1
+      },
+      "x0955": {
+        "n": 1,
+        "pnl": 4139,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 527.0,
+        "nights_up": 1,
+        "nights": 1
+      }
+    },
+    "CLIFF|all|全部|otm10": {
+      "x0935": {
+        "n": 1,
+        "pnl": 2626,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 395.9,
+        "nights_up": 1,
+        "nights": 1
+      },
+      "x0945": {
+        "n": 1,
+        "pnl": 2432,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 366.7,
+        "nights_up": 1,
+        "nights": 1
+      },
+      "x0955": {
+        "n": 1,
+        "pnl": 3598,
+        "pnl_ex_best": 0,
+        "win_pct": 100.0,
+        "median_roi": 542.4,
+        "nights_up": 1,
+        "nights": 1
       }
     }
   }

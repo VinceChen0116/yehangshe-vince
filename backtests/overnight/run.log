@@ -895,3 +895,12 @@
 16:54:57 [INFO] yhs.main: 【历史】XOM261016C00172500 真实 IV 序列 204 个点（1m）
 16:54:57 [INFO] yhs.overnight: 2026-10-12 XOM SPRINGBOARD O:XOM261016C00172500 成本 1.78 | 跳空 0.913% | 09:35 30.34% / 09:45 37.5% / 收盘 %
 16:54:57 [INFO] yhs.overnight: 配额剩余 86277
+17:16:21 [INFO] yhs.overnight: ===== 隔夜 2026-10-07 → 2026-10-08 =====
+17:16:22 [INFO] yhs.main: 【历史】AAPL261009C00337500 真实 IV 序列 390 个点（1m）
+17:16:23 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AAPL，5.1s 后免费重试（第 1 轮）
+17:16:29 [INFO] yhs.main: 【历史】AAPL261009C00337500 真实 IV 序列 390 个点（1m）
+17:16:30 [INFO] yhs.overnight: 2026-10-07 AAPL SPRINGBOARD O:AAPL261009C00337500 距 0.4% | 成本 2.16 | 跳空 0.019% | 09:35 -21.7% / 09:45 -18.5% / 09:55 -7.5%
+17:16:31 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AAPL261009C00352500，5.2s 后免费重试（第 1 轮）
+17:16:38 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AAPL261009C00352500，5.2s 后免费重试（第 1 轮）
+17:16:44 [INFO] yhs.main: 【历史】AAPL261009C00352500 真实 IV 序列 390 个点（1m）
+17:16:45 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AAPL261009C00360000，5.1s 后免费重试（第 1 轮）
