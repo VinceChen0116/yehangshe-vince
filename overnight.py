@@ -1,17 +1,16 @@
 """
-overnight.py —— 尾盘隔夜单回测（Playbook SOP）
-==============================================
-规则（用户提供的"尾盘隔夜单三大铁律"）：
-  1. 形态：首选 SPRINGBOARD 跳板看涨（现价站稳最大正 GEX 地板）；CLIFF 悬崖做空作为对照一并统计
-  2. 行权价：平值或顺向轻度虚值 1 档 —— 取 Heatmap 挂牌行权价中现价上方（看跌为下方）最近的一个
-  3. 出场：次日开盘 09:30–09:45 强制跳空兑现；同时统计 09:45 与次日收盘（15:55）持有作对照
-  4. 仓位：每笔 1 张（只看每笔收益率；实盘按总资金 3–5% 控制仓位）
-
-实现：
-  * 进场：P 日 15:50 的 Heatmap 快照判断形态，15:55 的期权价格买入（+2% 滑点）
-  * 到期：P 日之后最近的到期（当日到期的合约过不了夜，不用），只读本地存档
-  * 期权价格：与历史回放相同（contract-greeks-series 真实 IV + BS，缓存在 yhs_data/cache/），出场 −2% 滑点
-  * 样本：本地存档里相邻的交易日对 (P, S)；S 可以是今天（只需要 S 日早盘的期权价格）
+overnight.py —— 尾盘隔夜单回测（真实口径）
+==========================================
+形态（P 日 15:50 的 Heatmap，到 15:55 才可用 —— 与实盘一致晚 5 分钟）：
+  * CLIFF 悬崖做空：最大正 GEX（天花板）> 最大负 GEX（深渊），现货夹在两者之间 → 买 Put
+  * SPRINGBOARD 跳板做多：最大正 GEX（地板）< 最大负 GEX（加速区），现货夹在两者之间 → 买 Call
+  不限制现货离正节点的距离，逐笔记录距离（dist_pct），汇总时按 ≤1% / 1–2.5% / 2.5–5% / >5% 分组。
+到期：P 日之后最近一个有存档的到期（当日到期的合约过不了夜，不用）。
+行权价（Heatmap 挂牌行权价，三档都记录）：atm = 第一档虚值；otm5 / otm10 = 离 现货×(1∓5%/10%) 最近的虚值档。
+价格（真实口径，与回放一致）：中间价 = 每分钟真实 IV + 真实标的价还原（实测与实盘报价中位误差 3%）；
+  买入 = 中间价 + 当时真实 NBBO 半价差（ask），卖出 = 中间价 − 半价差（bid）；当时 bid 为 0 不开仓；
+  P 日 15:55 买入，S 日 09:35 / 09:45 / 09:55 卖出三种都统计。每笔 1 张。
+样本：本地存档里相邻交易日对 (P, S)；S 可以是今天（09:56 之后）。
 
 用法：python3 overnight.py [--post]      输出 backtests/overnight/trades.csv、summary.json
 """
@@ -25,16 +24,18 @@ import logging
 import os
 import sys
 
-from archive import load_archived_heatmap, rows_to_frames
-from config import SystemConfig, et_datetime, et_now, expiry_candidates, next_trading_day, setup_logging, trading_dte
-from detector import detect_structure, parse_heatmap
+from archive import live_universe, load_archived_heatmap, rows_to_frames
+from config import SystemConfig, et_datetime, et_now, expiry_candidates, next_trading_day, setup_logging
+from detector import parse_heatmap
 from main import HistoryClient
 from paper_trader import occ_symbol
 from yhs_client import YHSClient
 
 log = logging.getLogger("yhs.overnight")
 OUT_DIR = os.path.join("backtests", "overnight")
-EXITS = (("open_0935", "09:35"), ("open_0945", "09:45"), ("close", "15:55"))
+EXITS = (("x0935", "09:35"), ("x0945", "09:45"), ("x0955", "09:55"))
+STRIKES = (("atm", 0.0), ("otm5", 0.05), ("otm10", 0.10))
+DIST_BUCKETS = ((0.01, "≤1%"), (0.025, "1–2.5%"), (0.05, "2.5–5%"), (9.0, ">5%"))
 
 
 def snapshot_near_close(cfg, day: dt.date, ticker: str):
@@ -53,79 +54,116 @@ def snapshot_near_close(cfg, day: dt.date, ticker: str):
     return None, None
 
 
-def pick_strike(snap, right: str) -> float | None:
+def shape(snap):
+    """不限距离的形态：返回 (结构, 方向, 距离) 或 None。"""
+    pos, neg, spot = snap.king_call_strike, snap.king_put_strike, snap.spot
+    if not pos or not neg or not spot:
+        return None
+    dist = abs(spot - pos) / pos
+    if pos > neg and neg < spot <= pos:
+        return "CLIFF", "P", dist
+    if pos < neg and pos <= spot < neg:
+        return "SPRINGBOARD", "C", dist
+    return None
+
+
+def pick_strike(snap, right: str, depth: float) -> float | None:
     spot = snap.spot
-    side = [k for k in snap.strikes if (k >= spot if right == "C" else k <= spot)]
+    side = [k for k in snap.strikes if (k > spot if right == "C" else k < spot)]
     if not side:
         return None
-    return min(side) if right == "C" else max(side)
+    if depth == 0:
+        return min(side) if right == "C" else max(side)
+    want = spot * (1 + depth if right == "C" else 1 - depth)
+    return min(side, key=lambda k: abs(k - want))
+
+
+def half_spread(hc, cfg, sym, t):
+    """当时真实 NBBO 的单边半价差；bid 为 0 返回 None（没有买盘）；查不到用 slippage_pct。"""
+    q = hc.hist_quote(sym, t)
+    if q and q[0] <= 0:
+        return None
+    if q and q[1] > 0:
+        return (q[1] - q[0]) / (q[1] + q[0])
+    return cfg.slippage_pct
+
+
+def bucket(dist: float) -> str:
+    return next(lb for lim, lb in DIST_BUCKETS if dist <= lim)
 
 
 def run(cfg, client, tickers: list, pairs: list) -> list:
     out = []
     for P, S in pairs:
         hp, hs = HistoryClient(client, cfg, P), HistoryClient(client, cfg, S)
+        live_set = set(live_universe(P) or [])
         log.info("===== 隔夜 %s → %s =====", P, S)
         for t in tickers:
             exp, snap = snapshot_near_close(cfg, P, t)
             if snap is None or snap.spot <= 0:
                 continue
-            st = detect_structure(snap, cfg)
-            if st is None:
+            sh = shape(snap)
+            if sh is None:
                 continue
-            K = pick_strike(snap, st.right)
-            if K is None:
-                continue
-            sym = occ_symbol(t, exp, st.right, K)
-            entry = hp.option_price(sym, et_datetime(P, "15:55"))
-            if not entry or entry < cfg.min_option_price:
-                continue
-            cost = entry * (1 + cfg.slippage_pct)
-            row = {"night": f"{P}→{S}", "ticker": t, "structure": st.structure, "right": st.right,
-                   "expiration": exp, "dte_at_entry": trading_dte(dt.date.fromisoformat(exp), P),
-                   "contract": sym, "strike": K, "spot_close": round(snap.spot, 4), "pos_node": st.pos_strike,
-                   "neg_node": st.neg_strike, "entry": round(cost, 4)}
-            und_open = hs.underlying_at(sym, et_datetime(S, "09:35"))
-            row["gap_pct"] = round((und_open / snap.spot - 1) * 100, 3) if und_open else ""
-            for name, hhmm in EXITS:
-                px = hs.option_price(sym, et_datetime(S, hhmm))
-                if px is None:
-                    row[f"roi_{name}"] = ""
+            struct, right, dist = sh
+            seen = set()
+            for sk, depth in STRIKES:
+                K = pick_strike(snap, right, depth)
+                if K is None or K in seen:
                     continue
-                row[f"roi_{name}"] = round((px * (1 - cfg.slippage_pct) / cost - 1) * 100, 2)
-            out.append(row)
-            log.info("%s %s %s %s 成本 %.2f | 跳空 %s%% | 09:35 %s%% / 09:45 %s%% / 收盘 %s%%", P, t, st.structure, sym,
-                     cost, row["gap_pct"], row["roi_open_0935"], row["roi_open_0945"], row["roi_close"])
+                seen.add(K)
+                sym = occ_symbol(t, exp, right, K)
+                mid = hp.option_price(sym, et_datetime(P, "15:55"))
+                if not mid or mid < cfg.min_option_price:
+                    continue
+                h = half_spread(hp, cfg, sym, et_datetime(P, "15:55"))
+                if h is None:
+                    continue
+                cost = mid * (1 + h)
+                row = {"night": f"{P}→{S}", "ticker": t, "in_live": t in live_set, "structure": struct, "right": right,
+                       "expiration": exp, "strike_kind": sk, "contract": sym, "strike": K, "spot_close": round(snap.spot, 2),
+                       "pos_node": snap.king_call_strike, "neg_node": snap.king_put_strike,
+                       "dist_pct": round(dist * 100, 2), "dist_bucket": bucket(dist),
+                       "otm_pct": round(abs(K / snap.spot - 1) * 100, 2), "entry": round(cost, 4)}
+                und = hs.underlying_at(sym, et_datetime(S, "09:35"))
+                row["gap_pct"] = round((und / snap.spot - 1) * 100, 3) if und else ""
+                for name, hhmm in EXITS:
+                    tt = et_datetime(S, hhmm)
+                    px = hs.option_price(sym, tt)
+                    hx = half_spread(hs, cfg, sym, tt) if px else None
+                    bid = 0.0 if (px and hx is None) else (px * (1 - hx) if px else None)
+                    row[f"roi_{name}"] = "" if bid is None else round((bid / cost - 1) * 100, 1)
+                    row[f"pnl_{name}"] = "" if bid is None else round((bid - cost) * 100, 0)
+                out.append(row)
+                log.info("%s %s %s %s 距 %.1f%% | 成本 %.2f | 跳空 %s%% | 09:35 %s%% / 09:45 %s%% / 09:55 %s%%", P, t,
+                         struct, sym, dist * 100, cost, row["gap_pct"], row["roi_x0935"], row["roi_x0945"], row["roi_x0955"])
     return out
+
+
+def _stats(g, name):
+    v = [r for r in g if r[f"pnl_{name}"] != ""]
+    if not v:
+        return None
+    pnl = [r[f"pnl_{name}"] for r in v]
+    best = max(pnl)
+    return {"n": len(v), "pnl": round(sum(pnl)), "pnl_ex_best": round(sum(pnl) - best),
+            "win_pct": round(100 * sum(x > 0 for x in pnl) / len(v), 1),
+            "median_roi": sorted(r[f"roi_{name}"] for r in v)[len(v) // 2],
+            "nights_up": sum(1 for n in sorted({r["night"] for r in v})
+                             if sum(r[f"pnl_{name}"] for r in v if r["night"] == n) > 0),
+            "nights": len({r["night"] for r in v})}
 
 
 def summarize(rows: list) -> dict:
     res = {}
-    for struct in ("SPRINGBOARD", "CLIFF"):
-        g = [r for r in rows if r["structure"] == struct]
-        d = {"n": len(g)}
-        for name, _ in EXITS:
-            v = [r[f"roi_{name}"] for r in g if r[f"roi_{name}"] != ""]
-            if v:
-                d[name] = {"n": len(v), "avg_roi": round(sum(v) / len(v), 1), "win_pct": round(100 * sum(x > 0 for x in v) / len(v), 1),
-                           "pnl_per_contract_usd": round(sum(r[f"roi_{name}"] / 100 * r["entry"] * 100 for r in g
-                                                             if r[f"roi_{name}"] != ""), 0)}
-        gaps = [r["gap_pct"] for r in g if r["gap_pct"] != ""]
-        if gaps:
-            sign = 1 if struct == "SPRINGBOARD" else -1
-            d["gap_in_favor_pct"] = round(100 * sum(sign * x > 0 for x in gaps) / len(gaps), 1)
-            d["avg_gap_pct"] = round(sum(gaps) / len(gaps), 3)
-        both = [r for r in g if r["roi_open_0935"] != "" and r["roi_close"] != ""]
-        if both:
-            d["open_beats_close_pct"] = round(100 * sum(r["roi_open_0935"] > r["roi_close"] for r in both) / len(both), 1)
-        d["by_night"] = {}
-        for night in sorted({r["night"] for r in g}):
-            v = [r["roi_open_0935"] for r in g if r["night"] == night and r["roi_open_0935"] != ""]
-            gp = [r["gap_pct"] for r in g if r["night"] == night and r["gap_pct"] != ""]
-            d["by_night"][night] = {"n": len(v), "avg_roi_0935": round(sum(v) / len(v), 1) if v else None,
-                                    "win_pct": round(100 * sum(x > 0 for x in v) / len(v), 1) if v else None,
-                                    "avg_gap_pct": round(sum(gp) / len(gp), 3) if gp else None}
-        res[struct] = d
+    for struct in ("CLIFF", "SPRINGBOARD"):
+        for scope in ("all", "live"):
+            for _, b in DIST_BUCKETS + ((None, "全部"),):
+                for sk, _ in STRIKES:
+                    g = [r for r in rows if r["structure"] == struct and r["strike_kind"] == sk
+                         and (b == "全部" or r["dist_bucket"] == b) and (scope == "all" or r["in_live"])]
+                    if g:
+                        res[f"{struct}|{scope}|{b}|{sk}"] = {n: _stats(g, n) for n, _ in EXITS}
     return res
 
 
@@ -133,6 +171,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="尾盘隔夜单回测")
     ap.add_argument("--post", action="store_true", help="结果发 Discord")
     ap.add_argument("--log-file", default=os.path.join(OUT_DIR, "run.log"))
+    ap.add_argument("--tickers", help="逗号分隔，只跑这些标的（默认 212 只存档池）")
+    ap.add_argument("--nights", help="逗号分隔的 P 日（如 2026-10-14），默认全部")
     args = ap.parse_args(argv)
     cfg = SystemConfig.load(None)
     os.makedirs(OUT_DIR, exist_ok=True)
@@ -142,14 +182,19 @@ def main(argv=None) -> int:
     pairs = []
     for P in days:
         S = next_trading_day(P)
-        if S in days or (S == et_now().date() and et_now() >= et_datetime(S, "09:50")):
+        if S in days or (S == et_now().date() and et_now() >= et_datetime(S, "09:56")):
             pairs.append((P, S))
     with open(os.path.join(cfg.data_dir, "archive", "universe", "heatmap_filtered.json"), encoding="utf-8") as f:
         tickers = json.load(f)["tickers"]
+    if args.tickers:
+        tickers = args.tickers.split(",")
+    if args.nights:
+        pairs = [(p, s) for p, s in pairs if p.isoformat() in args.nights.split(",")]
     client = YHSClient(cfg)
     rows = run(cfg, client, tickers, pairs)
-    fields = ["night", "ticker", "structure", "right", "expiration", "dte_at_entry", "contract", "strike", "spot_close",
-              "pos_node", "neg_node", "entry", "gap_pct"] + [f"roi_{n}" for n, _ in EXITS]
+    fields = ["night", "ticker", "in_live", "structure", "right", "expiration", "strike_kind", "contract", "strike",
+              "spot_close", "pos_node", "neg_node", "dist_pct", "dist_bucket", "otm_pct", "entry", "gap_pct"] + \
+             [f"{k}_{n}" for n, _ in EXITS for k in ("roi", "pnl")]
     with open(os.path.join(OUT_DIR, "trades.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
