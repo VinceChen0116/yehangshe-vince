@@ -970,3 +970,40 @@
 20:33:19 [INFO] yhs.main: 【历史】NKE261016C00035500 真实 IV 序列 390 个点（1m）
 20:33:19 [INFO] yhs.overnight: 2026-10-12 NKE SPRINGBOARD O:NKE261016C00035500 距 3.8% | 成本 0.46 | 跳空 1.289% | 09:35 40.4% / 09:45 10.5% / 09:55 -2.3%
 20:33:20 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，5.3s 后免费重试（第 1 轮）
+20:33:25 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，7.7s 后免费重试（第 2 轮）
+20:33:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，11.4s 后免费重试（第 3 轮）
+20:33:46 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，17.0s 后免费重试（第 4 轮）
+20:34:04 [INFO] yhs.main: 【历史】NKE261016C00037000 真实 IV 序列 390 个点（1m）
+20:34:05 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，5.3s 后免费重试（第 1 轮）
+20:34:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，7.5s 后免费重试（第 2 轮）
+20:34:20 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，11.5s 后免费重试（第 3 轮）
+20:34:32 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，17.0s 后免费重试（第 4 轮）
+20:34:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00037000，25.5s 后免费重试（第 5 轮）
+20:35:17 [INFO] yhs.main: 【历史】NKE261016C00037000 真实 IV 序列 390 个点（1m）
+20:35:17 [INFO] yhs.overnight: 2026-10-12 NKE SPRINGBOARD O:NKE261016C00037000 距 3.8% | 成本 0.09 | 跳空 1.289% | 09:35 27.2% / 09:45 -2.0% / 09:55 -22.1%
+20:35:18 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NKE261016C00038500，5.2s 后免费重试（第 1 轮）
+20:35:24 [INFO] yhs.main: 【历史】NKE261016C00038500 真实 IV 序列 390 个点（1m）
+20:35:25 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，5.2s 后免费重试（第 1 轮）
+20:35:31 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，7.8s 后免费重试（第 2 轮）
+20:35:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，11.4s 后免费重试（第 3 轮）
+20:35:52 [INFO] yhs.main: 【历史】OKTA261016C00227500 真实 IV 序列 390 个点（1m）
+20:35:53 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，5.1s 后免费重试（第 1 轮）
+20:35:59 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，7.7s 后免费重试（第 2 轮）
+20:36:07 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，11.4s 后免费重试（第 3 轮）
+20:36:20 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，16.9s 后免费重试（第 4 轮）
+20:36:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，5.3s 后免费重试（第 1 轮）
+20:36:45 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，7.6s 后免费重试（第 2 轮）
+20:36:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，11.5s 后免费重试（第 3 轮）
+20:37:06 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，17.0s 后免费重试（第 4 轮）
+20:37:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，25.5s 后免费重试（第 5 轮）
+20:37:50 [INFO] yhs.main: 【历史】OKTA261016C00227500 真实 IV 序列 390 个点（1m）
+20:37:52 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，5.2s 后免费重试（第 1 轮）
+20:37:57 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，7.6s 后免费重试（第 2 轮）
+20:38:06 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，11.5s 后免费重试（第 3 轮）
+20:38:18 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，16.9s 后免费重试（第 4 轮）
+20:38:36 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，25.6s 后免费重试（第 5 轮）
+20:39:02 [INFO] yhs.overnight: 2026-10-12 OKTA SPRINGBOARD O:OKTA261016C00227500 距 3.0% | 成本 5.57 | 跳空 1.418% | 09:35 -10.5% / 09:45 27.2% / 09:55 17.6%
+20:39:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00240000，5.1s 后免费重试（第 1 轮）
+20:39:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00240000，7.8s 后免费重试（第 2 轮）
+20:39:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00240000，11.4s 后免费重试（第 3 轮）
+20:39:33 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00240000，17.0s 后免费重试（第 4 轮）

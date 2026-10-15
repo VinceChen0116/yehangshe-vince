@@ -775,3 +775,27 @@
 20:33:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00920000，5.0s 后免费重试（第 1 轮）
 20:33:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00920000，7.7s 后免费重试（第 2 轮）
 20:33:16 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00920000，11.5s 后免费重试（第 3 轮）
+20:33:28 [INFO] yhs.main: 【历史】GS261016C00920000 真实 IV 序列 390 个点（1m）
+20:33:29 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，5.1s 后免费重试（第 1 轮）
+20:33:35 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，7.6s 后免费重试（第 2 轮）
+20:34:33 [INFO] yhs.overnight: 2026-10-14 GS SPRINGBOARD O:GS261016C00920000 距 0.7% | 成本 0.65 | 跳空 -0.759% | 09:35 -78.4% / 09:45 -83.0% / 09:55 -90.8%
+20:34:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00950000，5.0s 后免费重试（第 1 轮）
+20:34:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00950000，7.5s 后免费重试（第 2 轮）
+20:34:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00950000，11.4s 后免费重试（第 3 轮）
+20:35:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00950000，17.1s 后免费重试（第 4 轮）
+20:35:58 [INFO] yhs.main: 【历史】GS261016C00950000 真实 IV 序列 390 个点（1m）
+20:35:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00950000，5.1s 后免费重试（第 1 轮）
+20:36:05 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00950000，7.5s 后免费重试（第 2 轮）
+20:36:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00950000，11.4s 后免费重试（第 3 轮）
+20:37:13 [INFO] yhs.main: 【历史】GS261016C00950000 真实 IV 序列 390 个点（1m）
+20:37:13 [INFO] yhs.overnight: 2026-10-14 GS SPRINGBOARD O:GS261016C00950000 距 0.7% | 成本 0.08 | 跳空 -0.759% | 09:35 -88.0% / 09:45 -88.2% / 09:55 -87.8%
+20:37:13 [INFO] yhs.main: 【历史】HD261016C00295000 真实 IV 序列 390 个点（1m）
+20:37:14 [WARNING] yhs.client: 429 /v1/options/contract-greeks-series/HD261016C00295000（RATE_LIMITED），按 Retry-After 等待 30.0s
+20:37:45 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HD261016C00295000，5.2s 后免费重试（第 1 轮）
+20:38:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HD261016C00295000，7.7s 后免费重试（第 2 轮）
+20:38:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/HD261016C00295000，11.5s 后免费重试（第 3 轮）
+20:39:06 [INFO] yhs.main: 【历史】HD261016C00295000 真实 IV 序列 296 个点（1m）
+20:39:07 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/HD，5.1s 后免费重试（第 1 轮）
+20:39:13 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/HD，7.5s 后免费重试（第 2 轮）
+20:39:21 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/HD，11.5s 后免费重试（第 3 轮）
+20:39:34 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/HD，17.1s 后免费重试（第 4 轮）

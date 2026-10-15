@@ -885,3 +885,47 @@
 20:33:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00110000，5.3s 后免费重试（第 1 轮）
 20:33:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00110000，7.6s 后免费重试（第 2 轮）
 20:33:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00110000，11.3s 后免费重试（第 3 轮）
+20:33:33 [INFO] yhs.main: 【历史】NEM261016P00110000 真实 IV 序列 390 个点（1m）
+20:33:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00110000，5.0s 后免费重试（第 1 轮）
+20:34:32 [INFO] yhs.main: 【历史】NEM261016P00110000 真实 IV 序列 390 个点（1m）
+20:34:32 [INFO] yhs.overnight: 2026-10-13 NEM CLIFF O:NEM261016P00110000 距 3.6% | 成本 0.25 | 跳空 -2.031% | 09:35 18.7% / 09:45 18.7% / 09:55 18.6%
+20:34:33 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00105000，5.1s 后免费重试（第 1 轮）
+20:34:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00105000，7.8s 后免费重试（第 2 轮）
+20:34:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00105000，11.5s 后免费重试（第 3 轮）
+20:34:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00105000，16.9s 后免费重试（第 4 轮）
+20:35:18 [INFO] yhs.main: 【历史】NEM261016P00105000 真实 IV 序列 390 个点（1m）
+20:35:18 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00105000，5.1s 后免费重试（第 1 轮）
+20:35:25 [INFO] yhs.main: 【历史】NEM261016P00105000 真实 IV 序列 390 个点（1m）
+20:35:25 [INFO] yhs.overnight: 2026-10-13 NEM CLIFF O:NEM261016P00105000 距 3.6% | 成本 0.10 | 跳空 -2.031% | 09:35 114.9% / 09:45 114.6% / 09:55 -20.0%
+20:35:25 [INFO] yhs.main: 【历史】NFLX261016P00070000 真实 IV 序列 200 个点（1m）
+20:35:25 [INFO] yhs.main: 【历史】NFLX261016P00067000 真实 IV 序列 390 个点（1m）
+20:35:26 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NFLX261016P00063000，5.1s 后免费重试（第 1 轮）
+20:35:32 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NFLX261016P00063000，7.5s 后免费重试（第 2 轮）
+20:35:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NFLX261016P00063000，11.4s 后免费重试（第 3 轮）
+20:35:52 [INFO] yhs.main: 【历史】NFLX261016P00063000 真实 IV 序列 390 个点（1m）
+20:35:52 [INFO] yhs.main: 【历史】NVDA261014P00227500 真实 IV 序列 390 个点（1m）
+20:35:52 [INFO] yhs.main: 【历史】NVDA261014P00227500 真实 IV 序列 324 个点（1m）
+20:35:53 [INFO] yhs.overnight: 2026-10-13 NVDA CLIFF O:NVDA261014P00227500 距 0.9% | 成本 1.67 | 跳空 -1.362% | 09:35 78.9% / 09:45 55.4% / 09:55 49.5%
+20:35:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261014P00215000，5.2s 后免费重试（第 1 轮）
+20:36:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261014P00215000，7.8s 后免费重试（第 2 轮）
+20:36:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261014P00215000，11.4s 后免费重试（第 3 轮）
+20:36:20 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261014P00215000，17.1s 后免费重试（第 4 轮）
+20:36:38 [INFO] yhs.main: 【历史】NVDA261014P00215000 真实 IV 序列 390 个点（1m）
+20:36:39 [INFO] yhs.main: 【历史】NVDA261014P00215000 真实 IV 序列 388 个点（1m）
+20:36:39 [INFO] yhs.overnight: 2026-10-13 NVDA CLIFF O:NVDA261014P00215000 距 0.9% | 成本 0.06 | 跳空 -1.362% | 09:35 -56.4% / 09:45 -71.9% / 09:55 -72.4%
+20:36:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261014P00205000，5.0s 后免费重试（第 1 轮）
+20:36:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261014P00205000，7.8s 后免费重试（第 2 轮）
+20:36:55 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261014P00205000，11.3s 后免费重试（第 3 轮）
+20:37:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261014P00205000，17.0s 后免费重试（第 4 轮）
+20:37:26 [INFO] yhs.main: 【历史】NVDA261014P00205000 真实 IV 序列 390 个点（1m）
+20:37:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00038500，5.2s 后免费重试（第 1 轮）
+20:37:32 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00038500，7.7s 后免费重试（第 2 轮）
+20:37:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00038500，11.5s 后免费重试（第 3 轮）
+20:37:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00038500，17.1s 后免费重试（第 4 轮）
+20:38:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00038500，25.4s 后免费重试（第 5 轮）
+20:38:39 [INFO] yhs.main: 【历史】NVO261016C00038500 真实 IV 序列 390 个点（1m）
+20:38:42 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，5.1s 后免费重试（第 1 轮）
+20:38:48 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，7.6s 后免费重试（第 2 轮）
+20:38:56 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，11.5s 后免费重试（第 3 轮）
+20:39:14 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，17.1s 后免费重试（第 4 轮）
+20:39:31 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVO，25.5s 后免费重试（第 5 轮）
