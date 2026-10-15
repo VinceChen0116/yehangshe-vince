@@ -5,9 +5,10 @@ overnight_live.py —— 隔夜期权模拟实盘（2026-10-15 用户定的规�
   1. 标的：212 只存档池 + 最近一个交易日的日内实盘监控名单（含 LITE / TSM / MU 这类高价票）
   2. 结构：最近两个已可用的 5 分钟 Heatmap 快照（到期 = 今天之后最近一个有数据的到期，能过夜）都识别出同一结构，
      局部节点（node_mode="local"）或全局节点（最大正 / 负 GEX）任一成立即可：跳板 → 买 Call，悬崖 → 买 Put
-  3. Flow 大单确认（必须）：今天该标的有同方向（Call / Put）的主动买入大单（成交在 Ask 或 Ask 以上），单笔权利金 ≥ $5 万
-  4. 合约：同一到期的第一档虚值（接近平值），每笔 1 张；按实时报价的 ask 买入，bid 为 0 或没有报价不开
-  5. 每晚最多 10 笔，按当天同方向大单权利金合计从大到小排
+  3. Flow 大单确认（必须）：今天 15:00 之后该标的有同方向（Call / Put）的主动买入大单（成交在 Ask 或 Ask 以上），单笔权利金 ≥ $5 万
+  4. 合约：同一到期的第一档虚值（接近平值），每笔 1 张；按实时报价的 ask 买入，bid 为 0、没有报价、
+     或买卖价差超过中间价 25% 的不开
+  5. 每晚最多 10 笔，按 15:00 后同方向大单权利金合计从大到小排
 次日出场（--close，约 09:15 启动）：
   09:35 起每分钟查实时报价，bid > 0 就按 bid 卖出；09:45 还没卖掉的按当时 bid 记（没有报价按 0 记）。夜里不设止损。
 记账：live/overnight_<开仓日>.csv（开仓时写入，次日平仓后补全出场字段）；开 / 平仓都发 Discord。
@@ -38,6 +39,8 @@ log = logging.getLogger("yhs.overnight_live")
 LIVE_DIR = "live"
 MAX_POSITIONS = 10
 FLOW_MIN_PREMIUM = 50000
+FLOW_SINCE = "15:00"   # 只看尾盘的同向大单
+MAX_SPREAD = 0.25      # (ask - bid) / 中间价 超过 25% 不开：一买一卖先亏掉价差
 PRESCAN_START, SCAN_START, OPEN_DEADLINE = "15:15", "15:44", "15:57"
 SELL_START, SELL_DEADLINE = "09:35", "09:45"
 FIELDS = ["position_id", "open_date", "ticker", "structure", "node_mode", "right", "contract", "expiration", "strike",
@@ -145,14 +148,18 @@ def find_structure(cfg, lcfg, ticker: str, day: dt.date, exp: str, raw: list, no
 
 
 def flow_check(client, ticker: str, right: str, day: dt.date) -> dict:
+    """今天 FLOW_SINCE（15:00）之后该标的同方向 Ask 侧单笔 ≥ $5 万 的大单（2026-10-15 用户定：其余时段的大单参考价值不大）。"""
+    since = et_datetime(day, FLOW_SINCE)
     trades, cursor = [], None
-    for _ in range(20):
+    for _ in range(20):   # 从最新往前翻，翻到 15:00 之前就停
         p = {"tickers": ticker, "kind": "order", "min_premium_usd": FLOW_MIN_PREMIUM, "sides": "A,AA", "rights": right,
-             "session_date": day.isoformat(), "sort_by": "occurredAt", "direction": "asc", "limit": 25, "cursor": cursor}
+             "session_date": day.isoformat(), "sort_by": "occurredAt", "direction": "desc", "limit": 25, "cursor": cursor}
         payload = client.get(FLOW_TRADES_PATH, p)
-        trades += extract_rows(payload)
+        page = extract_rows(payload)
+        recent = [t for t in page if to_et(parse_iso(t["occurred_at"])) >= since]
+        trades += recent
         cursor = (payload.get("_meta") or {}).get("next_cursor") if isinstance(payload, dict) else None
-        if not cursor:
+        if not cursor or len(recent) < len(page):
             break
     big = max(trades, key=lambda t: float(t.get("premium_usd") or 0), default=None)
     return {"n": len(trades), "usd": round(sum(float(t.get("premium_usd") or 0) for t in trades)),
@@ -217,6 +224,11 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
             log.warning("【隔夜·放弃】%s %s 没有报价或 bid 为 0，不开", t, sym)
             continue
         if q["ask"] < cfg.min_option_price:
+            continue
+        spread = (q["ask"] - q["bid"]) / ((q["ask"] + q["bid"]) / 2)
+        if spread > MAX_SPREAD:
+            log.warning("【隔夜·放弃】%s %s 买卖价差 %.0f%%（bid %.2f / ask %.2f）> %.0f%%，不开", t, sym, spread * 100,
+                        q["bid"], q["ask"], MAX_SPREAD * 100)
             continue
         rows.append({"position_id": f"ON{day.strftime('%Y%m%d')}-{len(rows) + 1:02d}", "open_date": day.isoformat(),
                      "ticker": t, "structure": st.structure, "node_mode": mode, "right": st.right, "contract": sym,
