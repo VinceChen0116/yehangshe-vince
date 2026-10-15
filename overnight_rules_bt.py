@@ -5,7 +5,7 @@ overnight_rules_bt.py —— 隔夜模拟实盘规则（overnight_live.py）的�
   * 标的：212 只存档池 + 当晚的日内实盘名单（有日志时）
   * 结构：P 日标记 15:40、15:45 的两个 Heatmap 快照（15:50 前都已可用）都识别出同一结构，
     局部节点优先、其次全局节点；到期 = P 日之后最近一个有存档的到期；跳板买 Call、悬崖买 Put
-  * Flow：P 日 15:00 之后同方向 Ask 侧（A/AA）单笔 ≥ $5 万 的大单至少 1 笔
+  * Flow：P 日 15:00–15:50 同方向 Ask 侧（A/AA）单笔 ≥ $5 万 的大单至少 1 笔（15:50 之后的实盘扫描时还看不到）
   * 合约：第一档虚值，1 张；15:55 买入价 = 真实 IV 还原中间价 + 当时真实 NBBO 半价差（ask）；
     当时 bid 为 0、或价差 > 中间价 25% 不开；每晚最多 10 笔，按 15:00 后大单金额排
   * 出场：S 日 09:35 按 bid（中间价 − 真实半价差）卖；bid 为 0 顺延到 09:40 / 09:45，仍为 0 按 0 记
@@ -37,7 +37,7 @@ OUT = os.path.join("backtests", "overnight_rules")
 BARS = ("15:40", "15:45")
 ENTRY = "15:55"
 EXITS = ("09:35", "09:40", "09:45")
-FLOW_SINCE, FLOW_MIN = "15:00", 50000
+FLOW_SINCE, FLOW_UNTIL, FLOW_MIN = "15:00", "15:50", 50000   # 实盘 15:44 起扫描，15:50 之后的大单当时还看不到
 MAX_SPREAD, MAX_POS = 0.25, 10
 
 
@@ -103,7 +103,8 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list) -> list:
         if r is None:
             continue
         exp, snap, st, mode = r
-        fl = late_flow(cfg, client, P, t, st.right)
+        until = et_datetime(P, FLOW_UNTIL)
+        fl = [x for x in late_flow(cfg, client, P, t, st.right) if to_et(parse_iso(x["occurred_at"])) <= until]
         log.info("%s %s %s（%s）%.2f→%.2f 距 %.2f%% | 15:00 后大单 %d 笔", P, t, st.structure, mode, st.pos_strike,
                  st.neg_strike, st.distance_pct * 100, len(fl))
         if fl:
