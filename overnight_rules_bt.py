@@ -93,7 +93,7 @@ def first_otm(snap, right: str):
     return (min(side) if right == "C" else max(side)) if side else None
 
 
-def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list) -> list:
+def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = ENTRY) -> list:
     lcfg = copy.copy(cfg)
     lcfg.node_mode = "local"
     hp, hs = HistoryClient(client, cfg, P), HistoryClient(client, cfg, S)
@@ -118,7 +118,7 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list) -> list:
         if K is None:
             continue
         sym = occ_symbol(t, exp, st.right, K)
-        te = et_datetime(P, ENTRY)
+        te = et_datetime(P, entry)
         mid = hp.option_price(sym, te)
         q = hp.hist_quote(sym, te)
         if not mid or mid < cfg.min_option_price or (q and q[0] <= 0):
@@ -157,12 +157,16 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list) -> list:
 
 
 def main(argv=None) -> int:
+    global OUT
     ap = argparse.ArgumentParser(description="隔夜实盘规则回测")
     ap.add_argument("--nights")
     ap.add_argument("--post", action="store_true")
+    ap.add_argument("--entry", default=ENTRY, help="P 日买入时刻（默认 15:55）")
+    ap.add_argument("--out", default=OUT, help="输出目录")
     ap.add_argument("--log-file", default=os.path.join(OUT, "run.log"))
     args = ap.parse_args(argv)
     cfg = SystemConfig.load(None)
+    OUT = args.out
     os.makedirs(OUT, exist_ok=True)
     setup_logging(cfg.log_level, args.log_file)
     root = os.path.join(cfg.data_dir, "archive", "heatmap")
@@ -177,7 +181,7 @@ def main(argv=None) -> int:
     client = YHSClient(cfg)
     for P, S in pairs:
         tickers = base + [t for t in (live_universe(P) or []) if t not in base]
-        rows = run_night(cfg, client, P, S, tickers)
+        rows = run_night(cfg, client, P, S, tickers, args.entry)
         with open(os.path.join(OUT, f"trades_{P}.csv"), "w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0]) if rows else ["night"])
             w.writeheader()

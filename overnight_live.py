@@ -1,11 +1,11 @@
 """
 overnight_live.py —— 隔夜期权模拟实盘（2026-10-15 用户定的规则，与日内实盘分开记账）
 =====================================================================================
-尾盘开仓（--open，约 15:25 启动，15:44 开始扫描）：
+尾盘开仓（--open，14:55 启动；15:15 预扫，15:45:15 扫描 1，15:50:15 扫描 2 确认，15:50–15:57 买入）：
   1. 标的：212 只存档池 + 最近一个交易日的日内实盘监控名单（含 LITE / TSM / MU 这类高价票）
-  2. 结构：最近两个已可用的 5 分钟 Heatmap 快照（到期 = 今天之后最近一个有数据的到期，能过夜）都识别出同一结构，
+  2. 结构：标记 15:40、15:45 的两个 5 分钟 Heatmap 快照（到期 = 今天之后最近一个有数据的到期，能过夜）都识别出同一结构，
      局部节点（node_mode="local"）或全局节点（最大正 / 负 GEX）任一成立即可：跳板 → 买 Call，悬崖 → 买 Put
-  3. Flow 大单确认（必须）：今天 15:00 之后该标的有同方向（Call / Put）的主动买入大单（成交在 Ask 或 Ask 以上），单笔权利金 ≥ $5 万
+  3. Flow 大单确认（必须）：今天 15:00–15:50该标的有同方向（Call / Put）的主动买入大单（成交在 Ask 或 Ask 以上），单笔权利金 ≥ $5 万
   4. 合约：同一到期的第一档虚值（接近平值），每笔 1 张；按实时报价的 ask 买入，bid 为 0、没有报价、
      或买卖价差超过中间价 25% 的不开
   5. 每晚最多 10 笔，按 15:00 后同方向大单权利金合计从大到小排
@@ -41,7 +41,10 @@ MAX_POSITIONS = 10
 FLOW_MIN_PREMIUM = 50000
 FLOW_SINCE = "15:00"   # 只看尾盘的同向大单
 MAX_SPREAD = 0.25      # (ask - bid) / 中间价 超过 25% 不开：一买一卖先亏掉价差
-PRESCAN_START, SCAN_START, OPEN_DEADLINE = "15:15", "15:44", "15:57"
+PRESCAN_START, OPEN_DEADLINE = "15:15", "15:57"
+BAR1, BAR2 = "15:40", "15:45"   # 两根确认用的 Heatmap；标记 T 的段约 T+5:10 才可用
+SCAN1_AT, SCAN2_AT = dt.timedelta(hours=15, minutes=45, seconds=15), dt.timedelta(hours=15, minutes=50, seconds=15)
+FLOW_UNTIL = "15:50"   # 大单统计截止（与回测一致）
 SELL_START, SELL_DEADLINE = "09:35", "09:45"
 FIELDS = ["position_id", "open_date", "ticker", "structure", "node_mode", "right", "contract", "expiration", "strike",
           "spot", "pos_node", "neg_node", "dist_pct", "flow_n", "flow_usd", "flow_max", "entry_time", "entry_bid",
@@ -128,6 +131,18 @@ def pick_expiry(client, ticker: str, day: dt.date, first: str | None = None):
     return None, []
 
 
+def structure_at(cfg, lcfg, ticker: str, day: dt.date, exp: str, raw: list, label: str):
+    """标记为 label 的那根 Heatmap 上的结构（局部节点优先，其次全局节点）。返回 (快照, 结构, 模式) 或 None。"""
+    frames = rows_to_frames(ticker, day, exp, raw)
+    k = next((t for t in frames if t.strftime("%H:%M") == label), None)
+    snap = parse_heatmap(frames[k], cfg, day) if k else None
+    if snap is None:
+        return None
+    loc = detect_structure(snap, lcfg)
+    st = loc or detect_structure(snap, cfg)
+    return (snap, st, "local" if loc else "king") if st else None
+
+
 def find_structure(cfg, lcfg, ticker: str, day: dt.date, exp: str, raw: list, now: dt.datetime):
     """最近两个已可用快照（标记 T 的段在 T+5 才可用）都识别出同一结构（局部节点优先，其次全局节点）。"""
     frames = rows_to_frames(ticker, day, exp, raw)
@@ -149,7 +164,7 @@ def find_structure(cfg, lcfg, ticker: str, day: dt.date, exp: str, raw: list, no
 
 def flow_check(client, ticker: str, right: str, day: dt.date) -> dict:
     """今天 FLOW_SINCE（15:00）之后该标的同方向 Ask 侧单笔 ≥ $5 万 的大单（2026-10-15 用户定：其余时段的大单参考价值不大）。"""
-    since = et_datetime(day, FLOW_SINCE)
+    since, until = et_datetime(day, FLOW_SINCE), et_datetime(day, FLOW_UNTIL)
     trades, cursor = [], None
     for _ in range(20):   # 从最新往前翻，翻到 15:00 之前就停
         p = {"tickers": ticker, "kind": "order", "min_premium_usd": FLOW_MIN_PREMIUM, "sides": "A,AA", "rights": right,
@@ -157,7 +172,7 @@ def flow_check(client, ticker: str, right: str, day: dt.date) -> dict:
         payload = client.get(FLOW_TRADES_PATH, p)
         page = extract_rows(payload)
         recent = [t for t in page if to_et(parse_iso(t["occurred_at"])) >= since]
-        trades += recent
+        trades += [t for t in recent if to_et(parse_iso(t["occurred_at"])) <= until]
         cursor = (payload.get("_meta") or {}).get("next_cursor") if isinstance(payload, dict) else None
         if not cursor or len(recent) < len(page):
             break
@@ -188,9 +203,11 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
                 early.append(t)
     order = early + [t for t in exps if t not in early]
     log.info("【隔夜·预扫】完成：%d 只有过夜到期，其中 %d 只预扫时已有结构：%s", len(exps), len(early), "、".join(early))
-    wait_until(et_datetime(day, SCAN_START))
-    log.info("【隔夜·扫描】%s 开始正式扫描 %d 只（局部或全局跳板 / 悬崖）", et_now().strftime("%H:%M"), len(order))
-    cands = []
+    # 第一段（15:45:15 起）：扫全部，15:40 那根有结构的进候选（若扫到时 15:45 那根也已出炉，就直接两根一起确认）
+    base = dt.datetime.combine(day, dt.time(0), tzinfo=et_datetime(day, "12:00").tzinfo)
+    wait_until(base + SCAN1_AT)
+    log.info("【隔夜·扫描1】%s 扫 %d 只，看 %s 那根", et_now().strftime("%H:%M:%S"), len(order), BAR1)
+    pending, confirmed = {}, []
     for t in order:
         if not dry and et_now() >= et_datetime(day, OPEN_DEADLINE):
             log.warning("【隔夜·扫描】到 %s 还没扫完，剩余标的放弃", OPEN_DEADLINE)
@@ -200,15 +217,39 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
         except Exception as e:
             log.info("%s Heatmap 获取失败：%s", t, e)
             continue
-        r = find_structure(cfg, lcfg, t, day, exps[t], raw, et_now())
-        if r is None:
+        a1 = structure_at(cfg, lcfg, t, day, exps[t], raw, BAR1)
+        if a1 is None:
             continue
-        exp, snap, st, mode = r
+        a2 = structure_at(cfg, lcfg, t, day, exps[t], raw, BAR2)
+        if a2 is not None:
+            if a2[1].structure == a1[1].structure:
+                confirmed.append((t, a2))
+        else:
+            pending[t] = a1
+    log.info("【隔夜·扫描1】完成：%s 有结构的 %d 只待 %s 确认，已确认 %d 只", BAR1, len(pending), BAR2, len(confirmed))
+    # 第二段（15:50:15 起）：候选重拉一次，15:45 那根结构相同才算
+    if pending:
+        wait_until(base + SCAN2_AT)
+        for t, a1 in pending.items():
+            if not dry and et_now() >= et_datetime(day, OPEN_DEADLINE):
+                break
+            try:
+                raw = fetch_heatmap_rows(client, t, exps[t], day, max_pages=1, start="15:25")
+            except Exception as e:
+                log.info("%s Heatmap 获取失败：%s", t, e)
+                continue
+            a2 = structure_at(cfg, lcfg, t, day, exps[t], raw, BAR2)
+            if a2 and a2[1].structure == a1[1].structure:
+                confirmed.append((t, a2))
+    log.info("【隔夜·确认】%s/%s 两根都成立 %d 只：%s", BAR1, BAR2, len(confirmed), "、".join(t for t, _ in confirmed))
+    cands = []
+    for t, (snap, st, mode) in confirmed:
         fl = flow_check(client, t, st.right, day)
-        log.info("【隔夜·结构】%s %s（%s）现货 %.2f 节点 %.2f→%.2f 距 %.2f%% | 同向大单 %d 笔 $%.0fK",
-                 t, st.structure, mode, snap.spot, st.pos_strike, st.neg_strike, st.distance_pct * 100, fl["n"], fl["usd"] / 1e3)
+        log.info("【隔夜·结构】%s %s（%s）现货 %.2f 节点 %.2f→%.2f 距 %.2f%% | 15:00–%s 同向大单 %d 笔 $%.0fK",
+                 t, st.structure, mode, snap.spot, st.pos_strike, st.neg_strike, st.distance_pct * 100, FLOW_UNTIL,
+                 fl["n"], fl["usd"] / 1e3)
         if fl["n"]:
-            cands.append((fl["usd"], t, exp, snap, st, mode, fl))
+            cands.append((fl["usd"], t, exps[t], snap, st, mode, fl))
     cands.sort(key=lambda x: -x[0])
     log.info("【隔夜·候选】结构 + 大单都满足 %d 个：%s", len(cands), "、".join(c[1] for c in cands) or "无")
     rows, quotes = [], QuoteBook(client)
