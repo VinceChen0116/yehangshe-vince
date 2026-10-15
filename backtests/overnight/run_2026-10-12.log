@@ -913,3 +913,14 @@
 20:26:25 [INFO] yhs.main: 【历史】NEE261016P00078000 真实 IV 序列 390 个点（1m）
 20:26:26 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEE，5.1s 后免费重试（第 1 轮）
 20:26:33 [INFO] yhs.main: 【历史】NEE261016P00078000 真实 IV 序列 199 个点（1m）
+20:26:34 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEE，5.2s 后免费重试（第 1 轮）
+20:26:40 [INFO] yhs.overnight: 2026-10-12 NEE CLIFF O:NEE261016P00078000 距 0.7% | 成本 0.64 | 跳空 -0.067% | 09:35 -26.4% / 09:45 -21.5% / 09:55 -1.5%
+20:26:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00075000，5.1s 后免费重试（第 1 轮）
+20:26:47 [INFO] yhs.main: 【历史】NEE261016P00075000 真实 IV 序列 390 个点（1m）
+20:26:49 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00075000，5.2s 后免费重试（第 1 轮）
+20:26:55 [INFO] yhs.main: 【历史】NEE261016P00075000 真实 IV 序列 390 个点（1m）
+20:26:55 [INFO] yhs.overnight: 2026-10-12 NEE CLIFF O:NEE261016P00075000 距 0.7% | 成本 0.07 | 跳空 -0.067% | 09:35 -25.1% / 09:45 -25.3% / 09:55 -24.8%
+20:26:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00071000，5.0s 后免费重试（第 1 轮）
+20:27:01 [INFO] yhs.main: 【历史】NEE261016P00071000 真实 IV 序列 390 个点（1m）
+20:27:01 [INFO] yhs.main: 【历史】NEM261016P00117000 真实 IV 序列 390 个点（1m）
+20:27:03 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEM，5.2s 后免费重试（第 1 轮）

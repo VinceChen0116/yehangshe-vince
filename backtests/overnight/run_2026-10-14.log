@@ -732,3 +732,12 @@
 20:26:19 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261016P00141000，5.2s 后免费重试（第 1 轮）
 20:26:25 [INFO] yhs.main: 【历史】GLW261016P00141000 真实 IV 序列 389 个点（1m）
 20:26:26 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GLW，5.2s 后免费重试（第 1 轮）
+20:26:35 [INFO] yhs.overnight: 2026-10-14 GLW CLIFF O:GLW261016P00141000 距 1.2% | 成本 3.16 | 跳空 -5.546% | 09:35 132.6% / 09:45 55.6% / 09:55 125.3%
+20:26:35 [INFO] yhs.main: 【历史】GLW261016P00135000 真实 IV 序列 390 个点（1m）
+20:26:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261016P00135000，5.2s 后免费重试（第 1 轮）
+20:26:42 [INFO] yhs.main: 【历史】GLW261016P00135000 真实 IV 序列 390 个点（1m）
+20:26:46 [INFO] yhs.overnight: 2026-10-14 GLW CLIFF O:GLW261016P00135000 距 1.2% | 成本 1.03 | 跳空 -5.546% | 09:35 207.5% / 09:45 69.0% / 09:55 189.4%
+20:26:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261016P00125000，5.2s 后免费重试（第 1 轮）
+20:26:53 [INFO] yhs.main: 【历史】GLW261016P00125000 真实 IV 序列 390 个点（1m）
+20:26:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261016P00125000，5.0s 后免费重试（第 1 轮）
+20:27:00 [INFO] yhs.main: 【历史】GLW261016P00125000 真实 IV 序列 390 个点（1m）

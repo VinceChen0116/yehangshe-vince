@@ -840,3 +840,12 @@
 20:26:27 [INFO] yhs.overnight: 2026-10-13 MXL SPRINGBOARD O:MXL261016C00090000 距 61.0% | 成本 2.93 | 跳空 -5.083% | 09:35 -70.3% / 09:45 -74.6% / 09:55 -76.6%
 20:26:27 [INFO] yhs.main: 【历史】MXL261016C00095000 真实 IV 序列 390 个点（1m）
 20:26:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MXL261016C00095000，5.2s 后免费重试（第 1 轮）
+20:26:34 [INFO] yhs.main: 【历史】MXL261016C00095000 真实 IV 序列 390 个点（1m）
+20:26:34 [INFO] yhs.overnight: 2026-10-13 MXL SPRINGBOARD O:MXL261016C00095000 距 61.0% | 成本 1.83 | 跳空 -5.083% | 09:35 -80.6% / 09:45 -85.9% / 09:55 -85.9%
+20:26:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NASA261016P00022500，5.2s 后免费重试（第 1 轮）
+20:26:42 [INFO] yhs.main: 【历史】NASA261016P00022500 真实 IV 序列 390 个点（1m）
+20:26:43 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NASA，5.3s 后免费重试（第 1 轮）
+20:26:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NASA261016P00022500，5.2s 后免费重试（第 1 轮）
+20:26:56 [INFO] yhs.main: 【历史】NASA261016P00022500 真实 IV 序列 307 个点（1m）
+20:26:57 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NASA，5.2s 后免费重试（第 1 轮）
+20:27:04 [INFO] yhs.overnight: 2026-10-13 NASA CLIFF O:NASA261016P00022500 距 1.4% | 成本 0.39 | 跳空 -2.337% | 09:35 0.8% / 09:45 0.9% / 09:55 0.9%
