@@ -73,13 +73,14 @@ def load_archived_heatmap(cfg: SystemConfig, day: dt.date, ticker: str, expirati
         return json.load(f).get("rows") or []
 
 
-def fetch_heatmap_rows(client, ticker: str, expiration: str, day: dt.date, max_pages: int = 10) -> list[dict]:
-    """分页拉取某交易日某到期日的全天 Heatmap 快照（原始行）。"""
+def fetch_heatmap_rows(client, ticker: str, expiration: str, day: dt.date, max_pages: int = 10,
+                       start: str = "09:30") -> list[dict]:
+    """分页拉取某交易日某到期日 start 之后的 Heatmap 快照（原始行；默认全天）。"""
     rows, cursor, pages = [], None, 0
     while pages < max_pages:
         # from/to 只传日期时服务端返回空集，必须传带时区的完整时间
         params = {"expiration": expiration,
-                  "from": et_datetime(day, "09:30").isoformat(),
+                  "from": et_datetime(day, start).isoformat(),
                   "to": et_datetime(day, "16:00").isoformat(),
                   "limit": 24, "cursor": cursor}
         payload = client.get(HEATMAP_HISTORY_PATH.format(ticker=ticker), params)
