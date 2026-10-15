@@ -1,0 +1,10 @@
+19:16:48 [INFO] yhs.overnight: ===== 隔夜 2026-10-13 → 2026-10-14 =====
+19:16:50 [INFO] yhs.main: 【历史】AAPL261014C00342500 分钟线为 2026-10-14（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+19:16:50 [INFO] yhs.main: 【历史】AAPL261014C00342500 真实 IV 序列 390 个点（1m）
+19:16:50 [INFO] yhs.main: 【历史】AAPL261014C00342500 真实 IV 序列 387 个点（1m）
+19:16:52 [INFO] yhs.overnight: 2026-10-13 AAPL SPRINGBOARD O:AAPL261014C00342500 距 0.4% | 成本 1.32 | 跳空 1.233% | 09:35 163.6% / 09:45 160.1% / 09:55 138.1%
+19:16:53 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AAPL261014C00357500，5.2s 后免费重试（第 1 轮）
+19:16:59 [INFO] yhs.main: 【历史】AAPL261014C00357500 真实 IV 序列 390 个点（1m）
+19:17:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ACN261016P00212500，5.1s 后免费重试（第 1 轮）
+19:17:05 [INFO] yhs.main: 【历史】ACN261016P00212500 真实 IV 序列 390 个点（1m）
+19:17:06 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/ACN，5.1s 后免费重试（第 1 轮）
