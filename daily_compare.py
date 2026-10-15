@@ -17,6 +17,9 @@ daily_compare.py —— 每日收盘后：所有候选规则在全部存档日�
 并把"累计 + 今天 + 逐日"对比发到 Discord；如有当天实盘交易明细（live/trades_<日期>.csv，B 账户），一并列出。
 一个月后（约 11 月中）用这些累计结果做最终决定。
 
+隔夜：另跑 overnight_rules_bt.py（与隔夜实盘 overnight_live.py 同一套规则）在全部存档晚上的真实回测，
+     列出累计 / 逐晚，并把最近一晚与隔夜实盘账本 live/overnight_<日期>.csv 对账。
+
 用法：python3 daily_compare.py [--no-post]
 """
 from __future__ import annotations
@@ -81,6 +84,42 @@ def reconcile(day: str) -> str:
             f"同标的同方向 {len(lk & rk)} 笔（只在实盘 {len(lk - rk)}，只在回测 {len(rk - lk)}）")
 
 
+def overnight_compare():
+    """隔夜规则（overnight_rules_bt.py，与隔夜实盘同一套规则）全部存档晚上的真实回测 + 最近一晚与隔夜实盘对账。"""
+    subprocess.run([sys.executable, "overnight_rules_bt.py"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    d = os.path.join("backtests", "overnight_rules")
+    rows = []
+    for fn in sorted(os.listdir(d)):
+        if fn.startswith("trades_2") and fn.endswith(".csv"):
+            with open(os.path.join(d, fn), encoding="utf-8") as f:
+                rows += [r for r in csv.DictReader(f) if r.get("pnl_usd")]
+    if not rows:
+        return None, "隔夜回测没有交易"
+    nights = sorted({r["night"] for r in rows})
+    pnl = [float(r["pnl_usd"]) for r in rows]
+    per = []
+    for n in nights:
+        g = [float(r["pnl_usd"]) for r in rows if r["night"] == n]
+        per.append(f"{n[5:10]}→{n[-5:]} {len(g):>3} 笔 赚 {sum(x > 0 for x in g):>2} {money(sum(g)):>8}")
+    head = (f"累计 {len(nights)} 晚 {len(pnl)} 笔，胜率 {100 * sum(x > 0 for x in pnl) / len(pnl):.0f}%，"
+            f"合计 {money(sum(pnl))}（去最大一笔 {money(sum(pnl) - max(pnl))}）")
+    last = nights[-1]
+    P = last.split("→")[0]
+    lp = os.path.join("live", f"overnight_{P}.csv")
+    if os.path.exists(lp):
+        with open(lp, encoding="utf-8") as f:
+            lv = [r for r in csv.DictReader(f) if r.get("status") == "CLOSED"]
+        bt = [r for r in rows if r["night"] == last]
+        lk, bk = {r["ticker"] for r in lv}, {r["ticker"] for r in bt}
+        recon = (f"{P} 晚 隔夜实盘 {len(lv)} 笔 {money(sum(float(r['pnl_usd'] or 0) for r in lv))} ｜ 回测 {len(bt)} 笔 "
+                 f"{money(sum(float(r['pnl_usd']) for r in bt))} ｜ 同标的 {len(lk & bk)} 笔（只在实盘 {len(lk - bk)}，只在回测 {len(bk - lk)}）")
+    else:
+        recon = f"{P} 晚没有隔夜实盘账本（隔夜实盘 10/16 尾盘起）"
+    summary = {"nights": nights, "trades": len(pnl), "total_pnl": round(sum(pnl)),
+               "win_pct": round(100 * sum(x > 0 for x in pnl) / len(pnl), 1), "recon": recon}
+    return summary, head + "\n```\n" + "\n".join(per[-8:]) + "\n```\n" + recon
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="多组规则每日回测对比")
     ap.add_argument("--no-post", action="store_true")
@@ -107,13 +146,18 @@ def main(argv=None) -> int:
     live = live_result(today)
     live_line = f"实盘（B 账户）{live[0]} 笔 {money(live[1])}" if live else "实盘交易明细未找到"
     recon = reconcile(today)
+    try:
+        on_summary, on_text = overnight_compare()
+    except Exception as e:   # 隔夜回测失败不影响日内对比
+        on_summary, on_text = None, f"隔夜回测失败：{e}"
     summary = {"run_at": et_now().strftime("%Y-%m-%d %H:%M"), "days": days,
                "groups": {lb: {"name": name, "overrides": extra, "overall": ov[lb]} for name, lb, extra in GROUPS},
-               "by_day": {d: {lb: day_pnl(lb, d) for lb in labels} for d in days}, "live_today": live}
+               "by_day": {d: {lb: day_pnl(lb, d) for lb in labels} for d in days}, "live_today": live,
+               "overnight": on_summary}
     os.makedirs(os.path.join("backtests", "daily_compare"), exist_ok=True)
     with open(os.path.join("backtests", "daily_compare", f"{today}.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
-    print("\n".join(table)); print(per_day); print(live_line); print(recon)
+    print("\n".join(table)); print(per_day); print(live_line); print(recon); print(on_text)
     notifier = None if args.no_post else from_config(SystemConfig.load(None))
     if notifier:
         notifier.send(embeds=[{
@@ -125,6 +169,7 @@ def main(argv=None) -> int:
                                                    + f"\n{live_line}", "inline": False},
                 {"name": "实盘 vs 实盘A回测（对账）", "value": recon, "inline": False},
                 {"name": f"逐日（最近 {len(lines)} 天 / 累计 {len(days)} 天）", "value": "```\n" + per_day + "\n```", "inline": False},
+                {"name": "🌙 隔夜规则（尾盘结构 + 15:00 后同向大单 → 次日 09:35 卖）", "value": on_text[:1024], "inline": False},
             ],
             "footer": {"text": "真实回测（当天实盘标的 · 5 分钟盯市 · 晚 5 分钟用 Heatmap · 历史真实买卖价差）· 每笔 1 张；实盘 10/15 起用组合 A；约 11 月中做最终决定"},
         }])
