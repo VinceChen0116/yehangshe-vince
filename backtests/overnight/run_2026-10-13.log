@@ -874,3 +874,14 @@
 20:30:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00071000，5.1s 后免费重试（第 1 轮）
 20:31:02 [INFO] yhs.main: 【历史】NEE261016P00071000 真实 IV 序列 390 个点（1m）
 20:31:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00115000，5.0s 后免费重试（第 1 轮）
+20:32:03 [INFO] yhs.main: 【历史】NEM261016P00115000 真实 IV 序列 390 个点（1m）
+20:32:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00115000，5.2s 后免费重试（第 1 轮）
+20:32:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00115000，7.6s 后免费重试（第 2 轮）
+20:32:18 [INFO] yhs.main: 【历史】NEM261016P00115000 真实 IV 序列 389 个点（1m）
+20:32:20 [WARNING] yhs.client: 429 /v1/options/chain-history/NEM（RATE_LIMITED），按 Retry-After 等待 30.0s
+20:32:51 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEM，5.2s 后免费重试（第 1 轮）
+20:32:57 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEM，7.6s 后免费重试（第 2 轮）
+20:33:05 [INFO] yhs.overnight: 2026-10-13 NEM CLIFF O:NEM261016P00115000 距 3.6% | 成本 1.51 | 跳空 -2.031% | 09:35 66.5% / 09:45 66.5% / 09:55 107.4%
+20:33:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00110000，5.3s 后免费重试（第 1 轮）
+20:33:13 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00110000，7.6s 后免费重试（第 2 轮）
+20:33:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00110000，11.3s 后免费重试（第 3 轮）

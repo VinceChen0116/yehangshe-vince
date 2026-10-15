@@ -762,3 +762,16 @@
 20:30:04 [INFO] yhs.main: 【历史】GS261016C00880000 真实 IV 序列 390 个点（1m）
 20:31:02 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，5.3s 后免费重试（第 1 轮）
 20:31:08 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，7.6s 后免费重试（第 2 轮）
+20:32:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00880000，5.1s 后免费重试（第 1 轮）
+20:32:13 [INFO] yhs.main: 【历史】GS261016C00880000 真实 IV 序列 390 个点（1m）
+20:32:14 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，5.3s 后免费重试（第 1 轮）
+20:32:20 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，7.8s 后免费重试（第 2 轮）
+20:32:29 [INFO] yhs.overnight: 2026-10-14 GS SPRINGBOARD O:GS261016C00880000 距 0.7% | 成本 9.25 | 跳空 -0.759% | 09:35 -44.1% / 09:45 -62.4% / 09:55 -70.4%
+20:32:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00920000，5.2s 后免费重试（第 1 轮）
+20:32:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00920000，7.8s 后免费重试（第 2 轮）
+20:32:45 [INFO] yhs.main: 【历史】GS261016C00920000 真实 IV 序列 390 个点（1m）
+20:32:46 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，5.2s 后免费重试（第 1 轮）
+20:32:52 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，7.7s 后免费重试（第 2 轮）
+20:33:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00920000，5.0s 后免费重试（第 1 轮）
+20:33:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00920000，7.7s 后免费重试（第 2 轮）
+20:33:16 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00920000，11.5s 后免费重试（第 3 轮）
