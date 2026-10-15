@@ -849,3 +849,26 @@
 20:26:56 [INFO] yhs.main: 【历史】NASA261016P00022500 真实 IV 序列 307 个点（1m）
 20:26:57 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NASA，5.2s 后免费重试（第 1 轮）
 20:27:04 [INFO] yhs.overnight: 2026-10-13 NASA CLIFF O:NASA261016P00022500 距 1.4% | 成本 0.39 | 跳空 -2.337% | 09:35 0.8% / 09:45 0.9% / 09:55 0.9%
+20:28:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NASA261016P00021500，5.3s 后免费重试（第 1 轮）
+20:28:09 [INFO] yhs.main: 【历史】NASA261016P00021500 真实 IV 序列 390 个点（1m）
+20:28:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NASA261016P00020000，5.0s 后免费重试（第 1 轮）
+20:28:16 [INFO] yhs.main: 【历史】NASA261016P00020000 真实 IV 序列 390 个点（1m）
+20:28:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NBIS261016P00205000，5.2s 后免费重试（第 1 轮）
+20:28:23 [INFO] yhs.main: 【历史】NBIS261016P00205000 真实 IV 序列 390 个点（1m）
+20:28:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NBIS261016P00205000，5.1s 后免费重试（第 1 轮）
+20:28:30 [INFO] yhs.main: 【历史】NBIS261016P00205000 真实 IV 序列 390 个点（1m）
+20:28:31 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NBIS，5.2s 后免费重试（第 1 轮）
+20:28:37 [INFO] yhs.overnight: 2026-10-13 NBIS CLIFF O:NBIS261016P00205000 距 1.4% | 成本 5.20 | 跳空 -7.786% | 09:35 185.4% / 09:45 217.1% / 09:55 232.9%
+20:28:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NBIS261016P00195000，5.3s 后免费重试（第 1 轮）
+20:28:45 [INFO] yhs.main: 【历史】NBIS261016P00195000 真实 IV 序列 390 个点（1m）
+20:29:43 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NBIS261016P00195000，5.1s 后免费重试（第 1 轮）
+20:29:49 [INFO] yhs.main: 【历史】NBIS261016P00195000 真实 IV 序列 390 个点（1m）
+20:29:49 [INFO] yhs.overnight: 2026-10-13 NBIS CLIFF O:NBIS261016P00195000 距 1.4% | 成本 1.93 | 跳空 -7.786% | 09:35 318.1% / 09:45 395.5% / 09:55 419.3%
+20:29:49 [INFO] yhs.main: 【历史】NBIS261016P00185000 真实 IV 序列 390 个点（1m）
+20:29:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NBIS261016P00185000，5.0s 后免费重试（第 1 轮）
+20:29:56 [INFO] yhs.main: 【历史】NBIS261016P00185000 真实 IV 序列 390 个点（1m）
+20:29:56 [INFO] yhs.overnight: 2026-10-13 NBIS CLIFF O:NBIS261016P00185000 距 1.4% | 成本 0.58 | 跳空 -7.786% | 09:35 457.5% / 09:45 631.2% / 09:55 661.0%
+20:29:56 [INFO] yhs.main: 【历史】NEE261016P00078000 真实 IV 序列 199 个点（1m）
+20:29:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00074000，5.2s 后免费重试（第 1 轮）
+20:30:03 [INFO] yhs.main: 【历史】NEE261016P00074000 真实 IV 序列 390 个点（1m）
+20:30:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEE261016P00071000，5.1s 后免费重试（第 1 轮）

@@ -741,3 +741,22 @@
 20:26:53 [INFO] yhs.main: 【历史】GLW261016P00125000 真实 IV 序列 390 个点（1m）
 20:26:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GLW261016P00125000，5.0s 后免费重试（第 1 轮）
 20:27:00 [INFO] yhs.main: 【历史】GLW261016P00125000 真实 IV 序列 390 个点（1m）
+20:28:01 [INFO] yhs.overnight: 2026-10-14 GLW CLIFF O:GLW261016P00125000 距 1.2% | 成本 0.20 | 跳空 -5.546% | 09:35 38.8% / 09:45 -11.3% / 09:55 11.8%
+20:28:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOG261016P00342500，5.1s 后免费重试（第 1 轮）
+20:28:08 [INFO] yhs.main: 【历史】GOOG261016P00342500 真实 IV 序列 390 个点（1m）
+20:28:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOG261016P00342500，5.1s 后免费重试（第 1 轮）
+20:28:15 [INFO] yhs.main: 【历史】GOOG261016P00342500 真实 IV 序列 390 个点（1m）
+20:28:16 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GOOG，5.2s 后免费重试（第 1 轮）
+20:28:24 [INFO] yhs.overnight: 2026-10-14 GOOG CLIFF O:GOOG261016P00342500 距 1.0% | 成本 3.18 | 跳空 -1.05% | 09:35 31.4% / 09:45 -31.1% / 09:55 -36.9%
+20:28:26 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOG261016P00325000，5.2s 后免费重试（第 1 轮）
+20:28:32 [INFO] yhs.main: 【历史】GOOG261016P00325000 真实 IV 序列 390 个点（1m）
+20:28:33 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOG261016P00325000，5.1s 后免费重试（第 1 轮）
+20:28:39 [INFO] yhs.main: 【历史】GOOG261016P00325000 真实 IV 序列 390 个点（1m）
+20:28:42 [INFO] yhs.overnight: 2026-10-14 GOOG CLIFF O:GOOG261016P00325000 距 1.0% | 成本 0.21 | 跳空 -1.05% | 09:35 -5.1% / 09:45 -43.4% / 09:55 -48.5%
+20:29:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOG261016P00320000，5.0s 后免费重试（第 1 轮）
+20:29:46 [INFO] yhs.main: 【历史】GOOG261016P00320000 真实 IV 序列 390 个点（1m）
+20:29:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOG261016P00320000，5.2s 后免费重试（第 1 轮）
+20:29:53 [INFO] yhs.main: 【历史】GOOG261016P00320000 真实 IV 序列 390 个点（1m）
+20:29:57 [INFO] yhs.overnight: 2026-10-14 GOOG CLIFF O:GOOG261016P00320000 距 1.0% | 成本 0.17 | 跳空 -1.05% | 09:35 -39.1% / 09:45 -54.0% / 09:55 -59.0%
+20:29:58 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261016C00880000，5.2s 后免费重试（第 1 轮）
+20:30:04 [INFO] yhs.main: 【历史】GS261016C00880000 真实 IV 序列 390 个点（1m）

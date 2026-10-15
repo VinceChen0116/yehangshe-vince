@@ -1,0 +1,2 @@
+date,ticker,in_live,expiration,structure,spot_1555,pos_node,pos_gex_m,neg_node,neg_gex_m,dist_pct,target_move_pct,pos_share_pct,king_view
+2026-10-15,TSM,True,2026-10-16,SPRINGBOARD,422.5,420.0,13.16,425.0,-6.94,0.6,0.59,15.7,无

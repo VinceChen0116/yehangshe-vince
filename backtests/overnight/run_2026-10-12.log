@@ -924,3 +924,25 @@
 20:27:01 [INFO] yhs.main: 【历史】NEE261016P00071000 真实 IV 序列 390 个点（1m）
 20:27:01 [INFO] yhs.main: 【历史】NEM261016P00117000 真实 IV 序列 390 个点（1m）
 20:27:03 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEM，5.2s 后免费重试（第 1 轮）
+20:28:03 [INFO] yhs.main: 【历史】NEM261016P00117000 真实 IV 序列 200 个点（1m）
+20:28:04 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEM，5.1s 后免费重试（第 1 轮）
+20:28:10 [INFO] yhs.overnight: 2026-10-12 NEM CLIFF O:NEM261016P00117000 距 2.1% | 成本 2.06 | 跳空 0.162% | 09:35 -36.3% / 09:45 -36.0% / 09:55 -28.0%
+20:28:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00112000，5.1s 后免费重试（第 1 轮）
+20:28:17 [INFO] yhs.main: 【历史】NEM261016P00112000 真实 IV 序列 390 个点（1m）
+20:28:18 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00112000，5.1s 后免费重试（第 1 轮）
+20:28:24 [INFO] yhs.main: 【历史】NEM261016P00112000 真实 IV 序列 390 个点（1m）
+20:28:24 [INFO] yhs.overnight: 2026-10-12 NEM CLIFF O:NEM261016P00112000 距 2.1% | 成本 0.51 | 跳空 0.162% | 09:35 -70.3% / 09:45 -70.3% / 09:55 -56.8%
+20:28:25 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261016P00105000，5.0s 后免费重试（第 1 轮）
+20:28:31 [INFO] yhs.main: 【历史】NEM261016P00105000 真实 IV 序列 390 个点（1m）
+20:28:31 [INFO] yhs.main: 【历史】NET261016P00350000 真实 IV 序列 390 个点（1m）
+20:28:32 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NET，5.1s 后免费重试（第 1 轮）
+20:28:40 [INFO] yhs.main: 【历史】NET261016P00350000 真实 IV 序列 200 个点（1m）
+20:28:41 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NET，5.3s 后免费重试（第 1 轮）
+20:28:47 [INFO] yhs.overnight: 2026-10-12 NET CLIFF O:NET261016P00350000 距 2.4% | 成本 9.14 | 跳空 -0.67% | 09:35 -16.0% / 09:45 -44.0% / 09:55 -38.2%
+20:29:45 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NET261016P00332500，5.3s 后免费重试（第 1 轮）
+20:29:51 [INFO] yhs.main: 【历史】NET261016P00332500 真实 IV 序列 390 个点（1m）
+20:29:52 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NET261016P00332500，5.0s 后免费重试（第 1 轮）
+20:29:58 [INFO] yhs.main: 【历史】NET261016P00332500 真实 IV 序列 390 个点（1m）
+20:29:58 [INFO] yhs.overnight: 2026-10-12 NET CLIFF O:NET261016P00332500 距 2.4% | 成本 2.45 | 跳空 -0.702% | 09:35 -10.4% / 09:45 -27.0% / 09:55 -49.4%
+20:29:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NET261016P00320000，5.1s 后免费重试（第 1 轮）
+20:30:05 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NET261016P00320000，7.8s 后免费重试（第 2 轮）
