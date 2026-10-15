@@ -942,3 +942,39 @@
 21:11:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00040000，5.1s 后免费重试（第 1 轮）
 21:11:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00040000，7.7s 后免费重试（第 2 轮）
 21:11:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00040000，11.5s 后免费重试（第 3 轮）
+21:12:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00040000，17.1s 后免费重试（第 4 轮）
+21:12:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00040000，25.5s 后免费重试（第 5 轮）
+21:12:53 [INFO] yhs.main: 【历史】NVO261016C00040000 真实 IV 序列 390 个点（1m）
+21:12:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00042500，5.3s 后免费重试（第 1 轮）
+21:13:00 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVO261016C00042500，7.8s 后免费重试（第 2 轮）
+21:14:00 [INFO] yhs.main: 【历史】NVO261016C00042500 真实 IV 序列 390 个点（1m）
+21:14:00 [INFO] yhs.main: 【历史】OKTA261016C00227500 真实 IV 序列 390 个点（1m）
+21:14:01 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，5.3s 后免费重试（第 1 轮）
+21:14:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00227500，7.5s 后免费重试（第 2 轮）
+21:14:15 [INFO] yhs.main: 【历史】OKTA261016C00227500 真实 IV 序列 390 个点（1m）
+21:14:17 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OKTA，5.2s 后免费重试（第 1 轮）
+21:14:22 [INFO] yhs.overnight: 2026-10-13 OKTA SPRINGBOARD O:OKTA261016C00227500 距 3.2% | 成本 5.54 | 跳空 -2.093% | 09:35 -55.1% / 09:45 -39.5% / 09:55 -41.7%
+21:14:22 [INFO] yhs.main: 【历史】OKTA261016C00240000 真实 IV 序列 390 个点（1m）
+21:15:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00240000，5.3s 后免费重试（第 1 轮）
+21:15:27 [INFO] yhs.main: 【历史】OKTA261016C00240000 真实 IV 序列 390 个点（1m）
+21:15:27 [INFO] yhs.overnight: 2026-10-13 OKTA SPRINGBOARD O:OKTA261016C00240000 距 3.2% | 成本 1.26 | 跳空 -2.093% | 09:35 -67.1% / 09:45 -62.7% / 09:55 -53.4%
+21:15:27 [INFO] yhs.main: 【历史】OKTA261016C00250000 真实 IV 序列 390 个点（1m）
+21:15:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00250000，5.0s 后免费重试（第 1 轮）
+21:15:33 [INFO] yhs.main: 【历史】OKTA261016C00250000 真实 IV 序列 390 个点（1m）
+21:15:33 [INFO] yhs.overnight: 2026-10-13 OKTA SPRINGBOARD O:OKTA261016C00250000 距 3.2% | 成本 0.47 | 跳空 -2.093% | 09:35 -78.4% / 09:45 -78.4% / 09:55 -79.1%
+21:15:35 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ORCL261016C00143000，5.1s 后免费重试（第 1 轮）
+21:15:41 [INFO] yhs.main: 【历史】ORCL261016C00143000 真实 IV 序列 390 个点（1m）
+21:15:43 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ORCL261016C00143000，5.3s 后免费重试（第 1 轮）
+21:15:48 [INFO] yhs.main: 【历史】ORCL261016C00143000 真实 IV 序列 390 个点（1m）
+21:15:48 [INFO] yhs.overnight: 2026-10-13 ORCL SPRINGBOARD O:ORCL261016C00143000 距 2.1% | 成本 3.32 | 跳空 -4.819% | 09:35 -77.4% / 09:45 -87.8% / 09:55 -86.7%
+21:15:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ORCL261016C00150000，5.2s 后免费重试（第 1 轮）
+21:15:55 [INFO] yhs.main: 【历史】ORCL261016C00150000 真实 IV 序列 390 个点（1m）
+21:15:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ORCL261016C00150000，5.0s 后免费重试（第 1 轮）
+21:16:02 [INFO] yhs.main: 【历史】ORCL261016C00150000 真实 IV 序列 390 个点（1m）
+21:16:02 [INFO] yhs.overnight: 2026-10-13 ORCL SPRINGBOARD O:ORCL261016C00150000 距 2.1% | 成本 1.04 | 跳空 -4.819% | 09:35 -81.9% / 09:45 -90.9% / 09:55 -90.9%
+21:16:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ORCL261016C00155000，5.1s 后免费重试（第 1 轮）
+21:16:14 [INFO] yhs.main: 【历史】ORCL261016C00155000 真实 IV 序列 390 个点（1m）
+21:16:20 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ORCL261016C00155000，5.0s 后免费重试（第 1 轮）
+21:16:25 [INFO] yhs.main: 【历史】ORCL261016C00155000 真实 IV 序列 390 个点（1m）
+21:16:25 [INFO] yhs.overnight: 2026-10-13 ORCL SPRINGBOARD O:ORCL261016C00155000 距 2.1% | 成本 0.43 | 跳空 -4.819% | 09:35 -83.5% / 09:45 -91.7% / 09:55 -91.7%
+21:16:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OSCR261016C00034000，5.2s 后免费重试（第 1 轮）

@@ -1021,3 +1021,31 @@
 21:11:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00250000，7.7s 后免费重试（第 2 轮）
 21:11:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00250000，11.5s 后免费重试（第 3 轮）
 21:11:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OKTA261016C00250000，16.9s 后免费重试（第 4 轮）
+21:12:26 [INFO] yhs.main: 【历史】OKTA261016C00250000 真实 IV 序列 390 个点（1m）
+21:12:26 [INFO] yhs.overnight: 2026-10-12 OKTA SPRINGBOARD O:OKTA261016C00250000 距 3.0% | 成本 0.53 | 跳空 1.418% | 09:35 -61.4% / 09:45 -53.1% / 09:55 -53.0%
+21:12:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00037000，5.2s 后免费重试（第 1 轮）
+21:12:33 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00037000，7.8s 后免费重试（第 2 轮）
+21:12:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00037000，11.5s 后免费重试（第 3 轮）
+21:12:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00037000，17.0s 后免费重试（第 4 轮）
+21:13:12 [INFO] yhs.main: 【历史】OUST261016P00037000 真实 IV 序列 390 个点（1m）
+21:13:13 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OUST，5.1s 后免费重试（第 1 轮）
+21:13:19 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OUST，7.7s 后免费重试（第 2 轮）
+21:13:28 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OUST，11.5s 后免费重试（第 3 轮）
+21:13:40 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OUST，17.0s 后免费重试（第 4 轮）
+21:13:58 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OUST，25.4s 后免费重试（第 5 轮）
+21:15:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00037000，5.2s 后免费重试（第 1 轮）
+21:15:31 [INFO] yhs.main: 【历史】OUST261016P00037000 真实 IV 序列 390 个点（1m）
+21:15:32 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/OUST，5.1s 后免费重试（第 1 轮）
+21:15:37 [INFO] yhs.overnight: 2026-10-12 OUST CLIFF O:OUST261016P00037000 距 13.4% | 成本 1.30 | 跳空 -3.816% | 09:35 11.9% / 09:45 -3.7% / 09:55 -3.8%
+21:15:45 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00034500，5.2s 后免费重试（第 1 轮）
+21:15:51 [INFO] yhs.main: 【历史】OUST261016P00034500 真实 IV 序列 390 个点（1m）
+21:15:52 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00034500，5.3s 后免费重试（第 1 轮）
+21:15:58 [INFO] yhs.main: 【历史】OUST261016P00034500 真实 IV 序列 390 个点（1m）
+21:15:58 [INFO] yhs.overnight: 2026-10-12 OUST CLIFF O:OUST261016P00034500 距 13.4% | 成本 0.49 | 跳空 -3.816% | 09:35 -16.0% / 09:45 -18.7% / 09:55 -39.0%
+21:15:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00033500，5.1s 后免费重试（第 1 轮）
+21:16:05 [INFO] yhs.main: 【历史】OUST261016P00033500 真实 IV 序列 390 个点（1m）
+21:16:22 [WARNING] yhs.client: 网络异常 /v1/options/contract-greeks-series/OUST261016P00033500：<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)>，4.3s 后第 1 次重试
+21:16:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/OUST261016P00033500，5.2s 后免费重试（第 1 轮）
+21:16:33 [INFO] yhs.main: 【历史】OUST261016P00033500 真实 IV 序列 390 个点（1m）
+21:16:33 [INFO] yhs.overnight: 2026-10-12 OUST CLIFF O:OUST261016P00033500 距 13.4% | 成本 0.25 | 跳空 -3.816% | 09:35 -77.1% / 09:45 -77.2% / 09:55 -80.0%
+21:16:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/PANW261016P00402500，5.1s 后免费重试（第 1 轮）
