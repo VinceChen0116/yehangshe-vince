@@ -1,0 +1,5 @@
+21:44:11 [INFO] yhs.overnight_rules: 2026-10-08 AAPL CLIFF（king）342.50→337.50 距 0.34% | 15:00 后大单 14 笔
+21:44:12 [INFO] yhs.overnight_rules: 2026-10-08 ADI CLIFF（local）407.50→405.00 距 0.60% | 15:00 后大单 2 笔
+21:44:13 [INFO] yhs.overnight_rules: 2026-10-08 AFRM SPRINGBOARD（local）76.00→77.00 距 0.71% | 15:00 后大单 0 笔
+21:44:17 [INFO] yhs.overnight_rules: 2026-10-08 AMAT SPRINGBOARD（local）505.00→512.50 距 0.18% | 15:00 后大单 0 笔
+21:44:17 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s

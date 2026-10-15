@@ -1,0 +1,5 @@
+21:44:07 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:08 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:10 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:11 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
+21:44:13 [WARNING] yhs.client: 429 /v1/flow/trades（IN_FLIGHT_EXCEEDED），按 Retry-After 等待 1.0s
