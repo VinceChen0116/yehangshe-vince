@@ -209,7 +209,7 @@ def main(argv=None) -> int:
     ap.add_argument("--need", type=int, default=0, help="至少几根成立（默认全部）")
     ap.add_argument("--one-contract", action="store_true", help="每笔 1 张（旧口径；默认每笔约 $1,000）")
     ap.add_argument("--max-dir", type=int, default=0, help="同方向（Call / Put）每晚最多几笔（0 = 不限）")
-    ap.add_argument("--max-sector", type=int, default=0, help="同板块每晚最多几笔（0 = 不限，板块见 sectors.py）")
+    ap.add_argument("--max-sector", type=int, default=3, help="同板块每晚最多几笔（默认 3 = 实盘；0 = 不限，板块见 sectors.py）")
     ap.add_argument("--log-file", default=os.path.join(OUT, "run.log"))
     args = ap.parse_args(argv)
     cfg = SystemConfig.load(None)

@@ -8,7 +8,7 @@ overnight_live.py —— 隔夜期权模拟实盘（2026-10-15 用户定的规�
   3. Flow 大单确认（必须）：今天 15:00–15:50该标的有同方向（Call / Put）的主动买入大单（成交在 Ask 或 Ask 以上），单笔权利金 ≥ $5 万
   4. 合约：同一到期的第一档虚值（接近平值），每笔约 $1,000（$750–$1,250，单张超 $1,250 不开）；按实时报价的 ask 买入，bid 为 0、没有报价、
      或买卖价差超过中间价 25% 的不开
-  5. 每晚最多 10 笔，按 15:00 后同方向大单权利金合计从大到小排
+  5. 每晚最多 10 笔、同板块最多 3 笔（sectors.py），按 15:00 后同方向大单权利金合计从大到小排
 次日出场（--close，约 09:15 启动）：
   09:35 起每分钟查实时报价，bid > 0 就按 bid 卖出；09:45 还没卖掉的按当时 bid 记（没有报价按 0 记）。夜里不设止损。
 记账：live/overnight_<开仓日>.csv（开仓时写入，次日平仓后补全出场字段）；开 / 平仓都发 Discord。
@@ -33,11 +33,13 @@ from detector import FLOW_TRADES_PATH, detect_structure, extract_rows, parse_hea
 from main import QuoteBook
 from notify import from_config
 from paper_trader import occ_symbol
+from sectors import sector_of
 from yhs_client import YHSClient
 
 log = logging.getLogger("yhs.overnight_live")
 LIVE_DIR = "live"
 MAX_POSITIONS = 10
+MAX_PER_SECTOR = 3   # 同板块每晚最多 3 笔（2026-10-16 用户定，板块见 sectors.py）
 BUDGET, BUDGET_BAND = 1000.0, 0.25   # 每笔目标投入 $1,000，允许 $750–$1,250（2026-10-16 用户定）
 
 
@@ -267,9 +269,14 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
     cands.sort(key=lambda x: -x[0])
     log.info("【隔夜·候选】结构 + 大单都满足 %d 个：%s", len(cands), "、".join(c[1] for c in cands) or "无")
     rows, quotes = [], QuoteBook(client)
+    sec_n = {}
     for usd, t, exp, snap, st, mode, fl in cands:
         if len(rows) >= MAX_POSITIONS:
             break
+        sec = sector_of(t)
+        if sec_n.get(sec, 0) >= MAX_PER_SECTOR:
+            log.info("【隔夜·跳过】%s 同板块（%s）已 %d 笔", t, sec, MAX_PER_SECTOR)
+            continue
         K = first_otm(snap, st.right)
         if K is None:
             continue
@@ -295,6 +302,7 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
                      "neg_node": st.neg_strike, "dist_pct": round(st.distance_pct * 100, 2), "flow_n": fl["n"],
                      "flow_usd": fl["usd"], "flow_max": fl["max"], "entry_time": et_now().strftime("%H:%M"),
                      "entry_bid": q["bid"], "entry_ask": q["ask"], "entry_price": q["ask"], "status": "OPEN"})
+        sec_n[sec] = sec_n.get(sec, 0) + 1
         log.info("【隔夜·开仓】%s %s %s × %d 张 | ask %.2f（bid %.2f）投入 $%.0f | 大单 %d 笔 $%.0fK", rows[-1]["position_id"],
                  t, sym, qty, q["ask"], q["bid"], q["ask"] * 100 * qty, fl["n"], fl["usd"] / 1e3)
     if not dry:

@@ -47,6 +47,8 @@ GROUPS = [  # (实验名, 显示名, 相对当前默认配置（= 实盘，2026-
 ]
 EXP = os.path.join("backtests", "exp")
 ON_VARIANTS = [  # 隔夜规则对照组：(目录后缀, 显示名, overnight_rules_bt.py 参数)
+    ("nosector", "不限板块", ["--max-sector", "0"]),
+    ("dir5", "同方向≤5", ["--max-dir", "5"]),
     ("nextday", "只买次日到期", ["--next-day-only"]),
     ("tol20", "结构容差0.2%", ["--tol", "0.002"]),
     ("2of3", "3根里2根", ["--bars", "15:35,15:40,15:45", "--need", "2"]),
