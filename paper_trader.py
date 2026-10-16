@@ -392,6 +392,20 @@ class PaperTrader:
                 return self.close(p, spot, now_et, "STOP_LOSS", mid)
             return None
 
+        # 零动能时间止损（实验）：开仓满 N 分钟仍未出现像样的浮盈 → 按当前可卖价离场
+        if (cfg.dead_momentum_min > 0 and p.stage == "INITIAL"
+                and (now_et - p.entry_time).total_seconds() >= cfg.dead_momentum_min * 60
+                and p.peak_roi_pct < cfg.dead_momentum_peak_pct):
+            return self.close(p, spot, now_et, "DEAD_MOMENTUM", mid)
+
+        # 连续棘轮（实验）：峰值 ≥ ratchet_start_pct 后锁定 keep×峰值−offset
+        if cfg.ratchet_start_pct > 0 and p.peak_roi_pct >= cfg.ratchet_start_pct:
+            lock = cfg.ratchet_keep * p.peak_roi_pct - cfg.ratchet_offset_pct
+            if lock > p.stop_pct:
+                p.stop_pct = lock
+                if p.stage == "INITIAL":
+                    p.stage = "RATCHET"
+
         # 状态机：止损线只升不降
         if p.peak_roi_pct >= cfg.trail_trigger_pct:
             new_stop = max(p.stop_pct, p.peak_roi_pct - cfg.trail_giveback_pct, cfg.breakeven_stop_pct)
@@ -415,7 +429,8 @@ class PaperTrader:
             if broken:
                 return self.close(p, spot, now_et, "UNDERLYING_STOP", mid)
         if roi <= p.stop_pct:
-            reason = {"INITIAL": "STOP_LOSS", "BREAKEVEN": "BREAKEVEN_STOP", "TRAILING": "TRAILING_STOP"}[p.stage]
+            reason = {"INITIAL": "STOP_LOSS", "BREAKEVEN": "BREAKEVEN_STOP", "TRAILING": "TRAILING_STOP",
+                      "RATCHET": "RATCHET_STOP"}[p.stage]
             return self.close(p, spot, now_et, reason, mid)
         return None
 
@@ -537,7 +552,18 @@ _REASON_CN = {
     "STOP_LOSS": "硬止损", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈", "UNDERLYING_STOP": "标的破节点止损",
     "HARD_TAKE_PROFIT": "硬顶止盈+150%", "EOD_FORCE_CLOSE": "收盘强平", "QUOTA_HALT": "配额熔断平仓",
     "REPLACED": "被更高分信号替换", "UNDERLYING_TRAIL": "标的追踪止盈",
+    "RATCHET_STOP": "棘轮锁利", "DEAD_MOMENTUM": "零动能时间止损",
 }
+
+
+def entry_rr(st, stop_buffer_pct: float) -> float | None:
+    """开仓时的结构赔率：现货到目标负节点的距离 ÷ 现货到止损位（正节点再多 buffer）的距离。只用开仓时已知的数据。"""
+    s = st.spot
+    if not s or not st.pos_strike or not st.neg_strike:
+        return None
+    reward = abs(st.neg_strike - s)
+    risk = abs(s - st.pos_strike) + st.pos_strike * stop_buffer_pct
+    return reward / risk if risk > 0 else None
 
 
 def _strike_step(spot: float) -> float:
@@ -626,6 +652,11 @@ class SessionEngine:
             if sig.score < self.cfg.min_signal_score:
                 skipped.append(f"{sig.ticker}({sig.score:.2f}<门槛)")
                 continue
+            if self.cfg.min_entry_rr > 0:
+                rr = entry_rr(sig.structure, self.cfg.underlying_stop_buffer_pct)
+                if rr is not None and rr < self.cfg.min_entry_rr:
+                    skipped.append(f"{sig.ticker}(R/R {rr:.2f}<{self.cfg.min_entry_rr})")
+                    continue
             ok, why = self.can_enter(sig.ticker, now_et)
             if ok and self.cfg.max_same_direction and sum(
                     1 for p in self.trader.open_positions() if p.right == sig.structure.right) >= self.cfg.max_same_direction:

@@ -194,6 +194,17 @@ class SystemConfig:
     # 后改为按标的价格追踪：记录开仓后对我们最有利的现货价，回撤超过 underlying_trail_pct 即平仓（UNDERLYING_TRAIL）
     trail_mode: str = "option"
     underlying_trail_pct: float = 0.003
+    # 连续棘轮（实验，0 = 关闭）：峰值浮盈 ≥ ratchet_start_pct 后，止损线 = ratchet_keep × 峰值 − ratchet_offset_pct（只升不降），
+    # 填补"+35% 保本 / +60% 追踪"之前没有利润保护的区间。仅 trail_mode="option" 生效。
+    ratchet_start_pct: float = 0.0
+    ratchet_keep: float = 0.8
+    ratchet_offset_pct: float = 5.5
+    # 零动能时间止损（实验，0 = 关闭）：开仓满 dead_momentum_min 分钟时，若至今峰值浮盈仍 < dead_momentum_peak_pct，
+    # 按当时可卖价平仓（DEAD_MOMENTUM）。只用开仓以来已发生的数据，不看未来。
+    dead_momentum_min: int = 0
+    dead_momentum_peak_pct: float = 5.0
+    # 开仓赔率门槛（实验，0 = 关闭）：现货→目标负节点距离 ÷ 现货→止损位（正节点 + underlying_stop_buffer_pct）距离 < 此值不开仓
+    min_entry_rr: float = 0.0
     direction_hit_pct: float = 15.0       # 峰值浮盈 ≥ +15% 判定方向正确
 
     max_open_positions: int = 8           # 同时持仓上限（2026-10-12 用户由 5 调为 8）
