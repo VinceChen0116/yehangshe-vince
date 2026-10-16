@@ -310,6 +310,44 @@ def live_universe(day: dt.date, base: str | None = None) -> list[str]:
     return []
 
 
+DEALER_GEX_HISTORY_PATH = "/v1/derived/dealer-gex/{ticker}/history"
+
+
+def dealer_gex_path(cfg: SystemConfig, day: dt.date, ticker: str) -> str:
+    return os.path.join(archive_root(cfg), "dealer_gex", day.isoformat(), f"{ticker}.json")
+
+
+def archive_dealer_gex(client, cfg: SystemConfig, day: dt.date, tickers: list, dry_run: bool = False) -> int:
+    """Dealer GEX（0DTE，即 PULSE 背后的模型数据）当天全部 5 分钟快照：前 5 个价位（正负、相对强度、king/gatekeeper）
+    + gamma flip / call wall / put wall / 总 GEX。服务端只保留 3 个交易日，每只每天约 1 次配额。已存的跳过。返回新存只数。"""
+    n = 0
+    for t in tickers:
+        fp = dealer_gex_path(cfg, day, t)
+        if os.path.exists(fp) or dry_run:
+            continue
+        rows, cursor = [], None
+        try:
+            for _ in range(5):
+                payload = client.get(DEALER_GEX_HISTORY_PATH.format(ticker=t),
+                                     {"from": et_datetime(day, "09:30").isoformat(),
+                                      "to": et_datetime(day, "16:00").isoformat(), "limit": 100, "cursor": cursor})
+                data = payload.get("data") if isinstance(payload, dict) else None
+                rows += data if isinstance(data, list) else []
+                cursor = (payload.get("_meta") or {}).get("next_cursor") if isinstance(payload, dict) else None
+                if not cursor:
+                    break
+        except QuotaExhausted:
+            raise
+        except Exception as e:   # 该标的没有 0DTE Dealer GEX 等：记下跳过
+            log.info("【Dealer GEX】%s %s 获取失败：%s", day, t, e)
+            continue
+        rows.sort(key=lambda r: r.get("snapshot_at") or "")
+        _write_json(fp, rows)
+        n += 1
+    log.info("【Dealer GEX】%s 新存档 %d 只", day, n)
+    return n
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Heatmap 每日存档（服务端仅保留 3 个交易日）")
     ap.add_argument("--date", help="只存档指定交易日 YYYY-MM-DD")
@@ -363,6 +401,8 @@ def main(argv=None) -> int:
                     log.info("%s 追加实盘标的 %d 只：%s", d, len(extra), ",".join(extra))
                     day_tickers = tickers + extra
             ok &= archive_day(client, cfg, d, day_tickers, today, args.dry_run, args.expiries)["complete"]
+            if d < today or now >= et_datetime(d, "16:10"):   # 收盘后才存（盘中存会缺后半天）
+                archive_dealer_gex(client, cfg, d, day_tickers, args.dry_run)
     except QuotaExhausted as e:
         log.critical("配额熔断，停止存档：%s", e)
         return 3
