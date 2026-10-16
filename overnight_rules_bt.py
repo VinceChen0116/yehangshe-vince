@@ -31,6 +31,7 @@ from main import HistoryClient
 from notify import from_config
 from overnight import half_spread
 from overnight_live import size_contracts
+from sectors import sector_of
 from paper_trader import occ_symbol
 from yhs_client import YHSClient
 
@@ -116,7 +117,8 @@ def first_otm(snap, right: str):
 
 
 def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = ENTRY, next_day_only: bool = False,
-              tol: float = 0.0, bars: tuple = BARS, need: int = 0, sizing: bool = True) -> list:
+              tol: float = 0.0, bars: tuple = BARS, need: int = 0, sizing: bool = True,
+              max_dir: int = 0, max_sector: int = 0) -> list:
     lcfg = copy.copy(cfg)
     lcfg.node_mode = "local"
     hp, hs = HistoryClient(client, cfg, P), HistoryClient(client, cfg, S)
@@ -134,9 +136,17 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = E
             cands.append((sum(float(x.get("premium_usd") or 0) for x in fl), len(fl), t, exp, snap, st, mode))
     cands.sort(key=lambda x: -x[0])
     out = []
+    dir_n, sec_n = {}, {}
     for usd, n, t, exp, snap, st, mode in cands:
         if len(out) >= MAX_POS:
             break
+        if max_dir and dir_n.get(st.right, 0) >= max_dir:
+            log.info("%s %s 放弃：同方向（%s）已 %d 笔", P, t, st.right, max_dir)
+            continue
+        sec = sector_of(t)
+        if max_sector and sec_n.get(sec, 0) >= max_sector:
+            log.info("%s %s 放弃：同板块（%s）已 %d 笔", P, t, sec, max_sector)
+            continue
         K = first_otm(snap, st.right)
         if K is None:
             continue
@@ -171,7 +181,7 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = E
             log.info("%s %s 次日没有价格，跳过", P, sym)
             continue
         und = hs.underlying_at(sym, et_datetime(S, "09:35"))
-        row = {"night": f"{P}→{S}", "ticker": t, "structure": st.structure, "node_mode": mode, "contract": sym,
+        row = {"night": f"{P}→{S}", "ticker": t, "sector": sec, "structure": st.structure, "node_mode": mode, "contract": sym,
                "spot": round(snap.spot, 2), "pos_node": st.pos_strike, "neg_node": st.neg_strike,
                "dist_pct": round(st.distance_pct * 100, 2), "flow_late_n": n, "flow_late_usd": round(usd),
                "entry": round(cost, 3), "exit": round(bid, 3), "exit_time": when,
@@ -180,6 +190,8 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = E
                "qty": qty, "invested": round(cost * 100 * qty),
                "pnl_usd": round((bid - cost) * 100 * qty, 1), "roi_pct": round((bid / cost - 1) * 100, 1)}
         out.append(row)
+        dir_n[st.right] = dir_n.get(st.right, 0) + 1
+        sec_n[sec] = sec_n.get(sec, 0) + 1
         log.info("%s 开 %s %s 成本 %.2f → %s 卖 %.2f（%+.1f%%）跳空 %s%%", P, t, sym, cost, when, bid, row["roi_pct"], row["gap_pct"])
     return out
 
@@ -196,6 +208,8 @@ def main(argv=None) -> int:
     ap.add_argument("--bars", default=",".join(BARS), help="用哪几根 Heatmap（逗号分隔）")
     ap.add_argument("--need", type=int, default=0, help="至少几根成立（默认全部）")
     ap.add_argument("--one-contract", action="store_true", help="每笔 1 张（旧口径；默认每笔约 $1,000）")
+    ap.add_argument("--max-dir", type=int, default=0, help="同方向（Call / Put）每晚最多几笔（0 = 不限）")
+    ap.add_argument("--max-sector", type=int, default=0, help="同板块每晚最多几笔（0 = 不限，板块见 sectors.py）")
     ap.add_argument("--log-file", default=os.path.join(OUT, "run.log"))
     args = ap.parse_args(argv)
     cfg = SystemConfig.load(None)
@@ -215,7 +229,7 @@ def main(argv=None) -> int:
     for P, S in pairs:
         tickers = base + [t for t in (live_universe(P) or []) if t not in base]
         rows = run_night(cfg, client, P, S, tickers, args.entry, args.next_day_only, args.tol,
-                         tuple(args.bars.split(",")), args.need, not args.one_contract)
+                         tuple(args.bars.split(",")), args.need, not args.one_contract, args.max_dir, args.max_sector)
         with open(os.path.join(OUT, f"trades_{P}.csv"), "w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0]) if rows else ["night"])
             w.writeheader()

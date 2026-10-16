@@ -1,0 +1,31 @@
+"""
+sectors.py —— 标的 → 板块（隔夜单"同板块最多 N 笔"用；手工归类，按主营业务，不是官方 GICS）
+不在表里的标的各自算一个板块（不受同板块上限影响）。
+"""
+from __future__ import annotations
+
+_GROUPS = {
+    "半导体": "AAOI ADI AEHR ALAB AMAT AMD AMKR ARM ASML AVGO AXTI CRDO GFS INTC LRCX MPWR MRVL MU MXL NVDA ON "
+              "QCOM SKHY SNDK SOXL STM TER TSEM TSM TXN UCTT VICR WOLF CDNS SNPS",
+    "硬件网络存储": "AAPL ANET CIEN COHR CSCO DELL FN GLW HPE HPQ LITE SMCI STX TTMI WDC VRT CRWV NBIS",
+    "软件": "ADBE ADSK APP BOX CRM CRWD DDOG DUOL FIG FTNT INTU MDB MNDY MSFT NET NOW OKTA ORCL PANW PLTR S SAP "
+            "SNOW TEAM U WDAY ZM ZS IBM INOD SYM TEM",
+    "互联网媒体": "AMZN BABA CHTR CMCSA DASH DIS GOOG GOOGL JD META NFLX PDD RBLX RDDT SHOP SPOT TCOM TTWO UBER",
+    "金融": "BAC BRKB C COIN CRCL FISV GS HOOD HSBC ICE JPM MS PYPL SCHW V WFC AFRM LMND OSCR",
+    "加密矿企": "APLD BMNR HUT IREN MSTR",
+    "医疗": "BMY BSX HIMS ISRG JNJ LLY MDT MRK MRNA NKTR NVO PFE QURE UNH VKTX",
+    "能源": "BTU CVX DVN OXY SHEL SLB WMB XOM YPF",
+    "电力公用": "BE CCJ CEG ENPH ES FSLR GEV GNRC NEE OKLO VST FPS HNGE",
+    "工业国防": "AVAV BA CAT DE LMT RTX UPS ASTS RKLB NASA UMAC OUST",
+    "消费": "BBY CCL CELH COST DAL DKS GM GME HD KO MCD NKE PEP PG QSR SBUX TGT TSLA WMT CVNA",
+    "材料": "DOW FCX MP NEM SCCO",
+    "电信": "T VZ",
+    "量子": "IONQ",
+    "大盘指数": "SPY QQQ TQQQ",
+    "债券": "TLT",
+}
+SECTOR = {t: g for g, s in _GROUPS.items() for t in s.split()}
+
+
+def sector_of(ticker: str) -> str:
+    return SECTOR.get(ticker, f"_{ticker}")
