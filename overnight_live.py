@@ -6,7 +6,7 @@ overnight_live.py —— 隔夜期权模拟实盘（2026-10-15 用户定的规�
   2. 结构：标记 15:40、15:45 的两个 5 分钟 Heatmap 快照（到期 = 今天之后最近一个有数据的到期，能过夜）都识别出同一结构，
      局部节点（node_mode="local"）或全局节点（最大正 / 负 GEX）任一成立即可：跳板 → 买 Call，悬崖 → 买 Put
   3. Flow 大单确认（必须）：今天 15:00–15:50该标的有同方向（Call / Put）的主动买入大单（成交在 Ask 或 Ask 以上），单笔权利金 ≥ $5 万
-  4. 合约：同一到期的第一档虚值（接近平值），每笔 1 张；按实时报价的 ask 买入，bid 为 0、没有报价、
+  4. 合约：同一到期的第一档虚值（接近平值），每笔约 $1,000（$750–$1,250，单张超 $1,250 不开）；按实时报价的 ask 买入，bid 为 0、没有报价、
      或买卖价差超过中间价 25% 的不开
   5. 每晚最多 10 笔，按 15:00 后同方向大单权利金合计从大到小排
 次日出场（--close，约 09:15 启动）：
@@ -38,6 +38,20 @@ from yhs_client import YHSClient
 log = logging.getLogger("yhs.overnight_live")
 LIVE_DIR = "live"
 MAX_POSITIONS = 10
+BUDGET, BUDGET_BAND = 1000.0, 0.25   # 每笔目标投入 $1,000，允许 $750–$1,250（2026-10-16 用户定）
+
+
+def size_contracts(price: float) -> int:
+    """按每笔 $1,000（±25%）算张数：取落在 $750–$1,250 内、最接近 $1,000 的张数；单张就超过 $1,250 返回 0（不开）。"""
+    per = price * 100
+    if per <= 0:
+        return 0
+    lo, hi = BUDGET * (1 - BUDGET_BAND), BUDGET * (1 + BUDGET_BAND)
+    best = 0
+    for n in range(1, int(hi // per) + 1):
+        if lo <= n * per <= hi and (not best or abs(n * per - BUDGET) < abs(best * per - BUDGET)):
+            best = n
+    return best
 FLOW_MIN_PREMIUM = 50000
 FLOW_SINCE = "15:00"   # 只看尾盘的同向大单
 MAX_SPREAD = 0.25      # (ask - bid) / 中间价 超过 25% 不开：一买一卖先亏掉价差
@@ -46,7 +60,7 @@ BAR1, BAR2 = "15:40", "15:45"   # 两根确认用的 Heatmap；标记 T 的段�
 SCAN1_AT, SCAN2_AT = dt.timedelta(hours=15, minutes=45, seconds=15), dt.timedelta(hours=15, minutes=50, seconds=15)
 FLOW_UNTIL = "15:50"   # 大单统计截止（与回测一致）
 SELL_START, SELL_DEADLINE = "09:35", "09:45"
-FIELDS = ["position_id", "open_date", "ticker", "structure", "node_mode", "right", "contract", "expiration", "strike",
+FIELDS = ["position_id", "open_date", "ticker", "structure", "node_mode", "right", "contract", "expiration", "strike", "qty",
           "spot", "pos_node", "neg_node", "dist_pct", "flow_n", "flow_usd", "flow_max", "entry_time", "entry_bid",
           "entry_ask", "entry_price", "exit_time", "exit_bid", "exit_price", "exit_note", "pnl_usd", "roi_pct", "status"]
 
@@ -271,19 +285,23 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
             log.warning("【隔夜·放弃】%s %s 买卖价差 %.0f%%（bid %.2f / ask %.2f）> %.0f%%，不开", t, sym, spread * 100,
                         q["bid"], q["ask"], MAX_SPREAD * 100)
             continue
-        rows.append({"position_id": f"ON{day.strftime('%Y%m%d')}-{len(rows) + 1:02d}", "open_date": day.isoformat(),
+        qty = size_contracts(q["ask"])
+        if not qty:
+            log.warning("【隔夜·放弃】%s %s 单张 $%.0f 超过每笔上限 $%.0f，不开", t, sym, q["ask"] * 100, BUDGET * (1 + BUDGET_BAND))
+            continue
+        rows.append({"position_id": f"ON{day.strftime('%Y%m%d')}-{len(rows) + 1:02d}", "open_date": day.isoformat(), "qty": qty,
                      "ticker": t, "structure": st.structure, "node_mode": mode, "right": st.right, "contract": sym,
                      "expiration": exp, "strike": K, "spot": round(snap.spot, 2), "pos_node": st.pos_strike,
                      "neg_node": st.neg_strike, "dist_pct": round(st.distance_pct * 100, 2), "flow_n": fl["n"],
                      "flow_usd": fl["usd"], "flow_max": fl["max"], "entry_time": et_now().strftime("%H:%M"),
                      "entry_bid": q["bid"], "entry_ask": q["ask"], "entry_price": q["ask"], "status": "OPEN"})
-        log.info("【隔夜·开仓】%s %s %s | ask %.2f（bid %.2f）| 大单 %d 笔 $%.0fK", rows[-1]["position_id"], t, sym,
-                 q["ask"], q["bid"], fl["n"], fl["usd"] / 1e3)
+        log.info("【隔夜·开仓】%s %s %s × %d 张 | ask %.2f（bid %.2f）投入 $%.0f | 大单 %d 笔 $%.0fK", rows[-1]["position_id"],
+                 t, sym, qty, q["ask"], q["bid"], q["ask"] * 100 * qty, fl["n"], fl["usd"] / 1e3)
     if not dry:
         write_ledger(day, rows)
     if notifier and not dry:
         lines = [f"{'🟢 Call' if r['right'] == 'C' else '🔴 Put'} **{r['ticker']}** {r['strike']:g}{r['right']} {r['expiration'][5:]}"
-                 f" @ ${r['entry_price']:.2f} | {'局部' if r['node_mode'] == 'local' else '全局'}"
+                 f" ×{r['qty']} @ ${r['entry_price']:.2f}（${r['entry_price'] * 100 * r['qty']:,.0f}）| {'局部' if r['node_mode'] == 'local' else '全局'}"
                  f"{'跳板' if r['structure'] == 'SPRINGBOARD' else '悬崖'} {r['pos_node']:g}→{r['neg_node']:g}"
                  f" | 大单 {r['flow_n']} 笔 ${r['flow_usd'] / 1e3:,.0f}K" for r in rows]
         notifier.send(embeds=[{"title": f"🌙 {day} 隔夜单开仓 {len(rows)} 笔（次日 09:35–09:45 跳空平仓）",
@@ -316,7 +334,7 @@ def do_close(cfg, client, notifier, day: dt.date, dry: bool) -> int:
                 entry = float(r["entry_price"])
                 r.update({"exit_time": et_now().strftime("%H:%M"), "exit_bid": bid, "exit_price": bid,
                           "exit_note": "" if bid > 0 else ("09:45 仍无报价，按 0 记" if not q else "09:45 bid 为 0"),
-                          "pnl_usd": round((bid - entry) * 100, 2), "roi_pct": round((bid / entry - 1) * 100, 1),
+                          "pnl_usd": round((bid - entry) * 100 * int(r.get("qty") or 1), 2), "roi_pct": round((bid / entry - 1) * 100, 1),
                           "status": "CLOSED"})
                 open_rows.remove(r)
                 log.info("【隔夜·平仓】%s %s %s | 买 %.2f → 卖 %.2f | %+.1f%% $%+.0f", r["position_id"], r["ticker"],
@@ -328,7 +346,7 @@ def do_close(cfg, client, notifier, day: dt.date, dry: bool) -> int:
     total = sum(float(r["pnl_usd"] or 0) for r in rows)
     if notifier and not dry:
         lines = [f"{'✅' if float(r['pnl_usd']) > 0 else '❌'} **{r['ticker']}** {float(r['strike']):g}{r['right']}"
-                 f" ${float(r['entry_price']):.2f} → ${float(r['exit_price']):.2f}（{float(r['roi_pct']):+.0f}%，"
+                 f" ×{r.get('qty') or 1} ${float(r['entry_price']):.2f} → ${float(r['exit_price']):.2f}（{float(r['roi_pct']):+.0f}%，"
                  f"${float(r['pnl_usd']):+,.0f}）{r['exit_time']}" for r in rows]
         notifier.send(embeds=[{"title": f"☀️ {pday} 隔夜单平仓：{len(rows)} 笔，合计 ${total:+,.0f}",
                                "color": 0x2ECC71 if total >= 0 else 0xE74C3C, "description": "\n".join(lines),

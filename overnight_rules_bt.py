@@ -6,7 +6,7 @@ overnight_rules_bt.py —— 隔夜模拟实盘规则（overnight_live.py）的�
   * 结构：P 日标记 15:40、15:45 的两个 Heatmap 快照（15:50 前都已可用）都识别出同一结构，
     局部节点优先、其次全局节点；到期 = P 日之后最近一个有存档的到期；跳板买 Call、悬崖买 Put
   * Flow：P 日 15:00–15:50 同方向 Ask 侧（A/AA）单笔 ≥ $5 万 的大单至少 1 笔（15:50 之后的实盘扫描时还看不到）
-  * 合约：第一档虚值，1 张；15:55 买入价 = 真实 IV 还原中间价 + 当时真实 NBBO 半价差（ask）；
+  * 合约：第一档虚值，每笔约 $1,000（$750–$1,250 内最接近的张数，单张超 $1,250 不开）；15:55 买入价 = 真实 IV 还原中间价 + 当时真实 NBBO 半价差（ask）；
     当时 bid 为 0、或价差 > 中间价 25% 不开；每晚最多 10 笔，按 15:00 后大单金额排
   * 出场：S 日 09:35 按 bid（中间价 − 真实半价差）卖；bid 为 0 顺延到 09:40 / 09:45，仍为 0 按 0 记
 用法：python3 overnight_rules_bt.py [--nights 2026-10-14,...] [--post]
@@ -30,6 +30,7 @@ from detector import FLOW_TRADES_PATH, detect_structure, extract_rows, parse_hea
 from main import HistoryClient
 from notify import from_config
 from overnight import half_spread
+from overnight_live import size_contracts
 from paper_trader import occ_symbol
 from yhs_client import YHSClient
 
@@ -115,7 +116,7 @@ def first_otm(snap, right: str):
 
 
 def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = ENTRY, next_day_only: bool = False,
-              tol: float = 0.0, bars: tuple = BARS, need: int = 0) -> list:
+              tol: float = 0.0, bars: tuple = BARS, need: int = 0, sizing: bool = True) -> list:
     lcfg = copy.copy(cfg)
     lcfg.node_mode = "local"
     hp, hs = HistoryClient(client, cfg, P), HistoryClient(client, cfg, S)
@@ -151,6 +152,10 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = E
             continue
         h = (q[1] - q[0]) / (q[1] + q[0]) if (q and q[1] > 0) else cfg.slippage_pct
         cost = mid * (1 + h)
+        qty = size_contracts(cost) if sizing else 1
+        if not qty:
+            log.info("%s %s 放弃：单张 $%.0f 超过每笔上限", P, sym, cost * 100)
+            continue
         bid, when = None, None
         for hm in EXITS:
             tx = et_datetime(S, hm)
@@ -172,7 +177,8 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = E
                "entry": round(cost, 3), "exit": round(bid, 3), "exit_time": when,
                "gap_pct": round((und / snap.spot - 1) * 100, 2) if und else "",
                "gap_right_way": (und > snap.spot) == (st.right == "C") if und else "",
-               "pnl_usd": round((bid - cost) * 100, 1), "roi_pct": round((bid / cost - 1) * 100, 1)}
+               "qty": qty, "invested": round(cost * 100 * qty),
+               "pnl_usd": round((bid - cost) * 100 * qty, 1), "roi_pct": round((bid / cost - 1) * 100, 1)}
         out.append(row)
         log.info("%s 开 %s %s 成本 %.2f → %s 卖 %.2f（%+.1f%%）跳空 %s%%", P, t, sym, cost, when, bid, row["roi_pct"], row["gap_pct"])
     return out
@@ -189,6 +195,7 @@ def main(argv=None) -> int:
     ap.add_argument("--tol", type=float, default=0.0, help="结构判断的现货容差（如 0.001 = 0.1%%）")
     ap.add_argument("--bars", default=",".join(BARS), help="用哪几根 Heatmap（逗号分隔）")
     ap.add_argument("--need", type=int, default=0, help="至少几根成立（默认全部）")
+    ap.add_argument("--one-contract", action="store_true", help="每笔 1 张（旧口径；默认每笔约 $1,000）")
     ap.add_argument("--log-file", default=os.path.join(OUT, "run.log"))
     args = ap.parse_args(argv)
     cfg = SystemConfig.load(None)
@@ -208,7 +215,7 @@ def main(argv=None) -> int:
     for P, S in pairs:
         tickers = base + [t for t in (live_universe(P) or []) if t not in base]
         rows = run_night(cfg, client, P, S, tickers, args.entry, args.next_day_only, args.tol,
-                         tuple(args.bars.split(",")), args.need)
+                         tuple(args.bars.split(",")), args.need, not args.one_contract)
         with open(os.path.join(OUT, f"trades_{P}.csv"), "w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0]) if rows else ["night"])
             w.writeheader()
