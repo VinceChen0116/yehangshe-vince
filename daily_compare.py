@@ -46,6 +46,11 @@ GROUPS = [  # (实验名, 显示名, 相对当前默认配置（= 实盘，2026-
     ("daily_local", "局部节点", ["--set", 'node_mode="local"']),
 ]
 EXP = os.path.join("backtests", "exp")
+ON_VARIANTS = [  # 隔夜规则对照组：(目录后缀, 显示名, overnight_rules_bt.py 参数)
+    ("nextday", "只买次日到期", ["--next-day-only"]),
+    ("tol20", "结构容差0.2%", ["--tol", "0.002"]),
+    ("2of3", "3根里2根", ["--bars", "15:35,15:40,15:45", "--need", "2"]),
+]
 
 
 def run(name: str, extra: list) -> dict:
@@ -87,15 +92,16 @@ def reconcile(day: str) -> str:
 def overnight_compare():
     """隔夜规则（overnight_rules_bt.py，与隔夜实盘同一套规则）全部存档晚上的真实回测 + 最近一晚与隔夜实盘对账。"""
     subprocess.run([sys.executable, "overnight_rules_bt.py"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    # 对照：只买次日到期的合约
-    nd_dir = os.path.join("backtests", "overnight_rules_nextday")
-    subprocess.run([sys.executable, "overnight_rules_bt.py", "--next-day-only", "--out", nd_dir,
-                    "--log-file", os.path.join(nd_dir, "run.log")], check=False,
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    nd = None
-    if os.path.exists(os.path.join(nd_dir, "summary.json")):
-        with open(os.path.join(nd_dir, "summary.json"), encoding="utf-8") as f:
-            nd = json.load(f)
+    # 对照组（同一套规则只改一处）
+    variants = []
+    for tag, label, extra in ON_VARIANTS:
+        vdir = os.path.join("backtests", f"overnight_rules_{tag}")
+        subprocess.run([sys.executable, "overnight_rules_bt.py", "--out", vdir, "--log-file", os.path.join(vdir, "run.log")]
+                       + extra, check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        sp = os.path.join(vdir, "summary.json")
+        if os.path.exists(sp):
+            with open(sp, encoding="utf-8") as f:
+                variants.append((label, json.load(f)))
     d = os.path.join("backtests", "overnight_rules")
     rows = []
     for fn in sorted(os.listdir(d)):
@@ -126,9 +132,9 @@ def overnight_compare():
         recon = f"{P} 晚没有隔夜实盘账本（隔夜实盘 10/16 尾盘起）"
     summary = {"nights": nights, "trades": len(pnl), "total_pnl": round(sum(pnl)),
                "win_pct": round(100 * sum(x > 0 for x in pnl) / len(pnl), 1), "recon": recon}
-    nd_line = (f"\n对照·只买次日到期：{nd['trades']} 笔，胜率 {nd['win_pct']}%，合计 {money(nd['total_pnl'])}"
-               if nd and nd.get("trades") else "")
-    summary["next_day_only"] = nd and {k: nd.get(k) for k in ("trades", "total_pnl", "win_pct")}
+    nd_line = "".join(f"\n对照·{lb}：{v['trades']} 笔，胜率 {v['win_pct']}%，合计 {money(v['total_pnl'])}"
+                      for lb, v in variants if v.get("trades"))
+    summary["variants"] = {lb: {k: v.get(k) for k in ("trades", "total_pnl", "win_pct")} for lb, v in variants}
     return summary, head + nd_line + "\n```\n" + "\n".join(per[-8:]) + "\n```\n" + recon
 
 
