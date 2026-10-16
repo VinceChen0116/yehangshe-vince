@@ -1,3 +1,3 @@
-night,ticker,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,pnl_usd,roi_pct
-2026-10-14→2026-10-15,QQQ,CLIFF,local,O:QQQ261015P00728000,728.62,732.0,720.0,0.46,108,14922207,3.273,10.352,09:35,-1.48,True,707.9,216.3
-2026-10-14→2026-10-15,SPY,CLIFF,local,O:SPY261015P00768000,768.84,774.0,768.0,0.67,67,8131314,1.843,3.22,09:35,-0.42,True,137.8,74.8
+night,ticker,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-14→2026-10-15,QQQ,CLIFF,local,O:QQQ261015P00728000,728.62,732.0,720.0,0.46,108,14922207,3.273,10.352,09:35,-1.48,True,3,982,2123.7,216.3
+2026-10-14→2026-10-15,SPY,CLIFF,local,O:SPY261015P00768000,768.84,774.0,768.0,0.67,67,8131314,1.843,3.22,09:35,-0.42,True,5,921,688.8,74.8
