@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import copy
 import csv
+import dataclasses
 import datetime as dt
 import json
 import logging
@@ -41,25 +42,43 @@ FLOW_SINCE, FLOW_UNTIL, FLOW_MIN = "15:00", "15:50", 50000   # 实盘 15:44 起�
 MAX_SPREAD, MAX_POS = 0.25, 10
 
 
-def structure_at_close(cfg, lcfg, day: dt.date, ticker: str, next_day_only: bool = False):
-    """next_day_only：只用次日到期的合约（次日卖出时是 0DTE）；该标的没有次日到期就跳过。"""
+def detect_tol(snap, cfg, lcfg, tol: float = 0.0):
+    """局部节点优先、其次全局节点；tol > 0 时，现货在 ±tol 范围内挪一下能成立也算（如现货越过天花板 0.1% 仍算悬崖）。
+    返回 (结构, 模式) 或 (None, None)。"""
+    spots = [snap.spot] + ([snap.spot * (1 - tol), snap.spot * (1 + tol)] if tol else [])
+    for sp in spots:
+        s2 = dataclasses.replace(snap, spot=sp)
+        for c, mode in ((lcfg, "local"), (cfg, "king")):
+            st = detect_structure(s2, c)
+            if st:
+                return st, mode
+    return None, None
+
+
+def structure_at_close(cfg, lcfg, day: dt.date, ticker: str, next_day_only: bool = False,
+                       tol: float = 0.0, bars: tuple = BARS, need: int = 0):
+    """next_day_only：只用次日到期的合约；tol：结构判断的现货容差；bars / need：在这些快照里至少 need 根
+    （默认全部）是同一结构才算，合约按最后一根成立的快照选。"""
     exps = expiry_candidates(day, None, cfg.expiry_search_trading_days)[1:]
+    need = need or len(bars)
     for exp in (exps[:1] if next_day_only else exps):
         rows = load_archived_heatmap(cfg, day, ticker, exp)
         if not rows:
             continue
         frames = rows_to_frames(ticker, day, exp, rows)
         found = []
-        for hm in BARS:
+        for hm in bars:
             k = next((t for t in frames if t.strftime("%H:%M") == hm), None)
             snap = parse_heatmap(frames[k], cfg, day) if k else None
-            if snap is None:
-                return None
-            loc = detect_structure(snap, lcfg)
-            found.append((snap, loc or detect_structure(snap, cfg), "local" if loc else "king"))
-        (_, a, _), (snap, b, mode) = found
-        if a and b and a.structure == b.structure:
-            return exp, snap, b, mode
+            if snap is not None:
+                st, mode = detect_tol(snap, cfg, lcfg, tol)
+                if st:
+                    found.append((snap, st, mode))
+        for kind in ("CLIFF", "SPRINGBOARD"):
+            hits = [f for f in found if f[1].structure == kind]
+            if len(hits) >= need:
+                snap, st, mode = hits[-1]
+                return exp, snap, st, mode
         return None
     return None
 
@@ -95,13 +114,14 @@ def first_otm(snap, right: str):
     return (min(side) if right == "C" else max(side)) if side else None
 
 
-def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = ENTRY, next_day_only: bool = False) -> list:
+def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = ENTRY, next_day_only: bool = False,
+              tol: float = 0.0, bars: tuple = BARS, need: int = 0) -> list:
     lcfg = copy.copy(cfg)
     lcfg.node_mode = "local"
     hp, hs = HistoryClient(client, cfg, P), HistoryClient(client, cfg, S)
     cands = []
     for t in tickers:
-        r = structure_at_close(cfg, lcfg, P, t, next_day_only)
+        r = structure_at_close(cfg, lcfg, P, t, next_day_only, tol, bars, need)
         if r is None:
             continue
         exp, snap, st, mode = r
@@ -166,6 +186,9 @@ def main(argv=None) -> int:
     ap.add_argument("--entry", default=ENTRY, help="P 日买入时刻（默认 15:55）")
     ap.add_argument("--out", default=OUT, help="输出目录")
     ap.add_argument("--next-day-only", action="store_true", help="只买次日到期的合约")
+    ap.add_argument("--tol", type=float, default=0.0, help="结构判断的现货容差（如 0.001 = 0.1%%）")
+    ap.add_argument("--bars", default=",".join(BARS), help="用哪几根 Heatmap（逗号分隔）")
+    ap.add_argument("--need", type=int, default=0, help="至少几根成立（默认全部）")
     ap.add_argument("--log-file", default=os.path.join(OUT, "run.log"))
     args = ap.parse_args(argv)
     cfg = SystemConfig.load(None)
@@ -184,7 +207,8 @@ def main(argv=None) -> int:
     client = YHSClient(cfg)
     for P, S in pairs:
         tickers = base + [t for t in (live_universe(P) or []) if t not in base]
-        rows = run_night(cfg, client, P, S, tickers, args.entry, args.next_day_only)
+        rows = run_night(cfg, client, P, S, tickers, args.entry, args.next_day_only, args.tol,
+                         tuple(args.bars.split(",")), args.need)
         with open(os.path.join(OUT, f"trades_{P}.csv"), "w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0]) if rows else ["night"])
             w.writeheader()
