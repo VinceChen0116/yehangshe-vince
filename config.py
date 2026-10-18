@@ -124,6 +124,11 @@ class SystemConfig:
     # local = 局部节点（2026-10-15 加入回测对比）：现货 ±node_distance_max_pct 内最大的正 GEX 作地板/天花板，
     #   再取它与下一个显著正节点之间最强的负 GEX 作加速区/深渊；显著 = 占该到期 |GEX| 合计 ≥ local_min_share
     node_mode: str = "king"
+    # JUNK 体系第一批过滤（2026-10-18 加入回测对比，默认全关 = 实盘不变）：
+    junk_reinforce: bool = False        # 节点加固：正节点（地板/天花板）GEX 现在 ≥ 2 根前（"那个底越来越长"）
+    junk_body_confirm: bool = False     # 实体确认：上一根 5 分钟收盘也在节点正确一侧（只看实体，不看影线）
+    junk_between_pillars: bool = False  # 卡在两大柱子之间不做：现价处在上下两个最大 |GEX| 节点之间的 30%–70%
+    junk_midday_garbage: bool = False   # 午后垃圾时间：12:00 前已上下两头都扫过开盘 30 分钟区间 → 12:00 后不开新仓
     local_min_share: float = 0.03
     fatigue_touch_band_pct: float = 0.004 # 距节点 ≤ 0.4% 视为一次"测试回踩"
     fatigue_reset_band_pct: float = 0.008 # 离开 ≥ 0.8% 后再回来才计新的一次

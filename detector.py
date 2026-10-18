@@ -602,6 +602,7 @@ class SignalDetector:
         self.flow_disabled = False   # Flow 返回 401/403 权限错误后置 True
         self._flow_rejected: dict[str, tuple] = {}   # flow_mode="lookback"：已被否决的结构，同一结构不再等后来的大单
         self.spot_hist: dict[str, list] = {}   # 标的 → 当日 5 分钟现货序列（打分用）
+        self.node_hist: dict[str, tuple] = {}  # 标的 → (日期, [(时间, {行权价: GEX})])（JUNK 节点加固用）
         self.stats = {"snapshots": 0, "structures": 0, "fatigue_reject": 0, "pcr_reject": 0,
                       "flow_calls": 0, "flow_throttled": 0, "flow_reject": 0, "signals": 0, "stale_skip": 0}
 
@@ -649,8 +650,50 @@ class SignalDetector:
             hist = []
         if not hist or hist[-1][0] != now_et.replace(second=0, microsecond=0):
             hist.append((now_et.replace(second=0, microsecond=0), snap.spot))
-        self.spot_hist[ticker] = (now_et.date(), hist[-48:])
+        self.spot_hist[ticker] = (now_et.date(), hist[-96:])
+        nday, nh = self.node_hist.get(ticker, (None, []))
+        if nday != now_et.date():
+            nh = []
+        if not nh or nh[-1][0] != now_et.replace(second=0, microsecond=0):
+            nh.append((now_et.replace(second=0, microsecond=0), dict(snap.cells)))
+        self.node_hist[ticker] = (now_et.date(), nh[-12:])
         return snap
+
+    def _junk_reject(self, ticker: str, snap, st, now_et: dt.datetime) -> str | None:
+        """JUNK 体系第一批过滤（各自由 cfg.junk_* 开关控制）。返回拒绝原因，通过返回 None。"""
+        cfg = self.cfg
+        bull = st.right == "C"
+        spots = [(t, s) for t, s in self.spot_hist.get(ticker, (None, []))[1]]
+        if cfg.junk_reinforce:
+            nh = self.node_hist.get(ticker, (None, []))[1]
+            if len(nh) >= 3:
+                now_g, old_g = nh[-1][1].get(st.pos_strike), nh[-3][1].get(st.pos_strike)
+                if now_g is None or old_g is None or now_g < old_g:
+                    return f"正节点 {st.pos_strike:g} 没有在加固（GEX {old_g} → {now_g}）"
+            else:
+                return "节点历史不足 3 根，无法确认加固"
+        if cfg.junk_body_confirm:
+            if len(spots) < 2:
+                return "没有上一根收盘，无法确认实体"
+            prev = spots[-2][1]
+            if (prev < st.pos_strike) if bull else (prev > st.pos_strike):
+                return f"上一根收盘 {prev:.2f} 不在节点 {st.pos_strike:g} 正确一侧（只是影线）"
+        if cfg.junk_between_pillars and snap.cells:
+            top = sorted(snap.cells, key=lambda x: -abs(x[1]))[:6]
+            above = [k for k, _ in top if k > snap.spot]
+            below = [k for k, _ in top if k < snap.spot]
+            if above and below:
+                hi = max(above, key=lambda k: abs(dict(snap.cells)[k]))
+                lo = max(below, key=lambda k: abs(dict(snap.cells)[k]))
+                r = (snap.spot - lo) / (hi - lo) if hi > lo else 0.0
+                if 0.3 < r < 0.7:
+                    return f"卡在两大柱子 {lo:g} / {hi:g} 之间（位置 {r:.0%}）"
+        if cfg.junk_midday_garbage and now_et.hour >= 12:
+            opening = [s for t, s in spots if t.hour == 9 or (t.hour == 10 and t.minute == 0)]
+            morning = [s for t, s in spots if (t.hour == 10 and t.minute > 0) or t.hour == 11]
+            if opening and morning and max(morning) > max(opening) and min(morning) < min(opening):
+                return "中午前上下两头都扫过开盘区间 → 午后垃圾时间"
+        return None
 
     def evaluate_full_signal(self, client, ticker: str, payload: dict, now_et: dt.datetime,
                              allow_flow_check: bool = True) -> tuple[FullSignal | None, HeatmapSnapshot | None]:
@@ -683,6 +726,11 @@ class SignalDetector:
         if self.cfg.pcr_direction_filter and ((bias == "BEAR" and st.right == "C") or (bias == "BULL" and st.right == "P")):
             self.stats["pcr_reject"] += 1
             self._note(ticker, "pcr", "【阶段2·方向】%s 结构 %s 与 PCR 偏向 %s 相反，放弃", ticker, st.action, bias)
+            return None, snap
+        why = self._junk_reject(ticker, snap, st, now_et)
+        if why:
+            self.stats["junk_reject"] = self.stats.get("junk_reject", 0) + 1
+            self._note(ticker, f"junk{why[:4]}", "【JUNK·过滤】%s %s：%s", ticker, st.action, why)
             return None, snap
         if not allow_flow_check:
             return None, snap
