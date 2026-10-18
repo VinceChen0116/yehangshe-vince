@@ -1,0 +1,2 @@
+﻿position_id,ticker,action,contract_symbol,strike,entry_time,entry_spot,entry_option_price,exit_time,exit_spot,exit_option_price,realized_pnl,realized_roi_pct,peak_roi_pct,max_adverse_roi_pct,direction_correct,exit_reason,signal_score,price_source,entry_bid,entry_ask,entry_spread_pct,flow_confirmed,flow_premium_usd,flow_note
+P20261015-0001,C,BUY_CALL,O:C261016C00122000,122.00,2026-10-15T12:55-04:00,122.15,1.1435,2026-10-15T16:00-04:00,123.15,1.4392,29.57,25.86,33.73,-18.26,True,EOD_FORCE_CLOSE,0.818,real_data,0.9400,1.1500,20.10,0,,"近 15 分钟无 ≥$50,000 的 Ask 侧Call大单"
