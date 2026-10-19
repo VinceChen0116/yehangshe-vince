@@ -403,6 +403,14 @@ def main(argv=None) -> int:
             ok &= archive_day(client, cfg, d, day_tickers, today, args.dry_run, args.expiries)["complete"]
             if d < today or now >= et_datetime(d, "16:10"):   # 收盘后才存（盘中存会缺后半天）
                 archive_dealer_gex(client, cfg, d, day_tickers, args.dry_run)
+                if not args.dry_run and args.expiries == "near":   # 每天只在第一条存档命令里跑一次
+                    from tape_archive import archive_tape_day      # 跟大单候选：全市场大单 + 对应到期日的 Heatmap
+                    try:
+                        archive_tape_day(client, cfg, d)
+                    except QuotaExhausted:
+                        raise
+                    except Exception as e:
+                        log.warning("【tape】%s 存档失败：%s", d, e)
     except QuotaExhausted as e:
         log.critical("配额熔断，停止存档：%s", e)
         return 3
