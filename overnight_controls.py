@@ -70,9 +70,11 @@ def run_filter(argv) -> int:
     """现行规则 + 大单过滤（10/19 用户定的对照）：
        --no-etf          排除指数 / 杠杆 ETF
        --flow-max-dte N  大单只算 N 天内（自然日）到期的合约
-       --flow-contract   大单必须正好是要买的那张合约（同到期日、同行权价）"""
+       --flow-contract   大单必须正好是要买的那张合约（同到期日、同行权价）
+       --flow-vol-ge-oi  大单合约成交时的当日成交量 ≥ 未平仓数（新开仓，排除滚动换月 / 平仓 / 对冲）"""
     no_etf = "--no-etf" in argv
     exact = "--flow-contract" in argv
+    vol_oi = "--flow-vol-ge-oi" in argv
     max_dte = int(argv[argv.index("--flow-max-dte") + 1]) if "--flow-max-dte" in argv else 0
     rest, skip = [], False
     for i, a in enumerate(argv):
@@ -80,7 +82,7 @@ def run_filter(argv) -> int:
             skip = False
         elif a == "--flow-max-dte":
             skip = True
-        elif a not in ("--no-etf", "--flow-contract"):
+        elif a not in ("--no-etf", "--flow-contract", "--flow-vol-ge-oi"):
             rest.append(a)
     orig_sac, orig_lf = bt.structure_at_close, bt.late_flow
 
@@ -106,6 +108,9 @@ def run_filter(argv) -> int:
             if max_dte and (dt.datetime.strptime(m.group(1), "%y%m%d").date() - day).days > max_dte:
                 continue
             if exact and s != sym:
+                continue
+            if vol_oi and not (x.get("session_volume") is not None and x.get("open_interest") is not None
+                               and float(x["session_volume"]) >= float(x["open_interest"])):
                 continue
             keep.append(x)
         return keep
