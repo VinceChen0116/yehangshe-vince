@@ -1,0 +1,22 @@
+{
+  "n": 15,
+  "win_pct": 53.3,
+  "pnl": 638,
+  "pf": 1.15,
+  "invested": 28550,
+  "reasons": {
+    "hard_stop": 7,
+    "trailing_stop": 8
+  },
+  "per_day": {
+    "2026-10-14": -3130,
+    "2026-10-15": 1885,
+    "2026-10-16": 1884
+  },
+  "filter": "HW",
+  "filter_name": "前4大负节点+同向 + 主导墙 −上（合计）",
+  "max_per_day": 5,
+  "trail": 0.1,
+  "sizing": "dennis",
+  "dates": "2026-10-14:2026-10-16"
+}

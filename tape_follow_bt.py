@@ -23,14 +23,14 @@ import logging
 import os
 import sys
 
-from archive import latest_closed_session
+from archive import heatmap_path, latest_closed_session, rows_to_frames
 from config import SystemConfig, et_now, et_datetime, is_trading_day, next_trading_day, parse_iso, setup_logging, to_et
 from main import HistoryClient
 from overnight import half_spread
 from overnight_live import size_contracts
 from paper_trader import bs_price_greeks
-from tape_archive import is_candidate, load_flow, parse_occ
-from tape_filter_study import features
+from tape_archive import is_candidate, load_flow, parse_occ, tape_heatmap_path
+from tape_filter_study import features, load_rows
 from yhs_client import QuotaExhausted, YHSClient
 
 log = logging.getLogger("yhs.tape_bt")
@@ -62,10 +62,46 @@ FILTERS = {   # f 是 tape_filter_study.features() 的结果（Heatmap 过滤）
     "F1": ("只用 Flow：≥$50万 + 到期≥14天 + 价外≥2%", lambda f: f["premium"] >= 500000 and (f["dte"] or 0) >= 14 and f["otm"] >= 2, False),
     "F2": ("只用 Flow：≥$30万 + 到期≥14天 + 价外≥2%", lambda f: f["premium"] >= 300000 and (f["dte"] or 0) >= 14 and f["otm"] >= 2, False),
     "H": ("前4大负节点+主导墙同向", lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"], True),
+    "W": ("主导墙 −上（所有到期合计）", lambda f: f.get("agg_wall") == "-上", True),
+    "HW": ("前4大负节点+同向 + 主导墙 −上（合计）", lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"]
+           and f.get("agg_wall") == "-上", True),
     "A": ("前4大负节点+同向+到期≥14天+价外≥2%", lambda f: _hm(f) and (f["dte"] or 0) >= 14, True),
     "C": ("前4大负节点+同向+到期≥7天+价外≥2%", lambda f: _hm(f) and (f["dte"] or 0) >= 7, True),
     "D": ("前4大负节点+同向+价外≥2%", _hm, True),
 }
+
+
+def agg_wall(cfg, day, ticker, when, cache):
+    """当天已存档的所有到期日（常规存档 + 跟单存档）在 when 时已可用的那根 Heatmap 按行权价合计 GEX，
+    返回主导墙标签如 "-上"（与 dennis 的「主导墙」标注 25 笔对上 18 笔；单看交易到期只对上 9/16）。"""
+    key = ("agg", ticker, when)
+    if key in cache:
+        return cache[key]
+    exps = set()
+    for base in (os.path.dirname(heatmap_path(cfg, day, ticker, "x")), os.path.dirname(tape_heatmap_path(cfg, day, ticker, "x"))):
+        if os.path.isdir(base):
+            exps |= {f[:-5] for f in os.listdir(base) if f.endswith(".json")}
+    agg, spot = collections.defaultdict(float), None
+    for e in exps:
+        fk = ("frames", day, ticker, e)
+        if fk not in cache:
+            rows = load_rows(cfg, day, ticker, e)
+            cache[fk] = rows_to_frames(ticker, day, e, rows) if rows else {}
+        fr = cache[fk]
+        ready = [k for k in fr if k + dt.timedelta(minutes=5) <= when]
+        if not ready:
+            continue
+        d = fr[max(ready)]["data"]
+        spot = spot or d.get("spot_usd")
+        for c in d.get("cells") or []:
+            if c.get("net_dealer_gex_usd") is not None:
+                agg[float(c["strike_usd"])] += float(c["net_dealer_gex_usd"])
+    lab = None
+    if agg and spot:
+        k, g = max(agg.items(), key=lambda kv: abs(kv[1]))
+        lab = f'{"+" if g > 0 else "-"}{"上" if k > spot else "下"}'
+    cache[key] = lab
+    return lab
 
 
 def flow_features(x):
@@ -182,6 +218,8 @@ def run(cfg, client, days, key, max_per_day):
             if core in seen:
                 continue
             f = features(cfg, day, x, cache) if need_hm else flow_features(x)
+            if f and need_hm:
+                f["agg_wall"] = agg_wall(cfg, day, f["ticker"], to_et(parse_iso(x["occurred_at"])) + dt.timedelta(minutes=LAG_MIN), cache)
             if not f or not fn(f):
                 continue
             seen.add(core)
