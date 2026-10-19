@@ -1,0 +1,10 @@
+21:34:40 [INFO] yhs.overnight_rules: 2026-10-16 AAPL SPRINGBOARD（king）342.50→350.00 距 0.42% | 15:00 后大单 2 笔
+21:34:40 [INFO] yhs.overnight_rules: 2026-10-16 AMZN CLIFF（local）250.00→247.50 距 0.21% | 15:00 后大单 0 笔
+21:34:40 [INFO] yhs.overnight_rules: 2026-10-16 AVGO SPRINGBOARD（local）327.50→330.00 距 0.62% | 15:00 后大单 0 笔
+21:34:40 [INFO] yhs.overnight_rules: 2026-10-16 MSFT SPRINGBOARD（local）522.50→535.00 距 0.90% | 15:00 后大单 0 笔
+21:34:41 [INFO] yhs.main: 【历史】AAPL261019C00345000 分钟线为 2026-10-19（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+21:34:41 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实 IV 序列 390 个点（1m）
+21:34:41 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实成交 bar 150 根（10:42–13:11）
+21:34:41 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实 IV 序列 365 个点（1m）
+21:34:41 [INFO] yhs.overnight_rules: 2026-10-16 开 AAPL O:AAPL261019C00345000 成本 1.82 → 09:35 卖 1.09（-40.4%）跳空 -0.07%
+21:34:41 [INFO] yhs.overnight_rules: 配额剩余 93928

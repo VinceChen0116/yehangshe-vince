@@ -1,0 +1,49 @@
+21:32:00 [INFO] yhs.overnight_rules: 2026-10-16 AAPL SPRINGBOARD（king）342.50→350.00 距 0.42% | 15:00 后大单 33 笔
+21:32:01 [INFO] yhs.overnight_rules: 2026-10-16 AMZN CLIFF（local）250.00→247.50 距 0.21% | 15:00 后大单 16 笔
+21:32:02 [INFO] yhs.overnight_rules: 2026-10-16 AVGO SPRINGBOARD（local）327.50→330.00 距 0.62% | 15:00 后大单 8 笔
+21:32:04 [INFO] yhs.overnight_rules: 2026-10-16 MSFT SPRINGBOARD（local）522.50→535.00 距 0.90% | 15:00 后大单 17 笔
+21:32:14 [INFO] yhs.overnight_rules: 2026-10-16 SPY CLIFF（local）763.00→762.00 距 0.04% | 15:00 后大单 120 笔
+21:32:16 [INFO] yhs.overnight_rules: 2026-10-16 TLT SPRINGBOARD（local）80.00→81.00 距 0.07% | 15:00 后大单 10 笔
+21:32:17 [INFO] yhs.main: 【历史】SPY261019P00762000 分钟线为 2026-10-19（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+21:32:18 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261019P00762000，5.1s 后免费重试（第 1 轮）
+21:32:23 [INFO] yhs.main: 【历史】SPY261019P00762000 真实 IV 序列 390 个点（1m）
+21:32:25 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SPY，5.1s 后免费重试（第 1 轮）
+21:32:33 [INFO] yhs.main: 【历史】SPY261019P00762000 真实成交 bar 150 根（13:31–16:14）
+21:32:34 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261019P00762000，5.2s 后免费重试（第 1 轮）
+21:32:39 [INFO] yhs.main: 【历史】SPY261019P00762000 真实 IV 序列 390 个点（1m）
+21:32:40 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SPY，5.2s 后免费重试（第 1 轮）
+21:32:47 [INFO] yhs.overnight_rules: 2026-10-16 开 SPY O:SPY261019P00762000 成本 2.52 → 09:35 卖 0.30（-88.1%）跳空 0.62%
+21:32:49 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实 IV 序列 390 个点（1m）
+21:32:51 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实成交 bar 150 根（10:42–13:11）
+21:32:52 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AAPL261019C00345000，5.3s 后免费重试（第 1 轮）
+21:32:58 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实 IV 序列 365 个点（1m）
+21:32:59 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AAPL，5.2s 后免费重试（第 1 轮）
+21:33:05 [INFO] yhs.overnight_rules: 2026-10-16 开 AAPL O:AAPL261019C00345000 成本 1.82 → 09:35 卖 1.09（-40.4%）跳空 -0.07%
+21:33:06 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实 IV 序列 390 个点（1m）
+21:33:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AMZN261019P00247500，5.1s 后免费重试（第 1 轮）
+21:33:14 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实成交 bar 61 根（09:30–15:41）
+21:33:15 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AMZN，5.1s 后免费重试（第 1 轮）
+21:33:21 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AMZN261019P00247500，5.3s 后免费重试（第 1 轮）
+21:33:27 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实 IV 序列 52 个点（1m）
+21:33:27 [INFO] yhs.overnight_rules: 2026-10-16 开 AMZN O:AMZN261019P00247500 成本 1.21 → 09:35 卖 0.04（-96.7%）跳空 2.61%
+21:33:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MSFT261019C00527500，5.1s 后免费重试（第 1 轮）
+21:33:34 [INFO] yhs.main: 【历史】MSFT261019C00527500 真实 IV 序列 389 个点（1m）
+21:33:35 [INFO] yhs.overnight_rules: 2026-10-16 O:MSFT261019C00527500 放弃：价差 26%
+21:33:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TLT261019C00080500，5.1s 后免费重试（第 1 轮）
+21:33:42 [INFO] yhs.main: 【历史】TLT261019C00080500 真实 IV 序列 390 个点（1m）
+21:33:43 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/TLT，5.3s 后免费重试（第 1 轮）
+21:33:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/TLT261019C00080500，5.3s 后免费重试（第 1 轮）
+21:33:56 [INFO] yhs.main: 【历史】TLT261019C00080500 真实成交 bar 57 根（09:30–15:42）
+21:33:57 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/TLT，5.2s 后免费重试（第 1 轮）
+21:34:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TLT261019C00080500，5.1s 后免费重试（第 1 轮）
+21:34:09 [INFO] yhs.main: 【历史】TLT261019C00080500 真实 IV 序列 184 个点（1m）
+21:34:09 [INFO] yhs.overnight_rules: 2026-10-16 开 TLT O:TLT261019C00080500 成本 0.12 → 09:35 卖 0.01（-94.2%）跳空 -0.18%
+21:34:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AVGO261019C00330000，5.2s 后免费重试（第 1 轮）
+21:34:16 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实 IV 序列 390 个点（1m）
+21:34:18 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AVGO261019C00330000，5.1s 后免费重试（第 1 轮）
+21:34:24 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实成交 bar 59 根（09:30–15:54）
+21:34:25 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AVGO，5.2s 后免费重试（第 1 轮）
+21:34:32 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AVGO261019C00330000，5.2s 后免费重试（第 1 轮）
+21:34:37 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实 IV 序列 236 个点（1m）
+21:34:37 [INFO] yhs.overnight_rules: 2026-10-16 开 AVGO O:AVGO261019C00330000 成本 3.50 → 09:35 卖 6.63（+89.6%）跳空 2.03%
+21:34:37 [INFO] yhs.overnight_rules: 配额剩余 93933

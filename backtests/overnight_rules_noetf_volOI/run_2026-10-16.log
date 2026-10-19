@@ -1,0 +1,20 @@
+21:34:39 [INFO] yhs.overnight_rules: 2026-10-16 AAPL SPRINGBOARD（king）342.50→350.00 距 0.42% | 15:00 后大单 4 笔
+21:34:39 [INFO] yhs.overnight_rules: 2026-10-16 AMZN CLIFF（local）250.00→247.50 距 0.21% | 15:00 后大单 4 笔
+21:34:39 [INFO] yhs.overnight_rules: 2026-10-16 AVGO SPRINGBOARD（local）327.50→330.00 距 0.62% | 15:00 后大单 2 笔
+21:34:39 [INFO] yhs.overnight_rules: 2026-10-16 MSFT SPRINGBOARD（local）522.50→535.00 距 0.90% | 15:00 后大单 2 笔
+21:34:40 [INFO] yhs.main: 【历史】AAPL261019C00345000 分钟线为 2026-10-19（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+21:34:40 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实 IV 序列 390 个点（1m）
+21:34:40 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实成交 bar 150 根（10:42–13:11）
+21:34:40 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实 IV 序列 365 个点（1m）
+21:34:40 [INFO] yhs.overnight_rules: 2026-10-16 开 AAPL O:AAPL261019C00345000 成本 1.82 → 09:35 卖 1.09（-40.4%）跳空 -0.07%
+21:34:40 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实 IV 序列 390 个点（1m）
+21:34:40 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实成交 bar 61 根（09:30–15:41）
+21:34:40 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实 IV 序列 52 个点（1m）
+21:34:40 [INFO] yhs.overnight_rules: 2026-10-16 开 AMZN O:AMZN261019P00247500 成本 1.21 → 09:35 卖 0.04（-96.7%）跳空 2.61%
+21:34:40 [INFO] yhs.main: 【历史】MSFT261019C00527500 真实 IV 序列 389 个点（1m）
+21:34:40 [INFO] yhs.overnight_rules: 2026-10-16 O:MSFT261019C00527500 放弃：价差 26%
+21:34:40 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实 IV 序列 390 个点（1m）
+21:34:40 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实成交 bar 59 根（09:30–15:54）
+21:34:40 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实 IV 序列 236 个点（1m）
+21:34:40 [INFO] yhs.overnight_rules: 2026-10-16 开 AVGO O:AVGO261019C00330000 成本 3.50 → 09:35 卖 6.63（+89.6%）跳空 2.03%
+21:34:40 [INFO] yhs.overnight_rules: 配额剩余 93930
