@@ -264,6 +264,8 @@ python3 archive.py --dry-run                 # 只看计划
 * 回测：overnight_rules_bt.py（同一套规则，P 日 15:55 买、S 日 09:35 卖；--entry 可改买入时刻）。
   10/7–10/14 共 6 晚 58 笔：15:51 买 +$5,012 / 15:55 买 +$4,880 / 15:57 买 +$4,959（胜率 53–57%）；
   价格核对见 validate_overnight_pricing.py（开仓中位误差 3%，平仓 8% 且无系统偏差）
+  10/19 "$625–$750 开 1 张"：10/7–10/15 共 7 晚，基准 67 笔 +$20,178 → 68 笔 +$20,578（+$400）；新增 AMD +$709 / MRVL −$323 /
+  MRNA −$352，挤掉 HOOD +$399 / V −$763（backtests/overnight_rules_gap_base vs overnight_rules_gap1）
 
 ## L. 2026-10-15：外部报告（Argon 四日回测）里的出场/过滤思路 —— 真实回测全部更差，未采用
 新增三个实验开关（默认关闭，实盘不变）：`ratchet_start_pct/ratchet_keep/ratchet_offset_pct`（连续棘轮，锁定 = 0.8×峰值 − 5.5%）、
