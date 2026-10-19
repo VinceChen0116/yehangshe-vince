@@ -16,10 +16,12 @@ import datetime as dt
 import glob
 import json
 import os
+import re
 import sys
 import urllib.request
 
 import overnight_rules_bt as bt
+from paper_trader import occ_symbol
 from archive import load_archived_heatmap, rows_to_frames
 from config import SystemConfig, et_datetime, expiry_candidates, parse_iso, to_et
 from detector import StructureSignal, parse_heatmap
@@ -57,6 +59,59 @@ def run_flow(argv) -> int:
     _client = YHSClient(SystemConfig.load(None))
     bt.structure_at_close = flow_only_at_close
     return bt.main(argv)
+
+
+ETFS = {"SPY", "QQQ", "TQQQ", "SQQQ", "IWM", "DIA", "SOXL", "SOXS", "SPXL", "SPXS", "UPRO", "TNA", "TZA", "TLT", "UVXY"}
+_OCC = re.compile(r"(\d{6})([CP])(\d{8})$")
+_target = {}
+
+
+def run_filter(argv) -> int:
+    """现行规则 + 大单过滤（10/19 用户定的对照）：
+       --no-etf          排除指数 / 杠杆 ETF
+       --flow-max-dte N  大单只算 N 天内（自然日）到期的合约
+       --flow-contract   大单必须正好是要买的那张合约（同到期日、同行权价）"""
+    no_etf = "--no-etf" in argv
+    exact = "--flow-contract" in argv
+    max_dte = int(argv[argv.index("--flow-max-dte") + 1]) if "--flow-max-dte" in argv else 0
+    rest, skip = [], False
+    for i, a in enumerate(argv):
+        if skip:
+            skip = False
+        elif a == "--flow-max-dte":
+            skip = True
+        elif a not in ("--no-etf", "--flow-contract"):
+            rest.append(a)
+    orig_sac, orig_lf = bt.structure_at_close, bt.late_flow
+
+    def sac(cfg, lcfg, day, ticker, *a, **k):
+        if no_etf and ticker in ETFS:
+            return None
+        r = orig_sac(cfg, lcfg, day, ticker, *a, **k)
+        if r:
+            exp, snap, st, _ = r
+            K = bt.first_otm(snap, st.right)
+            _target[(day, ticker, st.right)] = occ_symbol(ticker, exp, st.right, K).split(":")[-1] if K is not None else None
+        return r
+
+    def lf(cfg, client, day, ticker, right):
+        out = orig_lf(cfg, client, day, ticker, right)
+        sym = _target.get((day, ticker, right))
+        keep = []
+        for x in out:
+            s = str(x.get("contract_symbol") or "").split(":")[-1]
+            m = _OCC.search(s)
+            if not m:
+                continue
+            if max_dte and (dt.datetime.strptime(m.group(1), "%y%m%d").date() - day).days > max_dte:
+                continue
+            if exact and s != sym:
+                continue
+            keep.append(x)
+        return keep
+
+    bt.structure_at_close, bt.late_flow = sac, lf
+    return bt.main(rest)
 
 
 EARN_DIR = os.path.join("yhs_data", "cache", "earnings")
@@ -114,4 +169,4 @@ def run_earnings(dirs) -> int:
 
 if __name__ == "__main__":
     cmd, rest = sys.argv[1], sys.argv[2:]
-    sys.exit(run_flow(rest) if cmd == "flow" else run_earnings(rest))
+    sys.exit(run_flow(rest) if cmd == "flow" else run_filter(rest) if cmd == "filter" else run_earnings(rest))
