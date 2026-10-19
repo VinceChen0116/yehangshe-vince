@@ -22,8 +22,8 @@ import urllib.request
 
 import overnight_rules_bt as bt
 from paper_trader import occ_symbol
-from archive import load_archived_heatmap, rows_to_frames
-from config import SystemConfig, et_datetime, expiry_candidates, parse_iso, to_et
+from archive import fetch_heatmap_rows, load_archived_heatmap, rows_to_frames
+from config import SystemConfig, et_datetime, expiry_candidates, next_trading_day, parse_iso, to_et
 from detector import StructureSignal, parse_heatmap
 from yhs_client import YHSClient
 
@@ -61,6 +61,65 @@ def run_flow(argv) -> int:
     return bt.main(argv)
 
 
+HM_CACHE = os.path.join("yhs_data", "cache", "overnight_heatmap")
+
+
+def daily_tickers_before(cfg, day: dt.date) -> set:
+    """与 overnight_live.daily_expiry_tickers 相同，但只看 day 之前的存档（开仓当天 15:15 实盘能看到的）。"""
+    root = os.path.join(cfg.data_dir, "archive", "heatmap")
+    for d in sorted(os.listdir(root), reverse=True):
+        try:
+            a = dt.date.fromisoformat(d)
+        except ValueError:
+            continue
+        if a >= day or next_trading_day(a).weekday() == 4:
+            continue
+        nxt = next_trading_day(a)
+        return {t for t in os.listdir(os.path.join(root, d))
+                if os.path.exists(fp := os.path.join(root, d, t, f"{nxt}.json")) and os.path.getsize(fp) > 1000}
+    return set()
+
+
+def use_live_expiry():
+    """回测的到期日改成与实盘一致：先试 predicted_expiry（有每日到期 → 下一交易日，其余 → 下一个周五），
+    存档里没有的到期从接口补拉 15:00 之后的 Heatmap（缓存在 HM_CACHE，不写共享存档）。
+    修正：每日存档只存当天 + 下一交易日到期，周五晚上看不到下周五到期，回测原来会漏掉大部分标的。"""
+    from overnight_live import predicted_expiry
+    orig_sac, orig_load = bt.structure_at_close, bt.load_archived_heatmap
+    daily_cache, cur = {}, {}
+
+    def load(cfg, day, ticker, exp):
+        rows = orig_load(cfg, day, ticker, exp)
+        if rows:
+            return rows
+        fp = os.path.join(HM_CACHE, day.isoformat(), ticker, f"{exp}.json")
+        if not os.path.exists(fp):
+            try:
+                rows = fetch_heatmap_rows(_client, ticker, exp, day, max_pages=3, start="15:00")
+            except Exception:
+                rows = []
+            os.makedirs(os.path.dirname(fp), exist_ok=True)
+            with open(fp, "w", encoding="utf-8") as f:
+                json.dump(rows, f)
+        with open(fp, encoding="utf-8") as f:
+            return json.load(f)
+
+    def cands(day, *a, **k):
+        out = expiry_candidates(day, *a, **k)
+        pe = cur.get("exp")
+        return [out[0], pe] + [e for e in out[1:] if e != pe] if pe else out
+
+    def sac(cfg, lcfg, day, ticker, *a, **k):
+        if day not in daily_cache:
+            daily_cache[day] = daily_tickers_before(cfg, day)
+        cur["exp"] = predicted_expiry(ticker, day, daily_cache[day])
+        return orig_sac(cfg, lcfg, day, ticker, *a, **k)
+
+    global _client
+    _client = _client or YHSClient(SystemConfig.load(None))
+    bt.structure_at_close, bt.load_archived_heatmap, bt.expiry_candidates = sac, load, cands
+
+
 ETFS = {"SPY", "QQQ", "TQQQ", "SQQQ", "IWM", "DIA", "SOXL", "SOXS", "SPXL", "SPXS", "UPRO", "TNA", "TZA", "TLT", "UVXY"}
 _OCC = re.compile(r"(\d{6})([CP])(\d{8})$")
 _target = {}
@@ -75,6 +134,8 @@ def run_filter(argv) -> int:
     no_etf = "--no-etf" in argv
     exact = "--flow-contract" in argv
     vol_oi = "--flow-vol-ge-oi" in argv
+    if "--live-expiry" in argv:
+        use_live_expiry()
     max_dte = int(argv[argv.index("--flow-max-dte") + 1]) if "--flow-max-dte" in argv else 0
     rest, skip = [], False
     for i, a in enumerate(argv):
@@ -82,7 +143,7 @@ def run_filter(argv) -> int:
             skip = False
         elif a == "--flow-max-dte":
             skip = True
-        elif a not in ("--no-etf", "--flow-contract", "--flow-vol-ge-oi"):
+        elif a not in ("--no-etf", "--flow-contract", "--flow-vol-ge-oi", "--live-expiry"):
             rest.append(a)
     orig_sac, orig_lf = bt.structure_at_close, bt.late_flow
 
