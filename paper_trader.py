@@ -641,6 +641,16 @@ class SessionEngine:
         elif sig.score >= self.cfg.min_signal_score:
             self.trader.open_position(self.client, sig, now_et)
 
+    def mark_open(self, now_et: dt.datetime) -> None:
+        """两次 Heatmap 之间的分钟级盯市（实盘，2026-10-19 用户定）：只用刚拉的实时期权报价判断期权 ROI 类出场
+        （硬止盈 / 保本 / 追踪 / 灾难止损）；标的价格沿用上一根 Heatmap 的现货，所以标的类止损仍按 5 分钟判断。"""
+        for pos in list(self.trader.open_positions()):
+            spot = pos.last_spot or self.last_spot.get(pos.ticker)
+            if spot is None:
+                continue
+            if self.trader.mark(pos, spot, now_et):
+                self.last_exit_time[pos.ticker] = now_et
+
     def flush(self, now_et: dt.datetime) -> None:
         """一轮快照处理完后调用：按信号分数从高到低开仓，直到持仓/当日笔数上限。first_come 模式下无操作。"""
         if not self.pending:

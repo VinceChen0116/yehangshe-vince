@@ -300,3 +300,9 @@ python3 archive.py --dry-run                 # 只看计划
 - 账本 live/tape_trades.csv（跨日持仓都在这一个文件），状态 live/tape_state_<日期>.json，实时快照 yhs_data/archive/heatmap_live/。
 - 定时任务：每个交易日美东 09:25 启动，16:00 后提交账本。**2026-10-19 用户因配额不足暂停（定时任务已停用，未删除）**；跟单存档照常。
 - 回测 tape_follow_bt.py --filter HW（同规则）；依据见 backtests/dennis/reverse_engineering.md。
+
+## M. 日内实盘分钟级盯仓（2026-10-19 用户定，10/20 起生效）
+- `position_mark_min = 1`：两次 5 分钟 Heatmap 扫描之间，持仓每分钟拉一次实时期权报价（只拉持仓合约，每个 1 配额），
+  按真实 bid 判断硬止盈 +150% / 保本 / 追踪 / 灾难止损（SessionEngine.mark_open）。标的类止损（穿正节点 +0.5%）仍按 5 分钟 Heatmap 现货判断
+  （/v1/stocks/quote 实测延迟约 14 分钟，不能用来做分钟级现价）。开仓扫描仍是 5 分钟一轮。
+- 日内标的池上限 40 → 30（max_universe_size），给分钟级盯仓腾配额。配额 10/19 已重置为 100,000。

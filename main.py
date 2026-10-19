@@ -388,6 +388,19 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
                 next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min)
                 notifier.text(f"💓 {et_now().strftime('%H:%M')} ET 运行中｜监控 {len(pool)} 只｜"
                               + "｜".join(a.status() for a in accounts) + f"｜配额剩余 {client.quota_remaining}")
+            # 两次扫描之间：持仓每 position_mark_min 分钟用实时报价盯一次（只拉持仓合约的报价，每个 1 配额）
+            step = cfg.position_mark_min if cfg.live_quotes else 0
+            k = 1
+            while step:
+                tick = grid + dt.timedelta(seconds=cfg.poll_offset_s, minutes=step * k)
+                if tick >= nxt or tick >= close_t:
+                    break
+                k += 1
+                sleep_until(tick)
+                if any(a.trader.open_positions() for a in accounts):
+                    refresh_quotes()
+                    for a in accounts:
+                        a.engine.mark_open(et_now())
             sleep_until(min(nxt, close_t))
         finish_all(close_t)
     except QuotaExhausted:
