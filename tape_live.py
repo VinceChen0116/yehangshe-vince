@@ -8,7 +8,7 @@ tape_live.py —— 跟大单（dennis-tape 式）模拟实盘（2026-10-19 用�
        该到期 |GEX| 前 4 大节点里的负节点 = 行权价，且该到期主导墙在交易方向一侧（Call 在上方 / Put 在下方）
        + 所有到期按行权价合计的主导墙是「负、在现价上方」（与 dennis 的「主导墙 −上」口径一致，25 笔对上 18 笔）
      同一合约已开过仓的不再开；没通过的合约，后面再来的大单会重新判断
-  3. 开仓：按实时 ask 买，bid 为 0 / 没报价 / 买卖价差 > 中间价 25% 不开；每笔约 $1,800（至少 1 张，不设单张上限）；
+  3. 开仓：按实时 ask 买，bid 为 0 / 没报价 / 买卖价差 > 中间价 25% 不开；每笔约 $1,800（至少 1 张，单张超过 $3,600 不开）；
      每天最多 5 笔新仓、同时最多 10 笔；15:50 以后不开
   4. 持仓（可跨日）：每分钟实时报价，按中间价判断、按 bid 卖：
        −22% 止损；涨到 +30% 后追踪，回撤到 max(+30%, 峰值 × 0.9) 卖；最多持有 8 个交易日、到期前一天 15:50 时间离场
@@ -47,6 +47,7 @@ MAX_NEW_PER_DAY = 5
 MAX_OPEN = 10
 MAX_SPREAD = 0.25
 BUDGET = 1800.0
+MAX_CONTRACT_COST = 3600.0   # 单张超过 $3,600 不开（2026-10-19 用户定）
 STOP, TRAIL_ON, TRAIL = -0.22, 0.30, 0.10
 MAX_HOLD = 8
 QUOTA_FLOOR = 3000
@@ -57,9 +58,11 @@ FIELDS = ["position_id", "open_date", "ticker", "right", "contract", "expiration
 
 
 def size(price: float) -> int:
-    """每笔约 $1,800，至少 1 张，不设单张上限（2026-10-19 用户定）。"""
+    """每笔约 $1,800，至少 1 张；单张超过 $3,600 返回 0（不开）（2026-10-19 用户定）。"""
     per = price * 100
-    return max(1, int(round(BUDGET / per))) if per > 0 else 0
+    if per <= 0 or per > MAX_CONTRACT_COST:
+        return 0
+    return max(1, int(round(BUDGET / per)))
 
 
 def read_ledger() -> list:
@@ -230,6 +233,9 @@ class Tape:
                 log.info("【跟单·放弃】%s 价差 %.0f%%（bid %.2f / ask %.2f）", core, (q["ask"] - q["bid"]) / mid * 100, q["bid"], q["ask"])
                 continue
             qty = size(q["ask"])
+            if not qty:
+                log.info("【跟单·放弃】%s 单张 $%.0f 超过 $%.0f", core, q["ask"] * 100, MAX_CONTRACT_COST)
+                continue
             when = to_et(parse_iso(x["occurred_at"]))
             row = {"position_id": f"TP{self.day.strftime('%Y%m%d')}-{len(self.opened_today()) + 1:02d}",
                    "open_date": self.day.isoformat(), "ticker": f["ticker"], "right": f["right"], "contract": core,

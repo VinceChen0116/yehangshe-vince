@@ -8,7 +8,7 @@ tape_follow_bt.py —— dennis-tape 式"跟大单"策略的真实数据回测
   价格：真实 IV + 真实标的价 + BS（1 分钟 greeks 序列），买入加 / 卖出减当时真实 NBBO 半价差
   止损：−22%；止盈：涨到 +30% 后启动追踪，回撤到 max(+30%, 峰值 × (1 − TRAIL)) 卖出
   持仓：可以过夜，最多 MAX_HOLD 个交易日，或到期前一天 15:50 时间离场
-  仓位：--sizing dennis（默认）每笔约 $1,800、至少 1 张、不设单张上限（2026-10-19 用户定，与 tape_live 一致）；
+  仓位：--sizing dennis（默认）每笔约 $1,800、至少 1 张、单张超过 $3,600 不开（2026-10-19 用户定，与 tape_live 一致）；
         --sizing ours 每笔 $1,000（±25%，与隔夜单一致）
 用法：python3 tape_follow_bt.py --dates 2026-10-02:2026-10-16 --filter F1 [--max-per-day 5]
 """
@@ -47,7 +47,7 @@ def qty_for(price: float) -> int:
     if SIZING == "ours":
         return size_contracts(price)
     per = price * 100
-    if per <= 0:
+    if per <= 0 or per > 3600:
         return 0
     return max(1, int(round(1800 / per)))
 LAST_DATA = latest_closed_session(et_now())
