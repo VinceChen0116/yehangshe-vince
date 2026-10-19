@@ -685,3 +685,330 @@
 22:09:28 [INFO] yhs.main: 【历史】GLW261016P00137000 真实 IV 序列 195 个点（1m）
 22:09:28 [INFO] yhs.overnight_rules: 2026-10-15 开 GLW O:GLW261016P00137000 成本 1.69 → 09:35 卖 2.94（+73.8%）跳空 -2.5%
 22:09:28 [INFO] yhs.overnight_rules: 配额剩余 50781
+21:45:00 [INFO] yhs.overnight_rules: 2026-10-07 SPY CLIFF（local）781.00→775.00 距 0.52% | 15:00 后大单 46 笔
+21:45:01 [INFO] yhs.main: 【历史】SPY261008P00776000 真实 IV 序列 390 个点（1m）
+21:45:02 [INFO] yhs.main: 【历史】SPY261008P00776000 真实 IV 序列 380 个点（1m）
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-07 开 SPY O:SPY261008P00776000 成本 1.08 → 09:35 卖 1.71（+57.7%）跳空 -0.21%
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 AAPL CLIFF（king）342.50→337.50 距 0.34% | 15:00 后大单 4 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 ADI CLIFF（local）407.50→405.00 距 0.60% | 15:00 后大单 2 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 AFRM SPRINGBOARD（local）76.00→77.00 距 0.71% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 AMAT SPRINGBOARD（local）505.00→512.50 距 0.18% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 AMD SPRINGBOARD（local）615.00→617.50 距 0.22% | 15:00 后大单 18 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 AMZN SPRINGBOARD（local）252.50→257.50 距 0.94% | 15:00 后大单 5 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 ANET CLIFF（local）212.50→210.00 距 0.96% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 APP SPRINGBOARD（local）277.50→280.00 距 0.50% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 ASML CLIFF（local）1770.00→1750.00 距 0.12% | 15:00 后大单 2 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 AVAV CLIFF（local）138.00→136.00 距 0.08% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 AVGO SPRINGBOARD（local）357.50→360.00 距 0.38% | 15:00 后大单 8 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 BABA SPRINGBOARD（king）105.00→107.00 距 0.60% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 BSX CLIFF（king）42.00→41.00 距 0.19% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 C SPRINGBOARD（local）127.00→128.00 距 0.68% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 CAT SPRINGBOARD（local）790.00→797.50 距 0.43% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 CIEN SPRINGBOARD（local）422.50→425.00 距 0.52% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 COST CLIFF（local）955.00→945.00 距 0.51% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 CRCL CLIFF（local）81.00→80.00 距 0.18% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 CRDO SPRINGBOARD（local）207.50→210.00 距 0.57% | 15:00 后大单 4 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 CRWV SPRINGBOARD（local）81.00→82.00 距 0.74% | 15:00 后大单 2 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 CSCO SPRINGBOARD（local）114.00→115.00 距 0.71% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 CVX CLIFF（local）212.50→210.00 距 0.31% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 DASH SPRINGBOARD（local）190.00→192.50 距 0.99% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 DDOG CLIFF（local）275.00→267.50 距 0.23% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 DE CLIFF（local）652.50→650.00 距 0.11% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 DELL CLIFF（local）575.00→570.00 距 0.55% | 15:00 后大单 4 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 DKS SPRINGBOARD（king）135.00→138.00 距 0.20% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 DUOL CLIFF（local）152.50→149.00 距 0.94% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 DVN CLIFF（local）49.00→48.00 距 0.13% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 ENPH CLIFF（local）33.00→32.00 距 0.45% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 FISV SPRINGBOARD（local）45.50→46.00 距 0.60% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 FTNT SPRINGBOARD（local）187.50→190.00 距 1.01% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 GEV CLIFF（local）1000.00→960.00 距 0.52% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 GOOGL CLIFF（local）350.00→347.50 距 0.53% | 15:00 后大单 3 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 HOOD SPRINGBOARD（local）107.00→108.00 距 0.92% | 15:00 后大单 3 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 HPE CLIFF（local）71.00→70.00 距 0.31% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 HPQ CLIFF（king）32.50→31.50 距 0.14% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 ICE SPRINGBOARD（local）155.00→157.50 距 0.36% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 INTC CLIFF（local）107.00→105.00 距 0.24% | 15:00 后大单 18 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 LLY CLIFF（local）1170.00→1150.00 距 0.48% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 LMND SPRINGBOARD（local）46.50→47.00 距 0.47% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 LMT SPRINGBOARD（local）505.00→510.00 距 0.59% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 LRCX CLIFF（local）320.00→315.00 距 0.76% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 MCD SPRINGBOARD（local）235.00→242.50 距 0.84% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 MDB CLIFF（king）370.00→355.00 距 0.23% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 META SPRINGBOARD（local）720.00→725.00 距 0.17% | 15:00 后大单 17 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 MRVL CLIFF（local）272.50→270.00 距 0.04% | 15:00 后大单 17 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 MU SPRINGBOARD（king）1025.00→1050.00 距 0.95% | 15:00 后大单 58 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 NASA SPRINGBOARD（king）24.00→25.50 距 0.42% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 NEM SPRINGBOARD（local）115.00→116.00 距 0.18% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 NOW CLIFF（local）140.00→135.00 距 0.21% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 ON CLIFF（local）79.00→74.00 距 0.23% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 PANW CLIFF（local）400.00→390.00 距 0.46% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 PEP SPRINGBOARD（local）127.00→128.00 距 0.54% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 PG SPRINGBOARD（local）150.00→152.50 距 0.29% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 PLTR SPRINGBOARD（local）197.50→200.00 距 0.54% | 15:00 后大单 10 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 QQQ SPRINGBOARD（local）743.00→752.00 距 0.52% | 15:00 后大单 58 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 RDDT CLIFF（local）157.50→152.50 距 0.60% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 SHEL CLIFF（local）101.00→100.00 距 0.78% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 SKHY SPRINGBOARD（local）170.00→172.50 距 0.02% | 15:00 后大单 3 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 SNOW CLIFF（local）345.00→342.50 距 0.27% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 SPOT SPRINGBOARD（local）520.00→525.00 距 0.89% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 SPY SPRINGBOARD（local）771.00→774.00 距 0.33% | 15:00 后大单 45 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 STM CLIFF（local）53.00→52.00 距 0.85% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 STX CLIFF（local）775.00→770.00 距 0.07% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 TEM CLIFF（local）69.00→68.00 距 0.38% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 TQQQ CLIFF（local）80.00→79.00 距 0.06% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 TSLA SPRINGBOARD（king）370.00→400.00 距 0.95% | 15:00 后大单 14 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 TTWO CLIFF（local）210.00→207.50 距 0.25% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 TXN CLIFF（local）287.50→285.00 距 0.23% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 U SPRINGBOARD（local）45.50→46.00 距 0.26% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 VRT SPRINGBOARD（local）242.50→245.00 距 0.22% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 WDC CLIFF（local）392.50→390.00 距 0.19% | 15:00 后大单 1 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 WMB SPRINGBOARD（local）72.00→74.00 距 0.55% | 15:00 后大单 0 笔
+21:45:02 [INFO] yhs.overnight_rules: 2026-10-08 ZM CLIFF（local）95.00→94.00 距 0.71% | 15:00 后大单 0 笔
+21:45:03 [INFO] yhs.main: 【历史】SPY261009C00774000 真实 IV 序列 390 个点（1m）
+21:45:04 [INFO] yhs.main: 【历史】SPY261009C00774000 真实 IV 序列 348 个点（1m）
+21:45:04 [INFO] yhs.overnight_rules: 2026-10-08 开 SPY O:SPY261009C00774000 成本 1.67 → 09:35 卖 2.97（+77.6%）跳空 0.39%
+21:45:06 [INFO] yhs.main: 【历史】QQQ261009C00747000 真实 IV 序列 390 个点（1m）
+21:45:06 [INFO] yhs.main: 【历史】QQQ261009C00747000 真实成交 bar 150 根（13:07–16:14）
+21:45:06 [INFO] yhs.main: 【历史】QQQ261009C00747000 真实 IV 序列 337 个点（1m）
+21:45:06 [INFO] yhs.overnight_rules: 2026-10-08 开 QQQ O:QQQ261009C00747000 成本 3.10 → 09:35 卖 5.31（+71.2%）跳空 0.69%
+21:45:07 [INFO] yhs.main: 【历史】MU261009C01035000 真实 IV 序列 390 个点（1m）
+21:45:08 [INFO] yhs.main: 【历史】MU261009C01035000 真实 IV 序列 389 个点（1m）
+21:45:08 [INFO] yhs.overnight_rules: 2026-10-08 开 MU O:MU261009C01035000 成本 12.50 → 09:35 卖 13.09（+4.7%）跳空 0.86%
+21:45:09 [INFO] yhs.main: 【历史】MRVL261009P00270000 真实 IV 序列 390 个点（1m）
+21:45:10 [INFO] yhs.main: 【历史】MRVL261009P00270000 真实 IV 序列 387 个点（1m）
+21:45:10 [INFO] yhs.overnight_rules: 2026-10-08 开 MRVL O:MRVL261009P00270000 成本 3.17 → 09:35 卖 0.61（-80.9%）跳空 2.04%
+21:45:12 [INFO] yhs.main: 【历史】META261009C00722500 真实 IV 序列 390 个点（1m）
+21:45:13 [INFO] yhs.main: 【历史】META261009C00722500 真实 IV 序列 387 个点（1m）
+21:45:13 [INFO] yhs.overnight_rules: 2026-10-08 开 META O:META261009C00722500 成本 5.10 → 09:35 卖 4.06（-20.5%）跳空 0.17%
+21:45:14 [INFO] yhs.main: 【历史】INTC261009P00106000 真实 IV 序列 390 个点（1m）
+21:45:15 [INFO] yhs.main: 【历史】INTC261009P00106000 真实 IV 序列 380 个点（1m）
+21:45:15 [INFO] yhs.overnight_rules: 2026-10-08 开 INTC O:INTC261009P00106000 成本 1.11 → 09:35 卖 0.45（-59.0%）跳空 0.7%
+21:45:16 [INFO] yhs.main: 【历史】PLTR261009C00200000 真实 IV 序列 390 个点（1m）
+21:45:16 [INFO] yhs.main: 【历史】PLTR261009C00200000 真实成交 bar 150 根（13:10–15:59）
+21:45:16 [INFO] yhs.main: 【历史】PLTR261009C00200000 真实 IV 序列 258 个点（1m）
+21:45:16 [INFO] yhs.overnight_rules: 2026-10-08 开 PLTR O:PLTR261009C00200000 成本 1.43 → 09:35 卖 2.96（+107.1%）跳空 1.88%
+21:45:16 [INFO] yhs.overnight_rules: 2026-10-08 AMD 放弃：同板块（半导体）已 3 笔
+21:45:18 [INFO] yhs.main: 【历史】TSLA261009C00377500 真实 IV 序列 390 个点（1m）
+21:45:19 [INFO] yhs.main: 【历史】TSLA261009C00377500 真实 IV 序列 341 个点（1m）
+21:45:19 [INFO] yhs.overnight_rules: 2026-10-08 开 TSLA O:TSLA261009C00377500 成本 1.59 → 09:35 卖 7.61（+378.9%）跳空 3.02%
+21:45:20 [INFO] yhs.main: 【历史】PG261009C00152500 真实 IV 序列 390 个点（1m）
+21:45:20 [INFO] yhs.overnight_rules: 2026-10-08 O:PG261009C00152500 放弃：价差 81%
+21:45:21 [INFO] yhs.main: 【历史】AMZN261009C00255000 真实 IV 序列 390 个点（1m）
+21:45:22 [INFO] yhs.main: 【历史】AMZN261009C00255000 真实 IV 序列 229 个点（1m）
+21:45:22 [INFO] yhs.overnight_rules: 2026-10-08 开 AMZN O:AMZN261009C00255000 成本 1.70 → 09:35 卖 3.64（+113.3%）跳空 1.48%
+21:45:22 [INFO] yhs.overnight_rules: 2026-10-08 AVGO 放弃：同板块（半导体）已 3 笔
+21:45:24 [INFO] yhs.main: 【历史】AAPL261009P00340000 真实 IV 序列 390 个点（1m）
+21:45:25 [INFO] yhs.main: 【历史】AAPL261009P00340000 真实 IV 序列 217 个点（1m）
+21:45:25 [INFO] yhs.overnight_rules: 2026-10-08 开 AAPL O:AAPL261009P00340000 成本 1.32 → 09:35 卖 7.53（+468.9%）跳空 -2.64%
+21:45:25 [INFO] yhs.overnight_rules: 2026-10-09 AMD CLIFF（local）612.50→605.00 距 0.77% | 15:00 后大单 9 笔
+21:45:25 [INFO] yhs.overnight_rules: 2026-10-09 GOOGL CLIFF（local）355.00→350.00 距 0.89% | 15:00 后大单 22 笔
+21:45:25 [INFO] yhs.overnight_rules: 2026-10-09 MSFT SPRINGBOARD（local）532.50→550.00 距 0.52% | 15:00 后大单 15 笔
+21:45:25 [INFO] yhs.overnight_rules: 2026-10-09 NVDA CLIFF（local）230.00→225.00 距 0.12% | 15:00 后大单 9 笔
+21:45:25 [INFO] yhs.overnight_rules: 2026-10-09 QQQ SPRINGBOARD（local）745.00→755.00 距 0.79% | 15:00 后大单 39 笔
+21:45:25 [INFO] yhs.overnight_rules: 2026-10-09 TLT SPRINGBOARD（local）77.50→78.00 距 0.51% | 15:00 后大单 2 笔
+21:45:25 [INFO] yhs.overnight_rules: 2026-10-09 TSLA SPRINGBOARD（local）380.00→385.00 距 0.73% | 15:00 后大单 12 笔
+21:45:26 [INFO] yhs.main: 【历史】QQQ261012C00751000 真实 IV 序列 390 个点（1m）
+21:45:27 [INFO] yhs.main: 【历史】QQQ261012C00751000 真实 IV 序列 348 个点（1m）
+21:45:27 [INFO] yhs.overnight_rules: 2026-10-09 开 QQQ O:QQQ261012C00751000 成本 2.51 → 09:35 卖 0.42（-83.3%）跳空 -0.45%
+21:45:28 [INFO] yhs.main: 【历史】GOOGL261012P00350000 真实 IV 序列 390 个点（1m）
+21:45:30 [INFO] yhs.main: 【历史】GOOGL261012P00350000 真实 IV 序列 355 个点（1m）
+21:45:30 [INFO] yhs.overnight_rules: 2026-10-09 开 GOOGL O:GOOGL261012P00350000 成本 2.05 → 09:35 卖 0.56（-72.9%）跳空 0.26%
+21:45:31 [INFO] yhs.main: 【历史】MSFT261012C00537500 真实 IV 序列 390 个点（1m）
+21:45:32 [INFO] yhs.main: 【历史】MSFT261012C00537500 真实 IV 序列 347 个点（1m）
+21:45:32 [INFO] yhs.overnight_rules: 2026-10-09 开 MSFT O:MSFT261012C00537500 成本 2.22 → 09:35 卖 2.89（+30.5%）跳空 0.66%
+21:45:33 [INFO] yhs.main: 【历史】AMD261012P00607500 真实 IV 序列 390 个点（1m）
+21:45:34 [INFO] yhs.main: 【历史】AMD261012P00607500 真实 IV 序列 259 个点（1m）
+21:45:34 [INFO] yhs.overnight_rules: 2026-10-09 开 AMD O:AMD261012P00607500 成本 6.47 → 09:35 卖 13.56（+109.7%）跳空 -2.38%
+21:45:36 [INFO] yhs.main: 【历史】TSLA261012C00385000 真实 IV 序列 390 个点（1m）
+21:46:34 [INFO] yhs.main: 【历史】TSLA261012C00385000 真实 IV 序列 385 个点（1m）
+21:46:34 [INFO] yhs.overnight_rules: 2026-10-09 开 TSLA O:TSLA261012C00385000 成本 2.81 → 09:35 卖 0.53（-81.3%）跳空 -0.95%
+21:46:35 [INFO] yhs.main: 【历史】NVDA261012P00227500 真实 IV 序列 390 个点（1m）
+21:46:35 [INFO] yhs.main: 【历史】NVDA261012P00227500 真实成交 bar 139 根（09:30–11:48）
+21:46:35 [INFO] yhs.main: 【历史】NVDA261012P00227500 真实 IV 序列 389 个点（1m）
+21:46:35 [INFO] yhs.overnight_rules: 2026-10-09 开 NVDA O:NVDA261012P00227500 成本 0.84 → 09:35 卖 0.77（-8.5%）跳空 -0.7%
+21:46:36 [INFO] yhs.main: 【历史】TLT261012C00078000 真实 IV 序列 390 个点（1m）
+21:46:36 [INFO] yhs.main: 【历史】TLT261012C00078000 真实成交 bar 150 根（12:20–16:12）
+21:46:36 [INFO] yhs.main: 【历史】TLT261012C00078000 真实 IV 序列 390 个点（1m）
+21:46:36 [INFO] yhs.overnight_rules: 2026-10-09 开 TLT O:TLT261012C00078000 成本 0.17 → 09:35 卖 0.05（-72.5%）跳空 -0.05%
+21:46:36 [INFO] yhs.overnight_rules: 2026-10-12 QQQ SPRINGBOARD（local）740.00→746.00 距 0.81% | 15:00 后大单 39 笔
+21:46:36 [INFO] yhs.overnight_rules: 2026-10-12 SPY SPRINGBOARD（local）774.00→779.00 距 0.51% | 15:00 后大单 32 笔
+21:46:37 [INFO] yhs.main: 【历史】QQQ261013C00746000 真实 IV 序列 390 个点（1m）
+21:46:37 [INFO] yhs.main: 【历史】QQQ261013C00746000 真实成交 bar 150 根（13:43–16:14）
+21:46:37 [INFO] yhs.main: 【历史】QQQ261013C00746000 真实 IV 序列 390 个点（1m）
+21:46:37 [INFO] yhs.overnight_rules: 2026-10-12 开 QQQ O:QQQ261013C00746000 成本 2.20 → 09:35 卖 0.15（-93.3%）跳空 -0.78%
+21:46:38 [INFO] yhs.main: 【历史】SPY261013C00778000 真实 IV 序列 390 个点（1m）
+21:46:39 [INFO] yhs.main: 【历史】SPY261013C00778000 真实 IV 序列 390 个点（1m）
+21:46:39 [INFO] yhs.overnight_rules: 2026-10-12 开 SPY O:SPY261013C00778000 成本 1.43 → 09:35 卖 0.85（-40.2%）跳空 -0.03%
+21:46:39 [INFO] yhs.overnight_rules: 2026-10-13 AAPL SPRINGBOARD（local）340.00→342.50 距 0.51% | 15:00 后大单 18 笔
+21:46:39 [INFO] yhs.overnight_rules: 2026-10-13 AMZN CLIFF（local）260.00→257.50 距 0.13% | 15:00 后大单 2 笔
+21:46:39 [INFO] yhs.overnight_rules: 2026-10-13 INTC CLIFF（local）103.00→102.00 距 0.64% | 15:00 后大单 14 笔
+21:46:39 [INFO] yhs.overnight_rules: 2026-10-13 NVDA CLIFF（king）230.00→220.00 距 0.87% | 15:00 后大单 14 笔
+21:46:39 [INFO] yhs.overnight_rules: 2026-10-13 QQQ CLIFF（local）748.00→743.00 距 0.63% | 15:00 后大单 27 笔
+21:46:39 [INFO] yhs.overnight_rules: 2026-10-13 SPY CLIFF（local）781.00→778.00 距 0.34% | 15:00 后大单 60 笔
+21:46:39 [INFO] yhs.overnight_rules: 2026-10-13 TLT SPRINGBOARD（local）78.00→78.50 距 0.47% | 15:00 后大单 1 笔
+21:46:41 [INFO] yhs.main: 【历史】SPY261014P00778000 真实 IV 序列 390 个点（1m）
+21:46:42 [INFO] yhs.main: 【历史】SPY261014P00778000 真实 IV 序列 318 个点（1m）
+21:46:42 [INFO] yhs.overnight_rules: 2026-10-13 开 SPY O:SPY261014P00778000 成本 2.00 → 09:35 卖 3.32（+65.5%）跳空 -0.43%
+21:46:43 [INFO] yhs.main: 【历史】QQQ261014P00743000 真实 IV 序列 390 个点（1m）
+21:46:44 [INFO] yhs.main: 【历史】QQQ261014P00743000 真实 IV 序列 340 个点（1m）
+21:46:44 [INFO] yhs.overnight_rules: 2026-10-13 开 QQQ O:QQQ261014P00743000 成本 3.08 → 09:35 卖 5.52（+79.2%）跳空 -0.72%
+21:46:44 [INFO] yhs.main: 【历史】NVDA261014P00227500 真实成交 bar 150 根（13:29–15:59）
+21:46:44 [INFO] yhs.main: 【历史】NVDA261014P00227500 真实成交 bar 150 根（11:41–15:58）
+21:46:44 [INFO] yhs.main: 【历史】NVDA261014P00227500 真实 IV 序列 324 个点（1m）
+21:46:44 [INFO] yhs.overnight_rules: 2026-10-13 开 NVDA O:NVDA261014P00227500 成本 1.58 → 09:35 卖 2.98（+89.1%）跳空 -1.37%
+21:46:45 [INFO] yhs.main: 【历史】AAPL261014C00342500 真实 IV 序列 390 个点（1m）
+21:46:47 [INFO] yhs.main: 【历史】AAPL261014C00342500 真实 IV 序列 387 个点（1m）
+21:46:47 [INFO] yhs.overnight_rules: 2026-10-13 开 AAPL O:AAPL261014C00342500 成本 1.32 → 09:35 卖 3.49（+163.6%）跳空 1.14%
+21:46:48 [INFO] yhs.main: 【历史】INTC261014P00102000 真实 IV 序列 390 个点（1m）
+21:46:49 [INFO] yhs.main: 【历史】INTC261014P00102000 真实 IV 序列 298 个点（1m）
+21:46:49 [INFO] yhs.overnight_rules: 2026-10-13 开 INTC O:INTC261014P00102000 成本 1.37 → 09:35 卖 2.00（+45.4%）跳空 -1.89%
+21:46:50 [INFO] yhs.main: 【历史】AMZN261014P00257500 真实 IV 序列 390 个点（1m）
+21:46:50 [INFO] yhs.main: 【历史】AMZN261014P00257500 真实成交 bar 139 根（09:30–11:48）
+21:46:50 [INFO] yhs.main: 【历史】AMZN261014P00257500 真实 IV 序列 329 个点（1m）
+21:46:50 [INFO] yhs.overnight_rules: 2026-10-13 开 AMZN O:AMZN261014P00257500 成本 1.25 → 09:35 卖 1.18（-5.9%）跳空 -0.58%
+21:46:50 [INFO] yhs.main: 【历史】TLT261014C00078500 真实成交 bar 150 根（09:42–16:14）
+21:46:50 [INFO] yhs.main: 【历史】TLT261014C00078500 真实成交 bar 150 根（12:39–16:13）
+21:46:50 [INFO] yhs.main: 【历史】TLT261014C00078500 真实 IV 序列 352 个点（1m）
+21:46:50 [INFO] yhs.overnight_rules: 2026-10-13 开 TLT O:TLT261014C00078500 成本 0.23 → 09:35 卖 0.01（-96.3%）跳空 -0.7%
+21:46:50 [INFO] yhs.overnight_rules: 2026-10-14 QQQ CLIFF（local）732.00→720.00 距 0.46% | 15:00 后大单 108 笔
+21:46:50 [INFO] yhs.overnight_rules: 2026-10-14 SPY CLIFF（local）774.00→768.00 距 0.67% | 15:00 后大单 67 笔
+21:46:51 [INFO] yhs.main: 【历史】QQQ261015P00728000 真实 IV 序列 390 个点（1m）
+21:46:51 [INFO] yhs.main: 【历史】QQQ261015P00728000 真实成交 bar 150 根（13:45–16:14）
+21:46:51 [INFO] yhs.main: 【历史】QQQ261015P00728000 真实 IV 序列 390 个点（1m）
+21:46:51 [INFO] yhs.overnight_rules: 2026-10-14 开 QQQ O:QQQ261015P00728000 成本 3.27 → 09:35 卖 10.35（+216.3%）跳空 -1.48%
+21:46:53 [INFO] yhs.main: 【历史】SPY261015P00768000 真实 IV 序列 390 个点（1m）
+21:46:53 [INFO] yhs.main: 【历史】SPY261015P00768000 真实成交 bar 150 根（13:31–16:00）
+21:46:53 [INFO] yhs.main: 【历史】SPY261015P00768000 真实 IV 序列 390 个点（1m）
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-14 开 SPY O:SPY261015P00768000 成本 1.84 → 09:35 卖 3.22（+74.8%）跳空 -0.42%
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 AAOI CLIFF（local）85.00→84.00 距 0.20% | 15:00 后大单 3 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 ACN SPRINGBOARD（local）225.00→227.50 距 0.12% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 ALAB SPRINGBOARD（local）300.00→310.00 距 0.38% | 15:00 后大单 2 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 AMAT SPRINGBOARD（local）430.00→450.00 距 0.13% | 15:00 后大单 9 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 AMD SPRINGBOARD（local）560.00→572.50 距 0.93% | 15:00 后大单 64 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 AMZN SPRINGBOARD（local）255.00→260.00 距 0.03% | 15:00 后大单 17 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 ASML CLIFF（local）1660.00→1650.00 距 0.32% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 BA SPRINGBOARD（local）187.50→192.50 距 0.31% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 BKNG SPRINGBOARD（local）165.80→170.00 距 0.35% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 BRKB CLIFF（local）530.00→525.00 距 0.70% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 BSX SPRINGBOARD（local）44.00→44.50 距 0.27% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 C SPRINGBOARD（local）122.00→130.00 距 0.91% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 CBRS CLIFF（local）143.00→140.00 距 0.83% | 15:00 后大单 2 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 CCJ CLIFF（local）84.00→82.00 距 0.65% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 CELH SPRINGBOARD（king）28.00→30.00 距 0.36% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 CHTR CLIFF（local）110.00→108.00 距 0.61% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 COST CLIFF（local）990.00→975.00 距 0.93% | 15:00 后大单 3 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 CRM SPRINGBOARD（local）245.00→250.00 距 0.62% | 15:00 后大单 2 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 CRWD CLIFF（local）245.00→242.50 距 0.08% | 15:00 后大单 5 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 CSCO SPRINGBOARD（local）109.00→110.00 距 0.50% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 CVX CLIFF（local）220.00→215.00 距 0.47% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 DDOG SPRINGBOARD（local）265.00→275.00 距 0.57% | 15:00 后大单 3 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 ENPH SPRINGBOARD（local）30.50→31.00 距 0.49% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 FTNT CLIFF（local）182.50→180.00 距 0.28% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 GLW CLIFF（local）138.00→135.00 距 0.19% | 15:00 后大单 2 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 GOOG CLIFF（local）347.50→340.00 距 0.62% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 GS SPRINGBOARD（local）882.50→895.00 距 0.82% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 HIMS CLIFF（local）29.50→29.00 距 0.46% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 HPQ CLIFF（king）31.00→29.00 距 0.49% | 15:00 后大单 3 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 ICE SPRINGBOARD（local）157.50→160.00 距 0.57% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 INTU SPRINGBOARD（local）330.00→332.50 距 0.21% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 JPM CLIFF（local）337.50→332.50 距 0.75% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 KO CLIFF（local）92.50→92.00 距 0.54% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 LLY CLIFF（local）1260.00→1250.00 距 0.37% | 15:00 后大单 4 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 LMT SPRINGBOARD（local）527.50→532.50 距 0.90% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 MDT SPRINGBOARD（local）95.00→105.00 距 0.74% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 MRVL SPRINGBOARD（local）240.00→242.50 距 0.79% | 15:00 后大单 10 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 MSFT SPRINGBOARD（local）535.00→550.00 距 1.01% | 15:00 后大单 8 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 NEE CLIFF（king）79.00→76.00 距 0.18% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 NET CLIFF（local）317.50→312.50 距 0.80% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 NFLX SPRINGBOARD（king）72.50→74.00 距 0.42% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 NKTR CLIFF（local）38.00→36.00 距 0.38% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 NVO CLIFF（local）39.50→39.00 距 0.56% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 PG CLIFF（local）157.50→155.00 距 0.25% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 QQQ CLIFF（local）730.00→728.00 距 0.14% | 15:00 后大单 102 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 RBLX SPRINGBOARD（local）51.00→52.00 距 0.14% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 RTX CLIFF（local）187.50→185.00 距 0.63% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 SBUX SPRINGBOARD（local）96.00→97.00 距 0.12% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 SKHY SPRINGBOARD（local）145.00→150.00 距 0.85% | 15:00 后大单 6 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 SPY CLIFF（local）775.00→772.00 距 0.34% | 15:00 后大单 76 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 STM CLIFF（local）47.00→45.00 距 0.85% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 TER SPRINGBOARD（local）340.00→347.50 距 0.91% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 TSEM CLIFF（local）210.00→200.00 距 0.29% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 TSLA SPRINGBOARD（local）360.00→375.00 距 0.92% | 15:00 后大单 47 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 TSM SPRINGBOARD（local）420.00→425.00 距 0.57% | 15:00 后大单 7 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 UBER SPRINGBOARD（local）71.00→72.50 距 0.43% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 WDAY SPRINGBOARD（king）195.00→200.00 距 0.40% | 15:00 后大单 0 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 WFC CLIFF（local）83.00→82.50 距 0.58% | 15:00 后大单 1 笔
+21:46:53 [INFO] yhs.overnight_rules: 2026-10-15 NOK SPRINGBOARD（local）9.50→10.00 距 0.56% | 15:00 后大单 1 笔
+21:46:54 [INFO] yhs.main: 【历史】QQQ261016P00728000 真实 IV 序列 390 个点（1m）
+21:46:54 [INFO] yhs.main: 【历史】QQQ261016P00728000 真实成交 bar 150 根（09:39–13:09）
+21:46:54 [INFO] yhs.main: 【历史】QQQ261016P00728000 真实 IV 序列 218 个点（1m）
+21:46:54 [INFO] yhs.overnight_rules: 2026-10-15 开 QQQ O:QQQ261016P00728000 成本 3.13 → 09:35 卖 4.42（+41.1%）跳空 -0.65%
+21:46:55 [INFO] yhs.main: 【历史】AMD261016C00567500 真实 IV 序列 390 个点（1m）
+21:46:55 [INFO] yhs.main: 【历史】AMD261016C00567500 真实成交 bar 111 根（09:30–13:12）
+21:46:55 [INFO] yhs.main: 【历史】AMD261016C00567500 真实 IV 序列 224 个点（1m）
+21:46:55 [INFO] yhs.overnight_rules: 2026-10-15 开 AMD O:AMD261016C00567500 成本 5.90 → 09:35 卖 0.27（-95.4%）跳空 -3.26%
+21:46:56 [INFO] yhs.main: 【历史】SPY261016P00772000 真实 IV 序列 390 个点（1m）
+21:46:56 [INFO] yhs.main: 【历史】SPY261016P00772000 真实成交 bar 150 根（13:14–15:54）
+21:46:56 [INFO] yhs.main: 【历史】SPY261016P00772000 真实 IV 序列 223 个点（1m）
+21:46:56 [INFO] yhs.overnight_rules: 2026-10-15 开 SPY O:SPY261016P00772000 成本 2.03 → 09:35 卖 1.23（-39.7%）跳空 -0.01%
+21:46:57 [INFO] yhs.main: 【历史】TSLA261016C00365000 真实 IV 序列 390 个点（1m）
+21:46:57 [INFO] yhs.main: 【历史】TSLA261016C00365000 真实成交 bar 150 根（10:45–13:14）
+21:46:57 [INFO] yhs.main: 【历史】TSLA261016C00365000 真实 IV 序列 304 个点（1m）
+21:46:57 [INFO] yhs.overnight_rules: 2026-10-15 开 TSLA O:TSLA261016C00365000 成本 4.72 → 09:35 卖 4.44（-6.0%）跳空 0.88%
+21:46:59 [INFO] yhs.main: 【历史】AMZN261016C00257500 真实 IV 序列 390 个点（1m）
+21:46:59 [INFO] yhs.main: 【历史】AMZN261016C00257500 真实成交 bar 150 根（10:31–13:14）
+21:46:59 [INFO] yhs.main: 【历史】AMZN261016C00257500 真实 IV 序列 309 个点（1m）
+21:46:59 [INFO] yhs.overnight_rules: 2026-10-15 开 AMZN O:AMZN261016C00257500 成本 0.74 → 09:35 卖 0.24（-68.4%）跳空 -0.21%
+21:47:00 [INFO] yhs.main: 【历史】MRVL261016C00242500 真实 IV 序列 390 个点（1m）
+21:47:00 [INFO] yhs.main: 【历史】MRVL261016C00242500 真实成交 bar 106 根（09:30–13:12）
+21:47:00 [INFO] yhs.main: 【历史】MRVL261016C00242500 真实 IV 序列 229 个点（1m）
+21:47:00 [INFO] yhs.overnight_rules: 2026-10-15 开 MRVL O:MRVL261016C00242500 成本 4.35 → 09:35 卖 0.25（-94.2%）跳空 -3.26%
+21:47:01 [INFO] yhs.main: 【历史】SKHY261016C00147000 真实 IV 序列 390 个点（1m）
+21:47:01 [INFO] yhs.main: 【历史】SKHY261016C00147000 真实成交 bar 29 根（09:30–11:27）
+21:47:01 [INFO] yhs.main: 【历史】SKHY261016C00147000 真实 IV 序列 225 个点（1m）
+21:47:01 [INFO] yhs.overnight_rules: 2026-10-15 开 SKHY O:SKHY261016C00147000 成本 2.31 → 09:35 卖 0.04（-98.3%）跳空 -4.34%
+21:47:01 [INFO] yhs.overnight_rules: 2026-10-15 TSM 放弃：同板块（半导体）已 3 笔
+21:47:02 [INFO] yhs.main: 【历史】CSCO261016C00110000 分钟线为 2026-10-16（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+21:47:02 [INFO] yhs.main: 【历史】CSCO261016C00110000 真实 IV 序列 390 个点（1m）
+21:47:02 [INFO] yhs.main: 【历史】CSCO261016C00110000 真实成交 bar 52 根（09:30–12:59）
+21:47:02 [INFO] yhs.main: 【历史】CSCO261016C00110000 真实 IV 序列 177 个点（1m）
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-15 开 CSCO O:CSCO261016C00110000 成本 0.94 → 09:35 卖 0.26（-73.0%）跳空 -0.78%
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-15 AMAT 放弃：同板块（半导体）已 3 笔
+21:47:02 [INFO] yhs.main: 【历史】MSFT261016C00542500 真实 IV 序列 390 个点（1m）
+21:47:02 [INFO] yhs.main: 【历史】MSFT261016C00542500 真实成交 bar 149 根（09:30–13:19）
+21:47:02 [INFO] yhs.main: 【历史】MSFT261016C00542500 真实 IV 序列 138 个点（1m）
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-15 开 MSFT O:MSFT261016C00542500 成本 1.64 → 09:35 卖 1.16（-29.3%）跳空 0.11%
+21:47:02 [INFO] yhs.main: 【历史】GLW261016P00137000 真实 IV 序列 390 个点（1m）
+21:47:02 [INFO] yhs.main: 【历史】GLW261016P00137000 真实成交 bar 17 根（09:47–12:38）
+21:47:02 [INFO] yhs.main: 【历史】GLW261016P00137000 真实 IV 序列 195 个点（1m）
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-15 开 GLW O:GLW261016P00137000 成本 1.69 → 09:35 卖 2.94（+73.8%）跳空 -2.5%
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-16 AAPL SPRINGBOARD（king）342.50→350.00 距 0.42% | 15:00 后大单 33 笔
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-16 AMZN CLIFF（local）250.00→247.50 距 0.21% | 15:00 后大单 16 笔
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-16 AVGO SPRINGBOARD（local）327.50→330.00 距 0.62% | 15:00 后大单 8 笔
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-16 MSFT SPRINGBOARD（local）522.50→535.00 距 0.90% | 15:00 后大单 17 笔
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-16 SPY CLIFF（local）763.00→762.00 距 0.04% | 15:00 后大单 120 笔
+21:47:02 [INFO] yhs.overnight_rules: 2026-10-16 TLT SPRINGBOARD（local）80.00→81.00 距 0.07% | 15:00 后大单 10 笔
+21:47:03 [INFO] yhs.main: 【历史】SPY261019P00762000 分钟线为 2026-10-19（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+21:47:03 [INFO] yhs.main: 【历史】SPY261019P00762000 真实 IV 序列 390 个点（1m）
+21:47:03 [INFO] yhs.main: 【历史】SPY261019P00762000 真实成交 bar 150 根（13:31–16:14）
+21:47:03 [INFO] yhs.main: 【历史】SPY261019P00762000 真实 IV 序列 390 个点（1m）
+21:47:03 [INFO] yhs.overnight_rules: 2026-10-16 开 SPY O:SPY261019P00762000 成本 2.52 → 09:35 卖 0.30（-88.1%）跳空 0.62%
+21:47:03 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实 IV 序列 390 个点（1m）
+21:47:03 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实成交 bar 150 根（10:42–13:11）
+21:47:03 [INFO] yhs.main: 【历史】AAPL261019C00345000 真实 IV 序列 365 个点（1m）
+21:47:03 [INFO] yhs.overnight_rules: 2026-10-16 开 AAPL O:AAPL261019C00345000 成本 1.82 → 09:35 卖 1.09（-40.4%）跳空 -0.07%
+21:47:03 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实 IV 序列 390 个点（1m）
+21:47:03 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实成交 bar 61 根（09:30–15:41）
+21:47:03 [INFO] yhs.main: 【历史】AMZN261019P00247500 真实 IV 序列 52 个点（1m）
+21:47:03 [INFO] yhs.overnight_rules: 2026-10-16 开 AMZN O:AMZN261019P00247500 成本 1.21 → 09:35 卖 0.04（-96.7%）跳空 2.61%
+21:47:03 [INFO] yhs.main: 【历史】MSFT261019C00527500 真实 IV 序列 389 个点（1m）
+21:47:03 [INFO] yhs.overnight_rules: 2026-10-16 O:MSFT261019C00527500 放弃：价差 26%
+21:47:03 [INFO] yhs.main: 【历史】TLT261019C00080500 真实 IV 序列 390 个点（1m）
+21:47:03 [INFO] yhs.main: 【历史】TLT261019C00080500 真实成交 bar 57 根（09:30–15:42）
+21:47:03 [INFO] yhs.main: 【历史】TLT261019C00080500 真实 IV 序列 184 个点（1m）
+21:47:03 [INFO] yhs.overnight_rules: 2026-10-16 开 TLT O:TLT261019C00080500 成本 0.12 → 09:35 卖 0.01（-94.2%）跳空 -0.18%
+21:47:03 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实 IV 序列 390 个点（1m）
+21:47:03 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实成交 bar 59 根（09:30–15:54）
+21:47:03 [INFO] yhs.main: 【历史】AVGO261019C00330000 真实 IV 序列 236 个点（1m）
+21:47:03 [INFO] yhs.overnight_rules: 2026-10-16 开 AVGO O:AVGO261019C00330000 成本 3.50 → 09:35 卖 6.63（+89.6%）跳空 2.03%
+21:47:03 [INFO] yhs.overnight_rules: 配额剩余 93317
