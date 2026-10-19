@@ -283,7 +283,9 @@ python3 archive.py --dry-run                 # 只看计划
     B 排除 ETF + 大单必须是要买的同一张合约 → 13 笔 −$1,269（backtests/overnight_rules_noetf_contract）。
     现行规则里的大单多是远期/对冲单，但收紧后反而更差：被筛掉的单子才是这 7 晚的主要利润来源；
     只排除 ETF（大单定义不变）→ 66 笔 +$17,559（backtests/overnight_rules_noetf）：被排除的 13 笔 ETF 合计 +$3,206，
-    补进来的 11 笔个股合计 +$139
+    补进来的 11 笔个股合计 +$139；
+    大单要求 Vol ≥ OI（新开仓）→ 61 笔 +$9,400（overnight_rules_volOI）；排除 ETF + Vol ≥ OI → 54 笔 +$5,151
+    （overnight_rules_noetf_volOI）。隔夜单上，每一种收紧大单定义的做法都比现行差
 
 ## L. 2026-10-15：外部报告（Argon 四日回测）里的出场/过滤思路 —— 真实回测全部更差，未采用
 新增三个实验开关（默认关闭，实盘不变）：`ratchet_start_pct/ratchet_keep/ratchet_offset_pct`（连续棘轮，锁定 = 0.8×峰值 − 5.5%）、
