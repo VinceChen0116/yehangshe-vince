@@ -136,12 +136,18 @@ def run_filter(argv) -> int:
     vol_oi = "--flow-vol-ge-oi" in argv
     if "--live-expiry" in argv:
         use_live_expiry()
-    max_dte = int(argv[argv.index("--flow-max-dte") + 1]) if "--flow-max-dte" in argv else 0
+    val = lambda k, f: f(argv[argv.index(k) + 1]) if k in argv else None
+    max_dte = val("--flow-max-dte", int) or 0
+    if val("--max-pos", int):   # 每晚最多几笔（默认 10）
+        bt.MAX_POS = val("--max-pos", int)
+    if val("--budget", float):  # 每笔目标投入与浮动（默认 $1,000 ± 25%）
+        import overnight_live as ol
+        ol.BUDGET, ol.BUDGET_BAND = val("--budget", float), (val("--band", float) or 250.0) / val("--budget", float)
     rest, skip = [], False
     for i, a in enumerate(argv):
         if skip:
             skip = False
-        elif a == "--flow-max-dte":
+        elif a in ("--flow-max-dte", "--max-pos", "--budget", "--band"):
             skip = True
         elif a not in ("--no-etf", "--flow-contract", "--flow-vol-ge-oi", "--live-expiry"):
             rest.append(a)
