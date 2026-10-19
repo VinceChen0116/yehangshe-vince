@@ -1,0 +1,4 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-07→2026-10-08,META,互联网媒体,SPRINGBOARD,local,O:META261009C00722500,721.44,720.0,725.0,0.2,1,62400,7.653,7.463,09:35,0.17,True,1,765,-18.9,-2.5
+2026-10-07→2026-10-08,SKHY,半导体,SPRINGBOARD,local,O:SKHY261009C00180000,178.22,177.5,182.5,0.4,1,59116,2.493,1.292,09:35,-0.78,False,4,997,-480.7,-48.2
+2026-10-07→2026-10-08,AMZN,互联网媒体,CLIFF,local,O:AMZN261009P00257500,259.75,260.0,257.5,0.1,1,51475,1.38,1.314,09:35,-0.29,True,7,966,-46.2,-4.8

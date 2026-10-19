@@ -1,0 +1,4 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-16→2026-10-19,CRWV,硬件网络存储,SPRINGBOARD,local,O:CRWV261023C00061500,60.29,60.0,61.5,0.49,3,180850,3.19,4.356,09:35,5.85,True,3,957,349.7,36.5
+2026-10-16→2026-10-19,ACN,_ACN,CLIFF,local,O:ACN261023P00227500,228.48,230.0,225.0,0.66,1,147360,5.157,3.875,09:35,0.03,False,2,1031,-256.3,-24.9
+2026-10-16→2026-10-19,ORCL,软件,CLIFF,local,O:ORCL261023P00128000,128.04,129.0,125.0,0.74,1,120350,3.593,2.227,09:35,2.0,False,3,1078,-409.6,-38.0
