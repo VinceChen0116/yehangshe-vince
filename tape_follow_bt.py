@@ -8,7 +8,8 @@ tape_follow_bt.py —— dennis-tape 式"跟大单"策略的真实数据回测
   价格：真实 IV + 真实标的价 + BS（1 分钟 greeks 序列），买入加 / 卖出减当时真实 NBBO 半价差
   止损：−22%；止盈：涨到 +30% 后启动追踪，回撤到 max(+30%, 峰值 × (1 − TRAIL)) 卖出
   持仓：可以过夜，最多 MAX_HOLD 个交易日，或到期前一天 15:50 时间离场
-  仓位：每笔 $1,000（±25%，与隔夜单一致）
+  仓位：--sizing dennis（默认）每笔约 $1,800、至少 1 张、单张超过 $3,100 不开（dennis 实际 $1.2K–$3.1K）；
+        --sizing ours 每笔 $1,000（±25%，与隔夜单一致）
 用法：python3 tape_follow_bt.py --dates 2026-10-02:2026-10-16 --filter F1 [--max-per-day 5]
 """
 from __future__ import annotations
@@ -39,6 +40,16 @@ STOP = -0.22
 TRAIL_ON = 0.30
 TRAIL = 0.10
 MAX_HOLD = 8
+SIZING = "dennis"
+
+
+def qty_for(price: float) -> int:
+    if SIZING == "ours":
+        return size_contracts(price)
+    per = price * 100
+    if per <= 0 or per > 3100:
+        return 0
+    return max(1, int(round(1800 / per)))
 LAST_DATA = latest_closed_session(et_now())
 
 
@@ -104,7 +115,7 @@ def simulate(pr: Pricer, cfg, core, day, t_in):
     if h is None:
         return None
     cost = mid * (1 + h)
-    qty = size_contracts(cost)
+    qty = qty_for(cost)
     if not qty:
         return None
     _, exp, _, _ = parse_occ(core)
@@ -207,16 +218,17 @@ def summarize(rows):
 
 
 def main(argv=None) -> int:
-    global TRAIL
+    global TRAIL, SIZING
     ap = argparse.ArgumentParser(description="跟大单策略真实数据回测")
     ap.add_argument("--dates", required=True, help="YYYY-MM-DD:YYYY-MM-DD 或逗号分隔")
     ap.add_argument("--filter", default="F1", choices=sorted(FILTERS))
     ap.add_argument("--max-per-day", type=int, default=5)
+    ap.add_argument("--sizing", default=SIZING, choices=["dennis", "ours"])
     ap.add_argument("--trail", type=float, default=TRAIL, help="追踪止盈回撤比例（默认 0.10）")
     ap.add_argument("--out", default=os.path.join("backtests", "tape_follow"))
     ap.add_argument("--log-file")
     args = ap.parse_args(argv)
-    TRAIL = args.trail
+    TRAIL, SIZING = args.trail, args.sizing
     cfg = SystemConfig.load(None)
     setup_logging(cfg.log_level, args.log_file)
     client = YHSClient(cfg)
@@ -226,9 +238,9 @@ def main(argv=None) -> int:
         log.critical("配额熔断：%s", e)
         return 3
     s = summarize(rows)
-    s.update({"filter": args.filter, "filter_name": name, "max_per_day": args.max_per_day, "trail": args.trail, "dates": args.dates})
+    s.update({"filter": args.filter, "filter_name": name, "max_per_day": args.max_per_day, "trail": args.trail, "sizing": args.sizing, "dates": args.dates})
     os.makedirs(args.out, exist_ok=True)
-    tag = f"{args.filter}_m{args.max_per_day}_t{int(round(args.trail * 100))}"
+    tag = f"{args.filter}_m{args.max_per_day}_t{int(round(args.trail * 100))}_{args.sizing}"
     if rows:
         with open(os.path.join(args.out, f"{tag}.csv"), "w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0]))
