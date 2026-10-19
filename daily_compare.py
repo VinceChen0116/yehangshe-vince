@@ -1,6 +1,8 @@
 """
-daily_compare.py —— 每日收盘后：所有候选规则在全部存档日上的回测对比，发 Discord
+daily_compare.py —— 每日收盘后的回测对比，发 Discord
 ================================================================================
+2026-10-19 起（用户定）：每天默认只跑隔夜规则回测 + 隔夜对账；日内各组暂停，用户要求时用 --intraday 临时跑。
+以下是日内各组（--intraday）的说明：
 当前默认配置 = 实盘（2026-10-15 起"组合 A"）：现价距正节点 ≤1%、每天最多 25 笔、12:00 前最多 15 笔。
   * 旧规则     = 2026-10-13 以前：距节点 ≤2.5%、每天 15 笔
   * 10/14规则  = 距节点 ≤1%、每天 15 笔（10/14 一天的实盘规则）
@@ -20,7 +22,7 @@ daily_compare.py —— 每日收盘后：所有候选规则在全部存档日�
 隔夜：另跑 overnight_rules_bt.py（与隔夜实盘 overnight_live.py 同一套规则）在全部存档晚上的真实回测，
      列出累计 / 逐晚，并把最近一晚与隔夜实盘账本 live/overnight_<日期>.csv 对账。
 
-用法：python3 daily_compare.py [--no-post]
+用法：python3 daily_compare.py [--no-post] [--intraday]
 """
 from __future__ import annotations
 
@@ -34,7 +36,8 @@ import sys
 from config import SystemConfig, et_now
 from notify import from_config
 
-GROUPS = [  # (实验名, 显示名, 相对当前默认配置（= 实盘，2026-10-15 起组合 A）的改动)
+# 日内回测组：2026-10-19 起用户要求每日不再跑（省配额），只在要求时用 --intraday 临时跑
+INTRADAY_GROUPS = [  # (实验名, 显示名, 相对当前默认配置（= 实盘，2026-10-15 起组合 A）的改动)
     # 2026-10-19 用户砍掉「旧规则」「10/14规则」「午前≤10」三组（省配额）
     ("daily_live", "实盘A", []),
     ("daily_flowbonus", "A+Flow加分", ["--set", 'flow_mode="bonus"']),
@@ -140,10 +143,42 @@ def overnight_compare():
     return summary, head + nd_line + "\n```\n" + "\n".join(per[-8:]) + "\n```\n" + recon
 
 
+def overnight_only(args) -> int:
+    """每日默认：只跑隔夜回测 + 隔夜对账；日内只读今天的实盘账本（0 配额）。"""
+    today = et_now().date().isoformat()
+    live = live_result(today)
+    live_line = f"日内实盘（B 账户）{live[0]} 笔 {money(live[1])}" if live else "日内实盘交易明细未找到"
+    try:
+        on_summary, on_text = overnight_compare()
+    except Exception as e:
+        on_summary, on_text = None, f"隔夜回测失败：{e}"
+    os.makedirs(os.path.join("backtests", "daily_compare"), exist_ok=True)
+    with open(os.path.join("backtests", "daily_compare", f"{today}.json"), "w", encoding="utf-8") as f:
+        json.dump({"run_at": et_now().strftime("%Y-%m-%d %H:%M"), "live_today": live, "overnight": on_summary},
+                  f, ensure_ascii=False, indent=2)
+    print(live_line); print(on_text)
+    notifier = None if args.no_post else from_config(SystemConfig.load(None))
+    if notifier:
+        notifier.send(embeds=[{
+            "title": f"🌙 {today} 收盘：隔夜规则回测对比",
+            "color": 0x3498DB,
+            "fields": [
+                {"name": "🌙 隔夜规则（尾盘结构 + 15:00 后同向大单 → 次日 09:35 卖）", "value": on_text[:1024], "inline": False},
+                {"name": "日内实盘（今天）", "value": live_line + "\n（日内回测对比已暂停，需要时临时跑）", "inline": False},
+            ],
+            "footer": {"text": "真实回测（历史真实买卖价差）；日内回测 2026-10-19 起暂停"},
+        }])
+    return 0
+
+
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="多组规则每日回测对比")
+    ap = argparse.ArgumentParser(description="每日回测对比（默认只跑隔夜；--intraday 另跑日内各组）")
     ap.add_argument("--no-post", action="store_true")
+    ap.add_argument("--intraday", action="store_true", help="同时跑日内各组（临时回测用）")
     args = ap.parse_args(argv)
+    if not args.intraday:
+        return overnight_only(args)
+    GROUPS = INTRADAY_GROUPS
     res = {label: run(name, extra) for name, label, extra in GROUPS}
     labels = [label for _, label, _ in GROUPS]
     days = res["实盘A"]["dates"]

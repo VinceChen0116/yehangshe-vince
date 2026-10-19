@@ -234,6 +234,7 @@ python3 archive.py --dry-run                 # 只看计划
 - `config.max_trades_per_day=25`、`config.max_trades_before=("12:00", 15)`；同时持仓仍 8 笔；其余规则不变（距节点 ≤1%、目标节点行权价、实时报价、止损止盈）。
 - "同方向最多 5 笔"（`max_same_direction`）回测更差，未采用。
 - `daily_compare.py` 每天收盘后（定时任务美东 17:35）在全部存档日上跑 7 组：旧规则 / 10/14规则 / 实盘A / A+Flow加分 / 组合C / 午前≤10 / 上限25，发 Discord，结果在 `backtests/daily_compare/<日期>.json`。
+- **2026-10-19 起：daily_compare.py 默认只跑隔夜规则回测（6 组）+ 隔夜对账；日内各组暂停，用户要求时用 `--intraday` 临时跑。**
 - 用户决定：观察约一个月（约 11 月中）后再做最终决定。
 
 ## J. 2026-10-14 起：所有回测一律"真实回测"（硬规则）
