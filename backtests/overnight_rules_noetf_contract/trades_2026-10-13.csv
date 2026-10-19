@@ -1,0 +1,2 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-13→2026-10-14,NVDA,半导体,CLIFF,king,O:NVDA261014P00227500,227.99,230.0,220.0,0.87,1,86500,1.577,2.981,09:35,-1.37,True,6,946,842.8,89.1
