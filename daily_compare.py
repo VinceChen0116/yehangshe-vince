@@ -44,6 +44,7 @@ GROUPS = [  # (实验名, 显示名, 相对当前默认配置（= 实盘，2026-
     ("daily_morning10", "午前≤10", ["--set", "max_trades_per_day=15", "--set", 'max_trades_before=["12:00",10]']),
     ("daily_cap25", "上限25", ["--set", 'max_trades_before=[]']),
     ("daily_local", "局部节点", ["--set", 'node_mode="local"']),
+    ("daily_dynA", "A·节点动态", ["--set", 'score_fresh_mode="dynamics"']),
     ("daily_junk5", "JUNK精选5", ["--set", "junk_body_confirm=true", "--set", "junk_between_pillars=true",
                                   "--set", "min_signal_score=0.8", "--set", "max_trades_per_day=5", "--set", "max_trades_before=[]"]),
 ]
