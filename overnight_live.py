@@ -44,7 +44,8 @@ BUDGET, BUDGET_BAND = 1000.0, 0.25   # 每笔目标投入 $1,000，允许 $750�
 
 
 def size_contracts(price: float) -> int:
-    """按每笔 $1,000（±25%）算张数：取落在 $750–$1,250 内、最接近 $1,000 的张数；单张就超过 $1,250 返回 0（不开）。"""
+    """按每笔 $1,000（±25%）算张数：取落在 $750–$1,250 内、最接近 $1,000 的张数；单张就超过 $1,250 返回 0（不开）。
+    单张 $625–$750 时 1 张不够下限、2 张超上限，开 1 张（2026-10-19 用户定）。"""
     per = price * 100
     if per <= 0:
         return 0
@@ -53,6 +54,8 @@ def size_contracts(price: float) -> int:
     for n in range(1, int(hi // per) + 1):
         if lo <= n * per <= hi and (not best or abs(n * per - BUDGET) < abs(best * per - BUDGET)):
             best = n
+    if not best and per <= hi:
+        best = 1
     return best
 FLOW_MIN_PREMIUM = 50000
 FLOW_SINCE = "15:00"   # 只看尾盘的同向大单
