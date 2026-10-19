@@ -560,7 +560,8 @@ class FullSignal:
     score_parts: dict = field(default_factory=dict)
 
 
-def score_signal(snap: HeatmapSnapshot, st: StructureSignal, tests: int, spots: list, cfg: SystemConfig) -> tuple:
+def score_signal(snap: HeatmapSnapshot, st: StructureSignal, tests: int, spots: list, cfg: SystemConfig,
+                 node_growth: float | None = None) -> tuple:
     """信号质量分（0–1）与各分项。依据需求文档的跳板/悬崖逻辑，尚未经数据验证（见 backtests/signals）。
     spots：该标的当日此前的 5 分钟现货序列（含当前），用于估算 1 小时波动。"""
     total = snap.total_abs_gex or 0.0
@@ -582,7 +583,8 @@ def score_signal(snap: HeatmapSnapshot, st: StructureSignal, tests: int, spots: 
         "proximity": max(0.0, 1 - st.distance_pct / cfg.node_distance_max_pct),
         "distance": min(1.0, st.distance_pct / cfg.node_distance_max_pct),   # proximity 的反向：离正节点越远分越高
         "reach": reach,
-        "fresh": {0: 1.0, 1: 0.5}.get(tests, 0.0),
+        "fresh": ({0: 1.0, 1: 0.5}.get(tests, 0.0) if getattr(cfg, "score_fresh_mode", "touches") != "dynamics"
+                  else (0.5 if node_growth is None else max(0.0, min(1.0, 0.5 + node_growth * 2.5)))),
     }
     w = dict(cfg.score_weights)
     score = sum(w.get(k, 0.0) * v for k, v in parts.items()) / (sum(w.values()) or 1.0)
@@ -608,7 +610,13 @@ class SignalDetector:
 
     def _scored(self, sig: FullSignal) -> FullSignal:
         spots = [s for _, s in self.spot_hist.get(sig.ticker, (None, []))[1]]
-        sig.score, sig.score_parts = score_signal(sig.snapshot, sig.structure, sig.fatigue_tests, spots, self.cfg)
+        growth = None
+        nh = self.node_hist.get(sig.ticker, (None, []))[1]
+        if len(nh) >= 3:
+            now_g, old_g = nh[-1][1].get(sig.structure.pos_strike), nh[-3][1].get(sig.structure.pos_strike)
+            if now_g is not None and old_g:
+                growth = now_g / old_g - 1   # 正节点 GEX 最近 2 根的变化率
+        sig.score, sig.score_parts = score_signal(sig.snapshot, sig.structure, sig.fatigue_tests, spots, self.cfg, growth)
         return sig
 
     def _note(self, ticker: str, key: str, msg: str, *args) -> None:

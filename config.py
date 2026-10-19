@@ -129,6 +129,9 @@ class SystemConfig:
     junk_body_confirm: bool = False     # 实体确认：上一根 5 分钟收盘也在节点正确一侧（只看实体，不看影线）
     junk_between_pillars: bool = False  # 卡在两大柱子之间不做：现价处在上下两个最大 |GEX| 节点之间的 30%–70%
     junk_midday_garbage: bool = False   # 午后垃圾时间：12:00 前已上下两头都扫过开盘 30 分钟区间 → 12:00 后不开新仓
+    # 评分"新鲜度"一项的算法：touches = 数节点被测试次数（旧）；dynamics = 看正节点 GEX 最近 2 根的变化
+    #   （Nightwatch：节点在变大才可靠、缩水是被打空；JUNK：底越来越长 = MM 加固）。+20% 及以上满分，持平 0.5，−20% 及以下 0 分
+    score_fresh_mode: str = "touches"
     local_min_share: float = 0.03
     fatigue_touch_band_pct: float = 0.004 # 距节点 ≤ 0.4% 视为一次"测试回踩"
     fatigue_reset_band_pct: float = 0.008 # 离开 ≥ 0.8% 后再回来才计新的一次
