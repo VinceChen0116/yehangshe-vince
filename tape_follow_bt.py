@@ -50,6 +50,7 @@ FILTERS = {   # f 是 tape_filter_study.features() 的结果（Heatmap 过滤）
     "F0": ("只用 Flow：≥$50万", lambda f: f["premium"] >= 500000, False),
     "F1": ("只用 Flow：≥$50万 + 到期≥14天 + 价外≥2%", lambda f: f["premium"] >= 500000 and (f["dte"] or 0) >= 14 and f["otm"] >= 2, False),
     "F2": ("只用 Flow：≥$30万 + 到期≥14天 + 价外≥2%", lambda f: f["premium"] >= 300000 and (f["dte"] or 0) >= 14 and f["otm"] >= 2, False),
+    "H": ("前4大负节点+主导墙同向", lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"], True),
     "A": ("前4大负节点+同向+到期≥14天+价外≥2%", lambda f: _hm(f) and (f["dte"] or 0) >= 14, True),
     "C": ("前4大负节点+同向+到期≥7天+价外≥2%", lambda f: _hm(f) and (f["dte"] or 0) >= 7, True),
     "D": ("前4大负节点+同向+价外≥2%", _hm, True),

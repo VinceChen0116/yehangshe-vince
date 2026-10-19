@@ -116,6 +116,7 @@ def main(argv=None) -> int:
         "前3大节点 + 主导墙同向": lambda f: f["strike_rank"] <= 3 and f["aligned"],
         "前3大负节点 + 主导墙负且同向": lambda f: f["strike_rank"] <= 3 and f["strike_sign"] == "-" and f["aligned"] and f["dom_side"].startswith("-"),
         "前3大节点 + 主导墙同向 + ≥$50万": lambda f: f["strike_rank"] <= 3 and f["aligned"] and f["premium"] >= 500000,
+        "H: 前4大负节点+主导墙同向": lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"],
         "A: 前4大负节点+同向+到期≥14天+价外≥2%": lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"]
                                                 and (f["dte"] or 0) >= 14 and f["otm"] >= 2,
         "B: A + ≥$15万": lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"]
