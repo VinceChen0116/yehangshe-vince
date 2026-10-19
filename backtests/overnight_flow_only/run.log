@@ -1,0 +1,145 @@
+04:50:50 [INFO] yhs.overnight_rules: 2026-10-07 AAPL FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 16 笔
+04:50:52 [INFO] yhs.overnight_rules: 2026-10-07 ACN FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:50:55 [INFO] yhs.overnight_rules: 2026-10-07 ADBE FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:50:58 [INFO] yhs.overnight_rules: 2026-10-07 ADSK FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:51:03 [INFO] yhs.overnight_rules: 2026-10-07 ALAB FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:51:06 [INFO] yhs.overnight_rules: 2026-10-07 AMAT FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 3 笔
+04:51:07 [INFO] yhs.overnight_rules: 2026-10-07 AMD FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 14 笔
+04:51:12 [INFO] yhs.overnight_rules: 2026-10-07 AMZN FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 14 笔
+04:51:16 [INFO] yhs.overnight_rules: 2026-10-07 APLD FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:51:17 [INFO] yhs.overnight_rules: 2026-10-07 APP FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 6 笔
+04:51:19 [INFO] yhs.overnight_rules: 2026-10-07 ARM FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 6 笔
+04:51:20 [INFO] yhs.overnight_rules: 2026-10-07 ASML FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:51:22 [INFO] yhs.overnight_rules: 2026-10-07 ASTS FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 3 笔
+04:51:24 [INFO] yhs.overnight_rules: 2026-10-07 AVGO FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 10 笔
+04:51:28 [INFO] yhs.overnight_rules: 2026-10-07 BA FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 3 笔
+04:51:30 [INFO] yhs.overnight_rules: 2026-10-07 BABA FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 3 笔
+04:51:31 [INFO] yhs.overnight_rules: 2026-10-07 BAC FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:51:35 [INFO] yhs.overnight_rules: 2026-10-07 BE FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:51:39 [INFO] yhs.overnight_rules: 2026-10-07 BMY FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:51:51 [INFO] yhs.overnight_rules: 2026-10-07 CAT FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:51:53 [INFO] yhs.overnight_rules: 2026-10-07 CBRS FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:51:59 [INFO] yhs.overnight_rules: 2026-10-07 CEG FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:52:04 [INFO] yhs.overnight_rules: 2026-10-07 CHTR FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:52:10 [INFO] yhs.overnight_rules: 2026-10-07 COHR FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:52:12 [INFO] yhs.overnight_rules: 2026-10-07 COST FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:52:14 [INFO] yhs.overnight_rules: 2026-10-07 CRCL FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:52:15 [INFO] yhs.overnight_rules: 2026-10-07 CRDO FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:52:16 [INFO] yhs.overnight_rules: 2026-10-07 CRM FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:52:17 [INFO] yhs.overnight_rules: 2026-10-07 CRWD FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 3 笔
+04:52:20 [INFO] yhs.overnight_rules: 2026-10-07 CRWV FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 9 笔
+04:52:33 [INFO] yhs.overnight_rules: 2026-10-07 DELL FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 4 笔
+04:52:52 [INFO] yhs.overnight_rules: 2026-10-07 FN FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:53:01 [INFO] yhs.overnight_rules: 2026-10-07 GEV FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 3 笔
+04:53:04 [INFO] yhs.overnight_rules: 2026-10-07 GLW FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:53:13 [INFO] yhs.overnight_rules: 2026-10-07 GOOG FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 7 笔
+04:53:14 [INFO] yhs.overnight_rules: 2026-10-07 GOOGL FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 10 笔
+04:53:15 [INFO] yhs.overnight_rules: 2026-10-07 GS FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 5 笔
+04:53:16 [INFO] yhs.overnight_rules: 2026-10-07 HD FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:53:24 [INFO] yhs.overnight_rules: 2026-10-07 HPE FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 5 笔
+04:53:26 [INFO] yhs.overnight_rules: 2026-10-07 HPQ FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:53:32 [INFO] yhs.overnight_rules: 2026-10-07 IBM FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:53:39 [INFO] yhs.overnight_rules: 2026-10-07 INTU FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 4 笔
+04:53:41 [INFO] yhs.overnight_rules: 2026-10-07 IONQ FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:53:43 [INFO] yhs.overnight_rules: 2026-10-07 IREN FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:53:50 [INFO] yhs.overnight_rules: 2026-10-07 JNJ FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:53:52 [INFO] yhs.overnight_rules: 2026-10-07 JPM FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:53:57 [INFO] yhs.overnight_rules: 2026-10-07 LITE FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:53:58 [INFO] yhs.overnight_rules: 2026-10-07 LLY FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 3 笔
+04:54:05 [INFO] yhs.overnight_rules: 2026-10-07 MCD FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:54:08 [INFO] yhs.overnight_rules: 2026-10-07 MDB FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:54:11 [INFO] yhs.overnight_rules: 2026-10-07 META FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 43 笔
+04:54:19 [INFO] yhs.overnight_rules: 2026-10-07 MRNA FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:54:20 [INFO] yhs.overnight_rules: 2026-10-07 MRVL FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 9 笔
+04:54:22 [INFO] yhs.overnight_rules: 2026-10-07 MS FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:54:23 [INFO] yhs.overnight_rules: 2026-10-07 MSFT FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 6 笔
+04:54:26 [INFO] yhs.overnight_rules: 2026-10-07 MSTR FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 8 笔
+04:54:32 [INFO] yhs.overnight_rules: 2026-10-07 NBIS FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:54:39 [INFO] yhs.overnight_rules: 2026-10-07 NET FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:54:40 [INFO] yhs.overnight_rules: 2026-10-07 NFLX FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:54:42 [INFO] yhs.overnight_rules: 2026-10-07 NKE FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:54:45 [INFO] yhs.overnight_rules: 2026-10-07 NOW FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:54:47 [INFO] yhs.overnight_rules: 2026-10-07 NVDA FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 21 笔
+04:54:59 [INFO] yhs.overnight_rules: 2026-10-07 ORCL FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 5 笔
+04:55:08 [INFO] yhs.overnight_rules: 2026-10-07 PDD FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:55:15 [INFO] yhs.overnight_rules: 2026-10-07 PG FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:55:17 [INFO] yhs.overnight_rules: 2026-10-07 PLTR FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 6 笔
+04:55:19 [INFO] yhs.overnight_rules: 2026-10-07 PYPL FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:55:24 [INFO] yhs.overnight_rules: 2026-10-07 QQQ FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 34 笔
+04:55:32 [INFO] yhs.overnight_rules: 2026-10-07 RDDT FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:55:33 [INFO] yhs.overnight_rules: 2026-10-07 RKLB FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 6 笔
+04:55:48 [INFO] yhs.overnight_rules: 2026-10-07 SHOP FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:55:49 [INFO] yhs.overnight_rules: 2026-10-07 SKHY FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 5 笔
+04:55:51 [INFO] yhs.overnight_rules: 2026-10-07 SMCI FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 5 笔
+04:55:52 [INFO] yhs.overnight_rules: 2026-10-07 SNDK FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 20 笔
+04:55:54 [INFO] yhs.overnight_rules: 2026-10-07 SNOW FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:55:57 [INFO] yhs.overnight_rules: 2026-10-07 SOXL FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 20 笔
+04:56:00 [INFO] yhs.overnight_rules: 2026-10-07 SPOT FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:56:04 [INFO] yhs.overnight_rules: 2026-10-07 SPY FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 57 笔
+04:56:08 [INFO] yhs.overnight_rules: 2026-10-07 STX FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:56:27 [INFO] yhs.overnight_rules: 2026-10-07 TQQQ FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:56:31 [INFO] yhs.overnight_rules: 2026-10-07 TSLA FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 28 笔
+04:56:32 [INFO] yhs.overnight_rules: 2026-10-07 TSM FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 8 笔
+04:56:39 [INFO] yhs.overnight_rules: 2026-10-07 UBER FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:56:46 [INFO] yhs.overnight_rules: 2026-10-07 UNH FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 5 笔
+04:56:48 [INFO] yhs.overnight_rules: 2026-10-07 UPS FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:56:50 [INFO] yhs.overnight_rules: 2026-10-07 V FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:56:56 [INFO] yhs.overnight_rules: 2026-10-07 VRT FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:56:59 [INFO] yhs.overnight_rules: 2026-10-07 VST FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:57:05 [INFO] yhs.overnight_rules: 2026-10-07 WDC FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 3 笔
+04:57:06 [INFO] yhs.overnight_rules: 2026-10-07 WFC FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:57:08 [INFO] yhs.overnight_rules: 2026-10-07 WMB FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:57:09 [INFO] yhs.overnight_rules: 2026-10-07 WMT FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 2 笔
+04:57:17 [INFO] yhs.overnight_rules: 2026-10-07 ZS FLOW（flow）0.00→0.00 距 0.00% | 15:00 后大单 1 笔
+04:57:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/META261009P00720000，5.1s 后免费重试（第 1 轮）
+04:57:24 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/META261009P00720000，5.1s 后免费重试（第 1 轮）
+04:57:30 [INFO] yhs.main: 【历史】META261009P00720000 真实 IV 序列 390 个点（1m）
+04:57:33 [INFO] yhs.main: 【历史】META261009P00720000 真实 IV 序列 390 个点（1m）
+04:57:36 [INFO] yhs.overnight_rules: 2026-10-07 开 META O:META261009P00720000 成本 7.24 → 09:35 卖 5.86（-19.1%）跳空 0.17%
+04:57:37 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/QQQ261008C00758000，5.1s 后免费重试（第 1 轮）
+04:57:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/QQQ261008C00758000，7.7s 后免费重试（第 2 轮）
+04:57:51 [INFO] yhs.main: 【历史】QQQ261008C00758000 真实 IV 序列 390 个点（1m）
+04:57:52 [INFO] yhs.main: 【历史】QQQ261008C00758000 真实 IV 序列 311 个点（1m）
+04:57:52 [INFO] yhs.overnight_rules: 2026-10-07 开 QQQ O:QQQ261008C00758000 成本 2.16 → 09:35 卖 0.62（-71.4%）跳空 -0.32%
+04:57:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SPY261008C00777000，5.3s 后免费重试（第 1 轮）
+04:58:00 [INFO] yhs.main: 【历史】SPY261008C00777000 真实 IV 序列 390 个点（1m）
+04:58:01 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SPY，5.1s 后免费重试（第 1 轮）
+04:58:09 [INFO] yhs.main: 【历史】SPY261008C00777000 真实 IV 序列 390 个点（1m）
+04:58:09 [INFO] yhs.overnight_rules: 2026-10-07 开 SPY O:SPY261008C00777000 成本 1.93 → 09:35 卖 0.65（-66.0%）跳空 -0.21%
+04:58:10 [INFO] yhs.main: 【历史】SNDK261009P01695000 真实 IV 序列 390 个点（1m）
+04:58:10 [INFO] yhs.overnight_rules: 2026-10-07 O:SNDK261009P01695000 放弃：单张 $2962 超过每笔上限
+04:58:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/NVDA261009P00235000，5.1s 后免费重试（第 1 轮）
+04:58:18 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NVDA261009P00235000，5.2s 后免费重试（第 1 轮）
+04:58:23 [INFO] yhs.main: 【历史】NVDA261009P00235000 真实 IV 序列 390 个点（1m）
+04:58:25 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NVDA，5.3s 后免费重试（第 1 轮）
+04:58:31 [INFO] yhs.main: 【历史】NVDA261009P00235000 真实 IV 序列 390 个点（1m）
+04:58:33 [INFO] yhs.overnight_rules: 2026-10-07 开 NVDA O:NVDA261009P00235000 成本 1.06 → 09:35 卖 1.97（+85.9%）跳空 -1.05%
+04:58:34 [INFO] yhs.main: 【历史】TSLA261009P00375000 真实 IV 序列 390 个点（1m）
+04:58:35 [INFO] yhs.main: 【历史】TSLA261009P00375000 真实 IV 序列 390 个点（1m）
+04:58:35 [INFO] yhs.overnight_rules: 2026-10-07 开 TSLA O:TSLA261009P00375000 成本 2.96 → 09:35 卖 4.80（+62.5%）跳空 -1.08%
+04:58:36 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/SOXL261009C00159000，5.1s 后免费重试（第 1 轮）
+04:58:43 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SOXL261009C00159000，5.3s 后免费重试（第 1 轮）
+04:58:49 [INFO] yhs.main: 【历史】SOXL261009C00159000 真实 IV 序列 390 个点（1m）
+04:58:50 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SOXL，5.1s 后免费重试（第 1 轮）
+04:58:56 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SOXL，5.0s 后免费重试（第 1 轮）
+04:59:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SOXL261009C00159000，5.1s 后免费重试（第 1 轮）
+04:59:10 [INFO] yhs.main: 【历史】SOXL261009C00159000 真实 IV 序列 390 个点（1m）
+04:59:11 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SOXL，5.2s 后免费重试（第 1 轮）
+04:59:17 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SOXL，5.2s 后免费重试（第 1 轮）
+04:59:23 [INFO] yhs.overnight_rules: 2026-10-07 开 SOXL O:SOXL261009C00159000 成本 4.26 → 09:35 卖 1.13（-73.5%）跳空 -4.56%
+04:59:24 [INFO] yhs.main: 【历史】AMD261009C00647500 真实 IV 序列 390 个点（1m）
+04:59:25 [INFO] yhs.main: 【历史】AMD261009C00647500 真实 IV 序列 390 个点（1m）
+04:59:25 [INFO] yhs.overnight_rules: 2026-10-07 开 AMD O:AMD261009C00647500 成本 9.16 → 09:35 卖 4.09（-55.4%）跳空 -1.33%
+04:59:25 [INFO] yhs.overnight_rules: 2026-10-07 ARM 放弃：同板块（半导体）已 3 笔
+04:59:25 [INFO] yhs.overnight_rules: 2026-10-07 CRDO 放弃：同板块（半导体）已 3 笔
+04:59:27 [INFO] yhs.main: 【历史】AAPL261009C00337500 真实 IV 序列 390 个点（1m）
+04:59:28 [INFO] yhs.main: 【历史】AAPL261009C00337500 真实 IV 序列 390 个点（1m）
+04:59:28 [INFO] yhs.overnight_rules: 2026-10-07 开 AAPL O:AAPL261009C00337500 成本 2.16 → 09:35 卖 1.69（-21.7%）跳空 0.07%
+04:59:29 [INFO] yhs.main: 【历史】AMZN261009C00260000 真实 IV 序列 390 个点（1m）
+04:59:30 [INFO] yhs.main: 【历史】AMZN261009C00260000 真实 IV 序列 390 个点（1m）
+04:59:30 [INFO] yhs.overnight_rules: 2026-10-07 开 AMZN O:AMZN261009C00260000 成本 2.48 → 09:35 卖 1.62（-34.6%）跳空 -0.29%
+04:59:30 [INFO] yhs.overnight_rules: 2026-10-07 AVGO 放弃：同板块（半导体）已 3 笔
+04:59:31 [INFO] yhs.main: 【历史】GOOGL261009C00352500 真实 IV 序列 390 个点（1m）
+04:59:33 [INFO] yhs.main: 【历史】GOOGL261009C00352500 真实 IV 序列 390 个点（1m）
+04:59:33 [INFO] yhs.overnight_rules: 2026-10-07 开 GOOGL O:GOOGL261009C00352500 成本 2.85 → 09:35 卖 4.54（+59.6%）跳空 1.17%
+04:59:33 [INFO] yhs.overnight_rules: 配额剩余 45407
