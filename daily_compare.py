@@ -35,13 +35,10 @@ from config import SystemConfig, et_now
 from notify import from_config
 
 GROUPS = [  # (实验名, 显示名, 相对当前默认配置（= 实盘，2026-10-15 起组合 A）的改动)
-    ("daily_old", "旧规则", ["--set", "node_distance_max_pct=0.025", "--set", "max_trades_per_day=15",
-                           "--set", "max_trades_before=[]"]),
-    ("daily_new", "10/14规则", ["--set", "max_trades_per_day=15", "--set", "max_trades_before=[]"]),
+    # 2026-10-19 用户砍掉「旧规则」「10/14规则」「午前≤10」三组（省配额）
     ("daily_live", "实盘A", []),
     ("daily_flowbonus", "A+Flow加分", ["--set", 'flow_mode="bonus"']),
     ("daily_comboC", "组合C", ["--set", "max_trades_per_day=20", "--set", 'max_trades_before=["12:00",10]']),
-    ("daily_morning10", "午前≤10", ["--set", "max_trades_per_day=15", "--set", 'max_trades_before=["12:00",10]']),
     ("daily_cap25", "上限25", ["--set", 'max_trades_before=[]']),
     ("daily_local", "局部节点", ["--set", 'node_mode="local"']),
     ("daily_dynA", "A·节点动态", ["--set", 'score_fresh_mode="dynamics"']),
