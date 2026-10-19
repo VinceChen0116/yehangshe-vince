@@ -26,9 +26,14 @@ def load_rows(cfg, day, t, exp):
         if os.path.exists(fp):
             with open(fp, encoding="utf-8") as f:
                 rows = json.load(f)
+            if isinstance(rows, dict):   # 常规存档格式 {"rows": [...]}
+                rows = rows.get("rows") or []
             if rows:
                 return rows
     return None
+
+
+LAG_MIN = 6   # dennis 一般在大单后约 5 分钟开仓 = 等下一根 Heatmap；用下单后 LAG_MIN 分钟内已可用的那根
 
 
 def features(cfg, day, x, cache):
@@ -41,7 +46,7 @@ def features(cfg, day, x, cache):
     if not fr:
         return None
     when = to_et(parse_iso(x["occurred_at"]))
-    ready = [k for k in fr if k + dt.timedelta(minutes=5) <= when]
+    ready = [k for k in fr if k + dt.timedelta(minutes=5) <= when + dt.timedelta(minutes=LAG_MIN)]
     if not ready:
         return None
     d = fr[max(ready)]["data"]
@@ -57,7 +62,10 @@ def features(cfg, day, x, cache):
     dom_k, dom_g = ranked[0]
     dom_side = f'{"+" if dom_g > 0 else "-"}{"上" if dom_k > spot else "下"}'
     aligned = (dom_k > spot) if right == "C" else (dom_k < spot)
-    return {"ticker": t, "exp": exp, "right": right, "strike": K, "time": when.strftime("%H:%M"),
+    vol, oi = x.get("session_volume") or 0, x.get("open_interest") or 0
+    return {"ticker": t, "exp": exp, "right": right, "strike": K, "time": when.strftime("%H:%M"), "hour": when.hour,
+            "dte": x.get("min_dte"), "otm": float(x.get("min_moneyness_pct") or 0) * 100,
+            "vol_oi": vol / oi if oi else 99.0, "sweep": bool(x.get("has_sweep")), "side": x.get("side"),
             "premium": float(x.get("premium_usd") or 0), "spot": spot, "strike_rank": rank,
             "strike_sign": None if gex_at is None else ("+" if gex_at > 0 else "-"), "dom_side": dom_side,
             "aligned": aligned, "contract": str(x["contract_symbol"]).split(":")[-1]}
@@ -83,19 +91,22 @@ def main(argv=None) -> int:
         day = dt.date.fromisoformat(ds)
         with open(flow_path(cfg, day), encoding="utf-8") as f:
             flow = json.load(f)
-        seen, cache = set(), {}
+        best, cache, tot = {}, {}, collections.Counter()
         for x in sorted(flow, key=lambda r: r["occurred_at"]):
             if not is_candidate(x):
                 continue
             c = str(x["contract_symbol"]).split(":")[-1]
-            if c in seen:
+            tot[c] += float(x.get("premium_usd") or 0)
+            if c in best and best[c]["premium"] >= float(x.get("premium_usd") or 0):
                 continue
-            seen.add(c)
             ft = features(cfg, day, x, cache)
-            if ft:
+            if ft:   # 每张合约保留当天最大的一笔大单
                 ft["day"] = ds
                 ft["dennis"] = c in dennis.get(ds, set())
-                allf.append(ft)
+                best[c] = ft
+        for c, ft in best.items():
+            ft["day_total"] = tot[c]
+            allf.append(ft)
     filters = {
         "全部候选（有 Heatmap）": lambda f: True,
         "行权价 = 前3大节点": lambda f: f["strike_rank"] <= 3,
@@ -105,6 +116,13 @@ def main(argv=None) -> int:
         "前3大节点 + 主导墙同向": lambda f: f["strike_rank"] <= 3 and f["aligned"],
         "前3大负节点 + 主导墙负且同向": lambda f: f["strike_rank"] <= 3 and f["strike_sign"] == "-" and f["aligned"] and f["dom_side"].startswith("-"),
         "前3大节点 + 主导墙同向 + ≥$50万": lambda f: f["strike_rank"] <= 3 and f["aligned"] and f["premium"] >= 500000,
+        "A: 前4大负节点+同向+到期≥14天+价外≥2%": lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"]
+                                                and (f["dte"] or 0) >= 14 and f["otm"] >= 2,
+        "B: A + ≥$15万": lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"]
+                                     and (f["dte"] or 0) >= 14 and f["otm"] >= 2 and f["premium"] >= 150000,
+        "C: A + 到期≥7天(放宽)": lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"]
+                                         and (f["dte"] or 0) >= 7 and f["otm"] >= 2,
+        "D: 前4大负节点+同向+价外≥2%（不限到期）": lambda f: f["strike_rank"] <= 4 and f["strike_sign"] == "-" and f["aligned"] and f["otm"] >= 2,
     }
     days = args.dates.split(",")
     total_dennis = sum(1 for f in allf if f["dennis"])
@@ -121,6 +139,17 @@ def main(argv=None) -> int:
         if f["dennis"]:
             print(" ", f["day"][5:], f["time"], f["contract"], f"${f['premium'] / 1e3:.0f}K", "行权价排名", f["strike_rank"],
                   f["strike_sign"], "主导墙", f["dom_side"], "同向" if f["aligned"] else "反向")
+    import statistics as st
+    def desc(g, k):
+        v = [f[k] for f in g if f.get(k) is not None]
+        return f"中位 {st.median(v):.2f}" if v else "—"
+    dn, ot = [f for f in allf if f["dennis"]], [f for f in allf if not f["dennis"]]
+    print("\n特征对比（dennis 跟的 vs 没跟的）：")
+    for k, lb in (("premium", "最大单金额"), ("day_total", "当天该合约大单合计"), ("vol_oi", "当日量/OI"), ("dte", "到期天数"),
+                  ("otm", "价外%"), ("strike_rank", "行权价节点排名"), ("hour", "时段")):
+        print(f"  {lb:<16} dennis {desc(dn, k):<16} 其他 {desc(ot, k)}")
+    print("  扫单比例        dennis %.0f%%  其他 %.0f%%" % (100 * sum(f["sweep"] for f in dn) / max(1, len(dn)), 100 * sum(f["sweep"] for f in ot) / max(1, len(ot))))
+    print("  主导墙同向比例  dennis %.0f%%  其他 %.0f%%" % (100 * sum(f["aligned"] for f in dn) / max(1, len(dn)), 100 * sum(f["aligned"] for f in ot) / max(1, len(ot))))
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump({"filters": res, "n": len(allf), "dennis_n": total_dennis}, f, ensure_ascii=False, indent=2)
