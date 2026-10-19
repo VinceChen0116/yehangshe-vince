@@ -286,6 +286,12 @@ python3 archive.py --dry-run                 # 只看计划
     补进来的 11 笔个股合计 +$139；
     大单要求 Vol ≥ OI（新开仓）→ 61 笔 +$9,400（overnight_rules_volOI）；排除 ETF + Vol ≥ OI → 54 笔 +$5,151
     （overnight_rules_noetf_volOI）。隔夜单上，每一种收紧大单定义的做法都比现行差
+* **回测到期日 bug（10/19 修）**：overnight_rules_bt 取"存档里第一个有数据的到期"，而每日存档（--expiries near）只存 0DTE/1DTE，
+  周五晚上没有实盘用的"下周五到期"→ 回测只剩有周一到期的几只大票（10/16 回测 6 只有结构 / 5 笔，实盘 51 只 / 10 笔）。
+  修正：`overnight_controls.py filter --live-expiry` 按实盘 predicted_expiry 选到期、缺的补拉 15:00 后 Heatmap
+  （缓存 yhs_data/cache/overnight_heatmap/）；复现 10/16 实盘：候选 24 个一致，10 笔里 8 笔同合约同张数，
+  回测平仓价比真实 bid 平均每笔乐观约 $58（≈6%）。archive.py near 模式另存 overnight_friday（下一个周五），
+  10/16、10/19 已补存。**以后隔夜回测一律加 --live-expiry**，之前各组（overnight_rules_*）里 10/9、10/16 两个周五夜晚不可信
 
 ## L. 2026-10-15：外部报告（Argon 四日回测）里的出场/过滤思路 —— 真实回测全部更差，未采用
 新增三个实验开关（默认关闭，实盘不变）：`ratchet_start_pct/ratchet_keep/ratchet_offset_pct`（连续棘轮，锁定 = 0.8×峰值 − 5.5%）、
