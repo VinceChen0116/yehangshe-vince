@@ -50,7 +50,7 @@ def mark_at(pr, core, t):
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", required=True)
-    ap.add_argument("--out", default=os.path.join("backtests", "dennis", "replay.csv"))
+    ap.add_argument("--out", required=True, help="逐笔结果（含他的交易明细，不要放进仓库）")
     ap.add_argument("--log-file")
     args = ap.parse_args(argv)
     cfg = SystemConfig.load(None)
