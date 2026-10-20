@@ -1,0 +1,2 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-12→2026-10-13,COST,消费,SPRINGBOARD,local,O:COST261016C00965000,958.43,950.0,965.0,0.89,3,279215,5.676,6.287,09:35,0.6,True,2,1135,122.2,10.8

@@ -1,0 +1,5 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-16→2026-10-19,BRKB,金融,SPRINGBOARD,local,O:BRKB261023C00535000,531.69,530.0,535.0,0.32,2,791000,2.765,1.612,09:35,-0.33,False,4,1106,-461.5,-41.7
+2026-10-16→2026-10-19,ADBE,软件,CLIFF,local,O:ADBE261023P00242500,244.62,245.0,242.5,0.16,1,117810,4.795,3.34,09:35,0.7,False,2,959,-291.0,-30.3
+2026-10-16→2026-10-19,NVO,医疗,CLIFF,local,O:NVO261023P00038500,38.74,39.0,38.5,0.68,1,78760,0.526,0.408,09:35,0.06,False,19,998,-223.3,-22.4
+2026-10-16→2026-10-19,NOW,软件,SPRINGBOARD,local,O:NOW261023C00142000,141.4,140.0,142.0,1.0,1,55125,4.269,5.148,09:35,2.18,True,2,854,175.6,20.6
