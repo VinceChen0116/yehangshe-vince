@@ -1,0 +1,101 @@
+{
+  "name": "bl_v6_1015",
+  "rules": "baseline",
+  "dates": [
+    "2026-10-15"
+  ],
+  "overrides": [],
+  "overall": {
+    "trades": 20,
+    "total_pnl": -275.16,
+    "pnl_ex_best": -458.59,
+    "win_rate_pct": 35.0,
+    "direction_pct": 25.0,
+    "avg_peak_pct": 11.1,
+    "avg_roi_pct": -5.2,
+    "profit_factor": 0.63,
+    "hard_stops": 0,
+    "underlying_stops": 0,
+    "hard_stop_avg_pct": null,
+    "hard_stop_worst_pct": null
+  },
+  "breakdown": {
+    "by_day": {
+      "2026-10-15": {
+        "trades": 20,
+        "total_pnl": -275.16,
+        "pnl_ex_best": -458.59,
+        "win_rate_pct": 35.0,
+        "direction_pct": 25.0,
+        "avg_peak_pct": 11.1,
+        "avg_roi_pct": -5.2,
+        "profit_factor": 0.63,
+        "hard_stops": 0,
+        "underlying_stops": 0,
+        "hard_stop_avg_pct": null,
+        "hard_stop_worst_pct": null
+      }
+    },
+    "0DTE": {
+      "trades": 0
+    },
+    "1DTE": {
+      "trades": 20,
+      "total_pnl": -275.16,
+      "pnl_ex_best": -458.59,
+      "win_rate_pct": 35.0,
+      "direction_pct": 25.0,
+      "avg_peak_pct": 11.1,
+      "avg_roi_pct": -5.2,
+      "profit_factor": 0.63,
+      "hard_stops": 0,
+      "underlying_stops": 0,
+      "hard_stop_avg_pct": null,
+      "hard_stop_worst_pct": null
+    },
+    "by_session": {
+      "早盘": {
+        "trades": 10,
+        "total_pnl": -234.52,
+        "pnl_ex_best": -417.95,
+        "win_rate_pct": 30.0,
+        "direction_pct": 20.0,
+        "avg_peak_pct": 11.3,
+        "avg_roi_pct": -7.4,
+        "profit_factor": 0.54,
+        "hard_stops": 0,
+        "underlying_stops": 0,
+        "hard_stop_avg_pct": null,
+        "hard_stop_worst_pct": null
+      },
+      "午间": {
+        "trades": 8,
+        "total_pnl": -30.26,
+        "pnl_ex_best": -145.15,
+        "win_rate_pct": 50.0,
+        "direction_pct": 37.5,
+        "avg_peak_pct": 14.1,
+        "avg_roi_pct": -0.8,
+        "profit_factor": 0.87,
+        "hard_stops": 0,
+        "underlying_stops": 0,
+        "hard_stop_avg_pct": null,
+        "hard_stop_worst_pct": null
+      },
+      "尾盘": {
+        "trades": 2,
+        "total_pnl": -10.38,
+        "pnl_ex_best": -9.84,
+        "win_rate_pct": 0.0,
+        "direction_pct": 0.0,
+        "avg_peak_pct": -1.1,
+        "avg_roi_pct": -12.0,
+        "profit_factor": 0.0,
+        "hard_stops": 0,
+        "underlying_stops": 0,
+        "hard_stop_avg_pct": null,
+        "hard_stop_worst_pct": null
+      }
+    }
+  }
+}
