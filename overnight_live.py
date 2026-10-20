@@ -246,9 +246,9 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
     tickers = only or universe(cfg, day)
     # 预扫：确定每只能过夜的到期日，顺便看 15:00 后有没有结构（有的排在正式扫描前面）
     log.info("【隔夜·预扫】%s 确定 %d 只的过夜到期日", et_now().strftime("%H:%M"), len(tickers))
-    exps, early, daily = {}, [], daily_expiry_tickers(cfg)
+    exps, early = {}, []
     for t in tickers:
-        exp, raw = pick_expiry(client, t, day, predicted_expiry(t, day, daily))
+        exp, raw = pick_expiry(client, t, day)   # 开仓日之后最近一个有挂牌（有 Heatmap）的到期；当天到期不看（10/20 用户定）
         if exp:
             exps[t] = exp
             if find_structure(cfg, lcfg, t, day, exp, raw, et_now()):

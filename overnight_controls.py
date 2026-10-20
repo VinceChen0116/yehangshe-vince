@@ -81,7 +81,7 @@ def daily_tickers_before(cfg, day: dt.date) -> set:
 
 
 def use_live_expiry():
-    """回测的到期日改成与实盘一致：先试 predicted_expiry（有每日到期 → 下一交易日，其余 → 下一个周五），
+    """回测的到期日改成与实盘一致：开仓日之后逐个交易日试，取第一个有 Heatmap 的到期（10/20 前实盘先试 predicted_expiry），
     存档里没有的到期从接口补拉 15:00 之后的 Heatmap（缓存在 HM_CACHE，不写共享存档）。
     修正：每日存档只存当天 + 下一交易日到期，周五晚上看不到下周五到期，回测原来会漏掉大部分标的。"""
     from overnight_live import predicted_expiry
@@ -110,9 +110,8 @@ def use_live_expiry():
         return [out[0], pe] + [e for e in out[1:] if e != pe] if pe else out
 
     def sac(cfg, lcfg, day, ticker, *a, **k):
-        if day not in daily_cache:
-            daily_cache[day] = daily_tickers_before(cfg, day)
-        cur["exp"] = predicted_expiry(ticker, day, daily_cache[day])
+        # 10/20 起实盘取"开仓日之后最近一个有挂牌的到期"（不再先猜每日到期名单），回测按 expiry_candidates 顺序逐个试即可
+        cur["exp"] = None
         return orig_sac(cfg, lcfg, day, ticker, *a, **k)
 
     global _client
