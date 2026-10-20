@@ -140,7 +140,18 @@ class TestCliff(unittest.TestCase):
         self.assertReject(REJECT_PATH, {98.5: -15 * M, 97.0: 2 * M}, "上方没有显著正节点")
 
     def test_space(self):
-        self.assertReject(REJECT_PATH, {99.8: -15 * M, 100.75: 20 * M}, "只有贴着现价的负节点 99.8")
+        self.assertReject(REJECT_PATH, {99.8: -15 * M, 100.75: 20 * M}, "1%–4.5% 内也没有显著负节点可作目标")
+        self.assertReject(REJECT_PATH, {99.8: -15 * M, 100.75: 20 * M, 99.9: 15 * M}, "下方空间 0.60%（目标 = 下方超大正节点 99.9")
+
+    def test_target_is_next_big_positive(self):
+        # 用户口径：目标 = 下方下一个超大正节点（支撑）；紧贴的负节点是燃料
+        cells = {100.75: 20 * M, 100.2: -30 * M, 99.9: -10 * M, 99.0: 15 * M, 99.5: 3 * M, 97.0: -5 * M}
+        j, sig, _ = run(REJECT_PATH, cells)
+        self.assertIsNotNone(sig, j.last_reason.get("TEST"))
+        self.assertEqual(sig.target_spot, 99.0)                 # 99.5(+3M) 不够大，可以穿过
+        self.assertIn("目标 = 下方超大正节点 99", sig.cand.notes)
+        j, sig, _ = run(REJECT_PATH, {100.75: 20 * M, 100.2: -30 * M, 99.9: 12 * M})
+        self.assertIsNone(sig)                                  # 下一个超大正节点只有 0.6% → 空间不够
 
     def test_chasm_skips_adjacent_negative(self):
         # 紧贴现价的大负节点（0.3%）是燃料；目标取 1%–4.5% 内最大的负节点

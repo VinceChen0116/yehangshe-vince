@@ -32,8 +32,9 @@ INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0
 BASELINE_NOTES = """
 【解读】清单（文档没写死的地方，按以下方式实现；要改告诉我）：
 1. 天花板 / 地板 = 现价上方 / 下方"最近的"显著正节点（GEX ≥ G_min）；不是全天最大的那个。
-2. 悬崖的深渊 / 跳板的靶心（= 目标位）= 现价下方 / 上方 1.0%–4.5%（指数 0.4%–4.5%）内绝对值最大的显著负节点；
-   紧贴现价、不到 1% 的负节点是"燃料"不是目标（10/20 修正：之前取 4.5% 内最大的，MU 这类紧贴的负节点会把信号挡掉）。
+2. 目标位（2026-10-20 用户确认）：悬崖 / 跳板的重点都是超大正节点。目标 = 顺方向下一个超大正节点（悬崖 = 下方支撑，
+   跳板 = 上方阻力），超大 = GEX ≥ max(0.85×G_min, 0.45×天花板/踏板 GEX)；"空间" = 现价到它的距离。现价与目标之间必须有显著负节点
+   （燃料：文档的"负深渊 / 负靶心"）。4.5% 内没有超大正节点时，目标退回 1%–4.5% 内最大的负节点。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
    （中间关卡 ≥1.0% 时改为关卡行权价）。逼空 / 雪崩没有墙，风险距离取最小 0.8%。
 4. 中间关卡在 0.40%–1.0% 之间：不否决、不改目标（文档只写了 <0.40% 与 ≥1.0% 两种情况）。
@@ -255,6 +256,18 @@ def _gatekeeper(cells: list, spot: float, target: float, acting_gex: float, gmin
     return False, target, f"中间关卡 {near[0]:g} 距 {d * 100:.2f}%（不改目标）"
 
 
+def _next_big_positive(cells: list, spot: float, acting_gex: float, gmin: float, below: bool):
+    """悬崖 / 跳板的目标位：顺方向上下一个"超大正节点"（2026-10-20 用户确认：两种结构的重点都是超大正节点，
+    下方 / 上方空间 = 到下一个正节点支撑 / 阻力的距离）。超大 = GEX ≥ max(0.85 × G_min, 0.45 × 起作用墙的 GEX)
+    （与文档"中间关卡"的强正节点门槛相同）；比它小的正节点价格可以穿过。返回 (行权价, GEX) 或 None。"""
+    thr = max(0.85 * gmin, 0.45 * abs(acting_gex))
+    if below:
+        c = [(k, g) for k, g in cells if g >= thr and k < spot and (spot - k) / spot <= 0.045]
+        return max(c, key=lambda x: x[0]) if c else None
+    c = [(k, g) for k, g in cells if g >= thr and k > spot and (k - spot) / spot <= 0.045]
+    return min(c, key=lambda x: x[0]) if c else None
+
+
 def _stop_risk(wall_dist: float | None) -> float:
     if wall_dist is None:
         return HW.min_stop_loss_spot_pct
@@ -273,20 +286,29 @@ def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str)
     if not (min_d <= d_ceil <= max_d):
         return None, f"离天花板 {ceil[0]:g} {d_ceil * 100:.3f}% 不在 {min_d * 100:.2f}%–{max_d * 100:.1f}%"
     min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
-    chasms = [(k, g) for k, g in cells if g <= -gmin and k < S and min_sp <= (S - k) / S <= 0.045]
-    if not chasms:
-        near = [k for k, g in cells if g <= -gmin and k < S and (S - k) / S < min_sp]
-        return None, (f"下方 {min_sp * 100:.1f}%–4.5% 没有显著负节点（深渊）"
-                      + (f"；只有贴着现价的负节点 {', '.join(f'{k:g}' for k in near)}" if near else ""))
-    chasm = min(chasms, key=lambda c: c[1])
-    space = (S - chasm[0]) / S
+    fuel = [(k, g) for k, g in cells if g <= -gmin and k < S and (S - k) / S <= 0.045]
+    if not fuel:
+        return None, "下方 4.5% 内没有显著负节点（深渊 / 燃料）"
+    chasm = min(fuel, key=lambda c: c[1])
+    sup = _next_big_positive(cells, S, ceil[1], gmin, below=True)
+    if sup is not None:
+        tgt, tgt_note = sup[0], f"目标 = 下方超大正节点 {sup[0]:g}(+{sup[1] / 1e6:.1f}M)"
+    else:                                   # 下方 4.5% 内没有超大正节点：目标退回 1%–4.5% 内最大的负节点
+        deep = [(k, g) for k, g in fuel if (S - k) / S >= min_sp]
+        if not deep:
+            return None, f"下方没有超大正节点，1%–4.5% 内也没有显著负节点可作目标"
+        d = min(deep, key=lambda c: c[1])
+        tgt, tgt_note = d[0], f"目标 = 深渊 {d[0]:g}（下方 4.5% 内没有超大正节点）"
+    space = (S - tgt) / S
+    if space < min_sp:
+        return None, f"下方空间 {space * 100:.2f}%（{tgt_note}）< {min_sp * 100:.1f}%"
     rr = space / _stop_risk(d_ceil)
     if rr < HW.min_reward_to_risk_ratio:
         return None, f"盈亏比 {rr:.2f} < {HW.min_reward_to_risk_ratio}"
     floor = [(k, g) for k, g in cells if g >= gmin and k < S and (S - k) / S <= 0.0045]
     if floor:
         return None, f"下方 0.45% 内有强正地板 {floor[-1][0]:g}"
-    veto, target, gk_note = _gatekeeper(cells, S, chasm[0], ceil[1], gmin, False, idx)
+    veto, target, gk_note = _gatekeeper(cells, S, tgt, ceil[1], gmin, False, idx)
     if veto:
         return None, gk_note
     t5, t15 = cx.tick_ret_5m, cx.ret_15m
@@ -301,8 +323,8 @@ def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str)
                       f"当天 {cx.intraday_ret * 100:+.2f}%）")
     trigger = "REJECTION_DROP" if d_ceil <= 0.006 else "TREND_PULLBACK_REJECT"
     return Candidate("CLIFF_STRUCTURE", "BEARISH", ceil[0], ceil[1], target, d_ceil, space, rr, trigger,
-                     f"天花板 {ceil[0]:g}(+{ceil[1] / 1e6:.1f}M) 距 {d_ceil * 100:.2f}% · 深渊 {chasm[0]:g}({chasm[1] / 1e6:.1f}M) "
-                     f"空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
+                     f"天花板 {ceil[0]:g}(+{ceil[1] / 1e6:.1f}M) 距 {d_ceil * 100:.2f}% · 燃料 {chasm[0]:g}({chasm[1] / 1e6:.1f}M) · "
+                     f"{tgt_note} 空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
 
 
 def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str, frames: list
@@ -320,20 +342,29 @@ def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration
     if not (min_d <= d_floor <= max_d):
         return None, f"离踏板 {floor[0]:g} {d_floor * 100:.3f}% 不在 {min_d * 100:.2f}%–{max_d * 100:.1f}%"
     min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
-    accels = [(k, g) for k, g in cells if g <= -gmin and k > S and min_sp <= (k - S) / S <= 0.045]
-    if not accels:
-        near = [k for k, g in cells if g <= -gmin and k > S and (k - S) / S < min_sp]
-        return None, (f"上方 {min_sp * 100:.1f}%–4.5% 没有显著负节点（靶心）"
-                      + (f"；只有贴着现价的负节点 {', '.join(f'{k:g}' for k in near)}" if near else ""))
-    accel = min(accels, key=lambda c: c[1])
-    space = (accel[0] - S) / S
+    fuel = [(k, g) for k, g in cells if g <= -gmin and k > S and (k - S) / S <= 0.045]
+    if not fuel:
+        return None, "上方 4.5% 内没有显著负节点（靶心 / 燃料）"
+    accel = min(fuel, key=lambda c: c[1])
+    res = _next_big_positive(cells, S, floor[1], gmin, below=False)
+    if res is not None:
+        tgt, tgt_note = res[0], f"目标 = 上方超大正节点 {res[0]:g}(+{res[1] / 1e6:.1f}M)"
+    else:
+        deep = [(k, g) for k, g in fuel if (k - S) / S >= min_sp]
+        if not deep:
+            return None, f"上方没有超大正节点，1%–4.5% 内也没有显著负节点可作目标"
+        d = min(deep, key=lambda c: c[1])
+        tgt, tgt_note = d[0], f"目标 = 靶心 {d[0]:g}（上方 4.5% 内没有超大正节点）"
+    space = (tgt - S) / S
+    if space < min_sp:
+        return None, f"上方空间 {space * 100:.2f}%（{tgt_note}）< {min_sp * 100:.1f}%"
     rr = space / _stop_risk(d_floor)
     if rr < HW.min_reward_to_risk_ratio:
         return None, f"盈亏比 {rr:.2f} < {HW.min_reward_to_risk_ratio}"
     block = [(k, g) for k, g in cells if g >= gmin and k > S and (k - S) / S <= 0.0045]
     if block:
         return None, f"上方 0.45% 内有强天花板 {block[0][0]:g}"
-    veto, target, gk_note = _gatekeeper(cells, S, accel[0], floor[1], gmin, True, idx)
+    veto, target, gk_note = _gatekeeper(cells, S, tgt, floor[1], gmin, True, idx)
     if veto:
         return None, gk_note
     t5, t15 = cx.tick_ret_5m, cx.ret_15m
@@ -349,8 +380,8 @@ def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration
             return None, f"贴近踏板（{d_floor * 100:.2f}%）但踏板 {gs}、也没有反弹"
     trigger = "REJECTION_BOUNCE" if d_floor <= 0.006 else "TREND_PULLBACK_HOLD"
     return Candidate("SPRINGBOARD_STRUCTURE", "BULLISH", floor[0], floor[1], target, d_floor, space, rr, trigger,
-                     f"踏板 {floor[0]:g}(+{floor[1] / 1e6:.1f}M) 距 {d_floor * 100:.2f}% · 靶心 {accel[0]:g}({accel[1] / 1e6:.1f}M) "
-                     f"空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
+                     f"踏板 {floor[0]:g}(+{floor[1] / 1e6:.1f}M) 距 {d_floor * 100:.2f}% · 燃料 {accel[0]:g}({accel[1] / 1e6:.1f}M) · "
+                     f"{tgt_note} 空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
 
 
 def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) -> tuple[Candidate | None, str]:
