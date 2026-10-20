@@ -42,6 +42,7 @@ BASELINE_NOTES = """
 2a. 路径：现价到目标之间必须有显著负节点，且显著负节点 |GEX| 合计 ≥ 1.5 × 显著正节点合计（正负差不多 = 走不动）。
 2b. 墙外 3 格：天花板 / 踏板外侧 3 格以内（含第 3 格）有比它更大的正节点 → 结构不成立（价格会被更大的墙吸过去）。
 2c. 钉住：主结构到期 |GEX| 最大的节点是负节点、在路径上或现价 ±0.5% 内、且 ≥ 3 × 墙 → 不开（逼空也查）。
+2d. 至少一格：现价和（最终）目标之间至少要有一个 Heatmap 节点（行权价），否则不开（悬崖 / 跳板 / 逼空都查；2026-10-20 用户定）。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
    （中间关卡 ≥1.0% 时改为关卡行权价）。逼空 / 雪崩没有墙，风险距离取最小 0.8%。
 4. 中间关卡在 0.40%–1.0% 之间：不否决、不改目标（文档只写了 <0.40% 与 ≥1.0% 两种情况）。
@@ -53,7 +54,7 @@ BASELINE_NOTES = """
 8. 跳板"已放量反弹"没有成交量数据，用 5 分钟涨幅 ≥ +0.10% 代替。
 9. "强空头水下放宽至 2.7%"：当天跌幅 ≤ −1.2% 且现价 ≤ 0.995 × VWAP 时，悬崖离天花板最远放宽到 2.7%。
 10. 跨到期共振 / 冲突：在起作用的行权价上，比较主结构到期之后的下 2 个到期；同号各 +6（上限 +12），紧挨着的下一个到期异号 −14。
-11. 逼空"集中度 ≥18%" = 该 Call 墙 GEX ÷ 主结构到期全部节点 |GEX| 之和。
+11. 逼空"集中度 ≥18%" = 该 Call 墙 GEX ÷ 主结构到期全部正节点 GEX 之和（2026-10-20 用户定）。
 12. 文档没有规定合约怎么选：沿用原规则（买靶心行权价，最多虚值 0.5%，挂牌行权价里离靶心最近）。每笔 1 张，所以 +80% 分批止盈不会触发。
 13. 出场用"能卖出的价格"算收益率（实盘 = 实时 bid；回放 = 中间价 − 真实半价差），和开仓成本（ask）对比。
 14d. 执行层保护：买卖价差 > 中间价 25% 不开（2026-10-20 用户定）。
@@ -328,6 +329,15 @@ def pin_check(cells: list, spot: float, target: float, wall_g: float) -> tuple[b
     return False, ""
 
 
+def gap_check(cells: list, spot: float, target: float) -> tuple[bool, str]:
+    """现价和目标之间（都不含）至少要有一个 Heatmap 节点（行权价），也就是至少差一格以上；
+    只差一格以内期权赚不到钱（2026-10-20 用户定，例：SMCI 33.1 → 33.5）。"""
+    lo, hi = sorted((spot, target))
+    if any(lo < k < hi for k, _ in cells):
+        return True, ""
+    return False, f"现价 {spot:g} 到目标 {target:g} 之间没有 Heatmap 节点（不到一格以上，赚不到钱）"
+
+
 def _stop_risk(wall_dist: float | None) -> float:
     if wall_dist is None:
         return HW.min_stop_loss_spot_pct
@@ -373,6 +383,9 @@ def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str)
     veto, target, gk_note = _gatekeeper(cells, S, tgt, ceil[1], gmin, False, idx)
     if veto:
         return None, gk_note
+    ok, gap_note = gap_check(cells, S, target)
+    if not ok:
+        return None, gap_note
     t5, t15 = cx.tick_ret_5m, cx.ret_15m
     if t5 is None or t15 is None:
         return None, "开盘不足 15 分钟，没有 5 / 15 分钟涨跌"
@@ -431,6 +444,9 @@ def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration
     veto, target, gk_note = _gatekeeper(cells, S, tgt, floor[1], gmin, True, idx)
     if veto:
         return None, gk_note
+    ok, gap_note = gap_check(cells, S, target)
+    if not ok:
+        return None, gap_note
     t5, t15 = cx.tick_ret_5m, cx.ret_15m
     if t5 is None or t15 is None:
         return None, "开盘不足 15 分钟，没有 5 / 15 分钟涨跌"
@@ -457,9 +473,9 @@ def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) 
         return None, "上方没有正节点"
     cw = max(above, key=lambda c: c[1])
     tp, _ = trunc_floors(cells)
-    total = sum(abs(g) for _, g in cells) or 1.0
-    if cw[1] < max(gmin, 2.0 * tp) or cw[1] / total < 0.18:
-        return None, f"Call 墙 {cw[0]:g} 不够强（占 {cw[1] / total * 100:.0f}%）"
+    pos_total = sum(g for _, g in cells if g > 0) or 1.0      # 集中度 = Call 墙 ÷ 主结构到期全部正节点（2026-10-20 用户定）
+    if cw[1] < max(gmin, 2.0 * tp) or cw[1] / pos_total < 0.18:
+        return None, f"Call 墙 {cw[0]:g} 不够强（占正节点合计 {cw[1] / pos_total * 100:.0f}%）"
     mid = [(k, g) for k, g in cells if S < k < cw[0] and g > 0.25 * cw[1]]
     if mid:
         return None, f"中间有正墙 {mid[0][0]:g}"
@@ -469,6 +485,9 @@ def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) 
     run = (cw[0] - S) / S
     if not (0.012 <= run <= 0.055):
         return None, f"跑道 {run * 100:.2f}% 不在 1.2%–5.5%"
+    ok, gap_note = gap_check(cells, S, cw[0])
+    if not ok:
+        return None, gap_note
     t5, t15 = cx.tick_ret_5m, cx.ret_15m
     if t5 is None or t15 is None:
         return None, "开盘不足 15 分钟"

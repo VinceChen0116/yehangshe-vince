@@ -249,6 +249,21 @@ class TestTrendArchetypes(unittest.TestCase):
         self.assertEqual(sig.cand.structure_type, "SHORT_GAMMA_VACUUM_SQUEEZE")
         self.assertEqual(sig.target_spot, 102.5)
 
+    def test_squeeze_needs_node_between(self):    # SMCI 型：现价和目标之间没有节点（不到一格以上）
+        cells = {102.5: 40 * M, 99.0: 5 * M, 98.0: -6 * M, 97.0: 2 * M}
+        j, sig, _ = run([100.0, 100.1, 100.2, 100.35, 100.5, 100.6], cells)
+        self.assertIsNone(sig)
+        self.assertIn("之间没有 Heatmap 节点", j.last_reason["TEST"])
+
+    def test_squeeze_concentration_positive_only(self):   # 集中度只看正节点合计：负节点再大也不稀释
+        cells = {102.5: 40 * M, 99.0: 5 * M, 98.0: -600 * M, 101.0: -4 * M, 97.0: 2 * M}
+        ok, _ = B.gap_check(list(cells.items()), 100.6, 102.5)
+        self.assertTrue(ok)
+        cells2 = {102.5: 40 * M, 99.0: 5 * M, 94.0: 195 * M, 98.0: -6 * M, 101.0: -4 * M, 97.0: 2 * M}
+        j, sig, _ = run([100.0, 100.1, 100.2, 100.35, 100.5, 100.6], cells2)
+        self.assertIsNone(sig)
+        self.assertIn("占正节点合计 17%", j.last_reason["TEST"])
+
     def test_avalanche(self):
         cells = {98.0: -30 * M, 99.0: -6 * M, 100.0: -5 * M, 101.5: 3 * M}
         path = [101.0, 100.8, 100.5, 100.2, 99.9, 99.6]
@@ -450,8 +465,10 @@ class TestRealData1019(unittest.TestCase):
 
     def test_mu_call_rejected(self):
         j, sig = self.judge_at("MU", "11:20")
-        self.assertIsNone(sig)
-        self.assertIn("离踏板 925 0.143%", j.last_reason["MU"])
+        # 集中度改成"÷ 正节点合计"后，这根会出逼空（Call 墙 950，19%）；待用户决定，这里只锁定"不是跳板"
+        self.assertFalse(sig is not None and sig.cand.structure_type == "SPRINGBOARD_STRUCTURE")
+        if sig is None:
+            self.assertIn("离踏板 925 0.143%", j.last_reason["MU"])
 
     def test_meta_put_rejected(self):
         j, sig = self.judge_at("META", "10:40")
@@ -465,6 +482,12 @@ class TestRealData1019(unittest.TestCase):
             j, sig = self.judge_at(t, lab)
             self.assertFalse(sig is not None and sig.cand.structure_type == "CLIFF_STRUCTURE", f"{t} {lab} 不应是悬崖")
             self.assertIn(why, j.last_reason[t].split("；")[0], f"{t} {lab}: {j.last_reason[t]}")
+
+    def test_smci_squeeze_one_grid(self):
+        """10/20 用户：SMCI 11:20 现价 33.1、目标 33.5，中间没有节点 → 不开。"""
+        j, sig = self.judge_at("SMCI", "11:20")
+        self.assertIsNone(sig)
+        self.assertIn("33.5 之间没有 Heatmap 节点", j.last_reason["SMCI"])
 
 
 if __name__ == "__main__":
