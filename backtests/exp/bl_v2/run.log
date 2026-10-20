@@ -40,3 +40,192 @@
 03:24:07 [INFO] yhs.main: 【历史】BAC261009C00053000 真实 IV 序列 390 个点（1m）
 03:24:07 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0009 BAC BUY_CALL | 行权价 53.00 到期 2026-10-09 | 现货 53.12 | 中间价 0.570 → 成本 0.625（含滑点 3%） | δ=0.540 γ=0.2116 | 定价来源=real_data | 目标加速位 54.00
 03:24:07 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0009 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 72 | Call 墙 54(+3.2M) 跑道 1.66% | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 52.70 目标 54.00
+03:24:08 [INFO] yhs.main: 【历史】MDT261009P00087000 真实 IV 序列 388 个点（1m）
+03:24:08 [INFO] yhs.trader: 【阶段4·放弃】MDT O:MDT261009P00087000 买卖价差 106%（bid 0.42 / ask 1.37）> 25%，不开仓
+03:24:09 [INFO] yhs.main: 【历史】AAPL261007P00335000 真实 IV 序列 383 个点（1m）
+03:24:09 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0010 AAPL BUY_PUT | 行权价 335.00 到期 2026-10-07 | 现货 334.41 | 中间价 1.580 → 成本 1.605（含滑点 3%） | δ=0.525 γ=0.0996 | 定价来源=real_data | 目标加速位 327.50
+03:24:09 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0010 CLIFF_STRUCTURE/REJECTION_DROP 评分 56 | 天花板 335(+1.6M) 距 0.18% · 燃料 332.5(-40.0M) · 目标 = 下方超大正节点 327.5(+2.8M) 空间 2.07% · R:R 2.58 | 环境 NEUTRAL · 节点 DECAYING · 墙体 STABLE · 共振 1 | 现货止损 337.09 目标 327.50
+03:24:09 [INFO] yhs.baseline: 【baseline·排序】09:55 本轮信号 4 个 → 开仓 SHOP(88)、BAC(72)、AAPL(56)
+03:24:09 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0001 TSLA BUY_PUT | 原因 初始止损 −35% | 现货 376.83→378.05 | 期权 1.327→0.806 | ROI -39.3% | 峰值 -1.1% | 最大逆行 -39.3% | 盈亏 $-52.15
+03:24:09 [INFO] yhs.baseline: 【baseline·信号】LRCX SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 78 | Call 墙 330(+2.4M) 跑道 1.45% | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 322.68 目标 330.00
+03:24:09 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0004 MSTR BUY_PUT | 原因 10 分钟零动能截断 | 现货 155.19→156.71 | 期权 3.302→2.465 | ROI -25.3% | 峰值 -2.0% | 最大逆行 -26.0% | 盈亏 $-83.71
+03:24:09 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0003 TSM BUY_PUT | 原因 10 分钟零动能截断 | 现货 471.98→473.72 | 期权 3.443→2.717 | ROI -21.1% | 峰值 -2.9% | 最大逆行 -22.5% | 盈亏 $-72.58
+03:24:09 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0007 WMT BUY_CALL | 原因 10 分钟零动能截断 | 现货 107.86→107.69 | 期权 0.870→0.695 | ROI -20.1% | 峰值 +1.0% | 最大逆行 -21.1% | 盈亏 $-17.44
+03:24:11 [INFO] yhs.main: 【历史】LRCX261009C00325000 真实 IV 序列 390 个点（1m）
+03:24:11 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0011 LRCX BUY_CALL | 行权价 325.00 到期 2026-10-09 | 现货 325.28 | 中间价 5.901 → 成本 6.151（含滑点 3%） | δ=0.491 γ=0.0347 | 定价来源=real_data | 目标加速位 330.00
+03:24:11 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0011 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 78 | Call 墙 330(+2.4M) 跑道 1.45% | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 322.68 目标 330.00
+03:24:11 [INFO] yhs.baseline: 【baseline·排序】10:00 本轮信号 1 个 → 开仓 LRCX(78)
+03:24:11 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0010 AAPL BUY_PUT | 原因 0DTE 8 分钟零动能截断 | 现货 334.41→335.26 | 期权 1.605→1.004 | ROI -37.5% | 峰值 -3.2% | 最大逆行 -37.5% | 盈亏 $-60.16
+03:24:11 [INFO] yhs.baseline: 【baseline·信号】JPM SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 62 | Call 墙 332.5(+8.9M) 跑道 1.83% | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 323.90 目标 332.50
+03:24:11 [INFO] yhs.baseline: 【baseline·信号】MU SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 88 | 踏板 1030(+43.5M) 距 0.41% · 燃料 1045(-20.9M) · 目标 = 上方超大正节点 1050(+18.8M) 空间 1.52% · R:R 1.90 | 环境 TREND_DRIVER · 节点 GROWING · 墙体 MIGRATING_UP · 共振 0 | 现货止损 1025.99 目标 1050.00
+03:24:12 [INFO] yhs.main: 【历史】MU261007C01035000 真实 IV 序列 249 个点（1m）
+03:24:12 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0012 MU BUY_CALL | 行权价 1035.00 到期 2026-10-07 | 现货 1034.27 | 中间价 6.370 → 成本 6.679（含滑点 3%） | δ=0.587 γ=0.0329 | 定价来源=real_data | 目标加速位 1050.00
+03:24:12 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0012 SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 88 | 踏板 1030(+43.5M) 距 0.41% · 燃料 1045(-20.9M) · 目标 = 上方超大正节点 1050(+18.8M) 空间 1.52% · R:R 1.90 | 环境 TREND_DRIVER · 节点 GROWING · 墙体 MIGRATING_UP · 共振 0 | 现货止损 1025.99 目标 1050.00
+03:24:13 [INFO] yhs.main: 【历史】JPM261009C00327500 真实 IV 序列 390 个点（1m）
+03:24:13 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0013 JPM BUY_CALL | 行权价 327.50 到期 2026-10-09 | 现货 326.51 | 中间价 2.191 → 成本 2.374（含滑点 3%） | δ=0.478 γ=0.0345 | 定价来源=real_data | 目标加速位 332.50
+03:24:13 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0013 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 62 | Call 墙 332.5(+8.9M) 跑道 1.83% | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 323.90 目标 332.50
+03:24:13 [INFO] yhs.baseline: 【baseline·排序】10:05 本轮信号 2 个 → 开仓 MU(88)、JPM(62)
+03:24:13 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0012 MU BUY_CALL | 原因 连续棘轮锁利 | 现货 1034.27→1036.68 | 期权 6.679→7.183 | ROI +7.5% | 峰值 +18.9% | 最大逆行 -9.3% | 盈亏 $+50.37
+03:24:13 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0008 SHOP BUY_CALL | 原因 10 分钟零动能截断 | 现货 163.31→162.75 | 期权 3.556→2.786 | ROI -21.7% | 峰值 -15.6% | 最大逆行 -21.7% | 盈亏 $-76.99
+03:24:13 [INFO] yhs.baseline: 【baseline·信号】GS CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 875(+3.1M) 距 0.53% · 燃料 870(-4.1M) · 目标 = 深渊 860（下方 4.5% 内没有超大正节点） 空间 1.19% · R:R 1.43 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 877.61 目标 860.00
+03:24:13 [INFO] yhs.baseline: 【baseline·信号】MDT CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 70 | 天花板 88(+2.9M) 距 1.37% · 燃料 85(-0.8M) · 目标 = 深渊 85（下方 4.5% 内没有超大正节点） 空间 2.09% · R:R 1.39 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 88.11 目标 85.00
+03:24:13 [INFO] yhs.trader: 【阶段4·放弃】MDT O:MDT261009P00087000 买卖价差 106%（bid 0.42 / ask 1.37）> 25%，不开仓
+03:24:14 [INFO] yhs.main: 【历史】GS261009P00870000 真实 IV 序列 390 个点（1m）
+03:24:14 [INFO] yhs.trader: 【阶段4·放弃】GS O:GS261009P00870000 买卖价差 28%（bid 7.40 / ask 9.80）> 25%，不开仓
+03:24:14 [INFO] yhs.baseline: 【baseline·排序】10:10 本轮信号 2 个 → 开仓 无
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】MDT CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 62 | 天花板 88(+3.2M) 距 1.08% · 燃料 87(-1.7M) · 目标 = 深渊 85（下方 4.5% 内没有超大正节点） 空间 2.36% · R:R 1.71 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 88.26 目标 85.00
+03:24:14 [INFO] yhs.trader: 【阶段4·放弃】MDT O:MDT261009P00087000 买卖价差 130%（bid 0.42 / ask 1.97）> 25%，不开仓
+03:24:14 [INFO] yhs.baseline: 【baseline·排序】10:20 本轮信号 1 个 → 开仓 无
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】GS CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 875(+3.3M) 距 0.45% · 燃料 870(-3.0M) · 目标 = 深渊 860（下方 4.5% 内没有超大正节点） 空间 1.28% · R:R 1.59 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 878.08 目标 860.00
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】MSFT CLIFF_STRUCTURE/REJECTION_DROP 评分 72 | 天花板 527.5(+22.1M) 距 0.15% · 燃料 525(-27.9M) · 目标 = 下方超大正节点 520(+10.9M) 空间 1.28% · R:R 1.60 | 环境 STACKED_FLIP_ZONE · 节点 GROWING · 墙体 MIGRATING_DOWN · 共振 1 · 到期冲突 | 现货止损 530.94 目标 520.00
+03:24:14 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0014 MSFT BUY_PUT | 行权价 525.00 到期 2026-10-07 | 现货 526.73 | 中间价 0.829 → 成本 0.873（含滑点 3%） | δ=0.367 γ=0.0638 | 定价来源=real_data | 目标加速位 520.00
+03:24:14 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0014 CLIFF_STRUCTURE/REJECTION_DROP 评分 72 | 天花板 527.5(+22.1M) 距 0.15% · 燃料 525(-27.9M) · 目标 = 下方超大正节点 520(+10.9M) 空间 1.28% · R:R 1.60 | 环境 STACKED_FLIP_ZONE · 节点 GROWING · 墙体 MIGRATING_DOWN · 共振 1 · 到期冲突 | 现货止损 530.94 目标 520.00
+03:24:14 [INFO] yhs.trader: 【阶段4·放弃】GS O:GS261009P00870000 买卖价差 30%（bid 6.85 / ask 9.25）> 25%，不开仓
+03:24:14 [INFO] yhs.baseline: 【baseline·排序】10:25 本轮信号 2 个 → 开仓 MSFT(72)
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】GS CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 875(+3.2M) 距 0.54% · 燃料 870(-2.8M) · 目标 = 深渊 860（下方 4.5% 内没有超大正节点） 空间 1.18% · R:R 1.41 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 877.61 目标 860.00
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】WMT SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 70 | 踏板 107(+1.9M) 距 1.18% · 燃料 111(-1.8M) · 目标 = 靶心 111（上方 4.5% 内没有超大正节点） 空间 2.51% · R:R 1.69 | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 106.68 目标 111.00
+03:24:14 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0015 WMT BUY_CALL | 行权价 108.00 到期 2026-10-09 | 现货 108.28 | 中间价 1.020 → 成本 1.045（含滑点 3%） | δ=0.575 γ=0.1043 | 定价来源=real_data | 目标加速位 111.00
+03:24:14 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0015 SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 70 | 踏板 107(+1.9M) 距 1.18% · 燃料 111(-1.8M) · 目标 = 靶心 111（上方 4.5% 内没有超大正节点） 空间 2.51% · R:R 1.69 | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 106.68 目标 111.00
+03:24:14 [INFO] yhs.trader: 【阶段4·放弃】GS O:GS261009P00870000 买卖价差 30%（bid 6.85 / ask 9.25）> 25%，不开仓
+03:24:14 [INFO] yhs.baseline: 【baseline·排序】10:30 本轮信号 2 个 → 开仓 WMT(70)
+03:24:14 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0006 CRM BUY_PUT | 原因 连续棘轮锁利 | 现货 223.62→222.15 | 期权 3.898→4.079 | ROI +4.7% | 峰值 +13.6% | 最大逆行 -14.3% | 盈亏 $+18.17
+03:24:14 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0014 MSFT BUY_PUT | 原因 连续棘轮锁利 | 现货 526.73→526.37 | 期权 0.873→0.834 | ROI -4.4% | 峰值 +10.7% | 最大逆行 -10.9% | 盈亏 $-3.85
+03:24:14 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0009 BAC BUY_CALL | 原因 连续棘轮锁利 | 现货 53.12→53.38 | 期权 0.625→0.642 | ROI +2.7% | 峰值 +10.0% | 最大逆行 -20.4% | 盈亏 $+1.67
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】MDT CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 62 | 天花板 88(+3.1M) 距 1.37% · 燃料 85(-0.9M) · 目标 = 深渊 85（下方 4.5% 内没有超大正节点） 空间 2.09% · R:R 1.39 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 88.11 目标 85.00
+03:24:14 [INFO] yhs.trader: 【阶段4·放弃】MDT O:MDT261009P00087000 买卖价差 130%（bid 0.42 / ask 1.97）> 25%，不开仓
+03:24:14 [INFO] yhs.baseline: 【baseline·排序】10:40 本轮信号 1 个 → 开仓 无
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】AAPL CLIFF_STRUCTURE/REJECTION_DROP 评分 66 | 天花板 335(+8.1M) 距 0.08% · 燃料 332.5(-18.4M) · 目标 = 深渊 330（下方 4.5% 内没有超大正节点） 空间 1.41% · R:R 1.76 | 环境 TREND_DRIVER · 节点 DECAYING · 墙体 MIGRATING_DOWN · 共振 1 | 现货止损 337.39 目标 330.00
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】GS CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 875(+3.1M) 距 0.55% · 燃料 870(-2.8M) · 目标 = 深渊 860（下方 4.5% 内没有超大正节点） 空间 1.18% · R:R 1.39 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 877.61 目标 860.00
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 80 | 踏板 1700(+16.0M) 距 0.31% · 燃料 1720(-3.8M) · 目标 = 靶心 1740（上方 4.5% 内没有超大正节点） 空间 2.04% · R:R 2.55 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 | 现货止损 1691.64 目标 1740.00
+03:24:14 [INFO] yhs.baseline: 【baseline·信号】TSM CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 72 | 天花板 482.5(+9.0M) 距 1.64% · 燃料 470(-4.8M) · 目标 = 深渊 460（下方 4.5% 内没有超大正节点） 空间 3.10% · R:R 2.07 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 481.85 目标 460.00
+03:24:17 [INFO] yhs.main: 【历史】SNDK261009C01700000 真实 IV 序列 390 个点（1m）
+03:24:18 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SNDK，5.2s 后免费重试（第 1 轮）
+03:24:24 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SNDK，5.0s 后免费重试（第 1 轮）
+03:24:30 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01700000 单张 $3816 超过上限 $1000，不开仓
+03:24:31 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/TSM261009P00472500，5.0s 后免费重试（第 1 轮）
+03:24:38 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TSM261009P00472500，5.2s 后免费重试（第 1 轮）
+03:24:43 [INFO] yhs.main: 【历史】TSM261009P00472500 真实 IV 序列 390 个点（1m）
+03:24:43 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0016 TSM BUY_PUT | 行权价 472.50 到期 2026-10-09 | 现货 474.73 | 中间价 3.299 → 成本 3.403（含滑点 3%） | δ=0.422 γ=0.0237 | 定价来源=real_data | 目标加速位 460.00
+03:24:43 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0016 CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 72 | 天花板 482.5(+9.0M) 距 1.64% · 燃料 470(-4.8M) · 目标 = 深渊 460（下方 4.5% 内没有超大正节点） 空间 3.10% · R:R 2.07 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 481.85 目标 460.00
+03:24:43 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0017 AAPL BUY_PUT | 行权价 335.00 到期 2026-10-07 | 现货 334.72 | 中间价 1.140 → 成本 1.168（含滑点 3%） | δ=0.659 γ=0.1079 | 定价来源=real_data | 目标加速位 330.00
+03:24:43 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0017 CLIFF_STRUCTURE/REJECTION_DROP 评分 66 | 天花板 335(+8.1M) 距 0.08% · 燃料 332.5(-18.4M) · 目标 = 深渊 330（下方 4.5% 内没有超大正节点） 空间 1.41% · R:R 1.76 | 环境 TREND_DRIVER · 节点 DECAYING · 墙体 MIGRATING_DOWN · 共振 1 | 现货止损 337.39 目标 330.00
+03:24:43 [INFO] yhs.trader: 【阶段4·放弃】GS O:GS261009P00870000 买卖价差 30%（bid 6.85 / ask 9.25）> 25%，不开仓
+03:24:43 [INFO] yhs.baseline: 【baseline·排序】10:45 本轮信号 4 个 → 开仓 TSM(72)、AAPL(66)
+03:24:43 [INFO] yhs.baseline: 【baseline·信号】DELL SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 62 | 踏板 575(+1.9M) 距 0.27% · 燃料 585(-2.6M) · 目标 = 靶心 585（上方 4.5% 内没有超大正节点） 空间 1.47% · R:R 1.83 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 571.94 目标 585.00
+03:24:43 [INFO] yhs.baseline: 【baseline·信号】INTC CLIFF_STRUCTURE/REJECTION_DROP 评分 60 | 天花板 114(+10.2M) 距 0.08% · 燃料 113(-3.2M) · 目标 = 深渊 110（下方 4.5% 内没有超大正节点） 空间 3.43% · R:R 4.29 | 环境 STACKED_FLIP_ZONE · 节点 DECAYING · 墙体 MIGRATING_DOWN · 共振 0 | 现货止损 114.82 目标 110.00
+03:24:43 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 90 | 踏板 1700(+16.3M) 距 0.68% · 燃料 1720(-3.8M) · 目标 = 靶心 1740（上方 4.5% 内没有超大正节点） 空间 1.66% · R:R 1.70 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 | 现货止损 1694.87 目标 1740.00
+03:24:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/SNDK261009C01720000，5.1s 后免费重试（第 1 轮）
+03:24:51 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNDK261009C01720000，5.0s 后免费重试（第 1 轮）
+03:24:56 [INFO] yhs.main: 【历史】SNDK261009C01720000 真实 IV 序列 390 个点（1m）
+03:24:56 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01720000 单张 $3107 超过上限 $1000，不开仓
+03:24:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/DELL261009C00577500，5.2s 后免费重试（第 1 轮）
+03:25:04 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/DELL261009C00577500，5.0s 后免费重试（第 1 轮）
+03:25:10 [INFO] yhs.main: 【历史】DELL261009C00577500 真实 IV 序列 388 个点（1m）
+03:25:10 [INFO] yhs.trader: 【阶段4·放弃】DELL O:DELL261009C00577500 单张 $1032 超过上限 $1000，不开仓
+03:25:11 [INFO] yhs.main: 【历史】INTC261007P00114000 真实 IV 序列 381 个点（1m）
+03:25:11 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0018 INTC BUY_PUT | 行权价 114.00 到期 2026-10-07 | 现货 113.91 | 中间价 0.819 → 成本 0.833（含滑点 3%） | δ=0.569 γ=0.3198 | 定价来源=real_data | 目标加速位 110.00
+03:25:11 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0018 CLIFF_STRUCTURE/REJECTION_DROP 评分 60 | 天花板 114(+10.2M) 距 0.08% · 燃料 113(-3.2M) · 目标 = 深渊 110（下方 4.5% 内没有超大正节点） 空间 3.43% · R:R 4.29 | 环境 STACKED_FLIP_ZONE · 节点 DECAYING · 墙体 MIGRATING_DOWN · 共振 0 | 现货止损 114.82 目标 110.00
+03:25:11 [INFO] yhs.baseline: 【baseline·排序】10:50 本轮信号 3 个 → 开仓 INTC(60)
+03:25:11 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0017 AAPL BUY_PUT | 原因 现货锁利止盈 | 现货 334.72→334.43 | 期权 1.168→1.269 | ROI +8.7% | 峰值 +34.4% | 最大逆行 -15.7% | 盈亏 $+10.11
+03:25:11 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0018 INTC BUY_PUT | 原因 连续棘轮锁利 | 现货 113.91→113.67 | 期权 0.833→0.875 | ROI +5.1% | 峰值 +15.7% | 最大逆行 -6.7% | 盈亏 $+4.26
+03:25:11 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0013 JPM BUY_CALL | 原因 连续棘轮锁利 | 现货 326.51→327.46 | 期权 2.374→2.420 | ROI +1.9% | 峰值 +10.4% | 最大逆行 -16.6% | 盈亏 $+4.60
+03:25:11 [INFO] yhs.baseline: 【baseline·信号】MDT CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 62 | 天花板 88(+3.1M) 距 1.28% · 燃料 85(-1.0M) · 目标 = 深渊 85（下方 4.5% 内没有超大正节点） 空间 2.18% · R:R 1.45 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 88.19 目标 85.00
+03:25:11 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 80 | 踏板 1700(+16.5M) 距 0.59% · 燃料 1720(-3.9M) · 目标 = 靶心 1740（上方 4.5% 内没有超大正节点） 空间 1.75% · R:R 1.98 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 | 现货止损 1694.87 目标 1740.00
+03:25:12 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/SNDK261009C01715000，5.2s 后免费重试（第 1 轮）
+03:25:19 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNDK261009C01715000，5.2s 后免费重试（第 1 轮）
+03:25:24 [INFO] yhs.main: 【历史】SNDK261009C01715000 真实 IV 序列 390 个点（1m）
+03:25:24 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01715000 单张 $3282 超过上限 $1000，不开仓
+03:25:24 [INFO] yhs.trader: 【阶段4·放弃】MDT O:MDT261009P00087000 买卖价差 86%（bid 0.54 / ask 1.35）> 25%，不开仓
+03:25:24 [INFO] yhs.baseline: 【baseline·排序】11:00 本轮信号 2 个 → 开仓 无
+03:25:24 [INFO] yhs.baseline: 【baseline·信号】GOOGL CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 345(+72.0M) 距 0.06% · 燃料 337.5(-1.7M) · 目标 = 深渊 337.5（下方 4.5% 内没有超大正节点） 空间 2.12% · R:R 2.64 | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 1 · 到期冲突 | 现货止损 347.55 目标 337.50
+03:25:24 [INFO] yhs.baseline: 【baseline·信号】MDT CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 62 | 天花板 88(+2.9M) 距 1.40% · 燃料 85(-1.0M) · 目标 = 深渊 85（下方 4.5% 内没有超大正节点） 空间 2.05% · R:R 1.37 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 88.08 目标 85.00
+03:25:25 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/GOOGL261007P00345000，5.3s 后免费重试（第 1 轮）
+03:25:32 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GOOGL261007P00345000，5.0s 后免费重试（第 1 轮）
+03:25:38 [INFO] yhs.main: 【历史】GOOGL261007P00345000 真实 IV 序列 367 个点（1m）
+03:25:39 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0019 GOOGL BUY_PUT | 行权价 345.00 到期 2026-10-07 | 现货 344.80 | 中间价 1.410 → 成本 1.440（含滑点 3%） | δ=0.477 γ=0.1084 | 定价来源=real_data | 目标加速位 337.50
+03:25:39 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0019 CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 345(+72.0M) 距 0.06% · 燃料 337.5(-1.7M) · 目标 = 深渊 337.5（下方 4.5% 内没有超大正节点） 空间 2.12% · R:R 2.64 | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 1 · 到期冲突 | 现货止损 347.55 目标 337.50
+03:25:39 [INFO] yhs.trader: 【阶段4·放弃】MDT O:MDT261009P00087000 买卖价差 86%（bid 0.54 / ask 1.35）> 25%，不开仓
+03:25:39 [INFO] yhs.baseline: 【baseline·排序】11:05 本轮信号 2 个 → 开仓 GOOGL(62)
+03:25:39 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 70 | 踏板 1700(+16.7M) 距 0.78% · 燃料 1720(-4.0M) · 目标 = 靶心 1740（上方 4.5% 内没有超大正节点） 空间 1.56% · R:R 1.44 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1694.86 目标 1740.00
+03:25:39 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01720000 单张 $3117 超过上限 $1000，不开仓
+03:25:39 [INFO] yhs.baseline: 【baseline·排序】11:10 本轮信号 1 个 → 开仓 无
+03:25:39 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0019 GOOGL BUY_PUT | 原因 0DTE 8 分钟零动能截断 | 现货 344.80→345.08 | 期权 1.440→1.223 | ROI -15.1% | 峰值 -4.3% | 最大逆行 -17.9% | 盈亏 $-21.71
+03:25:39 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0016 TSM BUY_PUT | 原因 连续棘轮锁利 | 现货 474.73→473.79 | 期权 3.403→3.677 | ROI +8.0% | 峰值 +19.4% | 最大逆行 -6.2% | 盈亏 $+27.38
+03:25:39 [INFO] yhs.baseline: 【baseline·信号】SHOP SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 80 | Call 墙 170(+1.6M) 跑道 4.06% | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 162.05 目标 170.00
+03:25:39 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0020 SHOP BUY_CALL | 行权价 162.50 到期 2026-10-09 | 现货 163.36 | 中间价 3.151 → 成本 3.293（含滑点 3%） | δ=0.553 γ=0.0689 | 定价来源=real_data | 目标加速位 170.00
+03:25:39 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0020 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 80 | Call 墙 170(+1.6M) 跑道 4.06% | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 162.05 目标 170.00
+03:25:39 [INFO] yhs.baseline: 【baseline·排序】11:15 本轮信号 1 个 → 开仓 SHOP(80)
+03:25:39 [INFO] yhs.baseline: 【baseline·信号】MU CLIFF_STRUCTURE/REJECTION_DROP 评分 70 | 天花板 1070(+50.3M) 距 0.10% · 燃料 1065(-73.0M) · 目标 = 下方超大正节点 1050(+22.7M) 空间 1.77% · R:R 2.21 | 环境 STACKED_FLIP_ZONE · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 1077.45 目标 1050.00
+03:25:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/MU261007P01065000，5.1s 后免费重试（第 1 轮）
+03:25:47 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MU261007P01065000，5.1s 后免费重试（第 1 轮）
+03:25:52 [INFO] yhs.main: 【历史】MU261007P01065000 真实 IV 序列 369 个点（1m）
+03:25:52 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0021 MU BUY_PUT | 行权价 1065.00 到期 2026-10-07 | 现货 1068.90 | 中间价 4.169 → 成本 4.279（含滑点 3%） | δ=0.368 γ=0.0340 | 定价来源=real_data | 目标加速位 1050.00
+03:25:52 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0021 CLIFF_STRUCTURE/REJECTION_DROP 评分 70 | 天花板 1070(+50.3M) 距 0.10% · 燃料 1065(-73.0M) · 目标 = 下方超大正节点 1050(+22.7M) 空间 1.77% · R:R 2.21 | 环境 STACKED_FLIP_ZONE · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 1077.45 目标 1050.00
+03:25:52 [INFO] yhs.baseline: 【baseline·排序】11:25 本轮信号 1 个 → 开仓 MU(70)
+03:25:52 [INFO] yhs.baseline: 【baseline·信号】GS CLIFF_STRUCTURE/REJECTION_DROP 评分 70 | 天花板 875(+3.6M) 距 0.09% · 燃料 870(-3.0M) · 目标 = 深渊 860（下方 4.5% 内没有超大正节点） 空间 1.63% · R:R 2.04 | 环境 STACKED_FLIP_ZONE · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 881.23 目标 860.00
+03:25:52 [INFO] yhs.baseline: 【baseline·信号】NBIS CLIFF_STRUCTURE/REJECTION_DROP 评分 70 | 天花板 235(+1.9M) 距 0.23% · 燃料 230(-2.5M) · 目标 = 下方超大正节点 225(+1.5M) 空间 4.03% · R:R 5.04 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 236.34 目标 225.00
+03:25:52 [INFO] yhs.trader: 【阶段4·放弃】GS O:GS261009P00870000 买卖价差 32%（bid 4.60 / ask 6.35）> 25%，不开仓
+03:25:53 [INFO] yhs.main: 【历史】NBIS261009P00235000 真实 IV 序列 390 个点（1m）
+03:25:53 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0022 NBIS BUY_PUT | 行权价 235.00 到期 2026-10-09 | 现货 234.46 | 中间价 5.898 → 成本 5.998（含滑点 3%） | δ=0.488 γ=0.0488 | 定价来源=real_data | 目标加速位 225.00
+03:25:53 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0022 CLIFF_STRUCTURE/REJECTION_DROP 评分 70 | 天花板 235(+1.9M) 距 0.23% · 燃料 230(-2.5M) · 目标 = 下方超大正节点 225(+1.5M) 空间 4.03% · R:R 5.04 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 236.34 目标 225.00
+03:25:53 [INFO] yhs.baseline: 【baseline·排序】11:30 本轮信号 2 个 → 开仓 NBIS(70)
+03:25:53 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0021 MU BUY_PUT | 原因 0DTE 8 分钟零动能截断 | 现货 1068.90→1071.12 | 期权 4.279→3.310 | ROI -22.6% | 峰值 -5.1% | 最大逆行 -22.6% | 盈亏 $-96.88
+03:25:53 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0015 WMT BUY_CALL | 原因 连续棘轮锁利 | 现货 108.28→108.62 | 期权 1.045→1.171 | ROI +12.0% | 峰值 +24.2% | 最大逆行 -14.0% | 盈亏 $+12.59
+03:25:53 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 62 | 踏板 1700(+16.0M) 距 0.82% · 燃料 1720(-4.0M) · 目标 = 靶心 1740（上方 4.5% 内没有超大正节点） 空间 1.52% · R:R 1.36 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1694.86 目标 1740.00
+03:25:53 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01720000 单张 $2994 超过上限 $1000，不开仓
+03:25:53 [INFO] yhs.baseline: 【baseline·排序】11:40 本轮信号 1 个 → 开仓 无
+03:25:53 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 62 | 踏板 1700(+15.8M) 距 0.79% · 燃料 1720(-4.1M) · 目标 = 靶心 1740（上方 4.5% 内没有超大正节点） 空间 1.54% · R:R 1.42 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1694.86 目标 1740.00
+03:25:53 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01720000 单张 $3004 超过上限 $1000，不开仓
+03:25:53 [INFO] yhs.baseline: 【baseline·排序】11:45 本轮信号 1 个 → 开仓 无
+03:25:54 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 62 | 踏板 1700(+15.9M) 距 0.82% · 燃料 1720(-4.3M) · 目标 = 靶心 1740（上方 4.5% 内没有超大正节点） 空间 1.52% · R:R 1.36 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1694.86 目标 1740.00
+03:25:54 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01720000 单张 $3051 超过上限 $1000，不开仓
+03:25:54 [INFO] yhs.baseline: 【baseline·排序】11:50 本轮信号 1 个 → 开仓 无
+03:25:54 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0022 NBIS BUY_PUT | 原因 现货止损 | 现货 234.46→236.38 | 期权 5.998→4.816 | ROI -19.7% | 峰值 -3.3% | 最大逆行 -19.7% | 盈亏 $-118.20
+03:25:54 [INFO] yhs.baseline: 【baseline·信号】NFLX SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 66 | 踏板 69(+5.7M) 距 0.27% · 燃料 70(-11.0M) · 目标 = 靶心 70（上方 4.5% 内没有超大正节点） 空间 1.17% · R:R 1.46 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 · 到期冲突 | 现货止损 68.64 目标 70.00
+03:25:54 [INFO] yhs.main: 【历史】NFLX261009C00069000 真实 IV 序列 390 个点（1m）
+03:25:54 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0023 NFLX BUY_CALL | 行权价 69.00 到期 2026-10-09 | 现货 69.19 | 中间价 0.840 → 成本 0.850（含滑点 3%） | δ=0.530 γ=0.1653 | 定价来源=real_data | 目标加速位 70.00
+03:25:54 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0023 SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 66 | 踏板 69(+5.7M) 距 0.27% · 燃料 70(-11.0M) · 目标 = 靶心 70（上方 4.5% 内没有超大正节点） 空间 1.17% · R:R 1.46 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 · 到期冲突 | 现货止损 68.64 目标 70.00
+03:25:54 [INFO] yhs.baseline: 【baseline·排序】11:55 本轮信号 1 个 → 开仓 NFLX(66)
+03:25:55 [INFO] yhs.baseline: 【baseline·信号】JPM SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 82 | Call 墙 332.5(+11.4M) 跑道 1.33% | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 | 现货止损 325.52 目标 332.50
+03:25:55 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0024 JPM BUY_CALL | 行权价 327.50 到期 2026-10-09 | 现货 328.15 | 中间价 2.781 → 成本 2.972（含滑点 3%） | δ=0.545 γ=0.0350 | 定价来源=real_data | 目标加速位 332.50
+03:25:55 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0024 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 82 | Call 墙 332.5(+11.4M) 跑道 1.33% | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 | 现货止损 325.52 目标 332.50
+03:25:55 [INFO] yhs.baseline: 【baseline·排序】12:10 本轮信号 1 个 → 开仓 JPM(82)
+03:25:55 [INFO] yhs.baseline: 【baseline·信号】NBIS CLIFF_STRUCTURE/REJECTION_DROP 评分 78 | 天花板 235(+2.2M) 距 0.25% · 燃料 230(-2.7M) · 目标 = 下方超大正节点 225(+1.5M) 空间 4.02% · R:R 5.02 | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 236.29 目标 225.00
+03:25:55 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0025 NBIS BUY_PUT | 行权价 235.00 到期 2026-10-09 | 现货 234.41 | 中间价 5.718 → 成本 5.842（含滑点 3%） | δ=0.509 γ=0.0492 | 定价来源=real_data | 目标加速位 225.00
+03:25:55 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0025 CLIFF_STRUCTURE/REJECTION_DROP 评分 78 | 天花板 235(+2.2M) 距 0.25% · 燃料 230(-2.7M) · 目标 = 下方超大正节点 225(+1.5M) 空间 4.02% · R:R 5.02 | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 236.29 目标 225.00
+03:25:55 [INFO] yhs.baseline: 【baseline·排序】12:25 本轮信号 1 个 → 开仓 NBIS(78)
+03:25:55 [INFO] yhs.baseline: 【baseline·信号】SNDK CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 1730(+1.6M) 距 0.42% · 燃料 1670(-7.0M) · 目标 = 下方超大正节点 1700(+14.3M) 空间 1.32% · R:R 1.65 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1736.58 目标 1700.00
+03:25:56 [INFO] yhs.main: 【历史】SNDK261009P01720000 真实 IV 序列 390 个点（1m）
+03:25:56 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009P01720000 单张 $3126 超过上限 $1000，不开仓
+03:25:56 [INFO] yhs.baseline: 【baseline·排序】12:30 本轮信号 1 个 → 开仓 无
+03:25:56 [INFO] yhs.baseline: 【baseline·信号】SNDK CLIFF_STRUCTURE/REJECTION_DROP 评分 78 | 天花板 1730(+1.6M) 距 0.54% · 燃料 1670(-7.1M) · 目标 = 下方超大正节点 1700(+14.4M) 空间 1.20% · R:R 1.43 | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 1735.16 目标 1700.00
+03:25:56 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009P01720000 单张 $3270 超过上限 $1000，不开仓
+03:25:56 [INFO] yhs.baseline: 【baseline·排序】12:40 本轮信号 1 个 → 开仓 无
+03:25:56 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 62 | 踏板 1700(+14.1M) 距 1.42% · 燃料 1740(-4.2M) · 目标 = 靶心 1760（上方 4.5% 内没有超大正节点） 空间 2.06% · R:R 1.38 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1698.56 目标 1760.00
+03:25:57 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/SNDK261009C01732500，5.0s 后免费重试（第 1 轮）
+03:26:03 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNDK261009C01732500，5.2s 后免费重试（第 1 轮）
+03:26:09 [INFO] yhs.main: 【历史】SNDK261009C01732500 真实 IV 序列 390 个点（1m）
+03:26:09 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01732500 单张 $3035 超过上限 $1000，不开仓
+03:26:09 [INFO] yhs.baseline: 【baseline·排序】12:45 本轮信号 1 个 → 开仓 无
+03:26:09 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0011 LRCX BUY_CALL | 原因 持仓满 180 分钟 | 现货 325.28→327.31 | 期权 6.151→6.531 | ROI +6.2% | 峰值 +10.6% | 最大逆行 -17.2% | 盈亏 $+38.06
+03:26:09 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 62 | 踏板 1700(+13.1M) 距 1.57% · 燃料 1740(-4.1M) · 目标 = 靶心 1780（上方 4.5% 内没有超大正节点） 空间 3.06% · R:R 2.04 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1701.25 目标 1780.00
+03:26:10 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/SNDK261009C01735000，5.3s 后免费重试（第 1 轮）
+03:26:17 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/SNDK261009C01735000，5.1s 后免费重试（第 1 轮）
+03:26:23 [INFO] yhs.main: 【历史】SNDK261009C01735000 真实 IV 序列 390 个点（1m）
+03:26:23 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01735000 单张 $3153 超过上限 $1000，不开仓
+03:26:23 [INFO] yhs.baseline: 【baseline·排序】13:05 本轮信号 1 个 → 开仓 无
+03:26:23 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0023 NFLX BUY_CALL | 原因 连续棘轮锁利 | 现货 69.19→69.39 | 期权 0.850→0.928 | ROI +9.2% | 峰值 +19.6% | 最大逆行 -8.2% | 盈亏 $+7.79
+03:26:23 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 62 | 踏板 1700(+12.8M) 距 1.63% · 燃料 1740(-4.2M) · 目标 = 靶心 1780（上方 4.5% 内没有超大正节点） 空间 3.00% · R:R 2.00 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1702.23 目标 1780.00
+03:26:23 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01735000 单张 $3189 超过上限 $1000，不开仓
+03:26:23 [INFO] yhs.baseline: 【baseline·排序】13:10 本轮信号 1 个 → 开仓 无
+03:26:23 [INFO] yhs.baseline: 【baseline·信号】SNDK SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 62 | 踏板 1700(+13.3M) 距 1.68% · 燃料 1740(-4.1M) · 目标 = 靶心 1780（上方 4.5% 内没有超大正节点） 空间 2.95% · R:R 1.97 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 1703.04 目标 1780.00
+03:26:23 [INFO] yhs.trader: 【阶段4·放弃】SNDK O:SNDK261009C01735000 单张 $3159 超过上限 $1000，不开仓
+03:26:23 [INFO] yhs.baseline: 【baseline·排序】13:20 本轮信号 1 个 → 开仓 无
+03:26:23 [INFO] yhs.baseline: 【baseline·信号】TQQQ CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 84(+3.2M) 距 0.67% · 燃料 83(-2.6M) · 目标 = 下方超大正节点 82(+2.3M) 空间 1.73% · R:R 1.79 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 84.25 目标 82.00
+03:26:24 [INFO] yhs.main: 【历史】TQQQ261007P00084000 真实 IV 序列 359 个点（1m）
+03:26:24 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0026 TQQQ BUY_PUT | 行权价 84.00 到期 2026-10-07 | 现货 83.44 | 中间价 0.630 → 成本 0.677（含滑点 3%） | δ=0.910 γ=0.4302 | 定价来源=real_data | 目标加速位 82.00
+03:26:24 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0026 CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 84(+3.2M) 距 0.67% · 燃料 83(-2.6M) · 目标 = 下方超大正节点 82(+2.3M) 空间 1.73% · R:R 1.79 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 84.25 目标 82.00
+03:26:24 [INFO] yhs.baseline: 【baseline·排序】13:25 本轮信号 1 个 → 开仓 TQQQ(74)
+03:26:24 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0026 TQQQ BUY_PUT | 原因 棘轮软止损 | 现货 83.44→83.41 | 期权 0.677→0.592 | ROI -12.7% | 峰值 +7.8% | 最大逆行 -14.1% | 盈亏 $-8.57
+03:26:24 [INFO] yhs.baseline: 【baseline·信号】SKHY SPRINGBOARD_STRUCTURE/TREND_PULLBACK_HOLD 评分 70 | 踏板 177.5(+1.8M) 距 0.85% · 燃料 182.5(-1.7M) · 目标 = 靶心 182.5（上方 4.5% 内没有超大正节点） 空间 1.95% · R:R 1.70 | 环境 NEUTRAL · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 176.96 目标 182.50
+03:26:25 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/SKHY261009C00177500，5.2s 后免费重试（第 1 轮）
