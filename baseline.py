@@ -6,7 +6,7 @@ baseline.py —— 按 docs/AGENT_REPRODUCTION_BLUEPRINT_HEATMAP_AND_TPSL.md + s
 直接复用 strategy_core_spec.py 的原函数（不重写，保证与参考实现一致）：
   * compute_local_gamma_regime()          第一层：局部 Gamma 环境
   * compute_structure_confirmation_score() 三层综合评分（基础 58，≥55 放行）
-  * evaluate_exit_tick()                  出场：期权连续棘轮 L(M) + 现货五阶止损棘轮 + 18 分钟滞涨截断（8/10 分钟两档已去掉）+ 15:50 0DTE 强平
+  * evaluate_exit_tick()                  出场：期权连续棘轮 L(M) + 现货五阶止损棘轮 + 18 分钟零动能 / 25 分钟滞涨截断（0DTE 8 分钟已去掉）+ 15:50 0DTE 强平
 文档只给了文字、没有参考代码的部分在本文件实现（第二层节点演化 / 墙体迁移、第三层五大原型几何与价格触发、中间关卡、
 衰竭拦截、跨到期共振）。文档没写死、需要解读的地方都标了【解读】，见 BASELINE_NOTES。
 
@@ -26,9 +26,9 @@ from strategy_core_spec import (ExitWeights, HeatmapWeights, PositionState, comp
 
 log = logging.getLogger("yhs.baseline")
 HW = HeatmapWeights()
-# 2026-10-20 用户定：去掉 0DTE 8 分钟 / 10 分钟零动能截断（9 天回放里砍掉的多是还没走出来的单）；
-# 滞涨截断从 25 分钟提前到 18 分钟（最高 < +6%、当前 ≤ −15% 不变），全天一样
-EW = replace(ExitWeights(), stage0_0dte_minutes=float("inf"), stage1_dead_minutes=float("inf"), stage2_stag_minutes=18.0)
+# 2026-10-20 用户定：去掉 0DTE 8 分钟零动能截断；零动能截断从 10 分钟推迟到 18 分钟（最高 < +4%、当前 ≤ −20% 不变）；
+# 25 分钟滞涨截断（最高 < +6%、当前 ≤ −15%）不变；全天一样
+EW = replace(ExitWeights(), stage0_0dte_minutes=float("inf"), stage1_dead_minutes=18.0)
 INDEX_TICKERS = {"SPX", "SPXW", "NDX", "QQQ"}   # 文档原文的"指数"集合（SPY 不在内）
 OUTER_WALL_STEPS = 3                             # 墙外侧 3 格以内有更大的正节点 → 结构不成立（2026-10-20 用户定）
 PATH_NEG_RATIO = 1.5                             # 路径上显著负节点合计 ≥ 1.5 × 显著正节点合计（2026-10-20 用户定）
@@ -73,8 +73,8 @@ BASELINE_NOTES = """
 14b. 2026-10-20 用户定：先不做雪崩结构（bl_enable_avalanche=False）。
 14c. 实盘盯仓：平时每分钟；任一持仓离出场触发线 5 个百分点以内（现货离止损 / 目标 0.1% 以内）时改为每 20 秒（回放只有 1 分钟数据，仍按分钟）。
 15. 盘中开仓只到 15:00（之后文档是尾盘隔夜模式；我们的隔夜单是另一套独立规则，不动）。
-15a. 时间截断（2026-10-20 用户定）：去掉 0DTE 8 分钟与 10 分钟零动能截断；滞涨截断 = 持仓 ≥ 18 分钟（原 25）且期间最高 < +6%、
-    当前 ≤ −15% → 平仓（原因码沿用 THETA_STAGNATION_TRUNCATE_25M）。
+15a. 时间截断（2026-10-20 用户定）：去掉 0DTE 8 分钟截断；零动能截断 = 持仓 ≥ 18 分钟（原 10）且期间最高 < +4%、当前 ≤ −20%
+    （原因码沿用 DEAD_MOMENTUM_TRUNCATE_10M）；25 分钟滞涨截断（最高 < +6%、当前 ≤ −15%）不变。
 16. PINNING_MAGNET 只限 SPX/SPXW 而且没有方向，不开仓。
 17. 起始点衰减截断（2026-10-20 用户定，只限悬崖 / 跳板；默认时间截断照旧，逼空不适用）：持仓期间每根新 Heatmap
     看起始点（天花板 / 踏板）GEX：连续 2 根变小（10 分钟）且期间最远进度 < 20%，或连续 4 根变小（20 分钟）且 < 30% → 截断。
@@ -697,8 +697,8 @@ REASON_CN = {
     "INITIAL_STOP_LOSS": "初始止损 −35%", "RATCHET_SOFT_STOP": "棘轮软止损", "BREAKEVEN_STOP": "保本止损 +3%",
     "TRAILING_STOP": "连续棘轮锁利", "HARD_TP_CAP": "硬顶 +250%", "SPOT_STOP": "现货止损", "SPOT_PROFIT_STOP": "现货锁利止盈",
     "STRUCTURE_TARGET": "到达结构目标", "MAX_HOLD": "持仓满 180 分钟", "EOD_0DTE_CLOSE": "15:50 0DTE 强平",
-    "DEAD_MOMENTUM_TRUNCATE_0DTE_8M": "0DTE 8 分钟零动能截断", "DEAD_MOMENTUM_TRUNCATE_10M": "10 分钟零动能截断",
-    "THETA_STAGNATION_TRUNCATE_25M": "18 分钟滞涨截断",
+    "DEAD_MOMENTUM_TRUNCATE_0DTE_8M": "0DTE 8 分钟零动能截断", "DEAD_MOMENTUM_TRUNCATE_10M": "18 分钟零动能截断",
+    "THETA_STAGNATION_TRUNCATE_25M": "25 分钟滞涨截断",
     "START_NODE_DECAY_10M": "起始点 10 分钟连续变小且进度 <20% 截断",
     "START_NODE_DECAY_20M": "起始点 20 分钟连续变小且进度 <30% 截断",
 }
