@@ -51,7 +51,9 @@ BASELINE_NOTES = """
 12. 文档没有规定合约怎么选：沿用原规则（买靶心行权价，最多虚值 0.5%，挂牌行权价里离靶心最近）。每笔 1 张，所以 +80% 分批止盈不会触发。
 13. 出场用"能卖出的价格"算收益率（实盘 = 实时 bid；回放 = 中间价 − 真实半价差），和开仓成本（ask）对比。
 14a. 单张成本上限 $1,000（ask × 100，2026-10-20 用户定，文档没有）。
-14. 文档没有组合层面的上限：沿用原规则（同时最多 8 笔、每天 25 笔、12:00 前 15 笔、同一只票每天 2 笔、平仓后 30 分钟冷却）。
+14. 组合上限（文档没有）：2026-10-20 用户定不限持仓数量 / 每天笔数；保留同一只票同时 1 笔、每天最多 2 笔、平仓后 30 分钟冷却。
+14b. 2026-10-20 用户定：先不做雪崩结构（bl_enable_avalanche=False）。
+14c. 实盘盯仓：平时每分钟；任一持仓离出场触发线 5 个百分点以内（现货离止损 / 目标 0.1% 以内）时改为每 20 秒（回放只有 1 分钟数据，仍按分钟）。
 15. 盘中开仓只到 15:00（之后文档是尾盘隔夜模式；我们的隔夜单是另一套独立规则，不动）。
 16. PINNING_MAGNET 只限 SPX/SPXW 而且没有方向，不开仓。
 """
@@ -512,6 +514,8 @@ class BaselineJudge:
                    ("跳板", lambda: find_springboard(ticker, fr, cx, gmin, migration, frames)),
                    ("逼空", lambda: find_squeeze(ticker, fr, cx, gmin, regime)),
                    ("雪崩", lambda: find_avalanche(ticker, fr, cx, gmin, regime))]
+        if not getattr(self.cfg, "bl_enable_avalanche", True):
+            finders = finders[:3]          # 2026-10-20 用户定：先不做雪崩结构
         for name, fn in finders:
             cand, why = fn()
             if cand is None:
@@ -561,6 +565,34 @@ _pt._REASON_CN.update(REASON_CN)
 _notify.REASON_CN.update(REASON_CN)
 
 
+def near_trigger(st: PositionState, roi: float, spot: float, held_min: float, band_pct: float = 5.0,
+                 spot_band: float = 0.001) -> bool:
+    """持仓是否靠近任何出场触发线（用于实盘把盯仓从 1 分钟加密到 20 秒，2026-10-20 用户定）：
+    期权收益率离 初始止损 / 软止损 / 保本线 / 连续棘轮锁利线 / 硬顶 / 正在生效的时间截断线 在 band_pct 个百分点以内，
+    或现价离现货止损线 / 结构目标在 spot_band（0.1%）以内。"""
+    lines = [EW.hard_take_profit_roi_pct]
+    if not st.breakeven_locked:
+        lines.append(EW.initial_stop_loss_roi_pct)
+    if st.soft_stop_level_pct > EW.initial_stop_loss_roi_pct:
+        lines.append(st.soft_stop_level_pct)
+    if st.breakeven_locked:
+        lines.append(EW.breakeven_floor_roi_pct)
+    if st.trailing_active:
+        lines.append(st.trailing_stop_level_pct)
+    if st.is_0dte and held_min >= EW.stage0_0dte_minutes - 1 and st.peak_roi_pct <= EW.stage0_0dte_max_mfe_pct:
+        lines.append(EW.stage0_0dte_mae_floor_pct)
+    if held_min >= EW.stage1_dead_minutes - 1 and st.peak_roi_pct < EW.stage1_dead_max_mfe_pct:
+        lines.append(EW.stage1_dead_mae_floor_pct)
+    if held_min >= EW.stage2_stag_minutes - 1 and st.peak_roi_pct < EW.stage2_stag_max_mfe_pct:
+        lines.append(EW.stage2_stag_mae_floor_pct)
+    if any(abs(roi - x) <= band_pct for x in lines):
+        return True
+    for lvl in (st.stop_loss_spot, st.target_spot):
+        if lvl and spot and abs(spot - lvl) / spot <= spot_band:
+            return True
+    return False
+
+
 class BaselineTrader(PaperTrader):
     def __init__(self, cfg):
         super().__init__(cfg)
@@ -591,6 +623,13 @@ class BaselineTrader(PaperTrader):
                                     "bl_notes": sig.cand.notes}
         log.info("【baseline·开仓依据】%s %s", p.position_id, sig.describe())
         return p
+
+    def any_near_trigger(self, now_et: dt.datetime) -> bool:
+        for p in self.open_positions():
+            st = self.state.get(p.position_id)
+            if st is not None and near_trigger(st, p.roi_pct, p.last_spot, (now_et - p.entry_time).total_seconds() / 60):
+                return True
+        return False
 
     def mark(self, p: Position, spot: float, now_et: dt.datetime) -> Position | None:
         st = self.state.get(p.position_id)
@@ -623,15 +662,19 @@ class BaselineEngine(SessionEngine):
         self.spot_override = None     # 可选 callable(position, now) -> 实时现价（实盘 Call/Put 平价反推；回放 1 分钟真实标的价）
 
     def can_enter(self, ticker: str, now_et: dt.datetime):
+        """baseline 开仓门槛（2026-10-20 用户定）：不限持仓数量 / 每天笔数 / 午前笔数；保留 15:00 截止、
+        同一只票同时只有 1 笔（持仓中不出新信号）、同票每天最多 max_trades_per_ticker_day 笔、平仓后冷却。"""
+        cfg = self.cfg
         if now_et.hour * 60 + now_et.minute >= 15 * 60:
             return False, "15:00 后不开日内单（baseline 尾盘为隔夜模式）"
-        cfg = self.cfg
-        saved = cfg.no_new_entries_before
-        cfg.no_new_entries_before = "09:30"   # baseline 自身要求至少 15 分钟数据，不再额外限制 09:45
-        try:
-            return super().can_enter(ticker, now_et)
-        finally:
-            cfg.no_new_entries_before = saved
+        if self.trader.open_for(ticker) is not None:
+            return False, "该标的已有持仓"
+        if cfg.max_trades_per_ticker_day and len(self.trader.trades_today(ticker, now_et.date())) >= cfg.max_trades_per_ticker_day:
+            return False, "该标的当日开仓次数已达上限"
+        le = self.last_exit_time.get(ticker)
+        if le and (now_et - le).total_seconds() < cfg.reentry_cooldown_min * 60:
+            return False, "平仓冷却期中"
+        return True, ""
 
     def on_snapshot(self, ticker: str, payload: dict, now_et: dt.datetime, frame_t: dt.datetime | None = None) -> None:
         d = payload.get("data") if isinstance(payload, dict) else None

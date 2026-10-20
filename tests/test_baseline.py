@@ -234,7 +234,14 @@ class TestTrendArchetypes(unittest.TestCase):
 
     def test_avalanche(self):
         cells = {98.0: -30 * M, 99.0: -6 * M, 100.0: -5 * M, 101.5: 3 * M}
-        j, sig, _ = run([101.0, 100.8, 100.5, 100.2, 99.9, 99.6], cells)
+        path = [101.0, 100.8, 100.5, 100.2, 99.9, 99.6]
+        j, sig, _ = run(path, cells)
+        self.assertIsNone(sig)                                  # 默认关闭（2026-10-20 用户定先不做雪崩）
+        CFG.bl_enable_avalanche = True
+        try:
+            j, sig, _ = run(path, cells)
+        finally:
+            CFG.bl_enable_avalanche = False
         self.assertIsNotNone(sig, j.last_reason.get("TEST"))
         self.assertEqual(sig.cand.structure_type, "SHORT_GAMMA_AVALANCHE")
         self.assertEqual(sig.target_spot, 98.0)
@@ -342,7 +349,44 @@ class TestExits(unittest.TestCase):
         self.assertEqual(p.exit_reason, "SPOT_PROFIT_STOP")
 
 
+class TestNearTrigger(unittest.TestCase):
+    def test_bands(self):
+        tr, fq, p, now = opened()
+        st = tr.state[p.position_id]
+        tr.mark(p, 100.5, now + dt.timedelta(minutes=1))          # 先盯一次：峰值约 −5%
+        self.assertFalse(B.near_trigger(st, -20.0, 100.5, 3))       # 离 −35% 还有 15 点，8 分钟截断尚未生效
+        self.assertTrue(B.near_trigger(st, -31.0, 100.5, 3))        # 离 −35% 4 点
+        self.assertTrue(B.near_trigger(st, -9.0, 100.5, 8))         # 8 分钟 0DTE 截断线 −12% 在 5 点内
+        self.assertTrue(B.near_trigger(st, 0.0, 101.25, 3))         # 现价离现货止损 101.3 不到 0.1%
+        st.trailing_active, st.trailing_stop_level_pct, st.breakeven_locked = True, 34.1, True
+        self.assertTrue(B.near_trigger(st, 37.0, 100.0, 20))        # 离锁利线 2.9 点
+        self.assertFalse(B.near_trigger(st, 60.0, 100.0, 20))
+
+    def test_tick_schedule(self):
+        from main import next_mark_tick
+        grid = et_datetime(DAY, "10:00")
+        t = grid + dt.timedelta(seconds=25)
+        seq = []
+        for near in (False, True, True, True, True, False):
+            t = next_mark_tick(t, grid, 25, 1, 20, near)
+            seq.append(t.strftime("%H:%M:%S"))
+        self.assertEqual(seq, ["10:01:25", "10:01:45", "10:02:05", "10:02:25", "10:02:45", "10:03:25"])
+
+
 class TestEngine(unittest.TestCase):
+    def test_no_position_cap(self):
+        cfg = SystemConfig.load(None)
+        tr = B.BaselineTrader(cfg)
+        eng = B.BaselineEngine(cfg, None, SignalDetector(cfg, []), tr)
+        now = et_datetime(DAY, "10:30")
+        for i in range(30):                                          # 30 笔持仓（超过旧的 8 / 25 / 15 上限）
+            tr.positions.append(B.Position(f"X{i}", f"T{i}", "BUY_PUT", "P", "CLIFF", "O:X", 1, EXP, now, 1, 1, 1, 0.5, 0.1,
+                                           "quote", 1, 1))
+        ok, why = eng.can_enter("NEW", now)
+        self.assertTrue(ok, why)
+        ok, why = eng.can_enter("T3", now)
+        self.assertFalse(ok)                                         # 同一只票已有持仓
+
     def test_no_reevaluate_same_frame_and_1500_gate(self):
         cfg = SystemConfig.load(None)
         tr = B.BaselineTrader(cfg)

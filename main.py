@@ -293,6 +293,17 @@ def build_live_accounts(cfg: SystemConfig, client: YHSClient, day: dt.date, noti
     return universe, accounts
 
 
+def next_mark_tick(tick: dt.datetime, grid: dt.datetime, offset_s: int, step_min: int, fast_s: int, near: bool) -> dt.datetime:
+    """下一次持仓检查时刻：平时 = 下一个整 step_min 分钟（相对本轮网格 + offset）；靠近触发线时 = fast_s 秒后，
+    但不会越过下一个整分钟检查点。"""
+    base = grid + dt.timedelta(seconds=offset_s)
+    k = int((tick - base).total_seconds() // (60 * step_min)) + 1
+    minute_mark = base + dt.timedelta(minutes=step_min * k)
+    if near and fast_s:
+        return min(tick + dt.timedelta(seconds=fast_s), minute_mark)
+    return minute_mark
+
+
 def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=None) -> None:
     log.info("=" * 78)
     log.info("交易日 %s 开始（标的池模式：%s）", day, cfg.live_universe_mode)
@@ -407,13 +418,15 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
                 notifier.text(f"💓 {et_now().strftime('%H:%M')} ET 运行中｜监控 {len(pool)} 只｜"
                               + "｜".join(a.status() for a in accounts) + f"｜配额剩余 {client.quota_remaining}")
             # 两次扫描之间：持仓每 position_mark_min 分钟用实时报价盯一次（只拉持仓合约的报价，每个 1 配额）
+            # baseline：任一持仓靠近出场触发线时，两次分钟检查之间再每 bl_fast_mark_s 秒加查一次
             step = cfg.position_mark_min if cfg.live_quotes else 0
-            k = 1
+            fast = cfg.bl_fast_mark_s if (baseline_rules and step) else 0
+            tick = grid + dt.timedelta(seconds=cfg.poll_offset_s)
             while step:
-                tick = grid + dt.timedelta(seconds=cfg.poll_offset_s, minutes=step * k)
+                near = bool(fast) and any(getattr(a.trader, "any_near_trigger", lambda _t: False)(et_now()) for a in accounts)
+                tick = next_mark_tick(tick, grid, cfg.poll_offset_s, step, fast, near)
                 if tick >= nxt or tick >= close_t:
                     break
-                k += 1
                 sleep_until(tick)
                 if any(a.trader.open_positions() for a in accounts):
                     refresh_quotes()

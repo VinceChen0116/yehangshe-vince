@@ -113,6 +113,8 @@ class SystemConfig:
     poll_open_positions_fast: bool = True # 持仓标的始终按 5 分钟盯市（风控优先）
     # 日内规则：baseline = docs/AGENT_REPRODUCTION_BLUEPRINT_HEATMAP_AND_TPSL.md（baseline.py，2026-10-20 用户定，实盘默认）；
     #   legacy = 旧规则（最大正/负节点 + 距离 ≤1% + 0–1 评分 + 标的破节点止损），只留作回测对照
+    bl_enable_avalanche: bool = False          # baseline：先不做雪崩结构（2026-10-20 用户定）
+    bl_fast_mark_s: int = 20                   # baseline 实盘：持仓靠近触发线时每 20 秒盯一次（平时 position_mark_min 分钟）
     bl_max_contract_cost_usd: float = 1000.0   # baseline 日内：单张成本（ask × 100）超过 $1,000 不开（2026-10-20 用户定）
     intraday_rules: str = "legacy"   # 回放验证完成前暂留旧规则；验证后切 "baseline"
     position_mark_min: int = 1            # 实盘：两次 5 分钟扫描之间，每 N 分钟用实时期权报价盯一次持仓（0 = 关闭；2026-10-19 用户定 1）
