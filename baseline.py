@@ -27,13 +27,14 @@ from strategy_core_spec import (ExitWeights, HeatmapWeights, PositionState, comp
 log = logging.getLogger("yhs.baseline")
 HW, EW = HeatmapWeights(), ExitWeights()
 INDEX_TICKERS = {"SPX", "SPXW", "NDX", "QQQ"}   # 文档原文的"指数"集合（SPY 不在内）
+BIG_NODE_RATIO = 0.43                            # "超大正节点" = GEX ≥ 0.43 × 起作用墙（2026-10-20 用户定；文档中间关卡仍是 0.45）
 INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0DTE / 最近周度；15:00 后是尾盘隔夜模式
 
 BASELINE_NOTES = """
 【解读】清单（文档没写死的地方，按以下方式实现；要改告诉我）：
 1. 天花板 / 地板 = 现价上方 / 下方"最近的"显著正节点（GEX ≥ G_min）；不是全天最大的那个。
 2. 目标位（2026-10-20 用户确认）：悬崖 / 跳板的重点都是超大正节点。目标 = 顺方向下一个超大正节点（悬崖 = 下方支撑，
-   跳板 = 上方阻力），超大 = GEX ≥ max(0.85×G_min, 0.45×天花板/踏板 GEX)；"空间" = 现价到它的距离。现价与目标之间必须有显著负节点
+   跳板 = 上方阻力），超大 = GEX ≥ max(0.85×G_min, 0.43×天花板/踏板 GEX)（用户定 0.43；文档中间关卡门槛仍为 0.45）；"空间" = 现价到它的距离。现价与目标之间必须有显著负节点
    （燃料：文档的"负深渊 / 负靶心"）。4.5% 内没有超大正节点时，目标退回 1%–4.5% 内最大的负节点。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
    （中间关卡 ≥1.0% 时改为关卡行权价）。逼空 / 雪崩没有墙，风险距离取最小 0.8%。
@@ -258,9 +259,9 @@ def _gatekeeper(cells: list, spot: float, target: float, acting_gex: float, gmin
 
 def _next_big_positive(cells: list, spot: float, acting_gex: float, gmin: float, below: bool):
     """悬崖 / 跳板的目标位：顺方向上下一个"超大正节点"（2026-10-20 用户确认：两种结构的重点都是超大正节点，
-    下方 / 上方空间 = 到下一个正节点支撑 / 阻力的距离）。超大 = GEX ≥ max(0.85 × G_min, 0.45 × 起作用墙的 GEX)
-    （与文档"中间关卡"的强正节点门槛相同）；比它小的正节点价格可以穿过。返回 (行权价, GEX) 或 None。"""
-    thr = max(0.85 * gmin, 0.45 * abs(acting_gex))
+    下方 / 上方空间 = 到下一个正节点支撑 / 阻力的距离）。超大 = GEX ≥ max(0.85 × G_min, BIG_NODE_RATIO × 起作用墙的 GEX)
+    （参照文档"中间关卡"的强正节点门槛，比例由用户定为 0.43）；比它小的正节点价格可以穿过。返回 (行权价, GEX) 或 None。"""
+    thr = max(0.85 * gmin, BIG_NODE_RATIO * abs(acting_gex))
     if below:
         c = [(k, g) for k, g in cells if g >= thr and k < spot and (spot - k) / spot <= 0.045]
         return max(c, key=lambda x: x[0]) if c else None
