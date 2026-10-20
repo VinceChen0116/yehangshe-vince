@@ -1,0 +1,19 @@
+05:16:36 [INFO] yhs.baseline_replay: 2026-10-07：212 只有存档（共 212 只）
+05:16:36 [INFO] yhs.baseline: 【baseline·信号】SHOP SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 88 | Call 墙 170(+1.6M) 跑道 4.10% | 环境 TREND_DRIVER · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 162.00 目标 170.00
+05:16:37 [INFO] yhs.main: 【历史】SHOP261009C00162500 真实 IV 序列 390 个点（1m）
+05:16:37 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0001 SHOP BUY_CALL | 行权价 162.50 到期 2026-10-09 | 现货 163.31 | 中间价 3.220 → 成本 3.556（含滑点 3%） | δ=0.542 γ=0.0682 | 定价来源=real_data | 目标加速位 170.00
+05:16:37 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0001 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 88 | Call 墙 170(+1.6M) 跑道 4.10% | 环境 TREND_DRIVER · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 162.00 目标 170.00
+05:16:37 [INFO] yhs.baseline: 【baseline·排序】09:55 本轮信号 1 个 → 开仓 SHOP(88)
+05:16:37 [INFO] yhs.baseline: 【baseline·信号】JPM SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 62 | Call 墙 332.5(+8.9M) 跑道 1.83% | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 323.90 目标 332.50
+05:16:37 [INFO] yhs.baseline: 【baseline·信号】MU SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 88 | 踏板 1030(+43.5M) 距 0.41% · 燃料 1045(-20.9M) · 路径负 30.6M / 正 0.0M · 目标 = 上方超大正节点 1050(+18.8M) 空间 1.52% · R:R 1.90 | 环境 TREND_DRIVER · 节点 GROWING · 墙体 MIGRATING_UP · 共振 0 | 现货止损 1025.99 目标 1050.00
+05:16:38 [INFO] yhs.main: 【历史】MU261007C01035000 真实 IV 序列 249 个点（1m）
+05:16:38 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0002 MU BUY_CALL | 行权价 1035.00 到期 2026-10-07 | 现货 1034.27 | 中间价 6.370 → 成本 6.679（含滑点 3%） | δ=0.587 γ=0.0329 | 定价来源=real_data | 目标加速位 1050.00
+05:16:38 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0002 SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 88 | 踏板 1030(+43.5M) 距 0.41% · 燃料 1045(-20.9M) · 路径负 30.6M / 正 0.0M · 目标 = 上方超大正节点 1050(+18.8M) 空间 1.52% · R:R 1.90 | 环境 TREND_DRIVER · 节点 GROWING · 墙体 MIGRATING_UP · 共振 0 | 现货止损 1025.99 目标 1050.00
+05:16:39 [INFO] yhs.main: 【历史】JPM261009C00327500 真实 IV 序列 390 个点（1m）
+05:16:39 [INFO] yhs.trader: 【阶段4·开仓】P20261007-0003 JPM BUY_CALL | 行权价 327.50 到期 2026-10-09 | 现货 326.51 | 中间价 2.191 → 成本 2.374（含滑点 3%） | δ=0.478 γ=0.0345 | 定价来源=real_data | 目标加速位 332.50
+05:16:39 [INFO] yhs.baseline: 【baseline·开仓依据】P20261007-0003 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 62 | Call 墙 332.5(+8.9M) 跑道 1.83% | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 323.90 目标 332.50
+05:16:39 [INFO] yhs.baseline: 【baseline·排序】10:05 本轮信号 2 个 → 开仓 MU(88)、JPM(62)
+05:16:39 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0002 MU BUY_CALL | 原因 连续棘轮锁利 | 现货 1034.27→1036.68 | 期权 6.679→7.183 | ROI +7.5% | 峰值 +18.9% | 最大逆行 -9.3% | 盈亏 $+50.37
+05:16:39 [INFO] yhs.trader: 【阶段4·平仓】P20261007-0001 SHOP BUY_CALL | 原因 10 分钟零动能截断 | 现货 163.31→162.75 | 期权 3.556→2.786 | ROI -21.7% | 峰值 -15.6% | 最大逆行 -21.7% | 盈亏 $-76.99
+05:16:39 [INFO] yhs.baseline: 【baseline·信号】NVDA SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 68 | Call 墙 242.5(+21.3M) 跑道 1.45% | 环境 DISORDERED_WHIPSAW · 节点 GROWING · 墙体 WHIPSAW · 共振 2 | 现货止损 237.12 目标 242.50
+05:16:40 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/NVDA261007C00240000，5.2s 后免费重试（第 1 轮）
