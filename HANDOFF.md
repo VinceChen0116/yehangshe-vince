@@ -324,7 +324,7 @@ python3 archive.py --dry-run                 # 只看计划
 - `position_mark_min = 1`：两次 5 分钟 Heatmap 扫描之间，持仓每分钟拉一次实时期权报价（只拉持仓合约，每个 1 配额），
   按真实 bid 判断硬止盈 +150% / 保本 / 追踪 / 灾难止损（SessionEngine.mark_open）。标的类止损（穿正节点 +0.5%）仍按 5 分钟 Heatmap 现货判断
   （/v1/stocks/quote 实测延迟约 14 分钟，不能用来做分钟级现价）。开仓扫描仍是 5 分钟一轮。
-- 日内标的池保持 40 只（用户要求不降）。配额 10/19 已重置为 100,000。
+- 日内标的池保持 40 只（用户要求不降）。配额 10/19 已重置为 100,000。2026-10-20 用户定加回 60 只。
 
 ## N. 2026-10-20 起：日内实盘改用 baseline（bl_v8 规则）
 * `config.intraday_rules = "baseline"`（用户 10/20 决定"现在就切"）。A / B 两个日内账户都走 `BaselineEngine` / `BaselineTrader`；隔夜单（overnight_live.py）不受影响。
