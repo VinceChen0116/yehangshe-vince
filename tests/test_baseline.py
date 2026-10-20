@@ -297,7 +297,7 @@ class FakeQuotes:
         return self.q.get(sym.split(":")[-1], self.default)
 
 
-def opened(direction="BEARISH", entry="10:30", exp=EXP, stop=101.3, target=98.5, ask=2.0, bid=1.9):
+def opened(direction="BEARISH", entry="10:30", exp=EXP, stop=101.3, target=98.5, ask=2.0, bid=1.9, stype=None):
     cfg = SystemConfig.load(None)
     tr = B.BaselineTrader(cfg)
     fq = FakeQuotes()
@@ -305,6 +305,8 @@ def opened(direction="BEARISH", entry="10:30", exp=EXP, stop=101.3, target=98.5,
     j, sig, snap = run(REJECT_PATH, CLIFF_CELLS)
     sig.cand.direction = direction
     sig.stop_spot, sig.target_spot = stop, target
+    if stype:
+        sig.cand.structure_type = stype
     snap.expiration = exp
     right = "P" if direction == "BEARISH" else "C"
     sig.structure.right = right
@@ -321,6 +323,51 @@ class TestExits(unittest.TestCase):
     def tick(self, tr, fq, p, now, minutes, bid, spot):
         fq.q[p.contract_symbol.split(":")[-1]] = {"bid": bid, "ask": bid * 1.05, "mid": bid * 1.025}
         return tr.mark(p, spot, now + dt.timedelta(minutes=minutes))
+
+    def frame(self, now, minutes, ceil_gex, spot=100.5):
+        cells = dict(CLIFF_CELLS)
+        if ceil_gex is None:
+            cells.pop(100.75)
+        else:
+            cells[100.75] = ceil_gex
+        t = now + dt.timedelta(minutes=minutes - 5)
+        fr, _ = B.make_frame(payload(spot, cells, t=t), DAY, CFG, t)
+        return fr
+
+    def decay_feed(self, tr, fq, p, now, gexs, spots):
+        """每 5 分钟：先按现价盯市（期权价不变），再喂一根新 Heatmap；返回平仓时第几根（没平仓 None）。"""
+        for i, (g, sp) in enumerate(zip(gexs, spots), 1):
+            if self.tick(tr, fq, p, now, 5 * i, 1.95, sp):
+                return -i
+            if tr.on_frame(p, self.frame(now, 5 * i, g, sp), sp, now + dt.timedelta(minutes=5 * i)):
+                return i
+        return None
+
+    def test_start_node_decay_10m(self):                  # 天花板 20M → 18M → 16M，现价原地 → 10 分钟截断
+        tr, fq, p, now = opened()
+        self.assertEqual(self.decay_feed(tr, fq, p, now, [18 * M, 16 * M], [100.5, 100.45]), 2)
+        self.assertEqual(p.exit_reason, "START_NODE_DECAY_10M")
+
+    def test_start_node_decay_progress_20_to_30(self):    # 最远进度 27%（≥20%、<30%）→ 10 分钟不砍，20 分钟砍
+        tr, fq, p, now = opened()                         # 开仓 100.5，起始点 100.75，目标 98.5：区间 2.25
+        r = self.decay_feed(tr, fq, p, now, [19 * M, 18 * M, 17 * M, 16 * M], [99.9, 100.2, 100.3, 100.3])
+        self.assertEqual(r, 4)
+        self.assertEqual(p.exit_reason, "START_NODE_DECAY_20M")
+
+    def test_start_node_decay_progress_over_30(self):     # 最远进度 > 30% → 起始点再小也不截断
+        tr, fq, p, now = opened()
+        self.assertIsNone(self.decay_feed(tr, fq, p, now, [19 * M, 18 * M, 17 * M, 16 * M], [99.7, 100.2, 100.3, 100.3]))
+
+    def test_start_node_decay_chain_breaks(self):         # 中间有一根变大 / 缺这个行权价 → 连续中断
+        tr, fq, p, now = opened()
+        self.assertIsNone(self.decay_feed(tr, fq, p, now, [18 * M, 19 * M, None, 18 * M], [100.5] * 4))
+        tr, fq, p, now = opened()
+        self.assertIsNone(self.decay_feed(tr, fq, p, now, [18 * M, 18 * M], [100.5] * 2))   # 持平不算变小
+
+    def test_start_node_decay_not_for_squeeze(self):
+        tr, fq, p, now = opened(stype="SHORT_GAMMA_VACUUM_SQUEEZE")
+        self.assertNotIn(p.position_id, tr.decay)
+        self.assertIsNone(self.decay_feed(tr, fq, p, now, [18 * M, 16 * M], [100.5] * 2))
 
     def test_ratchet_table(self):
         self.assertEqual(compute_continuous_option_ratchet(5), (-35.0, -999.0))

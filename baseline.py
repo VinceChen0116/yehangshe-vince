@@ -32,6 +32,7 @@ PATH_NEG_RATIO = 1.5                             # 路径上显著负节点合�
 PIN_NEG_MULT = 3.0                               # 路径上全到期最大负节点 ≥ 3 × 墙 → 不开（2026-10-20 用户定）
 BIG_NODE_RATIO = 0.43                            # "超大正节点" = GEX ≥ 0.43 × 起作用墙（2026-10-20 用户定；文档中间关卡仍是 0.45）
 INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0DTE / 最近周度；15:00 后是尾盘隔夜模式
+DECAY_RULES = ((2, 0.20, "START_NODE_DECAY_10M"), (4, 0.30, "START_NODE_DECAY_20M"))   # 起始点衰减截断：(连续变小根数, 进度上限, 原因)
 
 BASELINE_NOTES = """
 【解读】清单（文档没写死的地方，按以下方式实现；要改告诉我）：
@@ -65,6 +66,9 @@ BASELINE_NOTES = """
 14c. 实盘盯仓：平时每分钟；任一持仓离出场触发线 5 个百分点以内（现货离止损 / 目标 0.1% 以内）时改为每 20 秒（回放只有 1 分钟数据，仍按分钟）。
 15. 盘中开仓只到 15:00（之后文档是尾盘隔夜模式；我们的隔夜单是另一套独立规则，不动）。
 16. PINNING_MAGNET 只限 SPX/SPXW 而且没有方向，不开仓。
+17. 起始点衰减截断（2026-10-20 用户定，只限悬崖 / 跳板；默认 8/10/25 分钟截断原样保留，逼空不适用）：持仓期间每根新 Heatmap
+    看起始点（天花板 / 踏板）GEX：连续 2 根变小（10 分钟）且期间最远进度 < 20%，或连续 4 根变小（20 分钟）且 < 30% → 截断。
+    进度 = 现价从开仓价朝目标走的距离 ÷ |起始点 − 目标|；序列从开仓那根算起，这根里没有该行权价 → 连续中断。
 """
 
 
@@ -645,6 +649,8 @@ REASON_CN = {
     "STRUCTURE_TARGET": "到达结构目标", "MAX_HOLD": "持仓满 180 分钟", "EOD_0DTE_CLOSE": "15:50 0DTE 强平",
     "DEAD_MOMENTUM_TRUNCATE_0DTE_8M": "0DTE 8 分钟零动能截断", "DEAD_MOMENTUM_TRUNCATE_10M": "10 分钟零动能截断",
     "THETA_STAGNATION_TRUNCATE_25M": "25 分钟滞涨截断",
+    "START_NODE_DECAY_10M": "起始点 10 分钟连续变小且进度 <20% 截断",
+    "START_NODE_DECAY_20M": "起始点 20 分钟连续变小且进度 <30% 截断",
 }
 
 
@@ -689,6 +695,7 @@ class BaselineTrader(PaperTrader):
         self.max_spread_pct = getattr(cfg, "bl_max_spread_pct", 0.0)
         self.state: dict = {}         # position_id → PositionState
         self.meta: dict = {}          # position_id → 开仓时的 baseline 信息（写进交易明细）
+        self.decay: dict = {}         # position_id → 起始点（天花板 / 踏板）GEX 序列与最远进度（悬崖 / 跳板专用）
 
     def open_position(self, client, sig, now_et: dt.datetime) -> Position | None:
         p = super().open_position(client, sig, now_et)
@@ -704,6 +711,10 @@ class BaselineTrader(PaperTrader):
                            is_opening_scalp=(9 * 60 + 30 <= now_et.hour * 60 + now_et.minute < 10 * 60),
                            quantity=p.contracts)
         self.state[p.position_id] = st
+        if sig.cand.structure_type in ("CLIFF_STRUCTURE", "SPRINGBOARD_STRUCTURE"):
+            self.decay[p.position_id] = {"strike": sig.cand.acting_strike, "gex": [sig.cand.acting_gex],
+                                         "range": abs(sig.cand.acting_strike - sig.target_spot),
+                                         "sign": 1.0 if sig.cand.direction == "BULLISH" else -1.0, "max_prog": 0.0}
         self.meta[p.position_id] = {"bl_structure": sig.cand.structure_type, "bl_trigger": sig.cand.trigger,
                                     "bl_score": f"{sig.score:.0f}", "bl_regime": sig.regime, "bl_growth": sig.growth,
                                     "bl_migration": sig.migration, "bl_wall": f"{sig.cand.acting_strike:g}",
@@ -732,11 +743,37 @@ class BaselineTrader(PaperTrader):
         held = (now_et - p.entry_time).total_seconds() / 60
         action, reason, _ = evaluate_exit_tick(st, spot, px, held, (now_et.hour, now_et.minute), EW)
         roi = (px / p.entry_option_price - 1) * 100
+        dk = self.decay.get(p.position_id)
+        if dk and dk["range"] > 0:
+            dk["max_prog"] = max(dk["max_prog"], dk["sign"] * (spot - p.entry_spot) / dk["range"])
         p.last_spot, p.last_mid, p.roi_pct, p.marks = spot, mid, roi, p.marks + 1
         p.peak_roi_pct = max(p.peak_roi_pct, roi)
         p.max_adverse_roi_pct = min(p.max_adverse_roi_pct, roi)
         if action == "CLOSE_ALL":
             return self.close(p, spot, now_et, reason, mid)
+        return None
+
+    def on_frame(self, p: Position, fr: Frame, spot: float, now_et: dt.datetime) -> Position | None:
+        """持仓期间每来一根新 Heatmap（2026-10-20 用户定，只限悬崖 / 跳板，默认 8/10/25 分钟截断照旧）：
+        起始点（天花板 / 踏板）GEX 连续 2 根变小（10 分钟）且期间最远进度 < 20%，或连续 4 根变小（20 分钟）且 < 30% → 截断。
+        进度 = 现价从开仓价朝目标走的距离 ÷ |起始点 − 目标|。这根里没有起始点行权价 → 连续中断（不算变小）。"""
+        dk = self.decay.get(p.position_id)
+        if not dk or not p.is_open:
+            return None
+        g = dict(fr.cells).get(dk["strike"])
+        dk["gex"] = dk["gex"] + [g]
+        seq = dk["gex"]
+        run = 0
+        for a, b in zip(seq[::-1][1:], seq[::-1]):     # 从最新往回数连续变小的根数
+            if a is None or b is None or not b < a:
+                break
+            run += 1
+        for n, lim, reason in DECAY_RULES:
+            if run >= n and dk["max_prog"] < lim:
+                log.info("【baseline·起始点衰减】%s %s 连续 %d 根变小 %s，最远进度 %.0f%% < %.0f%%", p.position_id,
+                         f"{dk['strike']:g}", run, "→".join(f"{x / 1e6:.1f}M" for x in seq[-n - 1:]),
+                         dk["max_prog"] * 100, lim * 100)
+                return self.close(p, spot, now_et, reason, self.current_mid(p, spot, now_et))
         return None
 
 
@@ -779,7 +816,7 @@ class BaselineEngine(SessionEngine):
         pos = self.trader.open_for(ticker)
         if pos is not None:
             spot = (self.spot_override(pos, now_et) if self.spot_override else None) or fr.spot
-            if self.trader.mark(pos, spot, now_et):
+            if self.trader.mark(pos, spot, now_et) or (is_new and self.trader.on_frame(pos, fr, spot, now_et)):
                 self.last_exit_time[ticker] = now_et
             return
         if not is_new:
