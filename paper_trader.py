@@ -32,7 +32,8 @@ CSV_FIELDS = ["position_id", "ticker", "action", "contract_symbol", "strike", "e
               "flow_confirmed", "flow_premium_usd", "flow_note",
               # baseline 规则（baseline.py）开仓依据；旧规则留空
               "bl_structure", "bl_trigger", "bl_score", "bl_regime", "bl_growth", "bl_migration", "bl_wall",
-              "bl_wall_gex_m", "bl_target", "bl_stop_spot", "bl_rr", "bl_notes", "bl_exit_detail"]
+              "bl_wall_gex_m", "bl_target", "bl_stop_spot", "bl_rr", "bl_notes", "bl_exit_detail",
+              "bl_contracts", "bl_total_cost", "bl_scale_out"]
 
 
 # =============================================================================
@@ -508,7 +509,9 @@ class PaperTrader:
         log.info("  平均峰值收益率 Avg Peak MFE    : %+.1f%%", s["avg_peak_mfe_pct"])
         log.info("  平均实现收益率                 : %+.1f%%", s["avg_realized_roi_pct"])
         log.info("  平均最大逆行 MAE               : %+.1f%%", s["avg_mae_pct"])
-        log.info("  合计盈亏                       : $%+.2f（每笔 %d 张）", s["total_pnl_usd"], self.cfg.contracts_per_trade)
+        log.info("  合计盈亏                       : $%+.2f（%s）", s["total_pnl_usd"],
+                 f"每笔约 ${self.cfg.bl_target_notional_usd:.0f}" if getattr(self, "orig_contracts", None) is not None
+                 else f"每笔 {self.cfg.contracts_per_trade} 张")
         pf = s["profit_factor"]
         log.info("  盈亏比 Profit Factor           : %s", "∞" if pf == float("inf") else f"{pf:.2f}")
         log.info("  出场原因分布                   : %s",

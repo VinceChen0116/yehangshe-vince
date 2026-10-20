@@ -117,6 +117,8 @@ class SystemConfig:
     bl_fast_mark_s: int = 20                   # baseline 实盘：持仓靠近触发线时每 20 秒盯一次（平时 position_mark_min 分钟）
     bl_max_spread_pct: float = 0.25            # baseline 执行层保护：买卖价差 > 中间价 25% 不开（2026-10-20 用户定，与隔夜单一致）
     bl_max_contract_cost_usd: float = 1000.0   # baseline 日内：单张成本（ask × 100）超过 $1,000 不开（2026-10-20 用户定）
+    bl_target_notional_usd: float = 650.0      # baseline 日内：每笔总成本目标约 $650（2026-10-20 用户定：贵的少开、便宜的多开，盈亏可比）
+    bl_notional_band_usd: float = 150.0        # 允许 ±$150（$500–$800）；单张就超过 $800 时只开 1 张
     intraday_rules: str = "baseline"   # 2026-10-20 用户定：日内实盘切 baseline（bl_v8 规则）；"legacy" = 旧规则（只做回测对照）
     position_mark_min: int = 1            # 实盘：两次 5 分钟扫描之间，每 N 分钟用实时期权报价盯一次持仓（0 = 关闭；2026-10-19 用户定 1）
     # 实盘用 /v1/options/quote(s) 的实时 bid/ask：按 ask 开仓、按 bid 盯市与平仓（每轮 1 次批量请求，

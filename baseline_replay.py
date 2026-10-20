@@ -96,7 +96,7 @@ def main(argv=None) -> int:
                 log.warning("没有配置 Discord Webhook，不推送")
             else:
                 notifier = notifier.tagged(f"🧪【回放 {ds}】")
-                notifier.text(f"以下是 {ds} baseline 规则真实回放，按实盘格式推送开平仓（时间 = 数据实际时刻，每笔 1 张）。")
+                notifier.text(f"以下是 {ds} baseline 规则真实回放，按实盘格式推送开平仓（时间 = 数据实际时刻，每笔约 $650）。")
         replay_day(cfg, real, day, tickers, notifier)
     from experiment import load_trades
     rows = load_trades(args.name)

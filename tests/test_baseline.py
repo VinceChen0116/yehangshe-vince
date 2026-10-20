@@ -395,6 +395,26 @@ class TestExits(unittest.TestCase):
         self.assertNotIn(p.position_id, tr.decay)
         self.assertIsNone(self.decay_feed(tr, fq, p, now, [18 * M, 16 * M], [100.5] * 2))
 
+    def test_contracts_for(self):                     # 2026-10-20 用户定：每笔约 $650（$500–$800）
+        for cost, n in ((100, 7), (90, 7), (120, 5), (250, 3), (300, 2), (600, 1), (450, 1), (900, 1), (50, 13)):
+            self.assertEqual(B.contracts_for(cost), n, cost)
+
+    def test_sizing_on_open(self):
+        tr, fq, p, now = opened()                         # ask 2.0 → 单张 $200 → 3 张 $600
+        self.assertEqual(p.contracts, 3)
+        self.assertEqual(tr.meta[p.position_id]["bl_contracts"], "3")
+        self.assertEqual(tr.state[p.position_id].quantity, 3)
+
+    def test_scale_out_half_at_80(self):
+        tr, fq, p, now = opened()                         # 3 张 @ 2.0
+        self.assertIsNone(self.tick(tr, fq, p, now, 3, 3.62, 100.0))          # +81% → 卖 1 张，剩 2 张
+        self.assertEqual(p.contracts, 2)
+        self.assertIn("卖出 1 张", tr.meta[p.position_id]["bl_scale_out"])
+        self.assertIsNotNone(self.tick(tr, fq, p, now, 4, 2.9, 100.1))        # 回落触发锁利，剩下 2 张平仓
+        self.assertEqual(p.contracts, 3)                                       # 记录恢复为开仓张数
+        self.assertAlmostEqual(p.realized_pnl, (3.62 - 2.0) * 100 + (2.9 - 2.0) * 200, places=2)
+        self.assertAlmostEqual(p.realized_roi_pct, p.realized_pnl / 600 * 100, places=4)
+
     def test_ratchet_table(self):
         self.assertEqual(compute_continuous_option_ratchet(5), (-35.0, -999.0))
         self.assertEqual(compute_continuous_option_ratchet(8), (-12.0, -999.0))

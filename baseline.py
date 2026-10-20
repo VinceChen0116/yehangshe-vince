@@ -65,7 +65,9 @@ BASELINE_NOTES = """
 9. "强空头水下放宽至 2.7%"：当天跌幅 ≤ −1.2% 且现价 ≤ 0.995 × VWAP 时，悬崖离天花板最远放宽到 2.7%。
 10. 跨到期共振 / 冲突：在起作用的行权价上，比较主结构到期之后的下 2 个到期；同号各 +6（上限 +12），紧挨着的下一个到期异号 −14。
 11. 逼空"集中度 ≥18%" = 该 Call 墙 GEX ÷ 主结构到期全部正节点 GEX 之和（2026-10-20 用户定）。
-12. 文档没有规定合约怎么选：沿用原规则（买靶心行权价，最多虚值 0.5%，挂牌行权价里离靶心最近）。每笔 1 张，所以 +80% 分批止盈不会触发。
+12. 文档没有规定合约怎么选：沿用原规则（买靶心行权价，最多虚值 0.5%，挂牌行权价里离靶心最近）。
+    张数（2026-10-20 用户定）：每笔总成本约 $650（$500–$800），单张超过 $800 只开 1 张；文档按评分分档调仓位（size_mult_tier）不用。
+    ≥2 张时 +80% 卖出一半（文档原规则），剩下的锁保本继续按棘轮出场。
 13. 出场用"能卖出的价格"算收益率（实盘 = 实时 bid；回放 = 中间价 − 真实半价差），和开仓成本（ask）对比。
 14d. 执行层保护：买卖价差 > 中间价 25% 不开（2026-10-20 用户定）。
 14a. 单张成本上限 $1,000（ask × 100，2026-10-20 用户定，文档没有）。
@@ -780,6 +782,20 @@ def near_trigger(st: PositionState, roi: float, spot: float, held_min: float, ba
     return False
 
 
+def contracts_for(cost_usd: float, target: float = 650.0, band: float = 150.0) -> int:
+    """每笔张数（2026-10-20 用户定）：总成本尽量接近 target（$650），落在 target ± band（$500–$800）内；
+    单张就超过上限时只开 1 张。例：$100 → 7 张、$300 → 2 张、$600 → 1 张、$900 → 1 张。"""
+    if cost_usd <= 0:
+        return 1
+    hi, lo = target + band, target - band
+    n = max(1, int(target / cost_usd + 0.5))
+    while n > 1 and n * cost_usd > hi:
+        n -= 1
+    if n * cost_usd < lo and (n + 1) * cost_usd <= hi:
+        n += 1
+    return n
+
+
 class BaselineTrader(PaperTrader):
     def __init__(self, cfg):
         super().__init__(cfg)
@@ -788,6 +804,8 @@ class BaselineTrader(PaperTrader):
         self.state: dict = {}         # position_id → PositionState
         self.meta: dict = {}          # position_id → 开仓时的 baseline 信息（写进交易明细）
         self.exit_note: dict = {}     # position_id → 起始点衰减截断的说明（平仓推送用）
+        self.orig_contracts: dict = {}  # position_id → 开仓张数（+80% 分批止盈后 p.contracts 只剩未卖出的部分）
+        self.partial: dict = {}       # position_id → (卖出张数, 价格, 时刻, 已实现盈亏)
         self.decay: dict = {}         # position_id → 起始点（天花板 / 踏板）GEX 序列与最远进度（悬崖 / 跳板专用）
 
     def open_position(self, client, sig, now_et: dt.datetime) -> Position | None:
@@ -802,6 +820,10 @@ class BaselineTrader(PaperTrader):
             return p
         p.base_strike = sig.cand.acting_strike
         p.stop_pct = EW.initial_stop_loss_roi_pct
+        p.contracts = contracts_for(p.entry_option_price * self.cfg.contract_multiplier,
+                                    getattr(self.cfg, "bl_target_notional_usd", 650.0),
+                                    getattr(self.cfg, "bl_notional_band_usd", 150.0))
+        self.orig_contracts[p.position_id] = p.contracts
         st = PositionState(position_id=p.position_id, ticker=p.ticker, direction=sig.cand.direction,
                            entry_spot=p.entry_spot, entry_option_price=p.entry_option_price,
                            initial_stop_loss_spot=sig.stop_spot, stop_loss_spot=sig.stop_spot,
@@ -820,7 +842,8 @@ class BaselineTrader(PaperTrader):
                                     "bl_wall_gex_m": f"{sig.cand.acting_gex / 1e6:.1f}",
                                     "bl_target": f"{sig.target_spot:g}", "bl_stop_spot": f"{sig.stop_spot:.2f}",
                                     "bl_rr": f"{sig.cand.rr:.2f}" if sig.cand.rr is not None else "",
-                                    "bl_notes": sig.cand.notes}
+                                    "bl_notes": sig.cand.notes, "bl_contracts": str(p.contracts),
+                                    "bl_total_cost": f"{p.entry_option_price * self.cfg.contract_multiplier * p.contracts:.0f}"}
         log.info("【baseline·开仓依据】%s %s", p.position_id, sig.describe())
         if n:
             n.baseline_opened(p, self.meta[p.position_id])
@@ -834,6 +857,12 @@ class BaselineTrader(PaperTrader):
             super().close(p, spot, now_et, reason, mid)
         finally:
             self.notifier = n
+        part = self.partial.get(p.position_id)
+        if part:                                         # +80% 已卖出一半：合并两段的盈亏，张数恢复为开仓张数
+            n0 = self.orig_contracts[p.position_id]
+            p.realized_pnl += part[3]
+            p.contracts = n0
+            p.realized_roi_pct = p.realized_pnl / (p.entry_option_price * self.cfg.contract_multiplier * n0) * 100
         if p.position_id in self.meta:
             detail = exit_detail(p, self.state.get(p.position_id), self.exit_note.pop(p.position_id, ""))
             self.meta[p.position_id]["bl_exit_detail"] = detail
@@ -867,6 +896,18 @@ class BaselineTrader(PaperTrader):
         p.max_adverse_roi_pct = min(p.max_adverse_roi_pct, roi)
         if action == "CLOSE_ALL":
             return self.close(p, spot, now_et, reason, mid)
+        if action == "SCALE_OUT_50" and p.contracts >= 2 and p.position_id not in self.partial:
+            k = p.contracts // 2                          # 文档 2.x：+80% 卖出一半，剩下的锁保本继续拿
+            pnl = (px - p.entry_option_price) * self.cfg.contract_multiplier * k
+            self.partial[p.position_id] = (k, px, now_et, pnl)
+            p.contracts -= k
+            st.quantity = p.contracts
+            note = f"{now_et.strftime('%H:%M')} +{roi:.0f}% 卖出 {k} 张 @ ${px:.2f}（{pnl:+.0f}），剩 {p.contracts} 张"
+            if p.position_id in self.meta:
+                self.meta[p.position_id]["bl_scale_out"] = note
+            log.info("【baseline·分批止盈】%s %s %s", p.position_id, p.ticker, note)
+            if self.notifier:
+                self.notifier.text(f"💰 分批止盈 {p.ticker} {p.strike:g}{p.right}：{note}")
         return None
 
     def on_frame(self, p: Position, fr: Frame, spot: float, now_et: dt.datetime) -> Position | None:

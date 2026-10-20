@@ -136,7 +136,8 @@ class DiscordNotifier:
                 {"name": "期权买入价", "value": f"${p.entry_option_price:.2f}" +
                  (f"（按 ask；bid {p.entry_bid:.2f} / ask {ask:.2f}）" if ask and p.price_source == "quote"
                   else "（回放：真实价 + 半价差）"), "inline": True},
-                {"name": "单张成本", "value": f"${p.entry_option_price * 100 * p.contracts:,.0f}", "inline": True},
+                {"name": "张数 / 总成本", "value": f"{p.contracts} 张 / ${p.entry_option_price * 100 * p.contracts:,.0f}"
+                 f"（单张 ${p.entry_option_price * 100:,.0f}）", "inline": True},
                 {"name": "合约", "value": f"`{p.contract_symbol}`（到期 {p.expiration}）", "inline": True},
                 {"name": "开仓现价", "value": f"{p.entry_spot:.2f}", "inline": True},
                 {"name": "目标价", "value": m.get("bl_target", ""), "inline": True},
@@ -147,7 +148,7 @@ class DiscordNotifier:
                                                    f"{m.get('bl_migration', '')}", "inline": True},
                 {"name": "开仓依据", "value": (m.get("bl_notes") or "—")[:1000], "inline": False},
             ],
-            "footer": {"text": f"{p.position_id} · {m.get('bl_trigger', '')} · 每笔 1 张 · 模拟盘"},
+            "footer": {"text": f"{p.position_id} · {m.get('bl_trigger', '')} · 模拟盘"},
         }])
 
     def baseline_closed(self, p, m: dict, detail: str) -> None:
@@ -163,7 +164,8 @@ class DiscordNotifier:
                 {"name": "类别", "value": STRUCT_CN.get(m.get("bl_structure"), ""), "inline": True},
                 {"name": "平仓时间（美东）", "value": f"{p.exit_time.strftime('%H:%M')}（持仓 {held:.0f} 分钟）", "inline": True},
                 {"name": "平仓价格", "value": f"${p.exit_option_price:.2f}（买入 ${p.entry_option_price:.2f}）", "inline": True},
-                {"name": "盈亏", "value": f"{_usd(p.realized_pnl)}（{p.realized_roi_pct:+.1f}%）", "inline": True},
+                {"name": "盈亏", "value": f"{_usd(p.realized_pnl)}（{p.realized_roi_pct:+.1f}%，{p.contracts} 张）"
+                 + (f"\n分批：{m['bl_scale_out']}" if m.get("bl_scale_out") else ""), "inline": True},
                 {"name": "现价", "value": f"{p.entry_spot:.2f} → {p.exit_spot:.2f}（目标 {m.get('bl_target', '')}）", "inline": True},
                 {"name": "峰值 / 最大逆行", "value": f"{p.peak_roi_pct:+.1f}% / {p.max_adverse_roi_pct:+.1f}%", "inline": True},
                 {"name": "平仓原因", "value": f"**{REASON_CN.get(p.exit_reason, p.exit_reason)}**：{detail}"[:1000],
@@ -188,7 +190,7 @@ class DiscordNotifier:
                 {"name": "方向正确率", "value": f"{stats['directional_accuracy_pct']:.0f}%", "inline": True},
                 {"name": "盈亏比", "value": "∞" if pf == float("inf") else f"{pf:.2f}", "inline": True},
             ],
-            "footer": {"text": "每笔 1 张 · 模拟盘"},
+            "footer": {"text": "模拟盘"},
         }])
 
 
