@@ -99,7 +99,7 @@ class SystemConfig:
     #   B（宽松）：成交量前 100 → 剔除指数/非白名单 ETF → 股价 ≥ min_spot_usd，不要求异动与 PCR
     live_universe_mode: str = "both"
     max_universe_size: int = 60           # 预算守卫上限（10/19 60 → 40；2026-10-20 用户定加回 60）
-    est_polls_per_ticker_day: int = 57    # 保守估计：5min×24 + 午间 15 次 + 5min×18 ≈ 57 次/标的/日
+    est_polls_per_ticker_day: int = 78    # baseline 全天 5 分钟一根：09:35–16:00 ≈ 78 次/标的/日（旧规则午间 12 分钟时约 57）
     flow_chain_budget_share: float = 0.15 # 每日预算中预留给 Flow/期权链的比例
     poll_offset_s: int = 25               # Heatmap 为 5 分钟固定采样，整点后延迟 25s 拉取以确保该段已归档
     holiday_grace_min: int = 20           # 开盘后这么多分钟内拿到旧日期快照只视为尚未更新；之后仍是旧日期才判定休市
@@ -109,7 +109,7 @@ class SystemConfig:
     session_close: str = "16:00"
     fast_windows: tuple = (("09:30", "11:30"), ("14:30", "16:00"))
     fast_poll_min: int = 5
-    slow_poll_min: int = 12               # 11:30-14:30 午间降频
+    slow_poll_min: int = 12               # 11:30-14:30 午间降频（只用于旧规则；baseline 全天 5 分钟）
     poll_open_positions_fast: bool = True # 持仓标的始终按 5 分钟盯市（风控优先）
     # 日内规则：baseline = docs/AGENT_REPRODUCTION_BLUEPRINT_HEATMAP_AND_TPSL.md（baseline.py，2026-10-20 用户定，实盘默认）；
     #   legacy = 旧规则（最大正/负节点 + 距离 ≤1% + 0–1 评分 + 标的破节点止损），只留作回测对照

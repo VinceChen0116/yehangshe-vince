@@ -363,7 +363,8 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
                 break
             # 对齐到 5 分钟采样网格
             grid = open_t + dt.timedelta(minutes=5 * ((minutes_of_day(now) - minutes_of_day(open_t)) // 5))
-            interval = poll_interval_min(cfg, grid)
+            # baseline：全天 5 分钟一根（与回放一致：节点 15 分钟演化 / 5、15 分钟涨跌 / 起始点衰减都按 5 分钟一根设计）
+            interval = cfg.fast_poll_min if baseline_rules else poll_interval_min(cfg, grid)
             refresh_quotes()   # 本轮盯市用的持仓报价：一次批量请求
             no_entry = entry_blocked_window(cfg, grid) is not None
             for t in list(pool):
