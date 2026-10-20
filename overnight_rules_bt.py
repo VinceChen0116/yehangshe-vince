@@ -42,6 +42,7 @@ ENTRY = "15:55"
 EXITS = ("09:35", "09:40", "09:45")
 FLOW_SINCE, FLOW_UNTIL, FLOW_MIN = "15:00", "15:50", 50000   # 实盘 15:44 起扫描，15:50 之后的大单当时还看不到
 MAX_SPREAD, MAX_POS = 0.25, 10
+RANK_KEY = None   # 候选排序（对照实验用）；None = 实盘口径，按 15:00 后大单金额从大到小
 
 
 def detect_tol(snap, cfg, lcfg, tol: float = 0.0):
@@ -134,7 +135,7 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = E
                  st.neg_strike, st.distance_pct * 100, len(fl))
         if fl:
             cands.append((sum(float(x.get("premium_usd") or 0) for x in fl), len(fl), t, exp, snap, st, mode))
-    cands.sort(key=lambda x: -x[0])
+    cands.sort(key=RANK_KEY or (lambda x: -x[0]))
     out = []
     dir_n, sec_n = {}, {}
     for usd, n, t, exp, snap, st, mode in cands:

@@ -120,6 +120,45 @@ def use_live_expiry():
     bt.structure_at_close, bt.load_archived_heatmap, bt.expiry_candidates = sac, load, cands
 
 
+def side_notional(day: dt.date) -> dict:
+    """{(代码, C/P): 成交张数 × 现价×100}，取 day 之前最近一个成交量榜存档（没有更早的就用最近一个），避免用到当天收盘后的数据。"""
+    root = os.path.join("yhs_data", "archive", "universe")
+    days = sorted(f[:10] for f in os.listdir(root) if re.match(r"\d{4}-\d{2}-\d{2}\.json$", f))
+    prev = [d for d in days if d < day.isoformat()]
+    pick = prev[-1] if prev else days[0]
+    with open(os.path.join(root, f"{pick}.json"), encoding="utf-8") as f:
+        data = json.load(f).get("data") or []
+    rows = data if isinstance(data, list) else (data.get("rows") or data.get("tickers") or [])
+    return {(r["ticker"], s): float(r.get(k) or 0) for r in rows for s, k in (("C", "call_volume"), ("P", "put_volume"))}
+
+
+def rank_key(mode: str):
+    """候选排序（候选元组 = (大单金额, 笔数, 代码, 到期, 快照, 结构, 模式)）：
+       flow      实盘口径：大单金额从大到小
+       relative  大单金额 ÷ 前一交易日该方向期权名义成交（张数 × 现价 × 100），大票不再天然排前
+       distance  结构强弱：现价离正 GEX 节点越近越前（不看大单金额）
+       random:N  随机顺序（种子 N），对照"排序本身有没有用" """
+    if mode == "flow":
+        return lambda x: -x[0]
+    if mode == "relative":
+        cache = {}
+
+        def key(x):
+            day = x[4].session_date
+            if day not in cache:
+                cache[day] = side_notional(day)
+            vol = cache[day].get((x[2], x[5].right))
+            return -(x[0] / (vol * x[4].spot * 100)) if vol else -float("inf")   # 不在成交量榜前 150 = 成交很小，相对规模视为最大
+        return key
+    if mode == "distance":
+        return lambda x: (x[5].distance_pct, -x[0])
+    if mode.startswith("random"):
+        import random
+        seed = int(mode.split(":")[1]) if ":" in mode else 1
+        return lambda x: random.Random(f"{seed}-{x[2]}-{x[4].session_date}").random()
+    raise ValueError(mode)
+
+
 ETFS = {"SPY", "QQQ", "TQQQ", "SQQQ", "IWM", "DIA", "SOXL", "SOXS", "SPXL", "SPXS", "UPRO", "TNA", "TZA", "TLT", "UVXY"}
 _OCC = re.compile(r"(\d{6})([CP])(\d{8})$")
 _target = {}
@@ -143,13 +182,18 @@ def run_filter(argv) -> int:
     if val("--budget", float):  # 每笔目标投入与浮动（默认 $1,000 ± 25%）
         import overnight_live as ol
         ol.BUDGET, ol.BUDGET_BAND = val("--budget", float), (val("--band", float) or 250.0) / val("--budget", float)
+    if "--one-if-expensive" in argv:   # 单张超过每笔上限时也开 1 张（原规则：不开）
+        orig_size = bt.size_contracts
+        bt.size_contracts = lambda price: orig_size(price) or 1
+    if val("--rank", str):
+        bt.RANK_KEY = rank_key(val("--rank", str))
     rest, skip = [], False
     for i, a in enumerate(argv):
         if skip:
             skip = False
-        elif a in ("--flow-max-dte", "--max-pos", "--budget", "--band"):
+        elif a in ("--flow-max-dte", "--max-pos", "--budget", "--band", "--rank"):
             skip = True
-        elif a not in ("--no-etf", "--flow-contract", "--flow-vol-ge-oi", "--live-expiry"):
+        elif a not in ("--no-etf", "--flow-contract", "--flow-vol-ge-oi", "--live-expiry", "--one-if-expensive"):
             rest.append(a)
     orig_sac, orig_lf = bt.structure_at_close, bt.late_flow
 
