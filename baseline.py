@@ -771,7 +771,7 @@ class BaselineTrader(PaperTrader):
         for n, lim, reason in DECAY_RULES:
             if run >= n and dk["max_prog"] < lim:
                 log.info("【baseline·起始点衰减】%s %s 连续 %d 根变小 %s，最远进度 %.0f%% < %.0f%%", p.position_id,
-                         f"{dk['strike']:g}", run, "→".join(f"{x / 1e6:.1f}M" for x in seq[-n - 1:]),
+                         f"{dk['strike']:g}", run, "→".join(f"{x / 1e6:.2f}M" for x in seq[-n - 1:]),
                          dk["max_prog"] * 100, lim * 100)
                 return self.close(p, spot, now_et, reason, self.current_mid(p, spot, now_et))
         return None
