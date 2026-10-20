@@ -32,6 +32,8 @@ PATH_NEG_RATIO = 1.5                             # 路径上显著负节点合�
 PIN_NEG_MULT = 3.0                               # 路径上全到期最大负节点 ≥ 3 × 墙 → 不开（2026-10-20 用户定）
 BIG_NODE_RATIO = 0.43                            # "超大正节点" = GEX ≥ 0.43 × 起作用墙（2026-10-20 用户定；文档中间关卡仍是 0.45）
 INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0DTE / 最近周度；15:00 后是尾盘隔夜模式
+OUTSIDE_WALL_RATIO = 0.5                         # 墙 ≥ 50% × 墙外侧（逆方向）最大正节点，否则不成立（2026-10-20 用户定）
+MAGNET_MIN_DIST = 0.006                          # 离墙 > 0.6% 时，墙在长大且是同侧 4.5% 内最大正节点 → 磁吸，不开（2026-10-20 用户定）
 DECAY_MIN_DROP = 0.02                            # 每根比上一根至少小 2% 才算"变小"（2026-10-20 用户定）
 DECAY_RULES = ((2, 0.20, "START_NODE_DECAY_10M"), (4, 0.30, "START_NODE_DECAY_20M"))   # 起始点衰减截断：(连续变小根数, 进度上限, 原因)
 
@@ -44,6 +46,8 @@ BASELINE_NOTES = """
 2a. 路径：现价到目标之间必须有显著负节点，且显著负节点 |GEX| 合计 ≥ 1.5 × 显著正节点合计（正负差不多 = 走不动）。
 2b. 墙外 3 格：天花板 / 踏板外侧 3 格以内（含第 3 格）有比它更大的正节点 → 结构不成立（价格会被更大的墙吸过去）。
 2c. 钉住：主结构到期 |GEX| 最大的节点是负节点、在路径上或现价 ±0.5% 内、且 ≥ 3 × 墙 → 不开（逼空也查）。
+2f. 墙外侧：天花板 / 踏板 GEX ≥ 50% × 墙外侧（悬崖 = 上方、跳板 = 下方）整张图最大的正节点，否则墙太弱不成立（2026-10-20 用户定）。
+2g. 磁吸：离墙 > 0.6% 时，墙在长大（GROWING / NEW）且是同侧 4.5% 内最大的正节点 → 价格可能先被吸过去，不开（2026-10-20 用户定）。
 2e. 逼空磁吸：现价上下 3 格以内（含第 3 格）有比 Call 墙更大的正节点 → 不开逼空（2026-10-20 用户定）。
 2d. 至少一格：现价和（最终）目标之间至少要有一个 Heatmap 节点（行权价），否则不开（悬崖 / 跳板 / 逼空都查；2026-10-20 用户定）。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
@@ -351,7 +355,34 @@ def _stop_risk(wall_dist: float | None) -> float:
     return max(HW.min_stop_loss_spot_pct, min(wall_dist, 0.012) + 0.003)
 
 
-def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str) -> tuple[Candidate | None, str]:
+def outside_wall_check(cells: list, wall_k: float, wall_g: float, above: bool) -> tuple[bool, str]:
+    """墙外侧（悬崖 = 天花板上方 / 跳板 = 踏板下方）整张图里最大的正节点 × OUTSIDE_WALL_RATIO > 墙 → 墙相对太弱，挡不住被外侧大节点吸走。"""
+    out = [(k, g) for k, g in cells if g > 0 and ((k > wall_k) if above else (k < wall_k))]
+    if not out:
+        return True, ""
+    k, g = max(out, key=lambda c: c[1])
+    if wall_g < OUTSIDE_WALL_RATIO * g:
+        return False, (f"{'天花板' if above else '踏板'} {wall_k:g}(+{wall_g / 1e6:.1f}M) 不到外侧最大正节点 {k:g}(+{g / 1e6:.1f}M) 的 "
+                       f"{OUTSIDE_WALL_RATIO * 100:.0f}%（墙太弱）")
+    return True, ""
+
+
+def magnet_check(cells: list, frames: list, spot: float, wall_k: float, d_wall: float, above: bool) -> tuple[bool, str]:
+    """离墙 > MAGNET_MIN_DIST 时，墙在长大（GROWING / NEW）且是同侧 4.5% 内最大的正节点 → 价格更可能先被吸过去，不开。"""
+    if d_wall <= MAGNET_MIN_DIST:
+        return True, ""
+    side = [(k, g) for k, g in cells if g > 0 and ((k > spot) if above else (k < spot)) and abs(k / spot - 1) <= 0.045]
+    if not side or max(side, key=lambda c: c[1])[0] != wall_k:
+        return True, ""
+    gs = node_growth(frames, wall_k) if frames else "UNKNOWN"
+    if gs in ("GROWING", "NEW"):
+        return False, (f"{'天花板' if above else '踏板'} {wall_k:g} 在长大（{gs}）且是同侧最大正节点、离现价 {d_wall * 100:.2f}% "
+                       f"> {MAGNET_MIN_DIST * 100:.1f}%：磁吸，价格可能先被吸过去")
+    return True, ""
+
+
+def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str, frames: list | None = None
+               ) -> tuple[Candidate | None, str]:
     S, cells, idx = fr.spot, fr.cells, is_index(ticker)
     ceil, _ = _walls(cells, S, gmin)
     if not ceil:
@@ -367,6 +398,12 @@ def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str)
     if big:
         return None, (f"天花板 {ceil[0]:g}(+{ceil[1] / 1e6:.1f}M) 外侧 {OUTER_WALL_STEPS} 格内有更大的正节点 "
                       f"{big[0]:g}(+{big[1] / 1e6:.1f}M)，价格会被吸上去")
+    ok, note = outside_wall_check(cells, ceil[0], ceil[1], above=True)
+    if not ok:
+        return None, note
+    ok, note = magnet_check(cells, frames, S, ceil[0], d_ceil, above=True)
+    if not ok:
+        return None, note
     min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
     sup = _next_big_positive(cells, S, ceil[1], gmin, below=True)
     if sup is None:                         # 宁缺毋滥：下方没有超大正节点承接就不做（2026-10-20 用户定，删掉负节点兜底）
@@ -428,6 +465,12 @@ def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration
     if big:
         return None, (f"踏板 {floor[0]:g}(+{floor[1] / 1e6:.1f}M) 外侧 {OUTER_WALL_STEPS} 格内有更大的正节点 "
                       f"{big[0]:g}(+{big[1] / 1e6:.1f}M)，价格会被吸下去")
+    ok, note = outside_wall_check(cells, floor[0], floor[1], above=False)
+    if not ok:
+        return None, note
+    ok, note = magnet_check(cells, frames, S, floor[0], d_floor, above=False)
+    if not ok:
+        return None, note
     min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
     res = _next_big_positive(cells, S, floor[1], gmin, below=False)
     if res is None:                         # 宁缺毋滥：上方没有超大正节点就不做
@@ -605,7 +648,7 @@ class BaselineJudge:
         cells_d = [{"strike_usd": k, "net_dealer_gex_usd": g} for k, g in fr.cells]
         regime, _share = compute_local_gamma_regime(cells_d, fr.spot, gmin, migration, HW)
         reasons, best = [], None
-        finders = [("悬崖", lambda: find_cliff(ticker, fr, cx, gmin, migration)),
+        finders = [("悬崖", lambda: find_cliff(ticker, fr, cx, gmin, migration, frames)),
                    ("跳板", lambda: find_springboard(ticker, fr, cx, gmin, migration, frames)),
                    ("逼空", lambda: find_squeeze(ticker, fr, cx, gmin, regime)),
                    ("雪崩", lambda: find_avalanche(ticker, fr, cx, gmin, regime))]

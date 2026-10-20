@@ -194,6 +194,28 @@ class TestCliff(unittest.TestCase):
     def test_no_negative_target_fallback(self):    # META 型：下方没有大正节点 → 宁缺毋滥
         self.assertReject(REJECT_PATH, {100.75: 20 * M, 99.5: -6 * M, 98.5: -6 * M, 98.0: 4 * M}, "宁缺毋滥")
 
+    def test_outside_wall_too_big(self):            # PLTR 型：天花板外侧（上方）有 2 倍以上的正节点 → 墙太弱
+        cells = {**CLIFF_CELLS, 104.0: 41 * M}
+        j, sig, _ = run(REJECT_PATH, cells)
+        self.assertIsNone(sig)
+        self.assertIn("墙太弱", j.last_reason["TEST"])
+        j, sig, _ = run(REJECT_PATH, {**CLIFF_CELLS, 104.0: 39 * M})   # 20M ≥ 50% × 39M → 照常
+        self.assertIsNotNone(sig, j.last_reason.get("TEST"))
+
+    def test_magnet_far_growing_wall(self):
+        cells = [(98.0, 10 * M), (98.5, -15 * M), (99.5, -3 * M), (100.75, 20 * M), (102.0, 5 * M)]
+        ok, _ = B.magnet_check(cells, [], 100.0, 100.75, 0.0075, above=True)     # 没有历史 → UNKNOWN → 放行
+        self.assertTrue(ok)
+        ok, _ = B.magnet_check(cells, [], 100.5, 100.75, 0.0025, above=True)     # 离墙 ≤ 0.6% 不查
+        self.assertTrue(ok)
+
+    def test_magnet_in_cliff(self):                 # 天花板 15 分钟长 50%、离现价 >0.6% → 磁吸不开
+        seq = [{**CLIFF_CELLS, 100.75: g} for g in (12 * M, 12 * M, 12 * M, 14 * M, 16 * M, 20 * M)]
+        path = [99.7, 99.9, 100.1, 100.2, 100.0, 99.8]
+        j, sig, _ = run(path, seq)
+        self.assertIsNone(sig)
+        self.assertIn("磁吸", j.last_reason["TEST"])
+
     def test_score_gate(self):
         # 天花板在撤单（节点 DECAYING −16）+ 主正墙 30 分钟内上移且现价走高（MIGRATING_UP，与看跌相反 −12）：
         # 几何与触发都通过，但评分 58 − 16 − 12 = 30 < 55
@@ -534,12 +556,24 @@ class TestRealData1019(unittest.TestCase):
 
     def test_user_review_1020_no_cliff(self):
         """10/20 用户逐笔复盘指出不该开的 6 笔悬崖：INTC / MU / META / TSLA×2 / AMD。"""
-        for t, lab, why in [("INTC", "09:45", "之间没有显著负节点"), ("MU", "10:00", "可能被钉住"),
+        for t, lab, why in [("INTC", "09:45", "之间没有显著负节点"), ("MU", "10:00", "墙太弱"),
                             ("META", "10:30", "宁缺毋滥"), ("TSLA", "10:35", "更大的正节点 370"),
                             ("TSLA", "11:15", "更大的正节点 370"), ("AMD", "14:30", "更大的正节点 540")]:
             j, sig = self.judge_at(t, lab)
             self.assertFalse(sig is not None and sig.cand.structure_type == "CLIFF_STRUCTURE", f"{t} {lab} 不应是悬崖")
             self.assertIn(why, j.last_reason[t].split("；")[0], f"{t} {lab}: {j.last_reason[t]}")
+
+    def test_pltr_1015_cliffs(self):
+        """10/20 用户复盘：10/15 PLTR 两笔 195P 悬崖（数据时刻 09:55 / 10:35）不该开。"""
+        global DAY
+        old, DAY = DAY, dt.date(2026, 10, 15)
+        try:
+            for lab in ("09:50", "10:30"):
+                j, sig = self.judge_at("PLTR", lab)
+                self.assertFalse(sig is not None and sig.cand.structure_type == "CLIFF_STRUCTURE", lab)
+                self.assertIn("墙太弱", j.last_reason["PLTR"].split("；")[0], j.last_reason["PLTR"])
+        finally:
+            DAY = old
 
     def test_smci_squeeze_one_grid(self):
         """10/20 用户：SMCI 11:20 现价 33.1、目标 33.5，中间没有节点 → 不开。"""
