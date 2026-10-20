@@ -120,6 +120,21 @@ def use_live_expiry():
     bt.structure_at_close, bt.load_archived_heatmap, bt.expiry_candidates = sac, load, cands
 
 
+def confirm_ok(cfg, day: dt.date, ticker: str, r, label: str) -> bool:
+    """再看一根（如标记 15:50，数据约 15:55）：现价没有比确认那根往反方向走、也没越过天花板 / 踏板才算确认。
+    悬崖：现价没往上、仍在天花板下；跳板：现价没往下、仍在踏板上。那根拿不到 = 不确认（宁缺毋滥）。"""
+    exp, snap, st, _ = r
+    rows = bt.load_archived_heatmap(cfg, day, ticker, exp)
+    frames = rows_to_frames(ticker, day, exp, rows or [])
+    k = next((k for k in frames if k.strftime("%H:%M") == label), None)
+    s = parse_heatmap(frames[k], cfg, day) if k else None
+    if s is None:
+        return False
+    if st.structure == "CLIFF":
+        return s.spot <= snap.spot and s.spot <= st.pos_strike
+    return s.spot >= snap.spot and s.spot >= st.pos_strike
+
+
 def side_notional(day: dt.date) -> dict:
     """{(代码, C/P): 成交张数 × 现价×100}，取 day 之前最近一个成交量榜存档（没有更早的就用最近一个），避免用到当天收盘后的数据。"""
     root = os.path.join("yhs_data", "archive", "universe")
@@ -191,16 +206,23 @@ def run_filter(argv) -> int:
     for i, a in enumerate(argv):
         if skip:
             skip = False
-        elif a in ("--flow-max-dte", "--max-pos", "--budget", "--band", "--rank"):
+        elif a in ("--flow-max-dte", "--max-pos", "--budget", "--band", "--rank", "--max-target-pct", "--confirm-bar"):
             skip = True
         elif a not in ("--no-etf", "--flow-contract", "--flow-vol-ge-oi", "--live-expiry", "--one-if-expensive"):
             rest.append(a)
     orig_sac, orig_lf = bt.structure_at_close, bt.late_flow
 
+    max_tgt = val("--max-target-pct", float)
+    confirm = val("--confirm-bar", str)
+
     def sac(cfg, lcfg, day, ticker, *a, **k):
         if no_etf and ticker in ETFS:
             return None
         r = orig_sac(cfg, lcfg, day, ticker, *a, **k)
+        if r and max_tgt and abs(r[2].neg_strike - r[1].spot) / r[1].spot > max_tgt:
+            return None   # 深渊 / 加速区离现价太远，隔夜到不了（10/20 用户定的对照）
+        if r and confirm and not confirm_ok(cfg, day, ticker, r, confirm):
+            return None
         if r:
             exp, snap, st, _ = r
             K = bt.first_otm(snap, st.right)
