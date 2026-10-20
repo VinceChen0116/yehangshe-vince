@@ -27,6 +27,9 @@ from strategy_core_spec import (ExitWeights, HeatmapWeights, PositionState, comp
 log = logging.getLogger("yhs.baseline")
 HW, EW = HeatmapWeights(), ExitWeights()
 INDEX_TICKERS = {"SPX", "SPXW", "NDX", "QQQ"}   # 文档原文的"指数"集合（SPY 不在内）
+OUTER_WALL_STEPS = 3                             # 墙外侧 3 格以内有更大的正节点 → 结构不成立（2026-10-20 用户定）
+PATH_NEG_RATIO = 2.0                             # 路径上显著负节点合计 ≥ 2 × 显著正节点合计（2026-10-20，倍数待用户确认）
+PIN_NEG_MULT = 3.0                               # 路径上全到期最大负节点 ≥ 3 × 墙 → 不开（2026-10-20 用户定）
 BIG_NODE_RATIO = 0.43                            # "超大正节点" = GEX ≥ 0.43 × 起作用墙（2026-10-20 用户定；文档中间关卡仍是 0.45）
 INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0DTE / 最近周度；15:00 后是尾盘隔夜模式
 
@@ -34,8 +37,11 @@ BASELINE_NOTES = """
 【解读】清单（文档没写死的地方，按以下方式实现；要改告诉我）：
 1. 天花板 / 地板 = 现价上方 / 下方"最近的"显著正节点（GEX ≥ G_min）；不是全天最大的那个。
 2. 目标位（2026-10-20 用户确认）：悬崖 / 跳板的重点都是超大正节点。目标 = 顺方向下一个超大正节点（悬崖 = 下方支撑，
-   跳板 = 上方阻力），超大 = GEX ≥ max(0.85×G_min, 0.43×天花板/踏板 GEX)（用户定 0.43；文档中间关卡门槛仍为 0.45）；"空间" = 现价到它的距离。现价与目标之间必须有显著负节点
-   （燃料：文档的"负深渊 / 负靶心"）。4.5% 内没有超大正节点时，目标退回 1%–4.5% 内最大的负节点。
+   跳板 = 上方阻力），超大 = GEX ≥ max(0.85×G_min, 0.43×天花板/踏板 GEX)；"空间" = 现价到它的距离。
+   【宁缺毋滥】没有超大正节点承接就不做（不退回负节点）。
+2a. 路径：现价到目标之间必须有显著负节点，且显著负节点 |GEX| 合计 ≥ 2 × 显著正节点合计（正负差不多 = 走不动）。
+2b. 墙外 3 格：天花板 / 踏板外侧 3 格以内（含第 3 格）有比它更大的正节点 → 结构不成立（价格会被更大的墙吸过去）。
+2c. 钉住：主结构到期 |GEX| 最大的节点是负节点、在路径上或现价 ±0.5% 内、且 ≥ 3 × 墙 → 不开（逼空也查）。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
    （中间关卡 ≥1.0% 时改为关卡行权价）。逼空 / 雪崩没有墙，风险距离取最小 0.8%。
 4. 中间关卡在 0.40%–1.0% 之间：不否决、不改目标（文档只写了 <0.40% 与 ≥1.0% 两种情况）。
@@ -273,6 +279,55 @@ def _next_big_positive(cells: list, spot: float, acting_gex: float, gmin: float,
     return min(c, key=lambda x: x[0]) if c else None
 
 
+def strike_step(cells: list, spot: float) -> float:
+    """现价附近（±5%）的行权价间距（"一格"）：相邻行权价差的最小值。"""
+    ks = sorted({k for k, _ in cells if abs(k / spot - 1) <= 0.05})
+    diffs = [round(b - a, 4) for a, b in zip(ks, ks[1:]) if b - a > 1e-9]
+    return min(diffs) if diffs else spot * 0.005
+
+
+def outer_bigger_wall(cells: list, wall_k: float, wall_g: float, step: float, above: bool):
+    """墙外侧 3 格以内（含第 3 格）有没有比墙更大的正节点（有 → 价格会被它吸过去，结构不成立；2026-10-20 用户定）。"""
+    if above:
+        c = [(k, g) for k, g in cells if wall_k < k <= wall_k + OUTER_WALL_STEPS * step + 1e-6 and g > wall_g]
+    else:
+        c = [(k, g) for k, g in cells if wall_k - OUTER_WALL_STEPS * step - 1e-6 <= k < wall_k and g > wall_g]
+    return max(c, key=lambda x: x[1]) if c else None
+
+
+def path_check(cells: list, spot: float, target: float, gmin: float) -> tuple[bool, str, tuple | None]:
+    """现价到目标之间（不含目标）：必须有显著负节点，而且显著负节点 |GEX| 合计 ≥ PATH_NEG_RATIO × 显著正节点合计
+    （正负差不多 = 走不动；2026-10-20 用户定）。返回 (通过, 说明, 路径上最大的负节点)。"""
+    lo, hi = sorted((spot, target))
+    path = [(k, g) for k, g in cells if lo < k < hi and abs(g) >= gmin]
+    neg = [(k, g) for k, g in path if g < 0]
+    pos = [(k, g) for k, g in path if g > 0]
+    if not neg:
+        return False, f"现价到目标 {target:g} 之间没有显著负节点（走不动）", None
+    ns, ps = sum(-g for _, g in neg), sum(g for _, g in pos)
+    biggest = min(neg, key=lambda c: c[1])
+    if ps > 0 and ns < PATH_NEG_RATIO * ps:
+        return False, (f"现价到目标 {target:g} 之间负节点合计 {ns / 1e6:.1f}M 不到正节点合计 {ps / 1e6:.1f}M 的 "
+                       f"{PATH_NEG_RATIO:g} 倍（走不动）"), biggest
+    return True, f"路径负 {ns / 1e6:.1f}M / 正 {ps / 1e6:.1f}M", biggest
+
+
+def pin_check(cells: list, spot: float, target: float, wall_g: float) -> tuple[bool, str]:
+    """主结构到期 |GEX| 最大的节点如果是负节点、在现价到目标的路径上或现价 ±0.5% 内，并且 ≥ PIN_NEG_MULT × 墙，
+    价格很可能被它钉住 → 不开（2026-10-20 用户定）。返回 (否决, 说明)。"""
+    if not cells:
+        return False, ""
+    k, g = max(cells, key=lambda c: abs(c[1]))
+    if g >= 0:
+        return False, ""
+    lo, hi = sorted((spot, target))
+    on_path = lo < k < hi or abs(k - spot) / spot <= 0.005
+    if on_path and abs(g) >= PIN_NEG_MULT * abs(wall_g):
+        return True, (f"路径上有全到期最大的负节点 {k:g}（{g / 1e6:.1f}M，是墙的 {abs(g) / abs(wall_g):.1f} 倍 ≥ "
+                      f"{PIN_NEG_MULT:g} 倍），可能被钉住")
+    return False, ""
+
+
 def _stop_risk(wall_dist: float | None) -> float:
     if wall_dist is None:
         return HW.min_stop_loss_spot_pct
@@ -290,23 +345,25 @@ def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str)
     min_d = HW.min_dist_cliff_index if idx else HW.min_dist_cliff_stock
     if not (min_d <= d_ceil <= max_d):
         return None, f"离天花板 {ceil[0]:g} {d_ceil * 100:.3f}% 不在 {min_d * 100:.2f}%–{max_d * 100:.1f}%"
+    step = strike_step(cells, S)
+    big = outer_bigger_wall(cells, ceil[0], ceil[1], step, above=True)
+    if big:
+        return None, (f"天花板 {ceil[0]:g}(+{ceil[1] / 1e6:.1f}M) 外侧 {OUTER_WALL_STEPS} 格内有更大的正节点 "
+                      f"{big[0]:g}(+{big[1] / 1e6:.1f}M)，价格会被吸上去")
     min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
-    fuel = [(k, g) for k, g in cells if g <= -gmin and k < S and (S - k) / S <= 0.045]
-    if not fuel:
-        return None, "下方 4.5% 内没有显著负节点（深渊 / 燃料）"
-    chasm = min(fuel, key=lambda c: c[1])
     sup = _next_big_positive(cells, S, ceil[1], gmin, below=True)
-    if sup is not None:
-        tgt, tgt_note = sup[0], f"目标 = 下方超大正节点 {sup[0]:g}(+{sup[1] / 1e6:.1f}M)"
-    else:                                   # 下方 4.5% 内没有超大正节点：目标退回 1%–4.5% 内最大的负节点
-        deep = [(k, g) for k, g in fuel if (S - k) / S >= min_sp]
-        if not deep:
-            return None, f"下方没有超大正节点，1%–4.5% 内也没有显著负节点可作目标"
-        d = min(deep, key=lambda c: c[1])
-        tgt, tgt_note = d[0], f"目标 = 深渊 {d[0]:g}（下方 4.5% 内没有超大正节点）"
+    if sup is None:                         # 宁缺毋滥：下方没有超大正节点承接就不做（2026-10-20 用户定，删掉负节点兜底）
+        return None, "下方 4.5% 内没有超大正节点承接（宁缺毋滥）"
+    tgt, tgt_note = sup[0], f"目标 = 下方超大正节点 {sup[0]:g}(+{sup[1] / 1e6:.1f}M)"
     space = (S - tgt) / S
     if space < min_sp:
         return None, f"下方空间 {space * 100:.2f}%（{tgt_note}）< {min_sp * 100:.1f}%"
+    ok, path_note, chasm = path_check(cells, S, tgt, gmin)
+    if not ok:
+        return None, path_note
+    pin, pin_note = pin_check(cells, S, tgt, ceil[1])
+    if pin:
+        return None, pin_note
     rr = space / _stop_risk(d_ceil)
     if rr < HW.min_reward_to_risk_ratio:
         return None, f"盈亏比 {rr:.2f} < {HW.min_reward_to_risk_ratio}"
@@ -329,7 +386,7 @@ def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str)
     trigger = "REJECTION_DROP" if d_ceil <= 0.006 else "TREND_PULLBACK_REJECT"
     return Candidate("CLIFF_STRUCTURE", "BEARISH", ceil[0], ceil[1], target, d_ceil, space, rr, trigger,
                      f"天花板 {ceil[0]:g}(+{ceil[1] / 1e6:.1f}M) 距 {d_ceil * 100:.2f}% · 燃料 {chasm[0]:g}({chasm[1] / 1e6:.1f}M) · "
-                     f"{tgt_note} 空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
+                     f"{path_note} · {tgt_note} 空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
 
 
 def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str, frames: list
@@ -346,23 +403,25 @@ def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration
     max_d = HW.max_wall_dist_index if idx else HW.max_wall_dist_stock
     if not (min_d <= d_floor <= max_d):
         return None, f"离踏板 {floor[0]:g} {d_floor * 100:.3f}% 不在 {min_d * 100:.2f}%–{max_d * 100:.1f}%"
+    step = strike_step(cells, S)
+    big = outer_bigger_wall(cells, floor[0], floor[1], step, above=False)
+    if big:
+        return None, (f"踏板 {floor[0]:g}(+{floor[1] / 1e6:.1f}M) 外侧 {OUTER_WALL_STEPS} 格内有更大的正节点 "
+                      f"{big[0]:g}(+{big[1] / 1e6:.1f}M)，价格会被吸下去")
     min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
-    fuel = [(k, g) for k, g in cells if g <= -gmin and k > S and (k - S) / S <= 0.045]
-    if not fuel:
-        return None, "上方 4.5% 内没有显著负节点（靶心 / 燃料）"
-    accel = min(fuel, key=lambda c: c[1])
     res = _next_big_positive(cells, S, floor[1], gmin, below=False)
-    if res is not None:
-        tgt, tgt_note = res[0], f"目标 = 上方超大正节点 {res[0]:g}(+{res[1] / 1e6:.1f}M)"
-    else:
-        deep = [(k, g) for k, g in fuel if (k - S) / S >= min_sp]
-        if not deep:
-            return None, f"上方没有超大正节点，1%–4.5% 内也没有显著负节点可作目标"
-        d = min(deep, key=lambda c: c[1])
-        tgt, tgt_note = d[0], f"目标 = 靶心 {d[0]:g}（上方 4.5% 内没有超大正节点）"
+    if res is None:                         # 宁缺毋滥：上方没有超大正节点就不做
+        return None, "上方 4.5% 内没有超大正节点作目标（宁缺毋滥）"
+    tgt, tgt_note = res[0], f"目标 = 上方超大正节点 {res[0]:g}(+{res[1] / 1e6:.1f}M)"
     space = (tgt - S) / S
     if space < min_sp:
         return None, f"上方空间 {space * 100:.2f}%（{tgt_note}）< {min_sp * 100:.1f}%"
+    ok, path_note, accel = path_check(cells, S, tgt, gmin)
+    if not ok:
+        return None, path_note
+    pin, pin_note = pin_check(cells, S, tgt, floor[1])
+    if pin:
+        return None, pin_note
     rr = space / _stop_risk(d_floor)
     if rr < HW.min_reward_to_risk_ratio:
         return None, f"盈亏比 {rr:.2f} < {HW.min_reward_to_risk_ratio}"
@@ -386,7 +445,7 @@ def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration
     trigger = "REJECTION_BOUNCE" if d_floor <= 0.006 else "TREND_PULLBACK_HOLD"
     return Candidate("SPRINGBOARD_STRUCTURE", "BULLISH", floor[0], floor[1], target, d_floor, space, rr, trigger,
                      f"踏板 {floor[0]:g}(+{floor[1] / 1e6:.1f}M) 距 {d_floor * 100:.2f}% · 燃料 {accel[0]:g}({accel[1] / 1e6:.1f}M) · "
-                     f"{tgt_note} 空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
+                     f"{path_note} · {tgt_note} 空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
 
 
 def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) -> tuple[Candidate | None, str]:
@@ -404,6 +463,9 @@ def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) 
     mid = [(k, g) for k, g in cells if S < k < cw[0] and g > 0.25 * cw[1]]
     if mid:
         return None, f"中间有正墙 {mid[0][0]:g}"
+    pin, pin_note = pin_check(cells, S, cw[0], cw[1])
+    if pin:
+        return None, pin_note
     run = (cw[0] - S) / S
     if not (0.012 <= run <= 0.055):
         return None, f"跑道 {run * 100:.2f}% 不在 1.2%–5.5%"

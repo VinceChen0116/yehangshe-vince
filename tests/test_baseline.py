@@ -44,7 +44,7 @@ def run(spots, cells_seq, ticker="TEST", start="10:00", extra=None):
 
 
 M = 1_000_000
-CLIFF_CELLS = {98.5: -15 * M, 99.5: -3 * M, 100.75: 20 * M, 102.0: 5 * M, 97.0: 2 * M}
+CLIFF_CELLS = {98.0: 10 * M, 98.5: -15 * M, 99.5: -3 * M, 100.75: 20 * M, 102.0: 5 * M, 97.0: 2 * M}
 REJECT_PATH = [100.4, 100.6, 100.8, 100.9, 100.7, 100.5]   # 冲高后回落：5 分钟 −0.2%、15 分钟 −0.4%，开盘 +0.1%
 
 
@@ -123,7 +123,7 @@ class TestCliff(unittest.TestCase):
         self.assertEqual(sig.cand.structure_type, "CLIFF_STRUCTURE")
         self.assertEqual(sig.structure.right, "P")
         self.assertEqual(sig.cand.acting_strike, 100.75)
-        self.assertEqual(sig.target_spot, 98.5)
+        self.assertEqual(sig.target_spot, 98.0)                         # 下方超大正节点（≥ 0.43 × 20M）
         self.assertEqual(sig.cand.trigger, "REJECTION_DROP")              # 离天花板 0.25% ≤ 0.6%
         self.assertAlmostEqual(sig.stop_spot, round(100.5 * 1.008, 2))     # 风险 max(0.8%, 0.25%+0.3%)
         self.assertGreaterEqual(sig.score, 55)
@@ -140,7 +140,7 @@ class TestCliff(unittest.TestCase):
         self.assertReject(REJECT_PATH, {98.5: -15 * M, 97.0: 2 * M}, "上方没有显著正节点")
 
     def test_space(self):
-        self.assertReject(REJECT_PATH, {99.8: -15 * M, 100.75: 20 * M}, "1%–4.5% 内也没有显著负节点可作目标")
+        self.assertReject(REJECT_PATH, {99.8: -15 * M, 100.75: 20 * M}, "没有超大正节点承接（宁缺毋滥）")
         self.assertReject(REJECT_PATH, {99.8: -15 * M, 100.75: 20 * M, 99.9: 15 * M}, "下方空间 0.60%（目标 = 下方超大正节点 99.9")
 
     def test_target_is_next_big_positive(self):
@@ -157,11 +157,11 @@ class TestCliff(unittest.TestCase):
         # 紧贴现价的大负节点（0.3%）是燃料；目标取 1%–4.5% 内最大的负节点
         j, sig, _ = run(REJECT_PATH, {**CLIFF_CELLS, 100.2: -40 * M})
         self.assertIsNotNone(sig, j.last_reason.get("TEST"))
-        self.assertEqual(sig.target_spot, 98.5)
+        self.assertEqual(sig.target_spot, 98.0)
 
     def test_rr(self):
-        cells = {98.8: -15 * M, 101.9: 20 * M}                              # 离墙 1.39% → 风险 1.5%，空间 1.69% → 1.13
-        self.assertReject(REJECT_PATH, cells, "盈亏比 1.13")
+        cells = {98.6: 10 * M, 98.8: -15 * M, 101.9: 20 * M}                # 离墙 1.39% → 风险 1.5%，空间 1.89% → 1.26
+        self.assertReject(REJECT_PATH, cells, "盈亏比 1.26")
 
     def test_floor_block(self):
         self.assertReject(REJECT_PATH, {**CLIFF_CELLS, 100.2: 3 * M}, "下方 0.45% 内有强正地板 100.2")
@@ -177,10 +177,27 @@ class TestCliff(unittest.TestCase):
     def test_no_rejection(self):
         self.assertReject([100.6, 100.5, 100.4, 100.45, 100.5, 100.6], CLIFF_CELLS, "没有受阻回落")
 
+    def test_path_without_negative(self):          # INTC 型：现价到目标之间只有正节点
+        self.assertReject(REJECT_PATH, {100.75: 20 * M, 100.0: 3 * M, 98.0: 10 * M, 96.0: -5 * M}, "之间没有显著负节点")
+
+    def test_path_balance(self):                   # 路径上正负差不多 → 走不动
+        self.assertReject(REJECT_PATH, {100.75: 20 * M, 100.0: 6 * M, 99.0: -8 * M, 98.0: 10 * M}, "不到正节点合计")
+
+    def test_outer_bigger_wall(self):              # TSLA 型：天花板外侧 3 格内有更大的正节点
+        self.assertReject(REJECT_PATH, {**CLIFF_CELLS, 101.25: 30 * M}, "外侧 3 格内有更大的正节点 101.25")
+        j, sig, _ = run(REJECT_PATH, {**CLIFF_CELLS, 102.5: 30 * M})        # 第 3.5 格：不算
+        self.assertIsNotNone(sig, j.last_reason.get("TEST"))
+
+    def test_pin_negative(self):                   # AMD 型：路径上全到期最大负节点 ≥ 3 × 墙
+        self.assertReject(REJECT_PATH, {**CLIFF_CELLS, 100.25: -65 * M}, "可能被钉住")
+
+    def test_no_negative_target_fallback(self):    # META 型：下方没有大正节点 → 宁缺毋滥
+        self.assertReject(REJECT_PATH, {100.75: 20 * M, 99.5: -6 * M, 98.5: -6 * M, 98.0: 4 * M}, "宁缺毋滥")
+
     def test_score_gate(self):
         # 天花板在撤单（节点 DECAYING −16）+ 主正墙 30 分钟内上移且现价走高（MIGRATING_UP，与看跌相反 −12）：
         # 几何与触发都通过，但评分 58 − 16 − 12 = 30 < 55
-        seq = [{**CLIFF_CELLS, 100.75: 40 * M}] * 4 + [{**CLIFF_CELLS, 100.75: 20 * M, 101.5: 30 * M}] * 3
+        seq = [{**CLIFF_CELLS, 100.75: 40 * M}] * 4 + [{**CLIFF_CELLS, 100.75: 20 * M, 103.0: 30 * M}] * 3   # 新主墙在 4.5 格外
         j, sig, _ = run([100.0, 100.2, 100.4, 100.6, 100.8, 100.7, 100.5], seq)
         self.assertIsNone(sig)
         self.assertIn("评分 30 < 55", j.last_reason["TEST"])
@@ -188,7 +205,7 @@ class TestCliff(unittest.TestCase):
         self.assertIn("墙体 MIGRATING_UP", j.last_reason["TEST"])
 
 
-SPRING_CELLS = {99.5: 20 * M, 102.0: -15 * M, 101.0: 3 * M, 98.0: -2 * M}
+SPRING_CELLS = {99.5: 20 * M, 102.0: -15 * M, 101.0: 3 * M, 98.0: -2 * M, 102.5: 10 * M}
 BOUNCE_PATH = [99.5, 99.6, 99.65, 99.7, 99.75, 99.95]
 
 
@@ -198,7 +215,7 @@ class TestSpringboard(unittest.TestCase):
         self.assertIsNotNone(sig, j.last_reason.get("TEST"))
         self.assertEqual(sig.cand.structure_type, "SPRINGBOARD_STRUCTURE")
         self.assertEqual(sig.structure.right, "C")
-        self.assertEqual(sig.target_spot, 102.0)
+        self.assertEqual(sig.target_spot, 102.5)
         self.assertAlmostEqual(sig.stop_spot, round(99.95 * (1 - 0.008), 2))
         self.assertEqual(sig.cand.trigger, "REJECTION_BOUNCE")
 
@@ -206,7 +223,7 @@ class TestSpringboard(unittest.TestCase):
         j, sig, _ = run([99.5, 99.6, 99.65, 99.7, 99.75, 99.8], SPRING_CELLS)   # 贴近踏板、5 分钟只 +0.05%
         self.assertIsNone(sig)
         self.assertIn("也没有反弹", j.last_reason["TEST"])
-        grow = [SPRING_CELLS] * 5 + [{**SPRING_CELLS, 99.5: 26 * M}]
+        grow = [SPRING_CELLS] * 5 + [{**SPRING_CELLS, 99.5: 22 * M}]           # +10% → GROWING
         j, sig, _ = run([99.5, 99.6, 99.65, 99.7, 99.75, 99.8], grow)          # 踏板在变大 → 放行
         self.assertIsNotNone(sig, j.last_reason.get("TEST"))
 
@@ -439,6 +456,15 @@ class TestRealData1019(unittest.TestCase):
     def test_meta_put_rejected(self):
         j, sig = self.judge_at("META", "10:40")
         self.assertIsNone(sig)
+
+    def test_user_review_1020_no_cliff(self):
+        """10/20 用户逐笔复盘指出不该开的 6 笔悬崖：INTC / MU / META / TSLA×2 / AMD。"""
+        for t, lab, why in [("INTC", "09:45", "之间没有显著负节点"), ("MU", "10:00", "可能被钉住"),
+                            ("META", "10:30", "宁缺毋滥"), ("TSLA", "10:35", "更大的正节点 370"),
+                            ("TSLA", "11:15", "更大的正节点 370"), ("AMD", "14:30", "更大的正节点 540")]:
+            j, sig = self.judge_at(t, lab)
+            self.assertFalse(sig is not None and sig.cand.structure_type == "CLIFF_STRUCTURE", f"{t} {lab} 不应是悬崖")
+            self.assertIn(why, j.last_reason[t].split("；")[0], f"{t} {lab}: {j.last_reason[t]}")
 
 
 if __name__ == "__main__":
