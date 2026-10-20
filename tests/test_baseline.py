@@ -363,6 +363,10 @@ class TestExits(unittest.TestCase):
         self.assertIsNone(self.decay_feed(tr, fq, p, now, [18 * M, 19 * M, None, 18 * M], [100.5] * 4))
         tr, fq, p, now = opened()
         self.assertIsNone(self.decay_feed(tr, fq, p, now, [18 * M, 18 * M], [100.5] * 2))   # 持平不算变小
+        tr, fq, p, now = opened()                         # PLTR 型：每根只降 0.5%（< 2%）不算变小
+        self.assertIsNone(self.decay_feed(tr, fq, p, now, [19.9 * M, 19.8 * M], [100.5] * 2))
+        tr, fq, p, now = opened()                         # 刚好降 2% 算
+        self.assertEqual(self.decay_feed(tr, fq, p, now, [19.6 * M, 19.208 * M], [100.5] * 2), 2)
 
     def test_start_node_decay_not_for_squeeze(self):
         tr, fq, p, now = opened(stype="SHORT_GAMMA_VACUUM_SQUEEZE")

@@ -32,6 +32,7 @@ PATH_NEG_RATIO = 1.5                             # 路径上显著负节点合�
 PIN_NEG_MULT = 3.0                               # 路径上全到期最大负节点 ≥ 3 × 墙 → 不开（2026-10-20 用户定）
 BIG_NODE_RATIO = 0.43                            # "超大正节点" = GEX ≥ 0.43 × 起作用墙（2026-10-20 用户定；文档中间关卡仍是 0.45）
 INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0DTE / 最近周度；15:00 后是尾盘隔夜模式
+DECAY_MIN_DROP = 0.02                            # 每根比上一根至少小 2% 才算"变小"（2026-10-20 用户定）
 DECAY_RULES = ((2, 0.20, "START_NODE_DECAY_10M"), (4, 0.30, "START_NODE_DECAY_20M"))   # 起始点衰减截断：(连续变小根数, 进度上限, 原因)
 
 BASELINE_NOTES = """
@@ -69,6 +70,7 @@ BASELINE_NOTES = """
 17. 起始点衰减截断（2026-10-20 用户定，只限悬崖 / 跳板；默认 8/10/25 分钟截断原样保留，逼空不适用）：持仓期间每根新 Heatmap
     看起始点（天花板 / 踏板）GEX：连续 2 根变小（10 分钟）且期间最远进度 < 20%，或连续 4 根变小（20 分钟）且 < 30% → 截断。
     进度 = 现价从开仓价朝目标走的距离 ÷ |起始点 − 目标|；序列从开仓那根算起，这根里没有该行权价 → 连续中断。
+    "变小" = 比上一根至少小 2%（持平或降幅 <2% 都不算，连续中断）。
 """
 
 
@@ -755,7 +757,7 @@ class BaselineTrader(PaperTrader):
 
     def on_frame(self, p: Position, fr: Frame, spot: float, now_et: dt.datetime) -> Position | None:
         """持仓期间每来一根新 Heatmap（2026-10-20 用户定，只限悬崖 / 跳板，默认 8/10/25 分钟截断照旧）：
-        起始点（天花板 / 踏板）GEX 连续 2 根变小（10 分钟）且期间最远进度 < 20%，或连续 4 根变小（20 分钟）且 < 30% → 截断。
+        起始点（天花板 / 踏板）GEX 连续 2 根变小（每根比上一根小 ≥ 2%；10 分钟）且期间最远进度 < 20%，或连续 4 根变小（20 分钟）且 < 30% → 截断。
         进度 = 现价从开仓价朝目标走的距离 ÷ |起始点 − 目标|。这根里没有起始点行权价 → 连续中断（不算变小）。"""
         dk = self.decay.get(p.position_id)
         if not dk or not p.is_open:
@@ -765,7 +767,7 @@ class BaselineTrader(PaperTrader):
         seq = dk["gex"]
         run = 0
         for a, b in zip(seq[::-1][1:], seq[::-1]):     # 从最新往回数连续变小的根数
-            if a is None or b is None or not b < a:
+            if a is None or b is None or not (a - b) >= DECAY_MIN_DROP * abs(a) > 0:
                 break
             run += 1
         for n, lim, reason in DECAY_RULES:
