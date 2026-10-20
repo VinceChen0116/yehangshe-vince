@@ -90,6 +90,9 @@ class TestLayer2(unittest.TestCase):
         newc = {**base, 101.5: 9 * M}
         j, _, _ = run(REJECT_PATH, [base] * 5 + [newc])
         self.assertEqual(B.node_growth(j.frames["TEST"], 101.5), "NEW")
+        back = [newc] + [base] * 4 + [newc]                   # 以前出现过又消失：不算 NEW
+        j, _, _ = run(REJECT_PATH, back)
+        self.assertEqual(B.node_growth(j.frames["TEST"], 101.5), "UNKNOWN")
         j, _, _ = run([100.5, 100.6], base)
         self.assertEqual(B.node_growth(j.frames["TEST"], 100.75), "UNKNOWN")   # 没有 9–27 分钟前的快照
 
@@ -137,7 +140,13 @@ class TestCliff(unittest.TestCase):
         self.assertReject(REJECT_PATH, {98.5: -15 * M, 97.0: 2 * M}, "上方没有显著正节点")
 
     def test_space(self):
-        self.assertReject(REJECT_PATH, {99.8: -15 * M, 100.75: 20 * M}, "下方空间 0.70%")
+        self.assertReject(REJECT_PATH, {99.8: -15 * M, 100.75: 20 * M}, "只有贴着现价的负节点 99.8")
+
+    def test_chasm_skips_adjacent_negative(self):
+        # 紧贴现价的大负节点（0.3%）是燃料；目标取 1%–4.5% 内最大的负节点
+        j, sig, _ = run(REJECT_PATH, {**CLIFF_CELLS, 100.2: -40 * M})
+        self.assertIsNotNone(sig, j.last_reason.get("TEST"))
+        self.assertEqual(sig.target_spot, 98.5)
 
     def test_rr(self):
         cells = {98.8: -15 * M, 101.9: 20 * M}                              # 离墙 1.39% → 风险 1.5%，空间 1.69% → 1.13

@@ -32,12 +32,13 @@ INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0
 BASELINE_NOTES = """
 【解读】清单（文档没写死的地方，按以下方式实现；要改告诉我）：
 1. 天花板 / 地板 = 现价上方 / 下方"最近的"显著正节点（GEX ≥ G_min）；不是全天最大的那个。
-2. 悬崖的深渊 / 跳板的靶心 = 现价下方 / 上方 4.5% 内绝对值最大的显著负节点；"下方/上方空间" = 现价到它的距离。
+2. 悬崖的深渊 / 跳板的靶心（= 目标位）= 现价下方 / 上方 1.0%–4.5%（指数 0.4%–4.5%）内绝对值最大的显著负节点；
+   紧贴现价、不到 1% 的负节点是"燃料"不是目标（10/20 修正：之前取 4.5% 内最大的，MU 这类紧贴的负节点会把信号挡掉）。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
    （中间关卡 ≥1.0% 时改为关卡行权价）。逼空 / 雪崩没有墙，风险距离取最小 0.8%。
 4. 中间关卡在 0.40%–1.0% 之间：不否决、不改目标（文档只写了 <0.40% 与 ≥1.0% 两种情况）。
-5. 节点 15 分钟演化：取 9–26.7 分钟前、最接近 15 分钟的那根快照比较；那根里没有这个行权价且当天已满 3 根 → NEW；
-   没有可比较的快照 → UNKNOWN（不加不减分）。
+5. 节点 15 分钟演化：当天满 3 根后第一次出现 → NEW；否则取 9–26.7 分钟前、最接近 15 分钟的那根比较；
+   没有可比较的快照（或那根里暂时没有这个行权价）→ UNKNOWN（不加不减分）。
 6. 墙体 30 分钟迁移：取 10–35 分钟前、最接近 30 分钟的那根快照；WHIPSAW = 最近 6 根里主正墙有 ≥2 次幅度 >0.3% 的跳动且有上有下。
 7. 5 分钟涨跌 = 对比上一根（Δt ≥ 180 秒）；15 分钟涨跌 = 11–25 分钟前、最接近 15 分钟的那根；VWAP = 当天已采集快照现价的均值。
    15 分钟涨跌还没有（开盘不足 15 分钟）就不出信号。
@@ -137,12 +138,15 @@ def node_growth(frames: list, strike: float) -> str:
     g_now = dict(cur.cells).get(strike)
     if g_now is None:
         return "UNKNOWN"
+    earlier = [f for f in frames[:-1] if f.exp == cur.exp]
+    if len(frames) >= 3 and earlier and all(strike not in dict(f.cells) for f in earlier):
+        return "NEW"                      # 当天满 3 根后第一次挤进 Top-10 榜单
     ref = _pick(frames[:-1], cur.t, 540, 1600, 900)
     if ref is None or ref.exp != cur.exp:
         return "UNKNOWN"
     g_prev = dict(ref.cells).get(strike)
     if g_prev is None:
-        return "NEW" if len(frames) >= 3 else "UNKNOWN"
+        return "UNKNOWN"                  # 以前出现过、15 分钟前那根暂时不在榜单里：无法比较
     g = (abs(g_now) - abs(g_prev)) / (abs(g_prev) + 1e-6) * 100
     if g >= HW.node_growing_threshold_pct:
         return "GROWING"
@@ -268,14 +272,14 @@ def find_cliff(ticker: str, fr: Frame, cx: Context, gmin: float, migration: str)
     min_d = HW.min_dist_cliff_index if idx else HW.min_dist_cliff_stock
     if not (min_d <= d_ceil <= max_d):
         return None, f"离天花板 {ceil[0]:g} {d_ceil * 100:.3f}% 不在 {min_d * 100:.2f}%–{max_d * 100:.1f}%"
-    chasms = [(k, g) for k, g in cells if g <= -gmin and k < S and (S - k) / S <= 0.045]
+    min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
+    chasms = [(k, g) for k, g in cells if g <= -gmin and k < S and min_sp <= (S - k) / S <= 0.045]
     if not chasms:
-        return None, "下方 4.5% 内没有显著负节点（深渊）"
+        near = [k for k, g in cells if g <= -gmin and k < S and (S - k) / S < min_sp]
+        return None, (f"下方 {min_sp * 100:.1f}%–4.5% 没有显著负节点（深渊）"
+                      + (f"；只有贴着现价的负节点 {', '.join(f'{k:g}' for k in near)}" if near else ""))
     chasm = min(chasms, key=lambda c: c[1])
     space = (S - chasm[0]) / S
-    min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
-    if space < min_sp:
-        return None, f"下方空间 {space * 100:.2f}%（到深渊 {chasm[0]:g}）< {min_sp * 100:.1f}%"
     rr = space / _stop_risk(d_ceil)
     if rr < HW.min_reward_to_risk_ratio:
         return None, f"盈亏比 {rr:.2f} < {HW.min_reward_to_risk_ratio}"
@@ -315,14 +319,14 @@ def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration
     max_d = HW.max_wall_dist_index if idx else HW.max_wall_dist_stock
     if not (min_d <= d_floor <= max_d):
         return None, f"离踏板 {floor[0]:g} {d_floor * 100:.3f}% 不在 {min_d * 100:.2f}%–{max_d * 100:.1f}%"
-    accels = [(k, g) for k, g in cells if g <= -gmin and k > S and (k - S) / S <= 0.045]
+    min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
+    accels = [(k, g) for k, g in cells if g <= -gmin and k > S and min_sp <= (k - S) / S <= 0.045]
     if not accels:
-        return None, "上方 4.5% 内没有显著负节点（靶心）"
+        near = [k for k, g in cells if g <= -gmin and k > S and (k - S) / S < min_sp]
+        return None, (f"上方 {min_sp * 100:.1f}%–4.5% 没有显著负节点（靶心）"
+                      + (f"；只有贴着现价的负节点 {', '.join(f'{k:g}' for k in near)}" if near else ""))
     accel = min(accels, key=lambda c: c[1])
     space = (accel[0] - S) / S
-    min_sp = HW.min_target_space_index if idx else HW.min_target_space_stock
-    if space < min_sp:
-        return None, f"上方空间 {space * 100:.2f}%（到靶心 {accel[0]:g}）< {min_sp * 100:.1f}%"
     rr = space / _stop_risk(d_floor)
     if rr < HW.min_reward_to_risk_ratio:
         return None, f"盈亏比 {rr:.2f} < {HW.min_reward_to_risk_ratio}"
