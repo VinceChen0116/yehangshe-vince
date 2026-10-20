@@ -16,7 +16,7 @@ A = [("QQQ","P",728,706),("AMD","C",567.5,-1125),("SPY","P",772,-328),("TSLA","C
      ("MRVL","C",242.5,-798),("SKHY","C",147,-908),("TSM","C",422.5,-782),("CSCO","C",110,-756),("AMAT","C",432.5,-932)]
 nights = [(D(2026,10,15), D(2026,10,16), [(t, r, k, "2026-10-16", p) for t, r, k, p in A], "复算")]
 for P, S in ((D(2026,10,16), D(2026,10,19)), (D(2026,10,19), D(2026,10,20))):
-    rows = list(csv.DictReader(open(f"live/overnight_{P}.csv")))
+    rows = [r for r in csv.DictReader(open(f"live/overnight_{P}.csv")) if not r["status"].startswith("SHADOW")]
     nights.append((P, S, [(r["ticker"], r["right"], float(r["strike"]), r["expiration"], float(r["pnl_usd"])) for r in rows], "实盘"))
 
 

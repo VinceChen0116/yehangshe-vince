@@ -121,8 +121,7 @@ def use_live_expiry():
 
 
 def confirm_ok(cfg, day: dt.date, ticker: str, r, label: str) -> bool:
-    """再看一根（如标记 15:50，数据约 15:55）：现价没有比确认那根往反方向走、也没越过天花板 / 踏板才算确认。
-    悬崖：现价没往上、仍在天花板下；跳板：现价没往下、仍在踏板上。那根拿不到 = 不确认（宁缺毋滥）。"""
+    """再看一根（如标记 15:50，数据约 15:55）：用实盘的 overnight_live.confirm_bar_ok 判定。那根拿不到 = 不确认（宁缺毋滥）。"""
     exp, snap, st, _ = r
     rows = bt.load_archived_heatmap(cfg, day, ticker, exp)
     frames = rows_to_frames(ticker, day, exp, rows or [])
@@ -130,9 +129,8 @@ def confirm_ok(cfg, day: dt.date, ticker: str, r, label: str) -> bool:
     s = parse_heatmap(frames[k], cfg, day) if k else None
     if s is None:
         return False
-    if st.structure == "CLIFF":
-        return s.spot <= snap.spot and s.spot <= st.pos_strike
-    return s.spot >= snap.spot and s.spot >= st.pos_strike
+    from overnight_live import confirm_bar_ok   # 与实盘同一个判定（含 0.05% 容差）
+    return confirm_bar_ok(st, snap.spot, s.spot)[0]
 
 
 def side_notional(day: dt.date) -> dict:

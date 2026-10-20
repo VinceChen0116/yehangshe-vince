@@ -44,6 +44,22 @@ BUDGET, BUDGET_BAND = 1000.0, 0.25   # 每笔目标投入 $1,000，允许 $750�
 SAME_COMPANY = (("GOOG", "GOOGL"),)   # 同一家公司的不同股票类别：方向冲突就都不开（2026-10-20 用户定）
 
 
+def confirm_bar_ok(st, prev_spot: float, spot: float) -> tuple[bool, str]:
+    """再确认（15:50 那根）：现价往反方向走不超过 CONFIRM_TOL、且没越过天花板 / 踏板才算确认。返回 (是否通过, 说明)。
+    悬崖（买 Put）：反方向 = 往上，越过 = 现价 > 天花板；跳板（买 Call）：反方向 = 往下，越过 = 现价 < 踏板。"""
+    if st.structure == "CLIFF":
+        if spot > st.pos_strike:
+            return False, f"现价 {spot:.2f} 已越过天花板 {st.pos_strike:g}"
+        if spot > prev_spot * (1 + CONFIRM_TOL):
+            return False, f"现价 {prev_spot:.2f}→{spot:.2f} 往上（反向）{(spot / prev_spot - 1) * 100:.2f}%"
+    else:
+        if spot < st.pos_strike:
+            return False, f"现价 {spot:.2f} 已跌破踏板 {st.pos_strike:g}"
+        if spot < prev_spot * (1 - CONFIRM_TOL):
+            return False, f"现价 {prev_spot:.2f}→{spot:.2f} 往下（反向）{(1 - spot / prev_spot) * 100:.2f}%"
+    return True, ""
+
+
 def drop_conflicts(cands: list, ticker, right) -> tuple[list, list]:
     """同一家公司（SAME_COMPANY）的候选一个看涨一个看跌 = 方向不明，全部去掉。返回 (保留, 去掉的代码)。
     ticker / right：从候选元组取代码与 C/P 的函数（实盘与回测的元组结构不同）。"""
@@ -72,14 +88,19 @@ def size_contracts(price: float) -> int:
 FLOW_MIN_PREMIUM = 50000
 FLOW_SINCE = "15:00"   # 只看尾盘的同向大单
 MAX_SPREAD = 0.25      # (ask - bid) / 中间价 超过 25% 不开：一买一卖先亏掉价差
-PRESCAN_START, OPEN_DEADLINE = "15:15", "15:57"
+PRESCAN_START, OPEN_DEADLINE = "15:15", "15:58"   # 10/20 起 15:50 那根再确认后才买，截止放宽到 15:58
 BAR1, BAR2 = "15:40", "15:45"   # 两根确认用的 Heatmap；标记 T 的段约 T+5:10 才可用
 SCAN1_AT, SCAN2_AT = dt.timedelta(hours=15, minutes=45, seconds=15), dt.timedelta(hours=15, minutes=50, seconds=15)
+BAR3, SCAN3_AT = "15:50", dt.timedelta(hours=15, minutes=55, seconds=15)   # 再确认那根（数据约 15:55），确认后约 15:56 买
+CONFIRM_TOL = 0.0005   # 再确认：反向不超过现价 0.05% 且没越过天花板 / 踏板（2026-10-20 用户定）
 FLOW_UNTIL = "15:50"   # 大单统计截止（与回测一致）
 SELL_START, SELL_DEADLINE = "09:35", "09:45"
 FIELDS = ["position_id", "open_date", "ticker", "structure", "node_mode", "right", "contract", "expiration", "strike", "qty",
           "spot", "pos_node", "neg_node", "dist_pct", "flow_n", "flow_usd", "flow_max", "entry_time", "entry_bid",
-          "entry_ask", "entry_price", "exit_time", "exit_bid", "exit_price", "exit_note", "pnl_usd", "roi_pct", "status"]
+          "entry_ask", "entry_price", "exit_time", "exit_bid", "exit_price", "exit_note", "pnl_usd", "roi_pct", "status",
+          "shadow_reason"]
+# status：OPEN / CLOSED = 真实（模拟）仓；SHADOW_OPEN / SHADOW_CLOSED = 影子仓：没有新规则时本会开、被规则删掉的单子，
+# 同样按实时 ask 记买入、次日按 bid 平，只用来检验规则（不计入隔夜盈亏），shadow_reason 写被哪条规则删掉
 
 
 def ledger_path(day: dt.date) -> str:
@@ -282,57 +303,98 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
         if fl["n"]:
             cands.append((fl["usd"], t, exps[t], snap, st, mode, fl))
     cands.sort(key=lambda x: -x[0])
+    all_cands = list(cands)   # 没有新规则时的候选：影子仓（被规则删掉的单子）从这里选
     cands, dropped = drop_conflicts(cands, lambda c: c[1], lambda c: c[4].right)
+    reasons = {t: "同一家公司方向相反" for t in dropped}
     if dropped:
         log.info("【隔夜·放弃】%s 是同一家公司、方向相反，都不开", "、".join(dropped))
-    log.info("【隔夜·候选】结构 + 大单都满足 %d 个：%s", len(cands), "、".join(c[1] for c in cands) or "无")
-    rows, quotes = [], QuoteBook(client)
-    sec_n = {}
-    for usd, t, exp, snap, st, mode, fl in cands:
-        if len(rows) >= MAX_POSITIONS:
-            break
-        sec = sector_of(t)
-        if sec_n.get(sec, 0) >= MAX_PER_SECTOR:
-            log.info("【隔夜·跳过】%s 同板块（%s）已 %d 笔", t, sec, MAX_PER_SECTOR)
-            continue
-        K = first_otm(snap, st.right)
-        if K is None:
-            continue
-        sym = occ_symbol(t, exp, st.right, K)
-        q = quotes.get(sym)
-        if not q or q["ask"] <= 0 or q["bid"] <= 0:
-            log.warning("【隔夜·放弃】%s %s 没有报价或 bid 为 0，不开", t, sym)
-            continue
-        if q["ask"] < cfg.min_option_price:
-            continue
-        spread = (q["ask"] - q["bid"]) / ((q["ask"] + q["bid"]) / 2)
-        if spread > MAX_SPREAD:
-            log.warning("【隔夜·放弃】%s %s 买卖价差 %.0f%%（bid %.2f / ask %.2f）> %.0f%%，不开", t, sym, spread * 100,
-                        q["bid"], q["ask"], MAX_SPREAD * 100)
-            continue
-        qty = size_contracts(q["ask"])
-        if not qty:
-            log.warning("【隔夜·放弃】%s %s 单张 $%.0f 超过每笔上限 $%.0f，不开", t, sym, q["ask"] * 100, BUDGET * (1 + BUDGET_BAND))
-            continue
-        rows.append({"position_id": f"ON{day.strftime('%Y%m%d')}-{len(rows) + 1:02d}", "open_date": day.isoformat(), "qty": qty,
-                     "ticker": t, "structure": st.structure, "node_mode": mode, "right": st.right, "contract": sym,
-                     "expiration": exp, "strike": K, "spot": round(snap.spot, 2), "pos_node": st.pos_strike,
-                     "neg_node": st.neg_strike, "dist_pct": round(st.distance_pct * 100, 2), "flow_n": fl["n"],
-                     "flow_usd": fl["usd"], "flow_max": fl["max"], "entry_time": et_now().strftime("%H:%M"),
-                     "entry_bid": q["bid"], "entry_ask": q["ask"], "entry_price": q["ask"], "status": "OPEN"})
-        sec_n[sec] = sec_n.get(sec, 0) + 1
-        log.info("【隔夜·开仓】%s %s %s × %d 张 | ask %.2f（bid %.2f）投入 $%.0f | 大单 %d 笔 $%.0fK", rows[-1]["position_id"],
-                 t, sym, qty, q["ask"], q["bid"], q["ask"] * 100 * qty, fl["n"], fl["usd"] / 1e3)
+    # 再确认（15:55:15 起看标记 15:50 的那根）：反向超过 0.05% 或越过天花板 / 踏板就不开
+    if cands:
+        wait_until(base + SCAN3_AT)
+        kept = []
+        for c in cands:
+            t, exp, snap, st = c[1], c[2], c[3], c[4]
+            s3 = None
+            try:
+                frames = rows_to_frames(t, day, exp, fetch_heatmap_rows(client, t, exp, day, max_pages=1, start="15:25"))
+                k = next((k for k in frames if k.strftime("%H:%M") == BAR3), None)
+                s3 = parse_heatmap(frames[k], cfg, day) if k else None
+            except Exception as e:
+                log.info("%s Heatmap 获取失败：%s", t, e)
+            ok, why = confirm_bar_ok(st, snap.spot, s3.spot) if s3 else (False, f"{BAR3} 那根拿不到")
+            if ok:
+                kept.append(c)
+            else:
+                reasons[t] = f"{BAR3} 再确认未通过：{why}"
+                log.info("【隔夜·再确认】%s 不开：%s", t, why)
+        cands = kept
+    log.info("【隔夜·候选】结构 + 大单 + %s 再确认都满足 %d 个：%s", BAR3, len(cands), "、".join(c[1] for c in cands) or "无")
+    quotes = QuoteBook(client)
+
+    def pick(clist, prefix: str, verbose: bool) -> list:
+        """按排序依次过板块 / 报价 / 价差 / 张数，最多 MAX_POSITIONS 笔。"""
+        out, sec_n = [], {}
+        say = log.info if verbose else log.debug
+        warn = log.warning if verbose else log.debug
+        for usd, t, exp, snap, st, mode, fl in clist:
+            if len(out) >= MAX_POSITIONS:
+                break
+            sec = sector_of(t)
+            if sec_n.get(sec, 0) >= MAX_PER_SECTOR:
+                say("【隔夜·跳过】%s 同板块（%s）已 %d 笔", t, sec, MAX_PER_SECTOR)
+                continue
+            K = first_otm(snap, st.right)
+            if K is None:
+                continue
+            sym = occ_symbol(t, exp, st.right, K)
+            q = quotes.get(sym)
+            if not q or q["ask"] <= 0 or q["bid"] <= 0:
+                warn("【隔夜·放弃】%s %s 没有报价或 bid 为 0，不开", t, sym)
+                continue
+            if q["ask"] < cfg.min_option_price:
+                continue
+            spread = (q["ask"] - q["bid"]) / ((q["ask"] + q["bid"]) / 2)
+            if spread > MAX_SPREAD:
+                warn("【隔夜·放弃】%s %s 买卖价差 %.0f%%（bid %.2f / ask %.2f）> %.0f%%，不开", t, sym, spread * 100,
+                     q["bid"], q["ask"], MAX_SPREAD * 100)
+                continue
+            qty = size_contracts(q["ask"])
+            if not qty:
+                warn("【隔夜·放弃】%s %s 单张 $%.0f 超过每笔上限 $%.0f，不开", t, sym, q["ask"] * 100, BUDGET * (1 + BUDGET_BAND))
+                continue
+            out.append({"position_id": f"{prefix}{day.strftime('%Y%m%d')}-{len(out) + 1:02d}", "open_date": day.isoformat(),
+                        "qty": qty, "ticker": t, "structure": st.structure, "node_mode": mode, "right": st.right,
+                        "contract": sym, "expiration": exp, "strike": K, "spot": round(snap.spot, 2),
+                        "pos_node": st.pos_strike, "neg_node": st.neg_strike, "dist_pct": round(st.distance_pct * 100, 2),
+                        "flow_n": fl["n"], "flow_usd": fl["usd"], "flow_max": fl["max"],
+                        "entry_time": et_now().strftime("%H:%M"), "entry_bid": q["bid"], "entry_ask": q["ask"],
+                        "entry_price": q["ask"], "status": "OPEN"})
+            sec_n[sec] = sec_n.get(sec, 0) + 1
+            say("【隔夜·开仓】%s %s %s × %d 张 | ask %.2f（bid %.2f）投入 $%.0f | 大单 %d 笔 $%.0fK", out[-1]["position_id"],
+                t, sym, qty, q["ask"], q["bid"], q["ask"] * 100 * qty, fl["n"], fl["usd"] / 1e3)
+        return out
+
+    rows = pick(cands, "ON", True)
+    # 影子仓：没有"同公司冲突 / 15:50 再确认"两条规则时本会开、现在被删掉的单子（同样按此刻 ask 记，次日按 bid 平）
+    real = {r["ticker"] for r in rows}
+    shadow = [r for r in pick(all_cands, "SH", False) if r["ticker"] not in real]
+    for r in shadow:
+        r.update({"status": "SHADOW_OPEN", "shadow_reason": reasons.get(r["ticker"], "")})
+        log.info("【隔夜·影子】%s %s × %d 张 | ask %.2f | 被删原因：%s", r["ticker"], r["contract"], r["qty"],
+                 r["entry_price"], r["shadow_reason"] or "（名额顺序变化）")
     if not dry:
-        write_ledger(day, rows)
+        write_ledger(day, rows + shadow)
     if notifier and not dry:
         lines = [f"{'🟢 Call' if r['right'] == 'C' else '🔴 Put'} **{r['ticker']}** {r['strike']:g}{r['right']} {r['expiration'][5:]}"
                  f" ×{r['qty']} @ ${r['entry_price']:.2f}（${r['entry_price'] * 100 * r['qty']:,.0f}）| {'局部' if r['node_mode'] == 'local' else '全局'}"
                  f"{'跳板' if r['structure'] == 'SPRINGBOARD' else '悬崖'} {r['pos_node']:g}→{r['neg_node']:g}"
                  f" | 大单 {r['flow_n']} 笔 ${r['flow_usd'] / 1e3:,.0f}K" for r in rows]
+        if shadow:
+            lines += ["", f"👻 被规则删掉的 {len(shadow)} 笔（影子仓，次日同样平仓对照，不计盈亏）："]
+            lines += [f"· {r['ticker']} {r['strike']:g}{r['right']} ×{r['qty']} @ ${r['entry_price']:.2f} — {r['shadow_reason']}" for r in shadow]
         notifier.send(embeds=[{"title": f"🌙 {day} 隔夜单开仓 {len(rows)} 笔（次日 09:35–09:45 跳空平仓）",
-                               "color": 0x5865F2, "description": "\n".join(lines) or "今晚没有同时满足结构 + 大单的标的，不开仓",
-                               "footer": {"text": "隔夜模拟盘 · 每笔 1 张 · 按实时 ask 买入 · 与日内账户分开记账"}}])
+                               "color": 0x5865F2, "description": "\n".join(lines) or "今晚没有同时满足结构 + 大单 + 再确认的标的，不开仓",
+                               "footer": {"text": "隔夜模拟盘 · 按实时 ask 买入 · 与日内账户分开记账"}}])
     log.info("【隔夜】开仓 %d 笔；配额剩余 %s", len(rows), client.quota_remaining)
     return 0
 
@@ -344,7 +406,7 @@ def do_close(cfg, client, notifier, day: dt.date, dry: bool) -> int:
         return 0
     with open(ledger_path(pday), encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
-    open_rows = [r for r in rows if r["status"] == "OPEN"]
+    open_rows = [r for r in rows if r["status"] in ("OPEN", "SHADOW_OPEN")]
     if not open_rows:
         return 0
     wait_until(et_datetime(day, SELL_START))
@@ -361,23 +423,32 @@ def do_close(cfg, client, notifier, day: dt.date, dry: bool) -> int:
                 r.update({"exit_time": et_now().strftime("%H:%M"), "exit_bid": bid, "exit_price": bid,
                           "exit_note": "" if bid > 0 else ("09:45 仍无报价，按 0 记" if not q else "09:45 bid 为 0"),
                           "pnl_usd": round((bid - entry) * 100 * int(r.get("qty") or 1), 2), "roi_pct": round((bid / entry - 1) * 100, 1),
-                          "status": "CLOSED"})
+                          "status": "SHADOW_CLOSED" if r["status"] == "SHADOW_OPEN" else "CLOSED"})
                 open_rows.remove(r)
-                log.info("【隔夜·平仓】%s %s %s | 买 %.2f → 卖 %.2f | %+.1f%% $%+.0f", r["position_id"], r["ticker"],
+                log.info("【隔夜·%s】%s %s %s | 买 %.2f → 卖 %.2f | %+.1f%% $%+.0f",
+                         "影子平仓" if r["status"] == "SHADOW_CLOSED" else "平仓", r["position_id"], r["ticker"],
                          r["contract"], entry, bid, float(r["roi_pct"]), float(r["pnl_usd"]))
         if open_rows:
             time.sleep(60)
     if not dry:
         write_ledger(pday, rows)
-    total = sum(float(r["pnl_usd"] or 0) for r in rows)
+    real = [r for r in rows if not r["status"].startswith("SHADOW")]
+    shadow = [r for r in rows if r["status"].startswith("SHADOW")]
+    total = sum(float(r["pnl_usd"] or 0) for r in real)
+    stotal = sum(float(r["pnl_usd"] or 0) for r in shadow)
     if notifier and not dry:
-        lines = [f"{'✅' if float(r['pnl_usd']) > 0 else '❌'} **{r['ticker']}** {float(r['strike']):g}{r['right']}"
-                 f" ×{r.get('qty') or 1} ${float(r['entry_price']):.2f} → ${float(r['exit_price']):.2f}（{float(r['roi_pct']):+.0f}%，"
-                 f"${float(r['pnl_usd']):+,.0f}）{r['exit_time']}" for r in rows]
-        notifier.send(embeds=[{"title": f"☀️ {pday} 隔夜单平仓：{len(rows)} 笔，合计 ${total:+,.0f}",
+        fmt = lambda r: (f"{'✅' if float(r['pnl_usd']) > 0 else '❌'} **{r['ticker']}** {float(r['strike']):g}{r['right']}"
+                         f" ×{r.get('qty') or 1} ${float(r['entry_price']):.2f} → ${float(r['exit_price']):.2f}（{float(r['roi_pct']):+.0f}%，"
+                         f"${float(r['pnl_usd']):+,.0f}）{r['exit_time']}")
+        lines = [fmt(r) for r in real]
+        if shadow:
+            lines += ["", f"👻 被规则删掉的 {len(shadow)} 笔（影子仓，不计盈亏）：合计 ${stotal:+,.0f}"]
+            lines += [fmt(r) + f" — {r.get('shadow_reason') or ''}" for r in shadow]
+        notifier.send(embeds=[{"title": f"☀️ {pday} 隔夜单平仓：{len(real)} 笔，合计 ${total:+,.0f}",
                                "color": 0x2ECC71 if total >= 0 else 0xE74C3C, "description": "\n".join(lines),
                                "footer": {"text": "隔夜模拟盘 · 按实时 bid 卖出 · 09:35–09:45"}}])
-    log.info("【隔夜】%s 的隔夜仓已全部平仓，合计 $%+.0f；配额剩余 %s", pday, total, client.quota_remaining)
+    log.info("【隔夜】%s 的隔夜仓已全部平仓，合计 $%+.0f；影子仓 %d 笔合计 $%+.0f；配额剩余 %s", pday, total, len(shadow),
+             stotal, client.quota_remaining)
     return 0
 
 
