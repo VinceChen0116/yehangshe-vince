@@ -1,0 +1,60 @@
+# Baseline 实盘实现说明（2026-10-20 起日内实盘规则）
+
+依据：`docs/AGENT_REPRODUCTION_BLUEPRINT_HEATMAP_AND_TPSL.md`（文字规则）+ `strategy_core_spec.py`（参考代码）。
+实现：`baseline.py`（判定 + 交易 + 引擎），`baseline_frames.py`（存档 → 多到期快照），`baseline_replay.py`（真实回放）。
+开关：`config.intraday_rules = "baseline"`（默认）/ `"legacy"`（旧规则，只做回测对照）。隔夜单（overnight_live.py）不受影响。
+
+## 1. 与参考实现的对应
+
+| 文档模块 | 实现 | 说明 |
+|---|---|---|
+| 1.2 G_min、指数/个股阈值 | `min_gex()`、`is_index()` | 指数 = SPX/SPXW/NDX/QQQ（文档原文；SPY 按个股） |
+| 1.3 第一层 局部 Gamma 环境 | `strategy_core_spec.compute_local_gamma_regime()` | 原函数直接调用 |
+| 1.4 第二层 节点 15m 演化 | `node_growth()` | ±8% / −10% 阈值取自 HeatmapWeights |
+| 1.4 第二层 墙体 30m 迁移 | `wall_migration()` | MIGRATING_UP/DOWN/WHIPSAW/STABLE |
+| 1.5 衰竭拦截 | `BaselineJudge.evaluate()` | ±6.5%、0.25% 反弹 |
+| 1.5 悬崖 / 跳板 / 逼空 / 雪崩 | `find_cliff/find_springboard/find_squeeze/find_avalanche` | 钉盘只限 SPX 且无方向，不开仓 |
+| 1.5 中间关卡 | `_gatekeeper()` | <0.40% 否决、≥1.0% 改目标 |
+| 1.6 综合评分 | `strategy_core_spec.compute_structure_confirmation_score()` | 原函数；≥55 放行，多个原型同时成立取最高分 |
+| 2.2–2.5 出场 | `strategy_core_spec.evaluate_exit_tick()` | 原函数，在 `BaselineTrader.mark()` 每次盯市调用 |
+
+## 2. 盯市频率与价格
+
+* 开仓扫描：每 5 分钟一根 Heatmap（API 实测 5 分钟更新）；按实时 ask 买（bid 为 0 或没有实时报价不开，沿用原规则）。
+* 出场：每次 Heatmap 轮询 + 两次扫描之间每分钟（`position_mark_min=1`）。
+  * 期权价 = 实时 bid（能卖出的价格），收益率对比开仓成本（ask）。
+  * 现价 = 同行权价 Call/Put 实时报价平价反推（K + C_mid − P_mid），拿不到时用最近一根 Heatmap 现价。
+* 回放：价格用真实 IV + 真实标的价 BS（或真实成交），开平各扣当时真实 NBBO 半价差；现价用该合约 1 分钟 greeks 里的真实标的价。
+
+## 3. 【解读】清单（文档没写死的地方）
+
+见 `baseline.BASELINE_NOTES`（同步打印在下方）。
+
+```
+1. 天花板 / 地板 = 现价上方 / 下方"最近的"显著正节点（GEX ≥ G_min）；不是全天最大的那个。
+2. 悬崖的深渊 / 跳板的靶心 = 现价下方 / 上方 4.5% 内绝对值最大的显著负节点；"下方/上方空间" = 现价到它的距离。
+3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
+   （中间关卡 ≥1.0% 时改为关卡行权价）。逼空 / 雪崩没有墙，风险距离取最小 0.8%。
+4. 中间关卡在 0.40%–1.0% 之间：不否决、不改目标。
+5. 节点 15 分钟演化：取 9–26.7 分钟前、最接近 15 分钟的那根快照比较；那根里没有这个行权价且当天已满 3 根 → NEW；没有可比较的快照 → UNKNOWN（不加不减分）。
+6. 墙体 30 分钟迁移：取 10–35 分钟前、最接近 30 分钟的那根；WHIPSAW = 最近 6 根里主正墙 ≥2 次幅度 >0.3% 的跳动且有上有下。
+7. 5 分钟涨跌 = 对比上一根；15 分钟涨跌 = 11–25 分钟前、最接近 15 分钟的那根；VWAP = 当天已采集快照现价均值。没有 15 分钟数据不出信号。
+8. 跳板"已放量反弹"没有成交量数据，用 5 分钟涨幅 ≥ +0.10% 代替。
+9. "强空头水下放宽至 2.7%"：当天 ≤ −1.2% 且现价 ≤ 0.995 × VWAP。
+10. 跨到期：主结构到期之后的下 2 个到期，同号各 +6（上限 +12），紧挨着的下一个到期异号 −14。
+11. 逼空"集中度 ≥18%" = Call 墙 GEX ÷ 主结构到期全部节点 |GEX| 之和。
+12. 合约选择沿用原规则（买靶心行权价，最多虚值 0.5%）；每笔 1 张，所以 +80% 分批止盈不会触发。
+13. 出场收益率用能卖出的价格（实盘 bid / 回放 中间价 − 半价差）。
+14. 组合上限沿用原规则（同时 8 笔、每天 25 笔、12:00 前 15 笔、同票每天 2 笔、平仓后 30 分钟冷却）。
+15. 盘中开仓只到 15:00（之后文档是尾盘隔夜模式；我们的隔夜单是另一套，不动）。
+16. PINNING_MAGNET 只限 SPX/SPXW 且没有方向，不开仓。
+```
+
+## 4. 测试
+
+* `python3 -m unittest tests.test_baseline tests.test_baseline_live -v`
+  * 每个原型的通过与各否决分支、节点演化 5 种状态、墙体迁移 4 种状态、日内上下文、跨到期、平价现价、
+    出场引擎每种原因（初始止损 / 0DTE 8 分钟截断 / 连续棘轮 / 现货止损 / 结构目标 / 15:50 强平 / 现货锁利）、
+    引擎（同一根快照不重复出信号、15:00 后不开）、10/19 真实存档回归（NVDA 10:50 / MU 11:20 / META 10:40 不开）、
+    实盘接线（按实盘主循环顺序跑 10/19 NVDA：ask 成交、Call+Put 批量报价、平价现价、交易明细 baseline 列）。
+* 真实回放：`python3 baseline_replay.py --name bl_base`（全部存档日），对照 `experiment.py --name lg_1min --set intraday_mark_min=1`。

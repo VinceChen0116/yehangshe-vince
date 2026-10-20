@@ -111,6 +111,9 @@ class SystemConfig:
     fast_poll_min: int = 5
     slow_poll_min: int = 12               # 11:30-14:30 午间降频
     poll_open_positions_fast: bool = True # 持仓标的始终按 5 分钟盯市（风控优先）
+    # 日内规则：baseline = docs/AGENT_REPRODUCTION_BLUEPRINT_HEATMAP_AND_TPSL.md（baseline.py，2026-10-20 用户定，实盘默认）；
+    #   legacy = 旧规则（最大正/负节点 + 距离 ≤1% + 0–1 评分 + 标的破节点止损），只留作回测对照
+    intraday_rules: str = "legacy"   # 回放验证完成前暂留旧规则；验证后切 "baseline"
     position_mark_min: int = 1            # 实盘：两次 5 分钟扫描之间，每 N 分钟用实时期权报价盯一次持仓（0 = 关闭；2026-10-19 用户定 1）
     # 实盘用 /v1/options/quote(s) 的实时 bid/ask：按 ask 开仓、按 bid 盯市与平仓（每轮 1 次批量请求，
     # 每个返回的报价 1 配额）。仅实盘生效；历史回放没有历史报价，仍用分钟成交价 + 滑点

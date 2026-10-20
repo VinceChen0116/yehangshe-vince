@@ -245,9 +245,15 @@ class LiveAccount:
         self.name, self.cfg, self.tag = name, cfg, tag
         self.tickers = {e.ticker for e in universe}
         self.detector = SignalDetector(cfg, universe)
-        self.trader = PaperTrader(cfg)
-        self.trader.notifier = notifier.tagged(tag) if notifier else None
-        self.engine = SessionEngine(cfg, client, self.detector, self.trader)
+        if cfg.intraday_rules == "baseline":
+            from baseline import BaselineEngine, BaselineTrader
+            self.trader = BaselineTrader(cfg)
+            self.trader.notifier = notifier.tagged(tag) if notifier else None
+            self.engine = BaselineEngine(cfg, client, self.detector, self.trader)
+        else:
+            self.trader = PaperTrader(cfg)
+            self.trader.notifier = notifier.tagged(tag) if notifier else None
+            self.engine = SessionEngine(cfg, client, self.detector, self.trader)
 
     def status(self) -> str:
         pos = self.trader.open_positions()
@@ -307,9 +313,21 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
         for a in accounts:
             a.trader.quote_provider = quotes.get
 
+    baseline_rules = cfg.intraday_rules == "baseline"
+
     def refresh_quotes() -> None:
         if quotes:
-            quotes.new_round(p.contract_symbol for a in accounts for p in a.trader.open_positions())
+            syms = [p.contract_symbol for a in accounts for p in a.trader.open_positions()]
+            if baseline_rules:   # 同行权价的另一边一起拉，用 Call/Put 平价反推实时现价（每个持仓多 1 配额）
+                from baseline import pair_symbol
+                syms += [pair_symbol(s) for s in syms]
+            quotes.new_round(syms)
+
+    if quotes and baseline_rules:
+        from baseline import parity_spot
+        for a in accounts:
+            a.engine.spot_override = lambda pos, now: parity_spot(
+                pos.contract_symbol, lambda sym: quotes.cache.get(sym.split(":")[-1]))
 
     pool = [e.ticker for e in universe]
     last_poll: dict[str, dt.datetime] = {}

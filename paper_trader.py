@@ -29,7 +29,10 @@ CSV_FIELDS = ["position_id", "ticker", "action", "contract_symbol", "strike", "e
               "entry_option_price", "exit_time", "exit_spot", "exit_option_price", "realized_pnl",
               "realized_roi_pct", "peak_roi_pct", "max_adverse_roi_pct", "direction_correct", "exit_reason",
               "signal_score", "price_source", "entry_bid", "entry_ask", "entry_spread_pct",
-              "flow_confirmed", "flow_premium_usd", "flow_note"]
+              "flow_confirmed", "flow_premium_usd", "flow_note",
+              # baseline 规则（baseline.py）开仓依据；旧规则留空
+              "bl_structure", "bl_trigger", "bl_score", "bl_regime", "bl_growth", "bl_migration", "bl_wall",
+              "bl_wall_gex_m", "bl_target", "bl_stop_spot", "bl_rr", "bl_notes"]
 
 
 # =============================================================================
@@ -524,7 +527,7 @@ class PaperTrader:
             for p in self.positions:
                 if p.is_open:
                     continue
-                w.writerow({
+                row = {
                     "position_id": p.position_id, "ticker": p.ticker, "action": p.action,
                     "contract_symbol": p.contract_symbol, "strike": f"{p.strike:.2f}",
                     "entry_time": p.entry_time.isoformat(timespec="minutes"),
@@ -543,7 +546,9 @@ class PaperTrader:
                     "flow_confirmed": "" if p.flow_ok is None else int(p.flow_ok),
                     "flow_premium_usd": f"{p.flow_premium_usd:.0f}" if p.flow_premium_usd else "",
                     "flow_note": p.flow_note,
-                })
+                }
+                row.update(getattr(self, "meta", {}).get(p.position_id, {}))
+                w.writerow(row)
         log.info("交易明细已导出：%s", os.path.abspath(path))
         return path
 
