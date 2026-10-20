@@ -50,6 +50,7 @@ BASELINE_NOTES = """
 11. 逼空"集中度 ≥18%" = 该 Call 墙 GEX ÷ 主结构到期全部节点 |GEX| 之和。
 12. 文档没有规定合约怎么选：沿用原规则（买靶心行权价，最多虚值 0.5%，挂牌行权价里离靶心最近）。每笔 1 张，所以 +80% 分批止盈不会触发。
 13. 出场用"能卖出的价格"算收益率（实盘 = 实时 bid；回放 = 中间价 − 真实半价差），和开仓成本（ask）对比。
+14d. 执行层保护：买卖价差 > 中间价 25% 不开（2026-10-20 用户定）。
 14a. 单张成本上限 $1,000（ask × 100，2026-10-20 用户定，文档没有）。
 14. 组合上限（文档没有）：2026-10-20 用户定不限持仓数量 / 每天笔数；保留同一只票同时 1 笔、每天最多 2 笔、平仓后 30 分钟冷却。
 14b. 2026-10-20 用户定：先不做雪崩结构（bl_enable_avalanche=False）。
@@ -597,6 +598,7 @@ class BaselineTrader(PaperTrader):
     def __init__(self, cfg):
         super().__init__(cfg)
         self.max_contract_cost_usd = getattr(cfg, "bl_max_contract_cost_usd", 0.0)
+        self.max_spread_pct = getattr(cfg, "bl_max_spread_pct", 0.0)
         self.state: dict = {}         # position_id → PositionState
         self.meta: dict = {}          # position_id → 开仓时的 baseline 信息（写进交易明细）
 

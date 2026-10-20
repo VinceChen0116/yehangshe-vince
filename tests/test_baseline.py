@@ -299,6 +299,12 @@ class TestExits(unittest.TestCase):
         self.assertTrue(st.is_0dte)
         self.assertEqual(st.initial_stop_loss_spot, 101.3)
 
+    def test_spread_cap(self):
+        with self.assertRaises(AssertionError):
+            opened(ask=2.4, bid=1.8)                          # 价差 0.6 / 中间价 2.1 = 28.6% > 25% → 不开
+        tr, fq, p, now = opened(ask=2.3, bid=1.8)             # 24.4% → 开
+        self.assertIsNotNone(p)
+
     def test_contract_cost_cap(self):
         with self.assertRaises(AssertionError):
             opened(ask=10.5, bid=10.3)                        # 单张 $1,050 > $1,000 → 不开

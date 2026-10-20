@@ -302,6 +302,11 @@ class PaperTrader:
             return None
         slip = (ask - bid) / (ask + bid) if (src == "real_data" and ask > 0 and bid > 0) else cfg.slippage_pct
         cost = ask if src == "quote" else mid * (1 + slip)
+        msp = getattr(self, "max_spread_pct", 0.0)
+        if msp and ask > 0 and bid > 0 and (ask - bid) / ((ask + bid) / 2) > msp:
+            log.info("【阶段4·放弃】%s %s 买卖价差 %.0f%%（bid %.2f / ask %.2f）> %.0f%%，不开仓", sig.ticker, sym,
+                     (ask - bid) / ((ask + bid) / 2) * 100, bid, ask, msp * 100)
+            return None
         cap = getattr(self, "max_contract_cost_usd", 0.0)
         if cap and cost * cfg.contract_multiplier > cap:
             log.info("【阶段4·放弃】%s %s 单张 $%.0f 超过上限 $%.0f，不开仓", sig.ticker, sym, cost * cfg.contract_multiplier, cap)
