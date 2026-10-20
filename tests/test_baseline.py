@@ -430,11 +430,16 @@ class TestExits(unittest.TestCase):
         self.assertIsNotNone(self.tick(tr, fq, p, now, 2, 1.29, 100.7))       # −35.5%
         self.assertEqual(p.exit_reason, "INITIAL_STOP_LOSS")
 
-    def test_dead_momentum_0dte(self):
+    def test_no_8_10_min_truncation(self):           # 2026-10-20 用户定：8 / 10 分钟零动能截断已去掉
         tr, fq, p, now = opened()
-        self.assertIsNone(self.tick(tr, fq, p, now, 5, 1.70, 100.6))          # 5 分钟、−15%：还不到 8 分钟
-        self.assertIsNotNone(self.tick(tr, fq, p, now, 8, 1.74, 100.6))       # 8 分钟、峰值 ≤ +1%、−13%
-        self.assertEqual(p.exit_reason, "DEAD_MOMENTUM_TRUNCATE_0DTE_8M")
+        self.assertIsNone(self.tick(tr, fq, p, now, 8, 1.74, 100.6))          # 8 分钟、峰值 ≤ +1%、−13%
+        self.assertIsNone(self.tick(tr, fq, p, now, 11, 1.58, 100.6))         # 11 分钟、−21%
+
+    def test_stagnation_18m(self):
+        tr, fq, p, now = opened()
+        self.assertIsNone(self.tick(tr, fq, p, now, 17, 1.66, 100.6))         # 17 分钟、−17%：还不到 18 分钟
+        self.assertIsNotNone(self.tick(tr, fq, p, now, 18, 1.66, 100.6))      # 18 分钟、最高 < +6%、−17% ≤ −15%
+        self.assertEqual(p.exit_reason, "THETA_STAGNATION_TRUNCATE_25M")
 
     def test_trailing(self):
         tr, fq, p, now = opened()
@@ -473,9 +478,10 @@ class TestNearTrigger(unittest.TestCase):
         tr, fq, p, now = opened()
         st = tr.state[p.position_id]
         tr.mark(p, 100.5, now + dt.timedelta(minutes=1))          # 先盯一次：峰值约 −5%
-        self.assertFalse(B.near_trigger(st, -20.0, 100.5, 3))       # 离 −35% 还有 15 点，8 分钟截断尚未生效
+        self.assertFalse(B.near_trigger(st, -20.0, 100.5, 3))       # 离 −35% 还有 15 点，18 分钟截断尚未生效
         self.assertTrue(B.near_trigger(st, -31.0, 100.5, 3))        # 离 −35% 4 点
-        self.assertTrue(B.near_trigger(st, -9.0, 100.5, 8))         # 8 分钟 0DTE 截断线 −12% 在 5 点内
+        self.assertFalse(B.near_trigger(st, -9.0, 100.5, 8))        # 8 分钟截断已去掉
+        self.assertTrue(B.near_trigger(st, -11.0, 100.5, 17))       # 18 分钟滞涨截断线 −15% 在 5 点内
         self.assertTrue(B.near_trigger(st, 0.0, 101.25, 3))         # 现价离现货止损 101.3 不到 0.1%
         st.trailing_active, st.trailing_stop_level_pct, st.breakeven_locked = True, 34.1, True
         self.assertTrue(B.near_trigger(st, 37.0, 100.0, 20))        # 离锁利线 2.9 点
