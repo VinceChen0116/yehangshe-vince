@@ -120,6 +120,58 @@ class DiscordNotifier:
             "footer": {"text": f"{p.position_id} · 模拟盘"},
         }])
 
+    def baseline_opened(self, p, m: dict) -> None:
+        """baseline 开仓：类别、开仓时间、期权买入价、评分、目标 / 止损、依据。"""
+        from baseline import STRUCT_CN
+        bull = p.action == "BUY_CALL"
+        cat = STRUCT_CN.get(m.get("bl_structure"), m.get("bl_structure", ""))
+        ask = getattr(p, "entry_ask", 0)
+        self.send(embeds=[{
+            "title": self._t(f"{'🟢' if bull else '🔴'} 开仓 {p.ticker} {p.strike:g}{'C' if bull else 'P'}｜{cat}"),
+            "color": GREEN if bull else RED,
+            "fields": [
+                {"name": "类别", "value": cat, "inline": True},
+                {"name": "开仓时间（美东）", "value": p.entry_time.strftime("%H:%M"), "inline": True},
+                {"name": "评分", "value": f"{m.get('bl_score', '')}（≥55 放行）", "inline": True},
+                {"name": "期权买入价", "value": f"${p.entry_option_price:.2f}" +
+                 (f"（按 ask；bid {p.entry_bid:.2f} / ask {ask:.2f}）" if ask and p.price_source == "quote"
+                  else "（回放：真实价 + 半价差）"), "inline": True},
+                {"name": "单张成本", "value": f"${p.entry_option_price * 100 * p.contracts:,.0f}", "inline": True},
+                {"name": "合约", "value": f"`{p.contract_symbol}`（到期 {p.expiration}）", "inline": True},
+                {"name": "开仓现价", "value": f"{p.entry_spot:.2f}", "inline": True},
+                {"name": "目标价", "value": m.get("bl_target", ""), "inline": True},
+                {"name": "现货止损", "value": m.get("bl_stop_spot", ""), "inline": True},
+                {"name": "起作用的墙", "value": f"{m.get('bl_wall', '')}（{m.get('bl_wall_gex_m', '')}M）", "inline": True},
+                {"name": "结构盈亏比", "value": m.get("bl_rr") or "—", "inline": True},
+                {"name": "环境 / 演化 / 迁移", "value": f"{m.get('bl_regime', '')} / {m.get('bl_growth', '')} / "
+                                                   f"{m.get('bl_migration', '')}", "inline": True},
+                {"name": "开仓依据", "value": (m.get("bl_notes") or "—")[:1000], "inline": False},
+            ],
+            "footer": {"text": f"{p.position_id} · {m.get('bl_trigger', '')} · 每笔 1 张 · 模拟盘"},
+        }])
+
+    def baseline_closed(self, p, m: dict, detail: str) -> None:
+        """baseline 平仓：平仓时间、平仓价、盈亏、具体原因。"""
+        from baseline import STRUCT_CN
+        win = p.realized_pnl > 0
+        held = (p.exit_time - p.entry_time).total_seconds() / 60
+        self.send(embeds=[{
+            "title": self._t(f"{'✅' if win else '❌'} 平仓 {p.ticker} {p.strike:g}{p.right}｜"
+                             f"{_usd(p.realized_pnl)}（{p.realized_roi_pct:+.1f}%）"),
+            "color": GREEN if win else RED,
+            "fields": [
+                {"name": "类别", "value": STRUCT_CN.get(m.get("bl_structure"), ""), "inline": True},
+                {"name": "平仓时间（美东）", "value": f"{p.exit_time.strftime('%H:%M')}（持仓 {held:.0f} 分钟）", "inline": True},
+                {"name": "平仓价格", "value": f"${p.exit_option_price:.2f}（买入 ${p.entry_option_price:.2f}）", "inline": True},
+                {"name": "盈亏", "value": f"{_usd(p.realized_pnl)}（{p.realized_roi_pct:+.1f}%）", "inline": True},
+                {"name": "现价", "value": f"{p.entry_spot:.2f} → {p.exit_spot:.2f}（目标 {m.get('bl_target', '')}）", "inline": True},
+                {"name": "峰值 / 最大逆行", "value": f"{p.peak_roi_pct:+.1f}% / {p.max_adverse_roi_pct:+.1f}%", "inline": True},
+                {"name": "平仓原因", "value": f"**{REASON_CN.get(p.exit_reason, p.exit_reason)}**：{detail}"[:1000],
+                 "inline": False},
+            ],
+            "footer": {"text": f"{p.position_id} · 开仓 {p.entry_time.strftime('%H:%M')} · 模拟盘"},
+        }])
+
     def daily_summary(self, day, stats: dict, positions: list) -> None:
         if not stats.get("trades"):
             self.send(self._t(f"📊 **{day} 收盘**：今日无交易。"))
@@ -138,6 +190,10 @@ class DiscordNotifier:
             ],
             "footer": {"text": "每笔 1 张 · 模拟盘"},
         }])
+
+
+def _usd(v: float) -> str:
+    return f"{'+' if v >= 0 else '-'}${abs(v):,.2f}"
 
 
 def _money(v) -> str:

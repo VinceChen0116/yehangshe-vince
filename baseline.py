@@ -662,6 +662,48 @@ _pt._REASON_CN.update(REASON_CN)
 _notify.REASON_CN.update(REASON_CN)
 
 
+STRUCT_CN = {"CLIFF_STRUCTURE": "悬崖（看跌）", "SPRINGBOARD_STRUCTURE": "跳板（看涨）",
+             "SHORT_GAMMA_VACUUM_SQUEEZE": "逼空（看涨）", "SHORT_GAMMA_AVALANCHE": "雪崩（看跌）"}
+
+
+def exit_detail(p: Position, st: PositionState | None, note: str = "") -> str:
+    """平仓的具体原因（中文，一句话）：触发了哪条线、当时的数值。"""
+    r = p.exit_reason
+    held = (p.exit_time - p.entry_time).total_seconds() / 60
+    roi, peak = p.realized_roi_pct, (st.peak_roi_pct if st else p.peak_roi_pct)
+    base = f"持仓 {held:.0f} 分钟，期间最高 {peak:+.1f}%，平仓 {roi:+.1f}%"
+    if note:
+        return f"{note}；{base}"
+    if st is None:
+        return base
+    bull = st.direction == "BULLISH"
+    if r == "TRAILING_STOP":
+        return f"期间最高 {peak:+.1f}%，锁利线 {st.trailing_stop_level_pct:+.1f}%，回落到 {roi:+.1f}% 触发（持仓 {held:.0f} 分钟）"
+    if r == "RATCHET_SOFT_STOP":
+        return f"收益 {roi:+.1f}% 跌破棘轮软止损线 {st.soft_stop_level_pct:+.1f}%；{base}"
+    if r == "BREAKEVEN_STOP":
+        return f"已锁保本，收益回落到 {roi:+.1f}% ≤ 保本线 {EW.breakeven_floor_roi_pct:+.0f}%；{base}"
+    if r == "INITIAL_STOP_LOSS":
+        return f"收益 {roi:+.1f}% 跌破初始止损 {EW.initial_stop_loss_roi_pct:.0f}%；{base}"
+    if r in ("SPOT_STOP", "SPOT_PROFIT_STOP"):
+        return (f"现价 {p.exit_spot:.2f} {'跌破' if bull else '升破'}现货止损线 {st.stop_loss_spot:.2f}"
+                f"（开仓 {st.initial_stop_loss_spot:.2f}{'，已上移锁利' if r == 'SPOT_PROFIT_STOP' else ''}）；{base}")
+    if r == "STRUCTURE_TARGET":
+        return f"现价 {p.exit_spot:.2f} 到达结构目标 {st.target_spot:g}；{base}"
+    if r == "DEAD_MOMENTUM_TRUNCATE_0DTE_8M":
+        return (f"0DTE 持仓 ≥ {EW.stage0_0dte_minutes:.0f} 分钟，期间最高 {peak:+.1f}%（≤ {EW.stage0_0dte_max_mfe_pct:+.0f}%），"
+                f"当前 {roi:+.1f}%（≤ {EW.stage0_0dte_mae_floor_pct:.0f}%）")
+    if r == "DEAD_MOMENTUM_TRUNCATE_10M":
+        return (f"持仓 {held:.0f} 分钟（≥ {EW.stage1_dead_minutes:.0f}），期间最高 {peak:+.1f}%（< {EW.stage1_dead_max_mfe_pct:+.0f}%），"
+                f"当前 {roi:+.1f}%（≤ {EW.stage1_dead_mae_floor_pct:.0f}%）")
+    if r == "THETA_STAGNATION_TRUNCATE_25M":
+        return (f"持仓 {held:.0f} 分钟（≥ {EW.stage2_stag_minutes:.0f}），期间最高 {peak:+.1f}%（< {EW.stage2_stag_max_mfe_pct:+.0f}%），"
+                f"当前 {roi:+.1f}%（≤ {EW.stage2_stag_mae_floor_pct:.0f}%）")
+    if r == "HARD_TP_CAP":
+        return f"收益 {roi:+.1f}% 到达硬顶 +{EW.hard_take_profit_roi_pct:.0f}%"
+    return base
+
+
 def near_trigger(st: PositionState, roi: float, spot: float, held_min: float, band_pct: float = 5.0,
                  spot_band: float = 0.001) -> bool:
     """持仓是否靠近任何出场触发线（用于实盘把盯仓从 1 分钟加密到 20 秒，2026-10-20 用户定）：
@@ -697,10 +739,17 @@ class BaselineTrader(PaperTrader):
         self.max_spread_pct = getattr(cfg, "bl_max_spread_pct", 0.0)
         self.state: dict = {}         # position_id → PositionState
         self.meta: dict = {}          # position_id → 开仓时的 baseline 信息（写进交易明细）
+        self.exit_note: dict = {}     # position_id → 起始点衰减截断的说明（平仓推送用）
         self.decay: dict = {}         # position_id → 起始点（天花板 / 踏板）GEX 序列与最远进度（悬崖 / 跳板专用）
 
     def open_position(self, client, sig, now_et: dt.datetime) -> Position | None:
-        p = super().open_position(client, sig, now_et)
+        n = self.notifier
+        if isinstance(sig, BaselineSignal):
+            self.notifier = None          # 用下面 baseline 专用格式推送
+        try:
+            p = super().open_position(client, sig, now_et)
+        finally:
+            self.notifier = n
         if p is None or not isinstance(sig, BaselineSignal):
             return p
         p.base_strike = sig.cand.acting_strike
@@ -725,6 +774,23 @@ class BaselineTrader(PaperTrader):
                                     "bl_rr": f"{sig.cand.rr:.2f}" if sig.cand.rr is not None else "",
                                     "bl_notes": sig.cand.notes}
         log.info("【baseline·开仓依据】%s %s", p.position_id, sig.describe())
+        if n:
+            n.baseline_opened(p, self.meta[p.position_id])
+        return p
+
+    def close(self, p: Position, spot: float, now_et: dt.datetime, reason: str, mid: float | None = None) -> Position:
+        n = self.notifier
+        if p.position_id in self.meta:
+            self.notifier = None
+        try:
+            super().close(p, spot, now_et, reason, mid)
+        finally:
+            self.notifier = n
+        if p.position_id in self.meta:
+            detail = exit_detail(p, self.state.get(p.position_id), self.exit_note.pop(p.position_id, ""))
+            self.meta[p.position_id]["bl_exit_detail"] = detail
+            if n:
+                n.baseline_closed(p, self.meta[p.position_id], detail)
         return p
 
     def any_near_trigger(self, now_et: dt.datetime) -> bool:
@@ -775,6 +841,9 @@ class BaselineTrader(PaperTrader):
                 log.info("【baseline·起始点衰减】%s %s 连续 %d 根变小 %s，最远进度 %.0f%% < %.0f%%", p.position_id,
                          f"{dk['strike']:g}", run, "→".join(f"{x / 1e6:.2f}M" for x in seq[-n - 1:]),
                          dk["max_prog"] * 100, lim * 100)
+                self.exit_note[p.position_id] = (
+                    f"起始点 {dk['strike']:g} GEX 连续 {run} 根变小（" + " → ".join(f"{x / 1e6:.2f}M" for x in seq[-run - 1:])
+                    + f"），期间最远只走到目标的 {max(dk['max_prog'], 0) * 100:.0f}%（< {lim * 100:.0f}%）")
                 return self.close(p, spot, now_et, reason, self.current_mid(p, spot, now_et))
         return None
 

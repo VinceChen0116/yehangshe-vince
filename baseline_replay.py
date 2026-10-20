@@ -29,7 +29,7 @@ log = logging.getLogger("yhs.baseline_replay")
 EXP_DIR = os.path.join("backtests", "exp")
 
 
-def replay_day(cfg, real, day: dt.date, tickers: list) -> list:
+def replay_day(cfg, real, day: dt.date, tickers: list, notifier=None) -> list:
     hc = HistoryClient(real, cfg, day)
     frames = {}
     for t in tickers:
@@ -38,6 +38,7 @@ def replay_day(cfg, real, day: dt.date, tickers: list) -> list:
             frames[t] = f
     log.info("%s：%d 只有存档（共 %d 只）", day, len(frames), len(tickers))
     trader = BaselineTrader(cfg)
+    trader.notifier = notifier                    # --notify：按实盘格式把开平仓推到 Discord（样式预览）
     trader.price_provider = hc.option_price
     trader.delta_provider = hc.option_delta
     trader.spread_provider = hc.hist_quote
@@ -66,6 +67,7 @@ def main(argv=None) -> int:
     ap.add_argument("--name", default="bl_base")
     ap.add_argument("--set", action="append", default=[])
     ap.add_argument("--tickers")
+    ap.add_argument("--notify", action="store_true", help="按实盘格式推送开平仓到 Discord（环境变量 DISCORD_WEBHOOK_URL）")
     args = ap.parse_args(argv)
     out = os.path.join(EXP_DIR, args.name)
     os.makedirs(out, exist_ok=True)
@@ -86,7 +88,16 @@ def main(argv=None) -> int:
             setattr(cfg, k.strip(), parse_value(v.strip()))
         cfg.trades_csv = os.path.join(out, f"trades_{ds}.csv")
         tickers = args.tickers.split(",") if args.tickers else (live_universe(day) or pool)
-        replay_day(cfg, real, day, tickers)
+        notifier = None
+        if args.notify:
+            from notify import from_config
+            notifier = from_config(cfg)
+            if notifier is None:
+                log.warning("没有配置 Discord Webhook，不推送")
+            else:
+                notifier = notifier.tagged(f"🧪【回放 {ds}】")
+                notifier.text(f"以下是 {ds} baseline 规则真实回放，按实盘格式推送开平仓（时间 = 数据实际时刻，每笔 1 张）。")
+        replay_day(cfg, real, day, tickers, notifier)
     from experiment import load_trades
     rows = load_trades(args.name)
     summary = {"name": args.name, "rules": "baseline", "dates": dates, "overrides": args.set,

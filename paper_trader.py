@@ -32,7 +32,7 @@ CSV_FIELDS = ["position_id", "ticker", "action", "contract_symbol", "strike", "e
               "flow_confirmed", "flow_premium_usd", "flow_note",
               # baseline 规则（baseline.py）开仓依据；旧规则留空
               "bl_structure", "bl_trigger", "bl_score", "bl_regime", "bl_growth", "bl_migration", "bl_wall",
-              "bl_wall_gex_m", "bl_target", "bl_stop_spot", "bl_rr", "bl_notes"]
+              "bl_wall_gex_m", "bl_target", "bl_stop_spot", "bl_rr", "bl_notes", "bl_exit_detail"]
 
 
 # =============================================================================
