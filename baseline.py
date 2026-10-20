@@ -42,6 +42,7 @@ BASELINE_NOTES = """
 2a. 路径：现价到目标之间必须有显著负节点，且显著负节点 |GEX| 合计 ≥ 1.5 × 显著正节点合计（正负差不多 = 走不动）。
 2b. 墙外 3 格：天花板 / 踏板外侧 3 格以内（含第 3 格）有比它更大的正节点 → 结构不成立（价格会被更大的墙吸过去）。
 2c. 钉住：主结构到期 |GEX| 最大的节点是负节点、在路径上或现价 ±0.5% 内、且 ≥ 3 × 墙 → 不开（逼空也查）。
+2e. 逼空磁吸：现价上下 3 格以内（含第 3 格）有比 Call 墙更大的正节点 → 不开逼空（2026-10-20 用户定）。
 2d. 至少一格：现价和（最终）目标之间至少要有一个 Heatmap 节点（行权价），否则不开（悬崖 / 跳板 / 逼空都查；2026-10-20 用户定）。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
    （中间关卡 ≥1.0% 时改为关卡行权价）。逼空 / 雪崩没有墙，风险距离取最小 0.8%。
@@ -479,6 +480,12 @@ def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) 
     mid = [(k, g) for k, g in cells if S < k < cw[0] and g > 0.25 * cw[1]]
     if mid:
         return None, f"中间有正墙 {mid[0][0]:g}"
+    step = strike_step(cells, S)
+    near = [(k, g) for k, g in cells if abs(k - S) <= OUTER_WALL_STEPS * step + 1e-6 and g > cw[1]]
+    if near:                                # 现价 3 格内有比 Call 墙更大的正节点 → 会被它吸住（2026-10-20 用户定）
+        b = max(near, key=lambda c: c[1])
+        return None, (f"现价 {OUTER_WALL_STEPS} 格内有比 Call 墙 {cw[0]:g}(+{cw[1] / 1e6:.1f}M) 更大的正节点 "
+                      f"{b[0]:g}(+{b[1] / 1e6:.1f}M)，会被吸住")
     pin, pin_note = pin_check(cells, S, cw[0], cw[1])
     if pin:
         return None, pin_note

@@ -264,6 +264,14 @@ class TestTrendArchetypes(unittest.TestCase):
         self.assertIsNone(sig)
         self.assertIn("占正节点合计 17%", j.last_reason["TEST"])
 
+    def test_squeeze_bigger_positive_near_spot(self):
+        cells = {102.5: 40 * M, 99.0: 5 * M, 100.0: 50 * M, 98.0: -6 * M, 101.0: -4 * M, 97.0: 2 * M}
+        j, _, _ = run([100.0, 100.1, 100.2, 100.35, 100.5, 100.6], cells)
+        frs = j.frames["TEST"]
+        cand, why = B.find_squeeze("TEST", frs[-1], B.context(frs), B.min_gex("TEST", 100.6), "NEUTRAL")
+        self.assertIsNone(cand)
+        self.assertIn("更大的正节点 100", why)
+
     def test_avalanche(self):
         cells = {98.0: -30 * M, 99.0: -6 * M, 100.0: -5 * M, 101.5: 3 * M}
         path = [101.0, 100.8, 100.5, 100.2, 99.9, 99.6]
@@ -465,10 +473,9 @@ class TestRealData1019(unittest.TestCase):
 
     def test_mu_call_rejected(self):
         j, sig = self.judge_at("MU", "11:20")
-        # 集中度改成"÷ 正节点合计"后，这根会出逼空（Call 墙 950，19%）；待用户决定，这里只锁定"不是跳板"
-        self.assertFalse(sig is not None and sig.cand.structure_type == "SPRINGBOARD_STRUCTURE")
-        if sig is None:
-            self.assertIn("离踏板 925 0.143%", j.last_reason["MU"])
+        self.assertIsNone(sig)
+        self.assertIn("离踏板 925 0.143%", j.last_reason["MU"])
+        self.assertIn("更大的正节点 925", j.last_reason["MU"])     # 逼空：现价 3 格内 925 比 Call 墙 950 大
 
     def test_meta_put_rejected(self):
         j, sig = self.judge_at("META", "10:40")
