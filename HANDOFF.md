@@ -325,3 +325,11 @@ python3 archive.py --dry-run                 # 只看计划
   按真实 bid 判断硬止盈 +150% / 保本 / 追踪 / 灾难止损（SessionEngine.mark_open）。标的类止损（穿正节点 +0.5%）仍按 5 分钟 Heatmap 现货判断
   （/v1/stocks/quote 实测延迟约 14 分钟，不能用来做分钟级现价）。开仓扫描仍是 5 分钟一轮。
 - 日内标的池保持 40 只（用户要求不降）。配额 10/19 已重置为 100,000。
+
+## N. 2026-10-20 起：日内实盘改用 baseline（bl_v8 规则）
+* `config.intraday_rules = "baseline"`（用户 10/20 决定"现在就切"）。A / B 两个日内账户都走 `BaselineEngine` / `BaselineTrader`；隔夜单（overnight_live.py）不受影响。
+* 规则全文：`baseline.BASELINE_NOTES` + `docs/BASELINE_IMPLEMENTATION.md`（含 10/20 用户补充：宁缺毋滥、目标 = 超大正节点、路径 1.5 倍、墙外 3 格、
+  墙外侧 50%、磁吸、钉住、至少一格、逼空集中度 / 3 格磁吸、起始点衰减截断、去掉 0DTE 8 分钟截断、零动能截断 18 分钟、25 分钟滞涨）。
+* 9 天真实回放（10/7–10/19）：bl_v8 125 笔 −$1,447（胜率 43%，盈亏比 0.67）；旧规则同口径 lg_1min 223 笔 −$6,257。
+* Discord 开平仓用 baseline 专用格式（类别 / 评分 / 目标 / 现货止损 / 开仓依据 / 具体平仓原因）。
+* 要退回旧规则：把 `intraday_rules` 改回 `"legacy"` 并推送（下一个交易日的 09:10 定时任务生效）。
