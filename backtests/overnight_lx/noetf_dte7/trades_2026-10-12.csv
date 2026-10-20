@@ -1,0 +1,5 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-12→2026-10-13,COHR,硬件网络存储,CLIFF,local,O:COHR261016P00285000,288.37,290.0,280.0,0.56,2,680000,7.895,12.327,09:35,-4.38,True,1,790,443.1,56.1
+2026-10-12→2026-10-13,BE,电力公用,SPRINGBOARD,local,O:BE261016C00262500,262.01,260.0,270.0,0.77,2,156200,8.574,2.814,09:35,-4.74,False,1,857,-576.0,-67.2
+2026-10-12→2026-10-13,PLTR,软件,SPRINGBOARD,local,O:PLTR261016C00210000,208.91,207.5,212.5,0.68,1,96250,3.47,3.678,09:35,0.34,True,3,1041,62.5,6.0
+2026-10-12→2026-10-13,NKE,消费,SPRINGBOARD,local,O:NKE261016C00035500,35.33,35.0,36.0,0.93,1,57960,0.455,0.639,09:35,1.17,True,22,1001,404.1,40.4

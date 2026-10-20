@@ -1,0 +1,174 @@
+21:39:55 [INFO] yhs.overnight_rules: 2026-10-16 ACN CLIFF（local）230.00→225.00 距 0.66% | 15:00 后大单 1 笔
+21:39:57 [INFO] yhs.overnight_rules: 2026-10-16 ADBE CLIFF（local）245.00→242.50 距 0.16% | 15:00 后大单 1 笔
+21:39:59 [INFO] yhs.overnight_rules: 2026-10-16 ADI CLIFF（local）400.00→395.00 距 0.69% | 15:00 后大单 1 笔
+21:40:03 [INFO] yhs.overnight_rules: 2026-10-16 AFRM CLIFF（local）74.00→72.00 距 0.40% | 15:00 后大单 0 笔
+21:40:05 [INFO] yhs.overnight_rules: 2026-10-16 ALAB SPRINGBOARD（local）282.50→300.00 距 0.69% | 15:00 后大单 0 笔
+21:40:07 [INFO] yhs.overnight_rules: 2026-10-16 AMAT CLIFF（local）412.50→400.00 距 0.79% | 15:00 后大单 4 笔
+21:40:10 [INFO] yhs.overnight_rules: 2026-10-16 AMD CLIFF（local）530.00→520.00 距 0.36% | 15:00 后大单 19 笔
+21:40:14 [INFO] yhs.overnight_rules: 2026-10-16 ANET CLIFF（local）177.50→175.00 距 0.14% | 15:00 后大单 0 笔
+21:40:27 [INFO] yhs.overnight_rules: 2026-10-16 BABA CLIFF（local）109.00→106.00 距 0.27% | 15:00 后大单 2 笔
+21:40:32 [INFO] yhs.overnight_rules: 2026-10-16 BKNG SPRINGBOARD（local）162.50→170.00 距 0.61% | 15:00 后大单 0 笔
+21:40:49 [INFO] yhs.overnight_rules: 2026-10-16 BRKB SPRINGBOARD（local）530.00→535.00 距 0.32% | 15:00 后大单 2 笔
+21:40:57 [INFO] yhs.overnight_rules: 2026-10-16 CCJ CLIFF（local）82.00→81.00 距 0.88% | 15:00 后大单 0 笔
+21:40:58 [INFO] yhs.overnight_rules: 2026-10-16 CCL CLIFF（local）26.00→25.00 距 0.37% | 15:00 后大单 0 笔
+21:41:02 [INFO] yhs.overnight_rules: 2026-10-16 CELH SPRINGBOARD（king）28.00→30.00 距 0.79% | 15:00 后大单 0 笔
+21:42:10 [INFO] yhs.overnight_rules: 2026-10-16 CRM SPRINGBOARD（local）240.00→242.50 距 0.83% | 15:00 后大单 1 笔
+21:42:13 [INFO] yhs.overnight_rules: 2026-10-16 CRWV SPRINGBOARD（local）60.00→61.50 距 0.49% | 15:00 后大单 4 笔
+21:42:18 [INFO] yhs.overnight_rules: 2026-10-16 DAL SPRINGBOARD（local）75.00→76.00 距 0.69% | 15:00 后大单 0 笔
+21:42:21 [INFO] yhs.overnight_rules: 2026-10-16 DDOG SPRINGBOARD（local）245.00→247.50 距 0.86% | 15:00 后大单 0 笔
+21:42:32 [INFO] yhs.overnight_rules: 2026-10-16 ENPH SPRINGBOARD（local）30.50→31.00 距 0.21% | 15:00 后大单 0 笔
+21:42:45 [INFO] yhs.overnight_rules: 2026-10-16 FCX CLIFF（local）70.00→69.00 距 0.76% | 15:00 后大单 0 笔
+21:43:14 [INFO] yhs.overnight_rules: 2026-10-16 FSLR SPRINGBOARD（local）172.50→182.50 距 0.43% | 15:00 后大单 0 笔
+21:43:17 [INFO] yhs.overnight_rules: 2026-10-16 GEV SPRINGBOARD（local）920.00→950.00 距 0.12% | 15:00 后大单 0 笔
+21:44:28 [INFO] yhs.overnight_rules: 2026-10-16 GLW SPRINGBOARD（local）131.00→135.00 距 0.83% | 15:00 后大单 1 笔
+21:44:29 [INFO] yhs.overnight_rules: 2026-10-16 GM SPRINGBOARD（local）83.00→84.00 距 0.69% | 15:00 后大单 0 笔
+21:44:31 [INFO] yhs.overnight_rules: 2026-10-16 GME CLIFF（local）27.00→26.50 距 0.61% | 15:00 后大单 0 笔
+21:44:37 [INFO] yhs.overnight_rules: 2026-10-16 GS CLIFF（local）885.00→870.00 距 0.71% | 15:00 后大单 2 笔
+21:44:59 [INFO] yhs.overnight_rules: 2026-10-16 IBM CLIFF（local）232.50→230.00 距 0.29% | 15:00 后大单 2 笔
+21:45:09 [INFO] yhs.overnight_rules: 2026-10-16 JD CLIFF（local）27.00→26.00 距 0.37% | 15:00 后大单 0 笔
+21:45:11 [INFO] yhs.overnight_rules: 2026-10-16 JNJ CLIFF（local）257.50→240.00 距 0.84% | 15:00 后大单 0 笔
+21:45:16 [INFO] yhs.overnight_rules: 2026-10-16 LLY SPRINGBOARD（local）1245.00→1260.00 距 0.96% | 15:00 后大单 5 笔
+21:45:24 [INFO] yhs.overnight_rules: 2026-10-16 MDT SPRINGBOARD（king）94.00→100.00 距 0.81% | 15:00 后大单 0 笔
+21:46:49 [INFO] yhs.overnight_rules: 2026-10-16 MRK CLIFF（local）146.00→140.00 距 0.01% | 15:00 后大单 0 笔
+21:47:01 [INFO] yhs.overnight_rules: 2026-10-16 MU SPRINGBOARD（local）875.00→880.00 距 0.18% | 15:00 后大单 94 笔
+21:47:19 [INFO] yhs.overnight_rules: 2026-10-16 NEM SPRINGBOARD（local）118.00→121.00 距 0.32% | 15:00 后大单 2 笔
+21:47:36 [INFO] yhs.overnight_rules: 2026-10-16 NOW SPRINGBOARD（local）140.00→142.00 距 1.00% | 15:00 后大单 1 笔
+21:47:39 [INFO] yhs.overnight_rules: 2026-10-16 NVO CLIFF（local）39.00→38.50 距 0.68% | 15:00 后大单 1 笔
+21:47:45 [INFO] yhs.overnight_rules: 2026-10-16 ORCL CLIFF（local）129.00→125.00 距 0.74% | 15:00 后大单 4 笔
+21:47:51 [INFO] yhs.overnight_rules: 2026-10-16 PDD CLIFF（local）81.00→79.00 距 0.25% | 15:00 后大单 0 笔
+21:49:22 [INFO] yhs.overnight_rules: 2026-10-16 RBLX SPRINGBOARD（king）49.00→54.00 距 0.35% | 15:00 后大单 0 笔
+21:49:28 [INFO] yhs.overnight_rules: 2026-10-16 SAP SPRINGBOARD（local）222.50→225.00 距 0.31% | 15:00 后大单 0 笔
+21:49:32 [INFO] yhs.overnight_rules: 2026-10-16 SCHW CLIFF（local）92.00→91.00 距 0.21% | 15:00 后大单 0 笔
+21:49:34 [INFO] yhs.overnight_rules: 2026-10-16 SHEL SPRINGBOARD（local）106.00→107.00 距 0.45% | 15:00 后大单 3 笔
+21:49:43 [INFO] yhs.overnight_rules: 2026-10-16 SNPS CLIFF（local）455.00→450.00 距 0.05% | 15:00 后大单 0 笔
+21:49:45 [INFO] yhs.overnight_rules: 2026-10-16 SPY CLIFF（local）763.00→762.00 距 0.04% | 15:00 后大单 120 笔
+21:49:47 [INFO] yhs.overnight_rules: 2026-10-16 STM SPRINGBOARD（local）45.00→45.50 距 0.86% | 15:00 后大单 0 笔
+21:49:49 [INFO] yhs.overnight_rules: 2026-10-16 STX SPRINGBOARD（local）632.50→642.50 距 0.80% | 15:00 后大单 2 笔
+21:50:11 [INFO] yhs.overnight_rules: 2026-10-16 TQQQ CLIFF（local）68.00→67.00 距 0.01% | 15:00 后大单 9 笔
+21:51:43 [INFO] yhs.overnight_rules: 2026-10-16 UNH CLIFF（local）402.50→395.00 距 0.43% | 15:00 后大单 10 笔
+21:52:03 [INFO] yhs.overnight_rules: 2026-10-16 VZ SPRINGBOARD（local）44.50→45.00 距 0.37% | 15:00 后大单 0 笔
+21:52:10 [INFO] yhs.overnight_rules: 2026-10-16 WMT CLIFF（local）120.00→113.00 距 0.95% | 15:00 后大单 1 笔
+21:52:13 [INFO] yhs.overnight_rules: 2026-10-16 XOM SPRINGBOARD（local）177.50→185.00 距 0.76% | 15:00 后大单 0 笔
+21:52:50 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/MU261023C00880000，5.1s 后免费重试（第 1 轮）
+21:52:55 [INFO] yhs.main: 【历史】MU261023C00880000 分钟线为 2026-10-19（该接口仅含最近交易日），本次回放不再请求，全部改用真实 IV 定价
+21:52:56 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/MU261023C00880000，5.0s 后免费重试（第 1 轮）
+21:53:02 [INFO] yhs.main: 【历史】MU261023C00880000 真实 IV 序列 390 个点（1m）
+21:53:04 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/MU，5.1s 后免费重试（第 1 轮）
+21:53:09 [INFO] yhs.overnight_rules: 2026-10-16 O:MU261023C00880000 放弃：单张 $2733 超过每笔上限
+21:53:09 [INFO] yhs.main: 【历史】SPY261019P00762000 真实 IV 序列 390 个点（1m）
+21:53:09 [INFO] yhs.main: 【历史】SPY261019P00762000 真实成交 bar 150 根（13:31–16:14）
+21:53:09 [INFO] yhs.main: 【历史】SPY261019P00762000 真实 IV 序列 390 个点（1m）
+21:53:09 [INFO] yhs.overnight_rules: 2026-10-16 开 SPY O:SPY261019P00762000 成本 2.52 → 09:35 卖 0.30（-88.1%）跳空 0.62%
+21:53:11 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AMD261023P00527500，5.1s 后免费重试（第 1 轮）
+21:53:16 [INFO] yhs.main: 【历史】AMD261023P00527500 真实 IV 序列 390 个点（1m）
+21:53:17 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AMD，5.3s 后免费重试（第 1 轮）
+21:53:24 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AMD，5.2s 后免费重试（第 1 轮）
+21:53:30 [INFO] yhs.overnight_rules: 2026-10-16 O:AMD261023P00527500 放弃：单张 $1609 超过每笔上限
+21:53:31 [INFO] yhs.main: 【历史】SHEL261023C00107000 真实 IV 序列 390 个点（1m）
+21:53:32 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/SHEL，5.2s 后免费重试（第 1 轮）
+21:53:38 [INFO] yhs.overnight_rules: 2026-10-16 O:SHEL261023C00107000 放弃：价差 63%
+21:53:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TQQQ261023P00067500，5.0s 后免费重试（第 1 轮）
+21:53:44 [INFO] yhs.main: 【历史】TQQQ261023P00067500 真实 IV 序列 390 个点（1m）
+21:53:46 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/TQQQ，5.1s 后免费重试（第 1 轮）
+21:53:52 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/TQQQ261023P00067500，5.2s 后免费重试（第 1 轮）
+21:53:58 [INFO] yhs.main: 【历史】TQQQ261023P00067500 真实成交 bar 47 根（09:30–15:58）
+21:53:59 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/TQQQ，5.2s 后免费重试（第 1 轮）
+21:54:06 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/TQQQ261023P00067500，5.1s 后免费重试（第 1 轮）
+21:54:11 [INFO] yhs.main: 【历史】TQQQ261023P00067500 真实 IV 序列 390 个点（1m）
+21:54:11 [INFO] yhs.overnight_rules: 2026-10-16 开 TQQQ O:TQQQ261023P00067500 成本 2.26 → 09:35 卖 0.87（-61.4%）跳空 4.38%
+21:54:12 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BRKB261023C00535000，5.1s 后免费重试（第 1 轮）
+21:54:18 [INFO] yhs.main: 【历史】BRKB261023C00535000 真实 IV 序列 390 个点（1m）
+21:54:19 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/BRKB，5.2s 后免费重试（第 1 轮）
+21:54:26 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/BRKB261023C00535000，5.0s 后免费重试（第 1 轮）
+21:54:31 [INFO] yhs.main: 【历史】BRKB261023C00535000 真实成交 bar 94 根（09:31–15:59）
+21:54:33 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/BRKB，5.0s 后免费重试（第 1 轮）
+21:54:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/BRKB261023C00535000，5.2s 后免费重试（第 1 轮）
+21:54:45 [INFO] yhs.main: 【历史】BRKB261023C00535000 真实 IV 序列 390 个点（1m）
+21:54:45 [INFO] yhs.overnight_rules: 2026-10-16 开 BRKB O:BRKB261023C00535000 成本 2.66 → 09:35 卖 1.61（-39.3%）跳空 -0.33%
+21:54:46 [INFO] yhs.main: 【历史】UNH261023P00400000 真实 IV 序列 390 个点（1m）
+21:54:48 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/UNH261023P00400000，5.3s 后免费重试（第 1 轮）
+21:54:54 [INFO] yhs.main: 【历史】UNH261023P00400000 真实成交 bar 97 根（09:31–15:53）
+21:54:55 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/UNH，5.0s 后免费重试（第 1 轮）
+21:55:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/UNH261023P00400000，5.2s 后免费重试（第 1 轮）
+21:55:07 [INFO] yhs.main: 【历史】UNH261023P00400000 真实 IV 序列 390 个点（1m）
+21:55:07 [INFO] yhs.overnight_rules: 2026-10-16 开 UNH O:UNH261023P00400000 成本 7.07 → 09:35 卖 5.66（-20.0%）跳空 0.08%
+21:55:09 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261023C00119000，5.1s 后免费重试（第 1 轮）
+21:55:14 [INFO] yhs.main: 【历史】NEM261023C00119000 真实 IV 序列 390 个点（1m）
+21:55:15 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEM，5.0s 后免费重试（第 1 轮）
+21:55:22 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/NEM261023C00119000，5.2s 后免费重试（第 1 轮）
+21:55:27 [INFO] yhs.main: 【历史】NEM261023C00119000 真实成交 bar 14 根（09:34–14:44）
+21:55:29 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/NEM，5.3s 后免费重试（第 1 轮）
+21:55:35 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/NEM261023C00119000，5.1s 后免费重试（第 1 轮）
+21:55:41 [INFO] yhs.main: 【历史】NEM261023C00119000 真实 IV 序列 390 个点（1m）
+21:55:41 [INFO] yhs.overnight_rules: 2026-10-16 开 NEM O:NEM261023C00119000 成本 2.99 → 09:35 卖 2.69（-10.1%）跳空 0.33%
+21:55:42 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/LLY261023C01260000，5.0s 后免费重试（第 1 轮）
+21:55:47 [INFO] yhs.main: 【历史】LLY261023C01260000 真实 IV 序列 389 个点（1m）
+21:55:49 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/LLY，5.3s 后免费重试（第 1 轮）
+21:55:55 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/LLY，5.1s 后免费重试（第 1 轮）
+21:56:01 [INFO] yhs.overnight_rules: 2026-10-16 O:LLY261023C01260000 放弃：单张 $2119 超过每笔上限
+21:56:02 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AMAT261023P00405000，5.3s 后免费重试（第 1 轮）
+21:56:08 [INFO] yhs.main: 【历史】AMAT261023P00405000 真实 IV 序列 390 个点（1m）
+21:56:09 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AMAT，5.2s 后免费重试（第 1 轮）
+21:56:16 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/AMAT261023P00405000，5.3s 后免费重试（第 1 轮）
+21:56:21 [INFO] yhs.main: 【历史】AMAT261023P00405000 真实成交 bar 17 根（09:31–14:12）
+21:56:23 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/AMAT，5.1s 后免费重试（第 1 轮）
+21:56:30 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/AMAT261023P00405000，5.1s 后免费重试（第 1 轮）
+21:56:35 [INFO] yhs.main: 【历史】AMAT261023P00405000 真实 IV 序列 390 个点（1m）
+21:56:35 [INFO] yhs.overnight_rules: 2026-10-16 开 AMAT O:AMAT261023P00405000 成本 11.32 → 09:35 卖 3.43（-69.7%）跳空 3.51%
+21:56:36 [INFO] yhs.main: 【历史】ORCL261023P00128000 真实 IV 序列 387 个点（1m）
+21:56:39 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/ORCL261023P00128000，5.1s 后免费重试（第 1 轮）
+21:56:44 [INFO] yhs.main: 【历史】ORCL261023P00128000 真实成交 bar 150 根（10:14–15:58）
+21:56:45 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ORCL261023P00128000，5.1s 后免费重试（第 1 轮）
+21:56:51 [INFO] yhs.main: 【历史】ORCL261023P00128000 真实 IV 序列 390 个点（1m）
+21:56:52 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/ORCL，5.3s 后免费重试（第 1 轮）
+21:56:58 [INFO] yhs.overnight_rules: 2026-10-16 开 ORCL O:ORCL261023P00128000 成本 3.59 → 09:35 卖 2.23（-38.0%）跳空 2.0%
+21:56:59 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRWV261023C00061500，5.1s 后免费重试（第 1 轮）
+21:57:05 [INFO] yhs.main: 【历史】CRWV261023C00061500 真实 IV 序列 390 个点（1m）
+21:57:07 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/CRWV261023C00061500，5.2s 后免费重试（第 1 轮）
+21:57:13 [INFO] yhs.main: 【历史】CRWV261023C00061500 真实成交 bar 150 根（10:31–15:59）
+21:57:14 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/CRWV261023C00061500，5.0s 后免费重试（第 1 轮）
+21:57:19 [INFO] yhs.main: 【历史】CRWV261023C00061500 真实 IV 序列 390 个点（1m）
+21:57:20 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/CRWV，5.2s 后免费重试（第 1 轮）
+21:57:26 [INFO] yhs.overnight_rules: 2026-10-16 开 CRWV O:CRWV261023C00061500 成本 3.19 → 09:35 卖 4.36（+36.5%）跳空 5.85%
+21:57:27 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/GS261023P00877500，5.1s 后免费重试（第 1 轮）
+21:57:33 [INFO] yhs.main: 【历史】GS261023P00877500 真实 IV 序列 390 个点（1m）
+21:57:34 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/GS，5.2s 后免费重试（第 1 轮）
+21:57:39 [INFO] yhs.overnight_rules: 2026-10-16 O:GS261023P00877500 放弃：单张 $1594 超过每笔上限
+21:57:41 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ACN261023P00227500，5.3s 后免费重试（第 1 轮）
+21:57:46 [INFO] yhs.main: 【历史】ACN261023P00227500 真实 IV 序列 390 个点（1m）
+21:57:47 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/ACN，5.3s 后免费重试（第 1 轮）
+21:57:54 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/ACN261023P00227500，5.3s 后免费重试（第 1 轮）
+21:58:00 [INFO] yhs.main: 【历史】ACN261023P00227500 真实成交 bar 30 根（09:31–15:54）
+21:58:01 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/ACN，5.3s 后免费重试（第 1 轮）
+21:58:08 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ACN261023P00227500，5.2s 后免费重试（第 1 轮）
+21:58:14 [INFO] yhs.main: 【历史】ACN261023P00227500 真实 IV 序列 389 个点（1m）
+21:58:14 [INFO] yhs.overnight_rules: 2026-10-16 开 ACN O:ACN261023P00227500 成本 5.16 → 09:35 卖 3.88（-24.9%）跳空 0.03%
+21:58:15 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/STX261023C00640000，5.3s 后免费重试（第 1 轮）
+21:58:20 [INFO] yhs.main: 【历史】STX261023C00640000 真实 IV 序列 390 个点（1m）
+21:58:22 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/STX，5.2s 后免费重试（第 1 轮）
+21:58:27 [INFO] yhs.overnight_rules: 2026-10-16 O:STX261023C00640000 放弃：单张 $2799 超过每笔上限
+21:58:28 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/ADI261023P00395000，5.1s 后免费重试（第 1 轮）
+21:58:34 [INFO] yhs.main: 【历史】ADI261023P00395000 真实 IV 序列 390 个点（1m）
+21:58:35 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/ADI，5.1s 后免费重试（第 1 轮）
+21:58:41 [INFO] yhs.overnight_rules: 2026-10-16 O:ADI261023P00395000 放弃：价差 32%
+21:58:42 [INFO] yhs.main: 【历史】WMT261023P00118000 真实 IV 序列 390 个点（1m）
+21:58:44 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-intraday/WMT261023P00118000，5.1s 后免费重试（第 1 轮）
+21:58:50 [INFO] yhs.main: 【历史】WMT261023P00118000 真实成交 bar 150 根（10:52–15:59）
+21:58:51 [INFO] yhs.client: 202 数据准备中 /v1/options/contract-greeks-series/WMT261023P00118000，5.0s 后免费重试（第 1 轮）
+21:58:57 [INFO] yhs.main: 【历史】WMT261023P00118000 真实 IV 序列 390 个点（1m）
+21:58:58 [INFO] yhs.client: 202 数据准备中 /v1/options/chain-history/WMT，5.1s 后免费重试（第 1 轮）
+21:59:03 [INFO] yhs.overnight_rules: 2026-10-16 开 WMT O:WMT261023P00118000 成本 1.24 → 09:35 卖 1.18（-5.5%）跳空 -0.63%
+{
+  "trades": 10,
+  "total_pnl": -3254,
+  "win_pct": 10.0,
+  "pnl_ex_best": -3603,
+  "by_night": {
+    "2026-10-16→2026-10-19": {
+      "n": 10,
+      "pnl": -3254,
+      "wins": 1
+    }
+  }
+}
+21:59:03 [INFO] yhs.overnight_rules: 配额剩余 92838

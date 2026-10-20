@@ -1,0 +1,2 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-16→2026-10-19,AAPL,硬件网络存储,SPRINGBOARD,king,O:AAPL261019C00345000,343.94,342.5,350.0,0.42,2,155450,1.821,1.085,09:35,-0.07,False,5,911,-367.8,-40.4

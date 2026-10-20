@@ -1,0 +1,2 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-09→2026-10-12,PLTR,软件,SPRINGBOARD,local,O:PLTR261016C00210000,207.97,207.5,212.5,0.23,2,168975,4.63,4.408,09:35,1.04,True,2,926,-44.6,-4.8

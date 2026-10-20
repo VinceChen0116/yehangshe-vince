@@ -1,0 +1,2 @@
+night,ticker,sector,structure,node_mode,contract,spot,pos_node,neg_node,dist_pct,flow_late_n,flow_late_usd,entry,exit,exit_time,gap_pct,gap_right_way,qty,invested,pnl_usd,roi_pct
+2026-10-15→2026-10-16,TSLA,消费,SPRINGBOARD,local,O:TSLA261016C00365000,363.33,360.0,375.0,0.92,1,59600,4.723,4.441,09:35,0.88,True,2,945,-56.4,-6.0

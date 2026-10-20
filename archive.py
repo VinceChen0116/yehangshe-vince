@@ -147,6 +147,17 @@ def recent_sessions(last: dt.date, n: int) -> list[dt.date]:
     return sorted(out)
 
 
+def overnight_friday(day: dt.date) -> str:
+    """隔夜单（overnight_live.predicted_expiry）给非每日到期标的选的到期：day 之后的下一个周五（休市则前一交易日）。
+    near 模式也存它，否则周五（及周一到周三）的隔夜回测拿不到实盘用的那个到期（2026-10-19 用户要求）。"""
+    d = day + dt.timedelta(days=1)
+    while d.weekday() != 4:
+        d += dt.timedelta(days=1)
+    while not is_trading_day(d):
+        d -= dt.timedelta(days=1)
+    return d.isoformat()
+
+
 def pick_expirations(listed: list[str], day: dt.date, today: dt.date, max_dte: int) -> list[str]:
     """未来 max_dte 天内的全部到期日 + 下一个周五。
     补存过去的交易日时，snapshot 列表里已不含当时已到期的合约，按规则补回（周五 0DTE、日到期标的的逐日到期）。"""
@@ -229,7 +240,7 @@ def archive_day(client, cfg: SystemConfig, day: dt.date, tickers: list[str], tod
                 log.info("  %-5s %s", t, "  ".join(f"{e[5:]}:{v}" for e, v in info.items()))
                 continue
             if expiry_mode == "near":
-                exps = [day.isoformat(), next_trading_day(day).isoformat()]
+                exps = list(dict.fromkeys([day.isoformat(), next_trading_day(day).isoformat(), overnight_friday(day)]))
             else:
                 snap = client.get(HEATMAP_SNAPSHOT_PATH.format(ticker=t)) if not dry_run else {"data": {}}
                 listed = ((snap.get("data") or {}).get("expirations") or []) if isinstance(snap, dict) else []
