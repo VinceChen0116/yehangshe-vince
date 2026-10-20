@@ -292,6 +292,12 @@ class TestExits(unittest.TestCase):
         self.assertTrue(st.is_0dte)
         self.assertEqual(st.initial_stop_loss_spot, 101.3)
 
+    def test_contract_cost_cap(self):
+        with self.assertRaises(AssertionError):
+            opened(ask=10.5, bid=10.3)                        # 单张 $1,050 > $1,000 → 不开
+        tr, fq, p, now = opened(ask=9.9, bid=9.7)
+        self.assertEqual(p.entry_option_price, 9.9)
+
     def test_initial_stop(self):
         tr, fq, p, now = opened()
         self.assertIsNone(self.tick(tr, fq, p, now, 1, 1.5, 100.6))           # −25%
