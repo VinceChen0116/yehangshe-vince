@@ -76,6 +76,7 @@ BASELINE_NOTES = """
 14d. 执行层保护：买卖价差 > 中间价 25% 不开（2026-10-20 用户定）。
 14a. 单张成本上限 $1,000（ask × 100，2026-10-20 用户定，文档没有）。
 14. 组合上限（文档没有）：2026-10-20 用户定不限持仓数量 / 每天笔数；保留同一只票同时 1 笔、每天最多 2 笔、平仓后 30 分钟冷却。
+14e. 同一底层的代码共享平仓冷却期（2026-10-20 用户定）：GOOGL 平仓后 30 分钟内 GOOG 也不开，反之亦然（config.SAME_UNDERLYING_GROUPS）。
 14b. 2026-10-20 用户定：先不做雪崩结构（bl_enable_avalanche=False）。
 14c. 实盘盯仓：平时每分钟；任一持仓离出场触发线 5 个百分点以内（现货离止损 / 目标 0.1% 以内）时改为每 20 秒（回放只有 1 分钟数据，仍按分钟）。
 15. 盘中开仓只到 15:00（之后文档是尾盘隔夜模式；我们的隔夜单是另一套独立规则，不动）。
@@ -974,7 +975,7 @@ class BaselineEngine(SessionEngine):
             return False, "该标的已有持仓"
         if cfg.max_trades_per_ticker_day and len(self.trader.trades_today(ticker, now_et.date())) >= cfg.max_trades_per_ticker_day:
             return False, "该标的当日开仓次数已达上限"
-        le = self.last_exit_time.get(ticker)
+        le = self.last_exit_for(ticker)
         if le and (now_et - le).total_seconds() < cfg.reentry_cooldown_min * 60:
             return False, "平仓冷却期中"
         return True, ""

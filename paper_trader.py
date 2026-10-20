@@ -17,7 +17,7 @@ import math
 import os
 from dataclasses import dataclass, field
 
-from config import SystemConfig, entry_blocked_window, hhmm_to_minutes, minutes_of_day
+from config import SystemConfig, entry_blocked_window, hhmm_to_minutes, minutes_of_day, same_underlying
 from detector import FullSignal, SignalDetector, extract_rows, pick, pick_num
 from yhs_client import QuotaExhausted, YHSApiError
 
@@ -611,6 +611,11 @@ class SessionEngine:
         self.last_exit_time: dict[str, dt.datetime] = {}
         self.pending: dict = {}   # 本轮待排序的信号：标的 → FullSignal（signal_ranking="score" 时使用）
 
+    def last_exit_for(self, ticker: str) -> dt.datetime | None:
+        """同一底层（如 GOOGL/GOOG）里最近一次平仓时间——冷却期按底层共享。"""
+        times = [t for t in (self.last_exit_time.get(x) for x in same_underlying(ticker)) if t]
+        return max(times) if times else None
+
     def can_enter(self, ticker: str, now_et: dt.datetime) -> tuple[bool, str]:
         cfg = self.cfg
         if minutes_of_day(now_et) < hhmm_to_minutes(cfg.no_new_entries_before):
@@ -630,7 +635,7 @@ class SessionEngine:
             return False, f"{cfg.max_trades_before[0]} 前已开 {cfg.max_trades_before[1]} 笔（名额留给下午）"
         if len(self.trader.trades_today(ticker, now_et.date())) >= cfg.max_trades_per_ticker_day:
             return False, "该标的当日开仓次数已达上限"
-        le = self.last_exit_time.get(ticker)
+        le = self.last_exit_for(ticker)
         if le and (now_et - le).total_seconds() < cfg.reentry_cooldown_min * 60:
             return False, "平仓冷却期中"
         return True, ""

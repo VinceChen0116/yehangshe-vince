@@ -33,6 +33,19 @@ INDEX_BLACKLIST = frozenset({
     "OEX", "XEO", "MRUT", "XND", "VXN", "RVX", "SKEW",
 })
 
+# 同一底层的不同代码（2026-10-20 用户定）：GOOGL/GOOG 都是 Alphabet，共享平仓冷却期
+SAME_UNDERLYING_GROUPS = (
+    frozenset({"GOOGL", "GOOG"}),
+)
+
+
+def same_underlying(ticker: str) -> frozenset:
+    """返回与 ticker 同一底层的全部代码（含自身）；不在任何分组里就只有它自己。"""
+    for g in SAME_UNDERLYING_GROUPS:
+        if ticker in g:
+            return g
+    return frozenset({ticker})
+
 # 常见 ETF / ETN 名录（用于识别"非白名单 ETF"并剔除）。
 # 榜单接口不返回证券类型，故采用本地名录；若接口行内带有 asset_type/is_etf 字段会优先使用。
 KNOWN_ETFS = frozenset({
