@@ -30,7 +30,7 @@ from detector import FLOW_TRADES_PATH, detect_structure, extract_rows, parse_hea
 from main import HistoryClient
 from notify import from_config
 from overnight import half_spread
-from overnight_live import size_contracts
+from overnight_live import drop_conflicts, size_contracts
 from sectors import sector_of
 from paper_trader import occ_symbol
 from yhs_client import YHSClient
@@ -136,6 +136,9 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = E
         if fl:
             cands.append((sum(float(x.get("premium_usd") or 0) for x in fl), len(fl), t, exp, snap, st, mode))
     cands.sort(key=RANK_KEY or (lambda x: -x[0]))
+    cands, dropped = drop_conflicts(cands, lambda c: c[2], lambda c: c[5].right)
+    if dropped:
+        log.info("%s %s 同一家公司方向相反，都不开", P, "、".join(dropped))
     out = []
     dir_n, sec_n = {}, {}
     for usd, n, t, exp, snap, st, mode in cands:

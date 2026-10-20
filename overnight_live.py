@@ -41,6 +41,18 @@ LIVE_DIR = "live"
 MAX_POSITIONS = 10
 MAX_PER_SECTOR = 3   # 同板块每晚最多 3 笔（2026-10-16 用户定，板块见 sectors.py）
 BUDGET, BUDGET_BAND = 1000.0, 0.25   # 每笔目标投入 $1,000，允许 $750–$1,250（2026-10-16 用户定）
+SAME_COMPANY = (("GOOG", "GOOGL"),)   # 同一家公司的不同股票类别：方向冲突就都不开（2026-10-20 用户定）
+
+
+def drop_conflicts(cands: list, ticker, right) -> tuple[list, list]:
+    """同一家公司（SAME_COMPANY）的候选一个看涨一个看跌 = 方向不明，全部去掉。返回 (保留, 去掉的代码)。
+    ticker / right：从候选元组取代码与 C/P 的函数（实盘与回测的元组结构不同）。"""
+    dropped = set()
+    for group in SAME_COMPANY:
+        rights = {right(c) for c in cands if ticker(c) in group}
+        if len(rights) > 1:
+            dropped |= set(group)
+    return [c for c in cands if ticker(c) not in dropped], sorted(dropped & {ticker(c) for c in cands})
 
 
 def size_contracts(price: float) -> int:
@@ -270,6 +282,9 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
         if fl["n"]:
             cands.append((fl["usd"], t, exps[t], snap, st, mode, fl))
     cands.sort(key=lambda x: -x[0])
+    cands, dropped = drop_conflicts(cands, lambda c: c[1], lambda c: c[4].right)
+    if dropped:
+        log.info("【隔夜·放弃】%s 是同一家公司、方向相反，都不开", "、".join(dropped))
     log.info("【隔夜·候选】结构 + 大单都满足 %d 个：%s", len(cands), "、".join(c[1] for c in cands) or "无")
     rows, quotes = [], QuoteBook(client)
     sec_n = {}
