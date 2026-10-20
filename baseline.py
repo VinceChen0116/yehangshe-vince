@@ -37,6 +37,8 @@ BIG_NODE_RATIO = 0.43                            # "超大正节点" = GEX ≥ 0
 INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0DTE / 最近周度；15:00 后是尾盘隔夜模式
 OUTSIDE_WALL_RATIO = 0.5                         # 墙 ≥ 50% × 墙外侧（逆方向）最大正节点，否则不成立（2026-10-20 用户定）
 MAGNET_MIN_DIST = 0.006                          # 离墙 > 0.6% 时，墙在长大且是同侧 4.5% 内最大正节点 → 磁吸，不开（2026-10-20 用户定）
+SQ_WALL_VS_NEAR = 0.5                            # 逼空：Call 墙 ≥ 0.5 × 现价 ±0.5% 内及路径上 |GEX| 最大的节点（2026-10-20 用户定）
+SQ_BELOW_NEG_RATIO = 0.2                         # 逼空：现价下方 0.5% 内负节点 ≥ 0.2 × Call 墙 → 不开（突破失败会被加速砸下；2026-10-20 用户定）
 DECAY_MIN_DROP = 0.02                            # 每根比上一根至少小 2% 才算"变小"（2026-10-20 用户定）
 DECAY_RULES = ((2, 0.20, "START_NODE_DECAY_10M"), (4, 0.30, "START_NODE_DECAY_20M"))   # 起始点衰减截断：(连续变小根数, 进度上限, 原因)
 
@@ -51,6 +53,8 @@ BASELINE_NOTES = """
 2c. 钉住：主结构到期 |GEX| 最大的节点是负节点、在路径上或现价 ±0.5% 内、且 ≥ 3 × 墙 → 不开（逼空也查）。
 2f. 墙外侧：天花板 / 踏板 GEX ≥ 50% × 墙外侧（悬崖 = 上方、跳板 = 下方）整张图最大的正节点，否则墙太弱不成立（2026-10-20 用户定）。
 2g. 磁吸：离墙 > 0.6% 时，墙在长大（GROWING / NEW）且是同侧 4.5% 内最大的正节点 → 价格可能先被吸过去，不开（2026-10-20 用户定）。
+2h. 逼空（2026-10-20 用户定）：Call 墙 < 0.5 × 现价 ±0.5% 内及路径上 |GEX| 最大的节点 → 不开（目标吸不过去）；
+    现价下方 0.5% 内有负节点 ≥ 0.2 × Call 墙 → 不开（突破失败会被加速砸下）。
 2e. 逼空磁吸：现价上下 3 格以内（含第 3 格）有比 Call 墙更大的正节点 → 不开逼空（2026-10-20 用户定）。
 2d. 至少一格：现价和（最终）目标之间至少要有一个 Heatmap 节点（行权价），否则不开（悬崖 / 跳板 / 逼空都查；2026-10-20 用户定）。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
@@ -545,6 +549,18 @@ def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) 
     pin, pin_note = pin_check(cells, S, cw[0], cw[1])
     if pin:
         return None, pin_note
+    zone = [(k, g) for k, g in cells if (S < k < cw[0]) or (k != cw[0] and abs(k / S - 1) <= 0.005)]
+    if zone:
+        zk, zg = max(zone, key=lambda c: abs(c[1]))
+        if cw[1] < SQ_WALL_VS_NEAR * abs(zg):
+            return None, (f"Call 墙 {cw[0]:g}(+{cw[1] / 1e6:.1f}M) 不到现价附近 / 路径上最大节点 {zk:g}({zg / 1e6:+.1f}M) 的 "
+                          f"{SQ_WALL_VS_NEAR * 100:.0f}%，吸不过去")
+    below = [(k, g) for k, g in cells if S * 0.995 <= k < S and g < 0]
+    if below:
+        bk, bg = min(below, key=lambda c: c[1])
+        if -bg >= SQ_BELOW_NEG_RATIO * cw[1]:
+            return None, (f"现价下方 0.5% 内有负节点 {bk:g}({bg / 1e6:.1f}M) ≥ {SQ_BELOW_NEG_RATIO:g} × Call 墙"
+                          f"（{cw[1] / 1e6:.1f}M），突破失败会被加速砸下")
     run = (cw[0] - S) / S
     if not (0.012 <= run <= 0.055):
         return None, f"跑道 {run * 100:.2f}% 不在 1.2%–5.5%"

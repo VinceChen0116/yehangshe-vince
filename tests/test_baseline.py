@@ -271,6 +271,27 @@ class TestTrendArchetypes(unittest.TestCase):
         self.assertEqual(sig.cand.structure_type, "SHORT_GAMMA_VACUUM_SQUEEZE")
         self.assertEqual(sig.target_spot, 102.5)
 
+    def test_squeeze_wall_vs_near_node(self):       # AMZN 10/20 型：现价旁 −23M 大负节点，Call 墙只有 8.7M
+        cells = {267.5: 8.74 * M, 265.0: -2.66 * M, 262.5: -23.07 * M, 260.0: 7.93 * M, 270.0: 3.41 * M}
+        j, _, _ = run([262.0, 262.3, 262.6, 262.9, 263.2, 263.45], cells)
+        frs = j.frames["TEST"]
+        cand, why = B.find_squeeze("TEST", frs[-1], B.context(frs), B.min_gex("TEST", 263.45), "NEUTRAL")
+        self.assertIsNone(cand)
+        self.assertIn("吸不过去", why)
+
+    def test_squeeze_negative_below_spot(self):     # GOOGL 10/20 11:06 型：现价下方 0.34% 有 −3.9M（≥ 0.2 × 18.7M）
+        cells = {352.5: 18.67 * M, 350.0: -7.24 * M, 347.5: 1.11 * M, 345.0: 0.27 * M, 342.5: -3.88 * M, 340.0: 0.65 * M}
+        j, _, _ = run([341.5, 342.0, 342.5, 343.0, 343.4, 343.68], cells)
+        frs = j.frames["TEST"]
+        cand, why = B.find_squeeze("TEST", frs[-1], B.context(frs), B.min_gex("TEST", 343.68), "NEUTRAL")
+        self.assertIsNone(cand)
+        self.assertIn("加速砸下", why)
+        cells[342.5] = -3.5 * M                       # < 0.2 × 18.67M → 这一条放行
+        j, _, _ = run([341.5, 342.0, 342.5, 343.0, 343.4, 343.68], cells)
+        frs = j.frames["TEST"]
+        cand, why = B.find_squeeze("TEST", frs[-1], B.context(frs), B.min_gex("TEST", 343.68), "NEUTRAL")
+        self.assertNotIn("加速砸下", why or "")
+
     def test_squeeze_needs_node_between(self):    # SMCI 型：现价和目标之间没有节点（不到一格以上）
         cells = {102.5: 40 * M, 99.0: 5 * M, 98.0: -6 * M, 97.0: 2 * M}
         j, sig, _ = run([100.0, 100.1, 100.2, 100.35, 100.5, 100.6], cells)
