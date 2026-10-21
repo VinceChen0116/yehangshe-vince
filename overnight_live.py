@@ -25,6 +25,7 @@ import logging
 import os
 import sys
 import time
+import urllib.request
 
 from archive import fetch_heatmap_rows, live_universe, rows_to_frames
 from config import (SystemConfig, et_datetime, et_now, expiry_candidates, is_trading_day, next_trading_day,
@@ -79,6 +80,43 @@ def confirm_bar_ok(st, prev_spot: float, spot: float) -> tuple[bool, str]:
         if spot < prev_spot * (1 - CONFIRM_TOL):
             return False, f"现价 {prev_spot:.2f}→{spot:.2f} 往下（反向）{(1 - spot / prev_spot) * 100:.2f}%"
     return True, ""
+
+
+EARN_DIR = os.path.join("yhs_data", "cache", "earnings")
+
+
+def earnings_on(day: dt.date) -> dict | None:
+    """Nasdaq 财报日历 {代码: time-pre-market / time-after-hours / time-not-supplied}，缓存在 EARN_DIR；拉不到返回 None。"""
+    fp = os.path.join(EARN_DIR, f"{day}.json")
+    if not os.path.exists(fp):
+        try:
+            req = urllib.request.Request(f"https://api.nasdaq.com/api/calendar/earnings?date={day}",
+                                         headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+            with urllib.request.urlopen(req, timeout=30) as r:
+                rows = (json.load(r).get("data") or {}).get("rows") or []
+        except Exception as e:
+            log.warning("【隔夜·财报】%s 财报日历拉取失败：%s", day, e)
+            return None
+        os.makedirs(EARN_DIR, exist_ok=True)
+        with open(fp, "w", encoding="utf-8") as f:
+            json.dump({x["symbol"].replace(".", "").replace("/", ""): x.get("time") for x in rows}, f, indent=0)
+    with open(fp, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def earnings_reason(ticker: str, day: dt.date) -> str:
+    """隔夜跨财报：开仓日盘后 / 时间未注明，或次日（及中间休市日）盘前 / 时间未注明发财报 → 返回说明；否则 ""。
+    财报后 IV 骤降，买方多空都亏（2026-10-21 用户定：财报夜不开）。日历拉不到时不拦（日志有警告）。"""
+    nxt = next_trading_day(day)
+    t = ticker.replace(".", "")
+    d = day
+    while d <= nxt:
+        cal = earnings_on(d)
+        tm = (cal or {}).get(t)
+        if tm and ((d == day and tm != "time-pre-market") or (d == nxt and tm != "time-after-hours") or day < d < nxt):
+            return f"财报夜（{d:%m/%d} {'盘后' if tm == 'time-after-hours' else '盘前' if tm == 'time-pre-market' else '时间未注明'}）"
+        d += dt.timedelta(days=1)
+    return ""
 
 
 def drop_conflicts(cands: list, ticker, right) -> tuple[list, list]:
@@ -332,8 +370,13 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
             cands.append((fl["usd"], t, exps[t], snap, st, mode, fl))
     cands.sort(key=lambda x: -x[0])
     all_cands = list(cands)   # 没有新规则时的候选：影子仓（被规则删掉的单子）从这里选
+    reasons = {c[1]: earnings_reason(c[1], day) for c in cands}
+    reasons = {t: r for t, r in reasons.items() if r}
+    for t, r in reasons.items():
+        log.info("【隔夜·放弃】%s %s，不开", t, r)
+    cands = [c for c in cands if c[1] not in reasons]
     cands, dropped = drop_conflicts(cands, lambda c: c[1], lambda c: c[4].right)
-    reasons = {t: "同一家公司方向相反" for t in dropped}
+    reasons.update({t: "同一家公司方向相反" for t in dropped})
     s1550 = {}   # 标记 15:50 那根的现价（记录用）
     if dropped:
         log.info("【隔夜·放弃】%s 是同一家公司、方向相反，都不开", "、".join(dropped))
