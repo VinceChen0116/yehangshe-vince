@@ -66,6 +66,25 @@ def node_metrics(snap, st) -> dict:
             "magnet": f"{m[0]:g}/{'正' if m[1] > 0 else '负'}/{side}/{abs(m[1]) / abs_max:.2f}" if m else ""}
 
 
+def path_reason(snap, st) -> str:
+    """天花板 / 踏板（不含）→ 深渊 / 加速区（含）这段路径的检查，局部 / 全局模式都用；不通过返回原因，通过返回 ""。"""
+    cells = dict(snap.cells)
+    tot = snap.total_abs_gex or sum(abs(g) for g in cells.values()) or 1.0
+    up = st.structure == "SPRINGBOARD"
+    path = [(k, g) for k, g in snap.cells if (st.pos_strike < k <= st.neg_strike if up else st.neg_strike <= k < st.pos_strike)]
+    node, tgt = cells.get(st.pos_strike, 0.0), cells.get(st.neg_strike, 0.0)
+    neg = [-g for _, g in path if g < 0]
+    pos = [(k, g) for k, g in path if g > 0]
+    if abs(tgt) < PATH_TARGET_MIN * tot:
+        return f"目标 {st.neg_strike:g} 太弱（{abs(tgt) / tot * 100:.1f}% < {PATH_TARGET_MIN * 100:.0f}%）"
+    wall = max(pos, key=lambda x: x[1], default=None)
+    if wall and node > 0 and wall[1] > PATH_BLOCK_MAX * node:
+        return f"路上 {wall[0]:g} 正节点挡路（{wall[1] / node:.0%} × 天花板/踏板）"
+    if sum(neg) < PATH_NEG_POS * sum(g for _, g in pos) or len(neg) <= len(pos):
+        return f"路径燃料不足（负 {sum(neg) / 1e6:.2f}M/{len(neg)} 个 vs 正 {sum(g for _, g in pos) / 1e6:.2f}M/{len(pos)} 个）"
+    return ""
+
+
 def confirm_bar_ok(st, prev_spot: float, spot: float) -> tuple[bool, str]:
     """再确认（15:50 那根）：现价往反方向走不超过 CONFIRM_TOL、且没越过天花板 / 踏板才算确认。返回 (是否通过, 说明)。
     悬崖（买 Put）：反方向 = 往上，越过 = 现价 > 天花板；跳板（买 Call）：反方向 = 往下，越过 = 现价 < 踏板。"""
@@ -151,6 +170,9 @@ PRESCAN_START, OPEN_DEADLINE = "15:15", "15:58"   # 10/20 起 15:50 那根再确
 BAR1, BAR2 = "15:40", "15:45"   # 两根确认用的 Heatmap；标记 T 的段约 T+5:10 才可用
 SCAN1_AT, SCAN2_AT = dt.timedelta(hours=15, minutes=45, seconds=15), dt.timedelta(hours=15, minutes=50, seconds=15)
 BAR3, SCAN3_AT = "15:50", dt.timedelta(hours=15, minutes=55, seconds=15)   # 再确认那根（数据约 15:55），确认后约 15:56 买
+PATH_TARGET_MIN = 0.03   # 深渊 / 加速区本身 |GEX| ≥ 该到期 |GEX| 合计 3%（与"显著正节点"同一标准）
+PATH_BLOCK_MAX = 0.5     # 路径上任何正节点 ≤ 天花板 / 踏板的 50%（否则是挡路的墙）
+PATH_NEG_POS = 2.0       # 路径上负 GEX 合计 ≥ 2 × 正 GEX 合计，且负节点个数 > 正节点个数（2026-10-21 用户定）
 CONFIRM_TOL = 0.0005   # 再确认：反向不超过现价 0.05% 且没越过天花板 / 踏板（2026-10-20 用户定）
 FLOW_UNTIL = "15:50"   # 大单统计截止（与回测一致）
 SELL_START, SELL_DEADLINE = "09:35", "09:45"
@@ -370,7 +392,7 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
             cands.append((fl["usd"], t, exps[t], snap, st, mode, fl))
     cands.sort(key=lambda x: -x[0])
     all_cands = list(cands)   # 没有新规则时的候选：影子仓（被规则删掉的单子）从这里选
-    reasons = {c[1]: earnings_reason(c[1], day) for c in cands}
+    reasons = {c[1]: earnings_reason(c[1], day) or path_reason(c[3], c[4]) for c in cands}
     reasons = {t: r for t, r in reasons.items() if r}
     for t, r in reasons.items():
         log.info("【隔夜·放弃】%s %s，不开", t, r)
