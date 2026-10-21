@@ -44,6 +44,27 @@ BUDGET, BUDGET_BAND = 1000.0, 0.25   # 每笔目标投入 $1,000，允许 $750�
 SAME_COMPANY = (("GOOG", "GOOGL"),)   # 同一家公司的不同股票类别：方向冲突就都不开（2026-10-20 用户定）
 
 
+def node_metrics(snap, st) -> dict:
+    """开仓时的结构指标（只记录，见 FIELDS 注释）。"""
+    cells, spot = list(snap.cells), snap.spot
+    tot = snap.total_abs_gex or sum(abs(g) for _, g in cells) or 1.0
+    pos_max = max((g for _, g in cells if g > 0), default=0.0) or 1.0
+    up = st.structure == "SPRINGBOARD"
+    win = [(k, g) for k, g in cells if (spot < k <= spot * 1.01 if up else spot * 0.99 <= k < spot)]
+    node_g = dict(cells).get(st.pos_strike, 0.0)
+    near = [(k, g) for k, g in cells if abs(k / spot - 1) <= 0.02]
+    m = max(near, key=lambda c: abs(c[1]), default=None)
+    side = ("本身" if m and m[0] == st.pos_strike else
+            "前方" if m and ((m[0] > spot) if up else (m[0] < spot)) else "背后")
+    abs_max = max((abs(g) for _, g in cells), default=1.0) or 1.0
+    return {"node_ratio": round(node_g / pos_max, 2),
+            "target_pct": round(abs(st.neg_strike - spot) / spot * 100, 2),
+            "fuel_neg_pct": round(-sum(g for _, g in win if g < 0) / tot * 100, 1),
+            "fuel_pos_pct": round(sum(g for _, g in win if g > 0) / tot * 100, 1),
+            "block_ratio": round(max((g for k, g in win if g > 0 and k != st.pos_strike), default=0.0) / pos_max, 2),
+            "magnet": f"{m[0]:g}/{'正' if m[1] > 0 else '负'}/{side}/{abs(m[1]) / abs_max:.2f}" if m else ""}
+
+
 def confirm_bar_ok(st, prev_spot: float, spot: float) -> tuple[bool, str]:
     """再确认（15:50 那根）：现价往反方向走不超过 CONFIRM_TOL、且没越过天花板 / 踏板才算确认。返回 (是否通过, 说明)。
     悬崖（买 Put）：反方向 = 往上，越过 = 现价 > 天花板；跳板（买 Call）：反方向 = 往下，越过 = 现价 < 踏板。"""
@@ -98,7 +119,14 @@ SELL_START, SELL_DEADLINE = "09:35", "09:45"
 FIELDS = ["position_id", "open_date", "ticker", "structure", "node_mode", "right", "contract", "expiration", "strike", "qty",
           "spot", "pos_node", "neg_node", "dist_pct", "flow_n", "flow_usd", "flow_max", "entry_time", "entry_bid",
           "entry_ask", "entry_price", "exit_time", "exit_bid", "exit_price", "exit_note", "pnl_usd", "roi_pct", "status",
-          "shadow_reason"]
+          "shadow_reason", "node_ratio", "target_pct", "fuel_neg_pct", "fuel_pos_pct", "block_ratio", "magnet", "spot_1550"]
+# 结构指标（10/21 起只记录、不参与开仓，积累一周后再定门槛；均按标记 15:45 那根计算，占比 = 占该到期 |GEX| 合计 %）：
+#   node_ratio   天花板 / 踏板 GEX ÷ 该到期最大正节点 GEX（1 = 就是最大正节点）
+#   target_pct   深渊 / 加速区离现价 %
+#   fuel_neg_pct / fuel_pos_pct  现价往目标方向 1% 内负 GEX 合计 / 正 GEX 合计占比（燃料）
+#   block_ratio  同一窗口内（不含天花板 / 踏板本身）最大正节点 ÷ 最大正节点（路上的阻挡）
+#   magnet       现价 ±2% 内 |GEX| 最大的节点：行权价/正负/位置（本身 / 前方 / 背后）/ 占最大 |GEX| 的比
+#   spot_1550    标记 15:50 那根的现价（再确认用）
 # status：OPEN / CLOSED = 真实（模拟）仓；SHADOW_OPEN / SHADOW_CLOSED = 影子仓：没有新规则时本会开、被规则删掉的单子，
 # 同样按实时 ask 记买入、次日按 bid 平，只用来检验规则（不计入隔夜盈亏），shadow_reason 写被哪条规则删掉
 
@@ -306,6 +334,7 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
     all_cands = list(cands)   # 没有新规则时的候选：影子仓（被规则删掉的单子）从这里选
     cands, dropped = drop_conflicts(cands, lambda c: c[1], lambda c: c[4].right)
     reasons = {t: "同一家公司方向相反" for t in dropped}
+    s1550 = {}   # 标记 15:50 那根的现价（记录用）
     if dropped:
         log.info("【隔夜·放弃】%s 是同一家公司、方向相反，都不开", "、".join(dropped))
     # 再确认（15:55:15 起看标记 15:50 的那根）：反向超过 0.05% 或越过天花板 / 踏板就不开
@@ -322,6 +351,8 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
             except Exception as e:
                 log.info("%s Heatmap 获取失败：%s", t, e)
             ok, why = confirm_bar_ok(st, snap.spot, s3.spot) if s3 else (False, f"{BAR3} 那根拿不到")
+            if s3:
+                s1550[t] = round(s3.spot, 2)
             if ok:
                 kept.append(c)
             else:
@@ -368,7 +399,8 @@ def do_open(cfg, client, notifier, day: dt.date, dry: bool, only=None) -> int:
                         "pos_node": st.pos_strike, "neg_node": st.neg_strike, "dist_pct": round(st.distance_pct * 100, 2),
                         "flow_n": fl["n"], "flow_usd": fl["usd"], "flow_max": fl["max"],
                         "entry_time": et_now().strftime("%H:%M"), "entry_bid": q["bid"], "entry_ask": q["ask"],
-                        "entry_price": q["ask"], "status": "OPEN"})
+                        "entry_price": q["ask"], "status": "OPEN", "spot_1550": s1550.get(t, ""),
+                        **node_metrics(snap, st)})
             sec_n[sec] = sec_n.get(sec, 0) + 1
             say("【隔夜·开仓】%s %s %s × %d 张 | ask %.2f（bid %.2f）投入 $%.0f | 大单 %d 笔 $%.0fK", out[-1]["position_id"],
                 t, sym, qty, q["ask"], q["bid"], q["ask"] * 100 * qty, fl["n"], fl["usd"] / 1e3)
