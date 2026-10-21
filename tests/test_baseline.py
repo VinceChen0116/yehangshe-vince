@@ -286,6 +286,13 @@ class TestTrendArchetypes(unittest.TestCase):
         cand, why = B.find_squeeze("TEST", frs[-1], B.context(frs), B.min_gex("TEST", 215.18), "NEUTRAL")
         self.assertNotIn("吸不过去", why or "")
 
+    def test_squeeze_negative_just_above_is_fuel(self):   # BAC 10/20 型：现价上方 0.33% 的负节点算燃料，B 不拦
+        cells = {52.0: 1.7 * M, 51.0: -4.1 * M, 49.5: 0.9 * M}
+        j, _, _ = run([50.3, 50.45, 50.55, 50.65, 50.75, 50.83], cells)
+        frs = j.frames["TEST"]
+        cand, why = B.find_squeeze("TEST", frs[-1], B.context(frs), B.min_gex("TEST", 50.83), "NEUTRAL")
+        self.assertNotIn("吸不过去", why or "")
+
     def test_squeeze_negative_below_spot(self):     # GOOGL 10/20 11:06 型：现价下方 0.34% 有 −3.9M（≥ 0.2 × 18.7M）
         cells = {352.5: 18.67 * M, 350.0: -7.24 * M, 347.5: 1.11 * M, 345.0: 0.27 * M, 342.5: -3.88 * M, 340.0: 0.65 * M}
         j, _, _ = run([341.5, 342.0, 342.5, 343.0, 343.4, 343.68], cells)
