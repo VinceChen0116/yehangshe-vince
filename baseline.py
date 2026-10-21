@@ -38,7 +38,7 @@ INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0
 OUTSIDE_WALL_RATIO = 0.5                         # 墙 ≥ 50% × 墙外侧（逆方向）最大正节点，否则不成立（2026-10-20 用户定）
 MAGNET_MIN_DIST = 0.006                          # 离墙 > 0.6% 时，墙在长大且是同侧 4.5% 内最大正节点 → 磁吸，不开（2026-10-20 用户定）
 SQ_WALL_VS_NEAR = 0.5                            # 逼空：Call 墙 ≥ 0.5 × 现价下方 0.5% 内 |GEX| 最大的节点（2026-10-20 用户定；10-21 收窄：只看现价下方，上方 / 路径上的负节点是燃料）
-SQ_BELOW_NEG_RATIO = 0.2                         # 逼空：现价下方 0.5% 内负节点 ≥ 0.2 × Call 墙 → 不开（突破失败会被加速砸下；2026-10-20 用户定）
+SQ_BELOW_NEG_RATIO = 0.5                         # 逼空：现价下方 0.5% 内负节点 ≥ 0.5 × 路径负节点合计 → 不开（脚下往下砸的力量比上方燃料还大；2026-10-20 定，10-21 改为与燃料比）
 SQ_PATH_NEG_RATIO = 2.0                          # 逼空燃料：现价→Call 墙之间负节点合计 ≥ 2 × 正节点合计（忽略 < 0.1×G_min 的小节点；2026-10-21 用户定）
 DECAY_MIN_DROP = 0.02                            # 每根比上一根至少小 2% 才算"变小"（2026-10-20 用户定）
 DECAY_RULES = ((2, 0.20, "START_NODE_DECAY_10M"), (4, 0.30, "START_NODE_DECAY_20M"))   # 起始点衰减截断：(连续变小根数, 进度上限, 原因)
@@ -55,7 +55,7 @@ BASELINE_NOTES = """
 2f. 墙外侧：天花板 / 踏板 GEX ≥ 50% × 墙外侧（悬崖 = 上方、跳板 = 下方）整张图最大的正节点，否则墙太弱不成立（2026-10-20 用户定）。
 2g. 磁吸：离墙 > 0.6% 时，墙在长大（GROWING / NEW）且是同侧 4.5% 内最大的正节点 → 价格可能先被吸过去，不开（2026-10-20 用户定）。
 2h. 逼空（2026-10-20 用户定）：Call 墙 < 0.5 × 现价下方 0.5% 内 |GEX| 最大的节点 → 不开（目标吸不过去；10-21 起只看现价下方，上方 / 路径上的负节点算燃料）；
-    现价下方 0.5% 内有负节点 ≥ 0.2 × Call 墙 → 不开（突破失败会被加速砸下）。
+    现价下方 0.5% 内有负节点 ≥ 0.5 × 路径负节点合计（燃料）→ 不开（突破失败会被加速砸下；10-21 起与燃料比，原为 0.2 × Call 墙）。
 2i. 逼空燃料（2026-10-21 用户定）：现价到 Call 墙之间（不含两端）负节点合计必须 > 0 且 ≥ 2 × 正节点合计，忽略 < 0.1×G_min 的小节点。
 2e. 逼空磁吸：现价上下 3 格以内（含第 3 格）有比 Call 墙更大的正节点 → 不开逼空（2026-10-20 用户定）。
 2d. 至少一格：现价和（最终）目标之间至少要有一个 Heatmap 节点（行权价），否则不开（悬崖 / 跳板 / 逼空都查；2026-10-20 用户定）。
@@ -558,12 +558,6 @@ def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) 
         if cw[1] < SQ_WALL_VS_NEAR * abs(zg):
             return None, (f"Call 墙 {cw[0]:g}(+{cw[1] / 1e6:.1f}M) 不到现价下方 0.5% 内最大节点 {zk:g}({zg / 1e6:+.1f}M) 的 "
                           f"{SQ_WALL_VS_NEAR * 100:.0f}%，吸不过去")
-    below = [(k, g) for k, g in cells if S * 0.995 <= k < S and g < 0]
-    if below:
-        bk, bg = min(below, key=lambda c: c[1])
-        if -bg >= SQ_BELOW_NEG_RATIO * cw[1]:
-            return None, (f"现价下方 0.5% 内有负节点 {bk:g}({bg / 1e6:.1f}M) ≥ {SQ_BELOW_NEG_RATIO:g} × Call 墙"
-                          f"（{cw[1] / 1e6:.1f}M），突破失败会被加速砸下")
     run = (cw[0] - S) / S
     if not (0.012 <= run <= 0.055):
         return None, f"跑道 {run * 100:.2f}% 不在 1.2%–5.5%"
@@ -575,6 +569,12 @@ def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) 
     if ns <= 0 or ns < SQ_PATH_NEG_RATIO * ps:
         return None, (f"路径燃料不足：现价到 Call 墙之间负节点合计 {ns / 1e6:.1f}M 不到正节点合计 {ps / 1e6:.1f}M 的 "
                       f"{SQ_PATH_NEG_RATIO:g} 倍" + ("（没有负节点）" if ns <= 0 else ""))
+    below = [(k, g) for k, g in cells if S * 0.995 <= k < S and g < 0]
+    if below:
+        bk, bg = min(below, key=lambda c: c[1])
+        if -bg >= SQ_BELOW_NEG_RATIO * ns:
+            return None, (f"现价下方 0.5% 内有负节点 {bk:g}({bg / 1e6:.1f}M) ≥ {SQ_BELOW_NEG_RATIO:g} × 路径负节点合计"
+                          f"（{ns / 1e6:.1f}M），突破失败会被加速砸下")
     t5, t15 = cx.tick_ret_5m, cx.ret_15m
     if t5 is None or t15 is None:
         return None, "开盘不足 15 分钟"
