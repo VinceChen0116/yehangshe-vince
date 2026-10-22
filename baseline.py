@@ -32,6 +32,7 @@ EW = replace(ExitWeights(), stage0_0dte_minutes=float("inf"), stage1_dead_minute
 INDEX_TICKERS = {"SPX", "SPXW", "NDX", "QQQ"}   # 文档原文的"指数"集合（SPY 不在内）
 OUTER_WALL_STEPS = 3                             # 墙外侧 3 格以内有更大的正节点 → 结构不成立（2026-10-20 用户定）
 PATH_NEG_RATIO = 1.5                             # 路径上显著负节点合计 ≥ 1.5 × 显著正节点合计（2026-10-20 用户定）
+PIN_NEAR_PCT = 0.01                              # 钉住：看现价 ±1% 内（2026-10-22 由 0.5% 放宽）
 PIN_NEG_MULT = 3.0                               # 路径上全到期最大负节点 ≥ 3 × 墙 → 不开（2026-10-20 用户定）
 BIG_NODE_RATIO = 0.43                            # "超大正节点" = GEX ≥ 0.43 × 起作用墙（2026-10-20 用户定；文档中间关卡仍是 0.45）
 INTRADAY_STRUCT_END = "15:00"                    # 文档：盘中 < 15:00 用 0DTE / 最近周度；15:00 后是尾盘隔夜模式
@@ -52,7 +53,7 @@ BASELINE_NOTES = """
    【宁缺毋滥】没有超大正节点承接就不做（不退回负节点）。
 2a. 路径：现价到目标之间必须有显著负节点，且显著负节点 |GEX| 合计 ≥ 1.5 × 显著正节点合计（正负差不多 = 走不动）。
 2b. 墙外 3 格：天花板 / 踏板外侧 3 格以内（含第 3 格）有比它更大的正节点 → 结构不成立（价格会被更大的墙吸过去）。
-2c. 钉住：主结构到期 |GEX| 最大的节点是负节点、在路径上或现价 ±0.5% 内、且 ≥ 3 × 墙 → 不开（逼空也查）。
+2c. 钉住：路径上或现价 ±1% 内任何一个负节点 ≥ 3 × 墙 → 不开（逼空也查；2026-10-22 扩展，原为"全到期最大的节点、±0.5%"）。
 2f. 墙外侧：天花板 / 踏板 GEX ≥ 50% × 墙外侧（悬崖 = 上方、跳板 = 下方）整张图最大的正节点，否则墙太弱不成立（2026-10-20 用户定）。
 2g. 磁吸：离墙 > 0.6% 时，墙在长大（GROWING / NEW）且是同侧 4.5% 内最大的正节点 → 价格可能先被吸过去，不开（2026-10-20 用户定）。
 2h. 逼空（2026-10-20 用户定）：Call 墙 < 0.5 × 现价下方 0.5% 内 |GEX| 最大的节点 → 不开（目标吸不过去；10-21 起只看现价下方，上方 / 路径上的负节点算燃料）；
@@ -340,17 +341,19 @@ def path_check(cells: list, spot: float, target: float, gmin: float) -> tuple[bo
 
 
 def pin_check(cells: list, spot: float, target: float, wall_g: float) -> tuple[bool, str]:
-    """主结构到期 |GEX| 最大的节点如果是负节点、在现价到目标的路径上或现价 ±0.5% 内，并且 ≥ PIN_NEG_MULT × 墙，
-    价格很可能被它钉住 → 不开（2026-10-20 用户定）。返回 (否决, 说明)。"""
-    if not cells:
-        return False, ""
-    k, g = max(cells, key=lambda c: abs(c[1]))
-    if g >= 0:
+    """现价到目标的路径上、或现价 ±1% 内，有任何一个负节点 ≥ PIN_NEG_MULT × 墙 → 价格很可能被它钉住，不开。
+    （2026-10-20 用户定 N = 3；2026-10-22 扩展：不再要求它是全到期 |GEX| 最大的节点，范围从 ±0.5% 放宽到 ±1%。）
+    返回 (否决, 说明)。"""
+    if not cells or not wall_g:
         return False, ""
     lo, hi = sorted((spot, target))
-    on_path = lo < k < hi or abs(k - spot) / spot <= 0.005
-    if on_path and abs(g) >= PIN_NEG_MULT * abs(wall_g):
-        return True, (f"路径上有全到期最大的负节点 {k:g}（{g / 1e6:.1f}M，是墙的 {abs(g) / abs(wall_g):.1f} 倍 ≥ "
+    cand = [(k, g) for k, g in cells if g < 0 and (lo < k < hi or abs(k - spot) / spot <= PIN_NEAR_PCT)]
+    if not cand:
+        return False, ""
+    k, g = min(cand, key=lambda c: c[1])
+    if abs(g) >= PIN_NEG_MULT * abs(wall_g):
+        where = "路径上" if lo < k < hi else f"现价 ±{PIN_NEAR_PCT * 100:g}% 内"
+        return True, (f"{where}有负节点 {k:g}（{g / 1e6:.1f}M，是墙的 {abs(g) / abs(wall_g):.1f} 倍 ≥ "
                       f"{PIN_NEG_MULT:g} 倍），可能被钉住")
     return False, ""
 

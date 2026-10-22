@@ -657,6 +657,26 @@ class TestRealData1019(unittest.TestCase):
         finally:
             DAY = old
 
+    def judge_on(self, day, ticker, label):
+        global DAY
+        old, DAY = DAY, day
+        try:
+            return self.judge_at(ticker, label)
+        finally:
+            DAY = old
+
+    def test_pin_extended_1021(self):
+        """10/22 用户定：钉住不再要求是全到期最大节点、范围 ±1%。10/21 实盘 AMZN 13:50 逼空 / AMD 14:16 悬崖应拦，
+        10/20 NVDA 10:09 逼空（217.5 −26.1M 只有墙的 2.2 倍）不拦。"""
+        d21, d20 = dt.date(2026, 10, 21), dt.date(2026, 10, 20)
+        for tk, lab in (("AMZN", "13:45"), ("AMD", "14:10")):
+            j, sig = self.judge_on(d21, tk, lab)
+            self.assertIsNone(sig, tk)
+            self.assertIn("可能被钉住", j.last_reason[tk])
+        j, sig = self.judge_on(d20, "NVDA", "10:00")
+        self.assertIsNotNone(sig, j.last_reason.get("NVDA"))
+        self.assertEqual(sig.cand.structure_type, "SHORT_GAMMA_VACUUM_SQUEEZE")
+
     def test_smci_squeeze_one_grid(self):
         """10/20 用户：SMCI 11:20 现价 33.1、目标 33.5，中间没有节点 → 不开。"""
         j, sig = self.judge_at("SMCI", "11:20")
