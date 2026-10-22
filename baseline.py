@@ -41,6 +41,7 @@ MAGNET_MIN_DIST = 0.006                          # 离墙 > 0.6% 时，墙在长
 SQ_WALL_VS_NEAR = 0.5                            # 逼空：Call 墙 ≥ 0.5 × 现价下方 0.5% 内 |GEX| 最大的节点（2026-10-20 用户定；10-21 收窄：只看现价下方，上方 / 路径上的负节点是燃料）
 SQ_BELOW_NEG_RATIO = 0.5                         # 逼空：现价下方 0.5% 内负节点 ≥ 0.5 × 路径负节点合计 → 不开（脚下往下砸的力量比上方燃料还大；2026-10-20 定，10-21 改为与燃料比）
 SQ_FILTERS = {"B": True, "C": True, "fuel": True}   # 逼空 B / C / 燃料三条开关（实盘全开；live_evidence.py 关掉它们找出"被拦下的信号"）
+SQ_MOMENTUM_15M = 0.003                          # 逼空：现价是前 15 分钟（前 3 根）新高，且 15 分钟净涨 ≥ 0.3%（2026-10-22 用户定）
 SQ_PATH_NEG_RATIO = 2.0                          # 逼空燃料：现价→Call 墙之间负节点合计 ≥ 2 × 正节点合计（忽略 < 0.1×G_min 的小节点；2026-10-21 用户定）
 DECAY_MIN_DROP = 0.02                            # 每根比上一根至少小 2% 才算"变小"（2026-10-20 用户定）
 DECAY_RULES = ((2, 0.20, "START_NODE_DECAY_10M"), (4, 0.30, "START_NODE_DECAY_20M"))   # 起始点衰减截断：(连续变小根数, 进度上限, 原因)
@@ -59,6 +60,8 @@ BASELINE_NOTES = """
 2h. 逼空（2026-10-20 用户定）：Call 墙 < 0.5 × 现价下方 0.5% 内 |GEX| 最大的节点 → 不开（目标吸不过去；10-21 起只看现价下方，上方 / 路径上的负节点算燃料）；
     现价下方 0.5% 内有负节点 ≥ 0.5 × 路径负节点合计（燃料）→ 不开（突破失败会被加速砸下；10-21 起与燃料比，原为 0.2 × Call 墙）。
 2i. 逼空燃料（2026-10-21 用户定）：现价到 Call 墙之间（不含两端）负节点合计必须 > 0 且 ≥ 2 × 正节点合计，忽略 < 0.1×G_min 的小节点。
+2j. 逼空走势（2026-10-22 用户定）：现价必须是前 15 分钟（前 3 根快照）的新高，且比 15 分钟前那根净涨 ≥ 0.3%；
+    不足 4 根快照不开。原文的当天 ≥ +0.15%、5 分钟 ≥ 0、15 分钟 ≥ +0.08%、现价 ≥ VWAP 照旧保留。
 2e. 逼空磁吸：现价上下 3 格以内（含第 3 格）有比 Call 墙更大的正节点 → 不开逼空（2026-10-20 用户定）。
 2d. 至少一格：现价和（最终）目标之间至少要有一个 Heatmap 节点（行权价），否则不开（悬崖 / 跳板 / 逼空都查；2026-10-20 用户定）。
 3. 结构盈亏比 = 空间 ÷ max(0.8%, min(离墙距离, 1.2%) + 0.3%)；初始现货止损 = 开仓现价 ± 这个风险距离；目标 = 靶心行权价
@@ -532,7 +535,8 @@ def find_springboard(ticker: str, fr: Frame, cx: Context, gmin: float, migration
                      f"{path_note} · {tgt_note} 空间 {space * 100:.2f}% · R:R {rr:.2f}" + (f" · {gk_note}" if gk_note else "")), ""
 
 
-def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) -> tuple[Candidate | None, str]:
+def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str, frames: list | None = None
+                 ) -> tuple[Candidate | None, str]:
     S, cells = fr.spot, fr.cells
     if regime == "RANGE_BUFFER":
         return None, "RANGE_BUFFER 环境"
@@ -584,6 +588,15 @@ def find_squeeze(ticker: str, fr: Frame, cx: Context, gmin: float, regime: str) 
         return None, "开盘不足 15 分钟"
     if not (cx.intraday_ret >= 0.0015 and t5 >= 0 and t15 >= 0.0008 and S >= cx.vwap):
         return None, "没有有效突破"
+    if frames is not None:                        # 2026-10-22 用户定：前 15 分钟要真的在往上走，不是在边缘徘徊
+        if len(frames) < 4:
+            return None, "不足 15 分钟走势（需要 4 根快照）"
+        prev = [f.spot for f in frames[-4:-1]]
+        rise = S / prev[0] - 1
+        if not (S > max(prev) and rise >= SQ_MOMENTUM_15M):
+            return None, (f"前 15 分钟没有逼空走势（净涨 {rise * 100:+.2f}% "
+                          f"{'≥' if rise >= SQ_MOMENTUM_15M else '<'} {SQ_MOMENTUM_15M * 100:.1f}%，"
+                          f"{'是' if S > max(prev) else '不是'} 15 分钟新高）")
     return Candidate("SHORT_GAMMA_VACUUM_SQUEEZE", "BULLISH", cw[0], cw[1], cw[0], None, run,
                      run / _stop_risk(None), "EFFECTIVE_BREAKOUT",
                      f"Call 墙 {cw[0]:g}(+{cw[1] / 1e6:.1f}M) 跑道 {run * 100:.2f}%"), ""
@@ -685,7 +698,7 @@ class BaselineJudge:
         reasons, best = [], None
         finders = [("悬崖", lambda: find_cliff(ticker, fr, cx, gmin, migration, frames)),
                    ("跳板", lambda: find_springboard(ticker, fr, cx, gmin, migration, frames)),
-                   ("逼空", lambda: find_squeeze(ticker, fr, cx, gmin, regime)),
+                   ("逼空", lambda: find_squeeze(ticker, fr, cx, gmin, regime, frames)),
                    ("雪崩", lambda: find_avalanche(ticker, fr, cx, gmin, regime))]
         if not getattr(self.cfg, "bl_enable_avalanche", True):
             finders = finders[:3]          # 2026-10-20 用户定：先不做雪崩结构

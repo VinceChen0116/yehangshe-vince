@@ -321,6 +321,15 @@ class TestTrendArchetypes(unittest.TestCase):
         cand, why = B.find_squeeze("TEST", frs[-1], B.context(frs), B.min_gex("TEST", 343.68), "NEUTRAL")
         self.assertNotIn("加速砸下", why or "")
 
+    def test_squeeze_needs_15m_trend(self):         # 2026-10-22：边缘徘徊（15 分钟只涨 0.1%）不开；回落后不是新高也不开
+        cells = {102.5: 40 * M, 99.0: 5 * M, 98.0: -6 * M, 101.0: -4 * M, 97.0: 2 * M}
+        j, sig, _ = run([100.0, 100.1, 100.5, 100.45, 100.5, 100.6], cells)      # 15 分钟 100.5→100.6：+0.1%
+        self.assertIsNone(sig)
+        self.assertIn("前 15 分钟没有逼空走势", j.last_reason["TEST"])
+        j, sig, _ = run([100.0, 100.1, 100.2, 100.9, 100.5, 100.6], cells)       # 净涨 0.4% 但没过 100.9 的高点
+        self.assertIsNone(sig)
+        self.assertIn("不是 15 分钟新高", j.last_reason["TEST"])
+
     def test_squeeze_needs_node_between(self):    # SMCI 型：现价和目标之间没有节点（不到一格以上）
         cells = {102.5: 40 * M, 99.0: 5 * M, 98.0: -6 * M, 97.0: 2 * M}
         j, sig, _ = run([100.0, 100.1, 100.2, 100.35, 100.5, 100.6], cells)
