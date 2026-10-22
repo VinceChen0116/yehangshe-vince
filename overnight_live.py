@@ -42,7 +42,11 @@ LIVE_DIR = "live"
 MAX_POSITIONS = 10
 MAX_PER_SECTOR = 3   # 同板块每晚最多 3 笔（2026-10-16 用户定，板块见 sectors.py）
 BUDGET, BUDGET_BAND = 1000.0, 0.25   # 每笔目标投入 $1,000，允许 $750–$1,250（2026-10-16 用户定）
-SAME_COMPANY = (("GOOG", "GOOGL"),)   # 同一家公司的不同股票类别：方向冲突就都不开（2026-10-20 用户定）
+SAME_COMPANY = (("GOOG", "GOOGL"),)
+# 中概股（中概 ADR / 中国 ETF）一律不做隔夜（2026-10-21 用户定）：直接从标的池去掉，不扫描
+CHINA_ADRS = {"BABA", "JD", "PDD", "TCOM", "BIDU", "NIO", "LI", "XPEV", "BILI", "NTES", "TME", "YMM", "ZTO", "BEKE",
+              "FUTU", "TIGR", "IQ", "VIPS", "HTHT", "LU", "QFIN", "BZ", "EDU", "TAL", "GDS", "WB", "ZK", "HSAI",
+              "ATHM", "MNSO", "GOTU", "YUMC", "KWEB", "FXI", "YINN", "MCHI"}   # 同一家公司的不同股票类别：方向冲突就都不开（2026-10-20 用户定）
 
 
 def node_metrics(snap, st) -> dict:
@@ -220,7 +224,7 @@ def universe(cfg, day: dt.date) -> list:
             tickers += [t for t in extra if t not in tickers]
             break
         d = prev_trading_day(d)
-    return tickers
+    return [t for t in tickers if t not in CHINA_ADRS]
 
 
 def daily_expiry_tickers(cfg) -> set:

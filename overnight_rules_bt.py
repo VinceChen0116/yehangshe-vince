@@ -30,7 +30,7 @@ from detector import FLOW_TRADES_PATH, detect_structure, extract_rows, parse_hea
 from main import HistoryClient
 from notify import from_config
 from overnight import half_spread
-from overnight_live import drop_conflicts, earnings_reason, path_reason, size_contracts
+from overnight_live import CHINA_ADRS, drop_conflicts, earnings_reason, path_reason, size_contracts
 from sectors import sector_of
 from paper_trader import occ_symbol
 from yhs_client import YHSClient
@@ -122,6 +122,7 @@ def run_night(cfg, client, P: dt.date, S: dt.date, tickers: list, entry: str = E
               max_dir: int = 0, max_sector: int = 0) -> list:
     lcfg = copy.copy(cfg)
     lcfg.node_mode = "local"
+    tickers = [t for t in tickers if t not in CHINA_ADRS]   # 中概股不做（与实盘一致）
     hp, hs = HistoryClient(client, cfg, P), HistoryClient(client, cfg, S)
     cands = []
     for t in tickers:
