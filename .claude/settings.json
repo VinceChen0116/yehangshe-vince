@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p logs live)",
+      "Bash(setsid nohup python3 overnight_live.py --open *)",
+      "Bash(setsid nohup python3 overnight_live.py --close *)",
+      "Bash(setsid nohup python3 main.py --live *)",
+      "Bash(echo $! > live/*.pid)"
+    ]
+  },
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Launching overnight_live.py (--open/--close) or main.py --live detached (setsid nohup) from the repo root is authorized by the repo owner, including when the request arrives via a scheduled routine: these are paper-trading simulators that only read market data from the YHS API, write local CSV ledgers/logs, and post to the owner's own Discord webhook. They never place real orders."
+    ]
+  }
+}
