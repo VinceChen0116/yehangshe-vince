@@ -842,6 +842,7 @@ class BaselineTrader(PaperTrader):
         super().__init__(cfg)
         self.max_contract_cost_usd = getattr(cfg, "bl_max_contract_cost_usd", 0.0)
         self.max_spread_pct = getattr(cfg, "bl_max_spread_pct", 0.0)
+        self.ew = replace(EW, **(getattr(cfg, "bl_exit_overrides", None) or {}))
         self.state: dict = {}         # position_id → PositionState
         self.meta: dict = {}          # position_id → 开仓时的 baseline 信息（写进交易明细）
         self.exit_note: dict = {}     # position_id → 起始点衰减截断的说明（平仓推送用）
@@ -927,7 +928,7 @@ class BaselineTrader(PaperTrader):
         mid = self.current_mid(p, spot, now_et)
         px = self._exit_value(p, mid)                    # 能卖出的价格（实盘 bid / 回放 中间价 − 半价差）
         held = (now_et - p.entry_time).total_seconds() / 60
-        action, reason, _ = evaluate_exit_tick(st, spot, px, held, (now_et.hour, now_et.minute), EW)
+        action, reason, _ = evaluate_exit_tick(st, spot, px, held, (now_et.hour, now_et.minute), self.ew)
         roi = (px / p.entry_option_price - 1) * 100
         dk = self.decay.get(p.position_id)
         if dk and dk["range"] > 0:
