@@ -128,7 +128,7 @@ class SystemConfig:
     #   legacy = 旧规则（最大正/负节点 + 距离 ≤1% + 0–1 评分 + 标的破节点止损），只留作回测对照
     bl_enable_avalanche: bool = False          # baseline：先不做雪崩结构（2026-10-20 用户定）
     bl_fast_mark_s: int = 20                   # baseline 实盘：持仓靠近触发线时每 20 秒盯一次（平时 position_mark_min 分钟）
-    bl_max_spread_pct: float = 0.08            # baseline 执行层保护：买卖价差 > 中间价 8% 不开（2026-10-27 用户定，10/28 起；旧 25%，回放见 bl_spr25/8/5）
+    bl_max_spread_pct: float = 0.08            # baseline 执行层保护：买卖价差 > 中间价 8% 不开（2026-10-26 晚用户定，10/27 起；旧 25%，回放见 bl_spr25/8/5）
     bl_exit_overrides: dict | None = None      # baseline 出场参数覆盖（ExitWeights 字段名 → 值），只给回放做对比；None = 按 baseline.EW
     bl_max_contract_cost_usd: float = 1000.0   # baseline 日内：单张成本（ask × 100）超过 $1,000 不开（2026-10-20 用户定）
     bl_target_notional_usd: float = 650.0      # baseline 日内：每笔总成本目标约 $650（2026-10-20 用户定：贵的少开、便宜的多开，盈亏可比）
