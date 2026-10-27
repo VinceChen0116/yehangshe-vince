@@ -384,3 +384,6 @@ python3 archive.py --dry-run                 # 只看计划
   `python3 oos_report.py --name <实验> [--exclude <没包含的规则>]` 分段统计，**结论只看样本外**。
   首次结果（bl_spr25_q，规则截至 10/21）：样本内 11 天 +$1,790，**样本外 3 天（10/22、10/23、10/26）−$716（盈亏比 0.65）**；实盘同 3 天 −$1,195。
   8% 价差上限（spread_8）目前样本外 0 天。
+* 2026-10-27 用户定：先不加新日内规则，积累样本外。定时任务 `trig_012MdVcLm7LFeBh5YeRq7DTx`「夜航社 每日样本外报告（美东 18:20）」
+  每个交易日跑 `python3 oos_report.py`（只看实盘，0 配额）→ 推送 `backtests/oos/live.md` → Discord「📐 样本外报告」。
+  绑定会话 session_01VcNgmmTwW5SGauso8rdCt3（换定时任务会话时也要一起换）。约 10 个交易日后评估。
