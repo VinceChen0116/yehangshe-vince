@@ -33,6 +33,7 @@ from paper_trader import CHAIN_PATH, PaperTrader, SessionEngine, bs_price_greeks
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
 log = logging.getLogger("yhs.main")
+HIST_QUOTE_MAX_SPREAD = 0.5   # 回放历史 NBBO：价差 > 中间价 50% 视为坏报价丢弃（用 10/20–10/26 实盘真实价差校准：平均误差 6.2 → 2.3 个百分点）
 
 
 # =============================================================================
@@ -607,15 +608,18 @@ class HistoryClient:
             hit = next((c for c in (data or {}).get("contracts") or [] if abs(float(c.get("strike_usd") or 0) - strike) < 1e-6), None)
             if hit is None:
                 continue
-            # 只用来估计买卖价差和"有没有买盘"（不用作成交价），所以取离 t 最近的一个报价（前后 60 分钟内）：
+            # 只用来估计买卖价差和"有没有买盘"（不用作成交价），所以取离 t 最近的一个有效报价（前后 60 分钟内）：
             # 开盘后第一个有效报价在 10:00 / 10:30，09:45 的开仓需要用之后的报价估计价差
             best, gap = None, None
             for q in hit.get("quotes") or []:
                 ts = (q.get("quoted_at") or "")[:16]
                 if not ts:
                     continue
-                if (q.get("bid_usd") or 0) == 0 and (q.get("ask_usd") or 0) == 0:
-                    continue   # 开盘前的空报价
+                bid_q, ask_q = float(q.get("bid_usd") or 0), float(q.get("ask_usd") or 0)
+                if ask_q <= 0 or ts[11:16] == "09:30":
+                    continue   # 开盘前的空报价 / 09:30 开盘那一条（常见 bid 0.01 / ask 20 之类的坏数据）
+                if bid_q > 0 and (ask_q - bid_q) / ((ask_q + bid_q) / 2) > HIST_QUOTE_MAX_SPREAD:
+                    continue   # 明显坏报价：不能拿它判"价差过大不开"，否则回放会悄悄跳过实盘会开的单（2026-10-27 对账）
                 g = abs((et_datetime(self.date, ts[11:16]) - t).total_seconds())
                 if g <= 3600 and (gap is None or g < gap):
                     best, gap = (float(q.get("bid_usd") or 0), float(q.get("ask_usd") or 0)), g
