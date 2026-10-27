@@ -18,6 +18,7 @@ import glob
 import os
 import re
 import sys
+from zoneinfo import ZoneInfo
 
 from rules_registry import RULES, active_on
 
@@ -107,8 +108,18 @@ def main(argv=None) -> int:
         if day < str(spread.effective):
             continue
         with open(f, encoding="utf-8", errors="replace") as fh:
-            hits = [m.group(1) + f"（{m.group(2)}%）" for m in
-                    (re.search(r"放弃】\S+ (\S+) 买卖价差 (\d+)%", ln) for ln in fh) if m]
+            seen, hits = set(), []
+            for ln in fh:
+                m = re.search(r"^(\d\d:\d\d):\d\d .*放弃】\S+ (\S+) 买卖价差 (\d+)%", ln)
+                if not m:
+                    continue
+                # 日志时间是 UTC；A、B 两个账户共用同一信号，同一分钟同一合约只记一次
+                utc = dt.datetime.fromisoformat(f"{day}T{m.group(1)}").replace(tzinfo=dt.timezone.utc)
+                et = utc.astimezone(ZoneInfo("America/New_York")).strftime("%H:%M")
+                if (et, m.group(2)) in seen:
+                    continue
+                seen.add((et, m.group(2)))
+                hits.append(f"{et} {m.group(2).split(':')[-1]}（{m.group(3)}%）")
         out.append(f"| {day} | {len(hits)} | {'、'.join(hits) or '—'} |")
     text = "\n".join(out) + "\n"
     os.makedirs(os.path.join("backtests", "oos"), exist_ok=True)
