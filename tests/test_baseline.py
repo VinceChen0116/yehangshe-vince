@@ -493,8 +493,8 @@ class TestExits(unittest.TestCase):
 
     def test_spread_cap(self):
         with self.assertRaises(AssertionError):
-            opened(ask=2.4, bid=1.8)                          # 价差 0.6 / 中间价 2.1 = 28.6% > 25% → 不开
-        tr, fq, p, now = opened(ask=2.3, bid=1.8)             # 24.4% → 开
+            opened(ask=2.0, bid=1.84)                         # 价差 0.16 / 中间价 1.92 = 8.3% > 8% → 不开
+        tr, fq, p, now = opened(ask=2.0, bid=1.86)            # 7.3% → 开
         self.assertIsNotNone(p)
 
     def test_contract_cost_cap(self):
