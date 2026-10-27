@@ -5,8 +5,9 @@ oos_report.py —— 回放 / 实盘结果按"样本内 / 样本外"分开统计
   包含的规则里最晚的"决定日"= 截止日；截止日及以前 = 样本内，之后 = 样本外。结论只看样本外。
 * 实盘：每天用的是当时已生效的规则，天然是那套规则的样本外；按规则版本分段列出。
 * 金额按 ROI × $650 / 笔归一（10/20 实盘每笔 1 张、之后按金额开仓，直接加美元不可比）。
-用法：python3 oos_report.py --name bl_spr25_q --exclude spread_8
-     python3 oos_report.py --name bl_spr8
+* 实盘日志里"买卖价差 … 不开仓"的次数按天列出（8% 价差上限的样本外证据）。
+用法：python3 oos_report.py                                  # 只看实盘（每日收盘后，0 配额）
+     python3 oos_report.py --name bl_spr25_q --exclude spread_8
 """
 from __future__ import annotations
 
@@ -15,6 +16,7 @@ import csv
 import datetime as dt
 import glob
 import os
+import re
 import sys
 
 from rules_registry import RULES, active_on
@@ -54,7 +56,7 @@ HEAD = "| 段 | 天数 | 笔数 | 合计（$650/笔） | 日均 | 胜率 | 平�
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--name", required=True, help="backtests/exp/<name>")
+    ap.add_argument("--name", help="backtests/exp/<name>；不给就只统计实盘")
     ap.add_argument("--exclude", default="", help="这次回放没有包含的规则 key，逗号分隔（见 rules_registry.py）")
     args = ap.parse_args(argv)
     excluded = {k for k in args.exclude.split(",") if k}
@@ -66,15 +68,19 @@ def main(argv=None) -> int:
     cutoff = max(r.decided for r in included)
     core = next(r for r in RULES if r.key == "bl_core").decided
 
-    rep = load(os.path.join("backtests", "exp", args.name, "trades_*.csv"))
-    out = [f"# 样本内 / 样本外：{args.name}", "",
+    out = []
+    rep = load(os.path.join("backtests", "exp", args.name, "trades_*.csv")) if args.name else []
+    if args.name:
+        out += [f"# 样本内 / 样本外：{args.name}", "",
            f"回放包含的规则：{', '.join(r.key for r in included)}" + (f"；不含：{', '.join(sorted(excluded))}" if excluded else ""),
            f"截止日（包含规则里最晚的决定日）= {cutoff}；之后的交易日才是样本外。", "",
            "## 回放", "", HEAD,
            f"| 样本内：核心规则定规则用的天（≤ {core}） " + stats([r for r in rep if r["day"] <= core]),
            f"| 样本内：之后补充规则用过的天（{core} < 日期 ≤ {cutoff}） " + stats([r for r in rep if core < r["day"] <= cutoff]),
            f"| **样本外（> {cutoff}）** " + stats([r for r in rep if r["day"] > cutoff]), ""]
-    if not [r for r in rep if r["day"] > cutoff]:
+    else:
+        out += ["# 样本内 / 样本外：实盘", ""]
+    if args.name and not [r for r in rep if r["day"] > cutoff]:
         out += ["> 这套规则还没有样本外的交易日，回放结果不能当证据。", ""]
 
     live = load(os.path.join("live", "trades_*.csv"))
@@ -87,13 +93,26 @@ def main(argv=None) -> int:
         keys = ", ".join(r.key for r in active_on(start))
         span = f"{start}" + (f" – {end - dt.timedelta(days=1)}" if end else " 起")
         out.append(f"| {span}（{keys}） " + stats(seg))
-    out += ["", "## 每条规则的样本外天数（回放存档日）", "", "| 规则 | 决定日 | 样本外天数 |", "|---|---|---|"]
-    days = sorted({r["day"] for r in rep})
+    out += ["", "## 每条规则的样本外天数", "", "| 规则 | 决定日 | 实盘样本外天数 |" + (" 回放样本外天数 |" if rep else ""),
+            "|---|---|---|" + ("---|" if rep else "")]
+    live_days = sorted({r["day"] for r in live})
+    rep_days = sorted({r["day"] for r in rep})
     for r in RULES:
-        out.append(f"| {r.key}：{r.name} | {r.decided} | {sum(d > r.decided for d in days)} |")
+        line = f"| {r.key}：{r.name} | {r.decided} | {sum(d > r.decided for d in live_days)} |"
+        out.append(line + (f" {sum(d > r.decided for d in rep_days)} |" if rep else ""))
+    spread = next(r for r in RULES if r.key == "spread_8")
+    out += ["", f"## 价差上限挡掉的信号（实盘日志，{spread.effective} 起为 8%）", "", "| 日期 | 次数 | 合约 |", "|---|---|---|"]
+    for f in sorted(glob.glob(os.path.join("logs", "live_*.log"))):
+        day = os.path.basename(f)[5:15]
+        if day < str(spread.effective):
+            continue
+        with open(f, encoding="utf-8", errors="replace") as fh:
+            hits = [m.group(1) + f"（{m.group(2)}%）" for m in
+                    (re.search(r"放弃】\S+ (\S+) 买卖价差 (\d+)%", ln) for ln in fh) if m]
+        out.append(f"| {day} | {len(hits)} | {'、'.join(hits) or '—'} |")
     text = "\n".join(out) + "\n"
     os.makedirs(os.path.join("backtests", "oos"), exist_ok=True)
-    with open(os.path.join("backtests", "oos", f"{args.name}.md"), "w", encoding="utf-8") as fh:
+    with open(os.path.join("backtests", "oos", f"{args.name or 'live'}.md"), "w", encoding="utf-8") as fh:
         fh.write(text)
     print(text)
     return 0
