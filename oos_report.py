@@ -40,6 +40,25 @@ def load(pattern: str) -> list[dict]:
     return rows
 
 
+def load_live() -> list[dict]:
+    """实盘逐笔收益率。某天没有交易明细（进程异常退出没导出 CSV，如 10/29）就从 logs/live_<日期>.log 的平仓记录重建；
+    A、B 账户同一信号同一秒平仓会各记一行，按（标的、方向、平仓分钟、ROI）去重。"""
+    rows = load(os.path.join("live", "trades_*.csv"))
+    have = {r["day"] for r in rows}
+    for f in sorted(glob.glob(os.path.join("logs", "live_????-??-??.log"))):
+        day = dt.date.fromisoformat(os.path.basename(f)[5:15])
+        if day in have:
+            continue
+        seen = set()
+        with open(f, encoding="utf-8", errors="replace") as fh:
+            for ln in fh:
+                m = re.search(r"^(\d\d:\d\d):\d\d .*阶段4·平仓】\S+ (\S+) (\S+) \|.*\| ROI ([+-]?[\d.]+)%", ln)
+                if m and m.groups() not in seen:
+                    seen.add(m.groups())
+                    rows.append(dict(day=day, roi=float(m.group(4)), rebuilt=True))
+    return rows
+
+
 def stats(rows: list[dict]) -> str:
     if not rows:
         return "| 0 | 0 | — | — | — | — | — |"
@@ -84,9 +103,13 @@ def main(argv=None) -> int:
     if args.name and not [r for r in rep if r["day"] > cutoff]:
         out += ["> 这套规则还没有样本外的交易日，回放结果不能当证据。", ""]
 
-    live = load(os.path.join("live", "trades_*.csv"))
+    live = load_live()
     live = [r for r in live if r["day"] >= next(r for r in RULES if r.key == "bl_core").effective]
-    out += ["## 实盘（每天用当时已生效的规则，天然是那套规则的样本外）", "", HEAD]
+    out += ["## 实盘（每天用当时已生效的规则，天然是那套规则的样本外）", ""]
+    rebuilt = sorted({str(r["day"]) for r in live if r.get("rebuilt")})
+    if rebuilt:
+        out += [f"> {'、'.join(rebuilt)} 没有交易明细（进程异常退出），收益率由实盘日志的平仓记录重建。", ""]
+    out += [HEAD]
     eras = sorted({r.effective for r in RULES})
     for i, start in enumerate(eras):
         end = eras[i + 1] if i + 1 < len(eras) else None
@@ -103,7 +126,7 @@ def main(argv=None) -> int:
         out.append(line + (f" {sum(d > r.decided for d in rep_days)} |" if rep else ""))
     spread = next(r for r in RULES if r.key == "spread_8")
     out += ["", f"## 价差上限挡掉的信号（实盘日志，{spread.effective} 起为 8%）", "", "| 日期 | 次数 | 合约 |", "|---|---|---|"]
-    for f in sorted(glob.glob(os.path.join("logs", "live_*.log"))):
+    for f in sorted(glob.glob(os.path.join("logs", "live_????-??-??.log"))):
         day = os.path.basename(f)[5:15]
         if day < str(spread.effective):
             continue
