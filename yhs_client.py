@@ -13,6 +13,7 @@ yhs_client.py —— 夜航社 Data API 网络客户端（纯标准库）
 from __future__ import annotations
 
 import collections
+import http.client
 import json
 import logging
 import random
@@ -158,7 +159,8 @@ class YHSClient:
                     body = e.read()
                 except Exception:  # noqa: BLE001
                     body = b""
-            except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as e:
+            except (urllib.error.URLError, TimeoutError, ConnectionError, OSError,
+                    http.client.HTTPException) as e:   # 含 IncompleteRead：响应读到一半连接断开
                 nnet += 1
                 if nnet > self.cfg.max_network_retries:
                     raise YHSApiError(0, "NETWORK_ERROR", str(e), path) from e
