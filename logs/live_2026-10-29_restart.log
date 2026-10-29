@@ -1,0 +1,30 @@
+19:44:45 [INFO] yhs.main: 实盘监控启动（模拟盘）。API Key=sk_live_…R0TT，节奏：早盘/尾盘 5 分钟、午间 12 分钟，限频 50 RPM / 间隔 1.2s / 并发 3
+19:45:00 [INFO] yhs.main: discover：账户=已识别，本月剩余配额=87604（免费端点，0 配额）
+19:45:00 [INFO] yhs.main: ==============================================================================
+19:45:00 [INFO] yhs.main: 交易日 2026-10-29 开始（标的池模式：both）
+19:45:00 [INFO] yhs.detector: 【阶段1】命中当日标的池缓存 yhs_data/universe_2026-10-29_va0_pcr0.json（80 只），不消耗配额
+19:45:00 [INFO] yhs.main: 【预算守卫】剩余配额 87604，本月剩余交易日 2，日预算约 43052 次 → 今日最多监控 469 只（上限 60）
+19:45:00 [INFO] yhs.main: 账户 B 监控 60 只：AAPL, AMD, AMZN, AVGO, BA, BAC, BE, BSX, CART, CAT, CCL, CRWD, CRWV, CVNA, DASH, EPD, FTNT, GME, GOOG, GOOGL, HOOD, INTC, IREN, JNJ, LITE, MARA, MCD, META, MO, MRNA, MRVL, MSFT, MSTR, MU, NBIS, NCLH, NFLX, NOW, NVDA, ONDS, OPEN, PLTR, QQQ, RPD, SKHY, SMCI, SNDK, SOFI, SOXL, SPY, STM, T, TLT, TQQQ, TSLA, TSM, UBER, VFC, VZ, WMT
+19:45:00 [INFO] yhs.main: 账户 A 监控 8 只：BSX, CAT, EPD, FTNT, GOOGL, NOW, RPD, STM
+19:45:09 [WARNING] yhs.main: RPD 不在 Heatmap 服务范围（404），移出标的池
+19:45:16 [WARNING] yhs.main: EPD 不在 Heatmap 服务范围（404），移出标的池
+19:45:31 [WARNING] yhs.main: VFC 不在 Heatmap 服务范围（404），移出标的池
+19:46:02 [WARNING] yhs.main: MO 不在 Heatmap 服务范围（404），移出标的池
+19:46:03 [WARNING] yhs.main: NCLH 不在 Heatmap 服务范围（404），移出标的池
+19:46:09 [WARNING] yhs.main: CART 不在 Heatmap 服务范围（404），移出标的池
+19:46:24 [INFO] yhs.main: [15:46:24] 本轮完成：B 持仓 0；A 持仓 0；监控 54 只，配额剩余 87503；下一轮 15:50:25
+19:51:28 [INFO] yhs.main: [15:51:28] 本轮完成：B 持仓 0；A 持仓 0；监控 54 只，配额剩余 87233；下一轮 15:55:25
+19:56:28 [INFO] yhs.main: [15:56:28] 本轮完成：B 持仓 0；A 持仓 0；监控 54 只，配额剩余 87061；下一轮 16:00:25
+20:00:00 [INFO] yhs.main: ----- 账户 B 收盘 -----
+20:00:00 [INFO] yhs.trader: ==============================================================================
+20:00:00 [INFO] yhs.trader: 复盘统计：本次运行无已平仓交易
+20:00:00 [INFO] yhs.trader: ==============================================================================
+20:00:01 [INFO] yhs.main: 检测统计：{'snapshots': 0, 'structures': 0, 'fatigue_reject': 0, 'pcr_reject': 0, 'flow_calls': 0, 'flow_throttled': 0, 'flow_reject': 0, 'signals': 0, 'stale_skip': 0}
+20:00:01 [INFO] yhs.main: 本进程计费调用 162 次，免费调用 8 次；服务端剩余配额 87061 / 100000；按端点：{'derived/heatmap/snapshot': 162}
+20:00:01 [INFO] yhs.main: ----- 账户 A 收盘 -----
+20:00:01 [INFO] yhs.trader: ==============================================================================
+20:00:01 [INFO] yhs.trader: 复盘统计：本次运行无已平仓交易
+20:00:01 [INFO] yhs.trader: ==============================================================================
+20:00:01 [INFO] yhs.main: 检测统计：{'snapshots': 0, 'structures': 0, 'fatigue_reject': 0, 'pcr_reject': 0, 'flow_calls': 0, 'flow_throttled': 0, 'flow_reject': 0, 'signals': 0, 'stale_skip': 0}
+20:00:01 [INFO] yhs.main: 本进程计费调用 162 次，免费调用 8 次；服务端剩余配额 87061 / 100000；按端点：{'derived/heatmap/snapshot': 162}
+20:00:01 [INFO] yhs.main: 单日模式：今日结束，退出
