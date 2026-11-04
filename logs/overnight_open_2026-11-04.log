@@ -1,0 +1,81 @@
+20:15:00 [INFO] yhs.overnight_live: 【隔夜·预扫】15:15 确定 222 只的过夜到期日
+20:16:11 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/BOX/history：<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)>，4.0s 后第 1 次重试
+20:25:30 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/ZS/history：Remote end closed connection without response，4.0s 后第 1 次重试
+20:26:32 [INFO] yhs.overnight_live: 【隔夜·预扫】完成：202 只有过夜到期，其中 45 只预扫时已有结构：AMZN、ASML、AVGO、AXTI、BSX、CEG、CHTR、CIEN、COHR、CRDO、CRM、CSCO、DIS、FCX、FTNT、GEV、GOOG、GS、HD、HIMS、HOOD、IBM、INOD、ISRG、JNJ、JPM、LLY、LRCX、MDT、MS、MSTR、NBIS、NEE、NOW、ORCL、PANW、QQQ、SAP、SCHW、SPY、TLT、TQQQ、UNH、UPS、WMT
+20:45:15 [INFO] yhs.overnight_live: 【隔夜·扫描1】15:45:15 扫 202 只，看 15:40 那根
+20:49:16 [INFO] yhs.overnight_live: 【隔夜·扫描1】完成：15:40 有结构的 63 只待 15:45 确认，已确认 0 只
+20:51:29 [INFO] yhs.overnight_live: 【隔夜·确认】15:40/15:45 两根都成立 43 只：ASML、CEG、CHTR、CRDO、DIS、FCX、GOOG、GS、HIMS、HOOD、IBM、ISRG、JNJ、JPM、MDT、MS、MSTR、ORCL、PANW、QQQ、SCHW、SPY、TLT、TQQQ、UNH、WMT、AMKR、BBY、BTU、CDNS、COIN、CVNA、CVX、GOOGL、INTU、LITE、LMT、MDB、NVDA、SNOW、TSLA、TXN、V
+20:51:32 [INFO] yhs.overnight_live: 【隔夜·结构】ASML CLIFF（local）现货 1492.35 节点 1500.00→1440.00 距 0.51% | 15:00–15:50 同向大单 2 笔 $116K
+20:51:33 [INFO] yhs.overnight_live: 【隔夜·结构】CEG SPRINGBOARD（local）现货 247.77 节点 247.50→250.00 距 0.11% | 15:00–15:50 同向大单 0 笔 $0K
+20:51:35 [INFO] yhs.overnight_live: 【隔夜·结构】CHTR SPRINGBOARD（local）现货 120.03 节点 120.00→125.00 距 0.03% | 15:00–15:50 同向大单 0 笔 $0K
+20:51:36 [INFO] yhs.overnight_live: 【隔夜·结构】CRDO CLIFF（local）现货 135.85 节点 136.00→135.00 距 0.11% | 15:00–15:50 同向大单 0 笔 $0K
+20:51:37 [INFO] yhs.overnight_live: 【隔夜·结构】DIS SPRINGBOARD（local）现货 119.09 节点 118.00→120.00 距 0.92% | 15:00–15:50 同向大单 1 笔 $63K
+20:51:39 [INFO] yhs.overnight_live: 【隔夜·结构】FCX SPRINGBOARD（local）现货 62.40 节点 62.00→69.00 距 0.64% | 15:00–15:50 同向大单 0 笔 $0K
+20:51:40 [INFO] yhs.overnight_live: 【隔夜·结构】GOOG CLIFF（local）现货 289.14 节点 290.00→285.00 距 0.29% | 15:00–15:50 同向大单 4 笔 $400K
+20:51:42 [INFO] yhs.overnight_live: 【隔夜·结构】GS CLIFF（local）现货 929.25 节点 930.00→920.00 距 0.08% | 15:00–15:50 同向大单 1 笔 $56K
+20:51:43 [INFO] yhs.overnight_live: 【隔夜·结构】HIMS CLIFF（local）现货 26.88 节点 27.00→26.00 距 0.46% | 15:00–15:50 同向大单 0 笔 $0K
+20:51:44 [INFO] yhs.overnight_live: 【隔夜·结构】HOOD SPRINGBOARD（local）现货 87.42 节点 87.00→90.00 距 0.48% | 15:00–15:50 同向大单 2 笔 $268K
+20:51:45 [INFO] yhs.overnight_live: 【隔夜·结构】IBM CLIFF（local）现货 255.36 节点 257.50→255.00 距 0.83% | 15:00–15:50 同向大单 1 笔 $95K
+20:51:47 [INFO] yhs.overnight_live: 【隔夜·结构】ISRG SPRINGBOARD（king）现货 484.03 节点 482.50→495.00 距 0.32% | 15:00–15:50 同向大单 0 笔 $0K
+20:51:49 [INFO] yhs.overnight_live: 【隔夜·结构】JNJ CLIFF（local）现货 276.50 节点 277.50→275.00 距 0.36% | 15:00–15:50 同向大单 0 笔 $0K
+20:51:50 [INFO] yhs.overnight_live: 【隔夜·结构】JPM CLIFF（local）现货 351.53 节点 355.00→350.00 距 0.98% | 15:00–15:50 同向大单 0 笔 $0K
+20:51:51 [INFO] yhs.overnight_live: 【隔夜·结构】MDT SPRINGBOARD（local）现货 105.17 节点 105.00→106.00 距 0.16% | 15:00–15:50 同向大单 1 笔 $123K
+20:51:53 [INFO] yhs.overnight_live: 【隔夜·结构】MS SPRINGBOARD（local）现货 193.26 节点 192.50→195.00 距 0.39% | 15:00–15:50 同向大单 2 笔 $109K
+20:51:54 [INFO] yhs.overnight_live: 【隔夜·结构】MSTR SPRINGBOARD（local）现货 142.69 节点 142.00→143.00 距 0.49% | 15:00–15:50 同向大单 3 笔 $286K
+20:51:56 [INFO] yhs.overnight_live: 【隔夜·结构】ORCL CLIFF（local）现货 124.87 节点 125.00→115.00 距 0.10% | 15:00–15:50 同向大单 6 笔 $1197K
+20:51:57 [INFO] yhs.overnight_live: 【隔夜·结构】PANW SPRINGBOARD（local）现货 350.08 节点 350.00→352.50 距 0.02% | 15:00–15:50 同向大单 2 笔 $375K
+20:52:02 [INFO] yhs.overnight_live: 【隔夜·结构】QQQ CLIFF（local）现货 692.32 节点 697.00→690.00 距 0.67% | 15:00–15:50 同向大单 85 笔 $10805K
+20:52:03 [INFO] yhs.overnight_live: 【隔夜·结构】SCHW SPRINGBOARD（local）现货 93.44 节点 93.00→95.00 距 0.47% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:08 [INFO] yhs.overnight_live: 【隔夜·结构】SPY CLIFF（local）现货 767.41 节点 772.00→767.00 距 0.59% | 15:00–15:50 同向大单 54 笔 $10294K
+20:52:10 [INFO] yhs.overnight_live: 【隔夜·结构】TLT SPRINGBOARD（local）现货 81.69 节点 81.50→82.50 距 0.23% | 15:00–15:50 同向大单 1 笔 $99K
+20:52:12 [INFO] yhs.overnight_live: 【隔夜·结构】TQQQ SPRINGBOARD（local）现货 62.37 节点 62.00→64.00 距 0.59% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:14 [INFO] yhs.overnight_live: 【隔夜·结构】UNH CLIFF（local）现货 411.26 节点 415.00→410.00 距 0.90% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:16 [INFO] yhs.overnight_live: 【隔夜·结构】WMT SPRINGBOARD（local）现货 130.23 节点 130.00→135.00 距 0.17% | 15:00–15:50 同向大单 2 笔 $196K
+20:52:17 [INFO] yhs.overnight_live: 【隔夜·结构】AMKR CLIFF（local）现货 35.30 节点 35.50→33.50 距 0.55% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:19 [INFO] yhs.overnight_live: 【隔夜·结构】BBY CLIFF（local）现货 101.18 节点 102.00→100.00 距 0.80% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:21 [INFO] yhs.overnight_live: 【隔夜·结构】BTU SPRINGBOARD（local）现货 17.14 节点 17.00→18.50 距 0.80% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:22 [INFO] yhs.overnight_live: 【隔夜·结构】CDNS SPRINGBOARD（local）现货 329.65 节点 327.50→332.50 距 0.66% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:24 [INFO] yhs.overnight_live: 【隔夜·结构】COIN CLIFF（local）现货 151.39 节点 152.50→150.00 距 0.73% | 15:00–15:50 同向大单 3 笔 $947K
+20:52:25 [INFO] yhs.overnight_live: 【隔夜·结构】CVNA CLIFF（local）现货 77.56 节点 78.00→74.00 距 0.56% | 15:00–15:50 同向大单 2 笔 $236K
+20:52:27 [INFO] yhs.overnight_live: 【隔夜·结构】CVX CLIFF（local）现货 217.10 节点 217.50→215.00 距 0.18% | 15:00–15:50 同向大单 2 笔 $241K
+20:52:28 [INFO] yhs.overnight_live: 【隔夜·结构】GOOGL SPRINGBOARD（local）现货 290.77 节点 290.00→292.50 距 0.27% | 15:00–15:50 同向大单 1 笔 $56K
+20:52:30 [INFO] yhs.overnight_live: 【隔夜·结构】INTU SPRINGBOARD（local）现货 356.61 节点 355.00→357.50 距 0.45% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:31 [INFO] yhs.overnight_live: 【隔夜·结构】LITE CLIFF（local）现货 619.96 节点 620.00→610.00 距 0.01% | 15:00–15:50 同向大单 4 笔 $479K
+20:52:32 [INFO] yhs.overnight_live: 【隔夜·结构】LMT SPRINGBOARD（local）现货 594.08 节点 590.00→600.00 距 0.69% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:34 [INFO] yhs.overnight_live: 【隔夜·结构】MDB SPRINGBOARD（local）现货 330.48 节点 327.50→337.50 距 0.91% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:36 [INFO] yhs.overnight_live: 【隔夜·结构】NVDA SPRINGBOARD（local）现货 201.63 节点 200.00→202.50 距 0.81% | 15:00–15:50 同向大单 31 笔 $3034K
+20:52:38 [INFO] yhs.overnight_live: 【隔夜·结构】SNOW CLIFF（local）现货 291.08 节点 292.50→290.00 距 0.49% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:39 [INFO] yhs.overnight_live: 【隔夜·结构】TSLA SPRINGBOARD（local）现货 385.06 节点 382.50→387.50 距 0.67% | 15:00–15:50 同向大单 16 笔 $1951K
+20:52:40 [INFO] yhs.overnight_live: 【隔夜·结构】TXN SPRINGBOARD（local）现货 310.15 节点 307.50→312.50 距 0.86% | 15:00–15:50 同向大单 0 笔 $0K
+20:52:41 [INFO] yhs.overnight_live: 【隔夜·结构】V SPRINGBOARD（local）现货 435.01 节点 435.00→440.00 距 0.00% | 15:00–15:50 同向大单 1 笔 $65K
+20:52:44 [INFO] yhs.overnight_live: 【隔夜·放弃】SPY 路径燃料不足（负 262.48M/1 个 vs 正 192.67M/3 个），不开
+20:52:44 [INFO] yhs.overnight_live: 【隔夜·放弃】NVDA 目标 202.5 太弱（2.3% < 3%），不开
+20:52:44 [INFO] yhs.overnight_live: 【隔夜·放弃】MSTR 目标 143 太弱（1.0% < 3%），不开
+20:52:44 [INFO] yhs.overnight_live: 【隔夜·放弃】TLT 路径燃料不足（负 64.23M/1 个 vs 正 7.40M/1 个），不开
+20:52:44 [INFO] yhs.overnight_live: 【隔夜·放弃】GOOG、GOOGL 是同一家公司、方向相反，都不开
+20:55:18 [INFO] yhs.overnight_live: 【隔夜·再确认】COIN 不开：现价 151.39→151.55 往上（反向）0.11%
+20:55:20 [INFO] yhs.overnight_live: 【隔夜·再确认】LITE 不开：现价 621.92 已越过天花板 620
+20:55:21 [INFO] yhs.overnight_live: 【隔夜·再确认】PANW 不开：现价 347.94 已跌破踏板 350
+20:55:22 [INFO] yhs.overnight_live: 【隔夜·再确认】HOOD 不开：现价 87.42→87.36 往下（反向）0.06%
+20:55:23 [INFO] yhs.overnight_live: 【隔夜·再确认】CVX 不开：现价 217.10→217.28 往上（反向）0.08%
+20:55:25 [INFO] yhs.overnight_live: 【隔夜·再确认】CVNA 不开：现价 77.56→77.84 往上（反向）0.35%
+20:55:26 [INFO] yhs.overnight_live: 【隔夜·再确认】WMT 不开：现价 130.23→130.11 往下（反向）0.09%
+20:55:34 [INFO] yhs.overnight_live: 【隔夜·候选】结构 + 大单 + 15:50 再确认都满足 10 个：QQQ、TSLA、ORCL、MDT、ASML、MS、IBM、V、DIS、GS
+20:55:36 [INFO] yhs.overnight_live: 【隔夜·开仓】ON20261104-01 QQQ O:QQQ261105P00692000 × 2 张 | ask 4.16（bid 4.14）投入 $832 | 大单 85 笔 $10805K
+20:55:37 [INFO] yhs.overnight_live: 【隔夜·开仓】ON20261104-02 TSLA O:TSLA261106C00387500 × 2 张 | ask 5.55（bid 5.40）投入 $1110 | 大单 16 笔 $1951K
+20:55:38 [INFO] yhs.overnight_live: 【隔夜·开仓】ON20261104-03 ORCL O:ORCL261106P00124000 × 4 张 | ask 2.83（bid 2.74）投入 $1132 | 大单 6 笔 $1197K
+20:55:39 [WARNING] yhs.overnight_live: 【隔夜·放弃】MDT O:MDT261106C00106000 买卖价差 45%（bid 0.57 / ask 0.90）> 25%，不开
+20:55:40 [WARNING] yhs.overnight_live: 【隔夜·放弃】ASML O:ASML261106P01490000 单张 $2830 超过每笔上限 $1250，不开
+20:55:42 [WARNING] yhs.overnight_live: 【隔夜·放弃】MS O:MS261106C00195000 买卖价差 30%（bid 1.24 / ask 1.68）> 25%，不开
+20:55:43 [INFO] yhs.overnight_live: 【隔夜·开仓】ON20261104-04 IBM O:IBM261106P00255000 × 3 张 | ask 3.50（bid 2.96）投入 $1050 | 大单 1 笔 $95K
+20:55:44 [INFO] yhs.overnight_live: 【隔夜·开仓】ON20261104-05 V O:V261106C00437500 × 4 张 | ask 2.84（bid 2.28）投入 $1136 | 大单 1 笔 $65K
+20:55:45 [WARNING] yhs.overnight_live: 【隔夜·放弃】DIS O:DIS261106C00120000 买卖价差 27%（bid 0.57 / ask 0.75）> 25%，不开
+20:55:46 [INFO] yhs.overnight_live: 【隔夜·开仓】ON20261104-06 GS O:GS261106P00927500 × 1 张 | ask 11.35（bid 10.75）投入 $1135 | 大单 1 笔 $56K
+20:55:57 [INFO] yhs.overnight_live: 【隔夜·影子】SPY O:SPY261105P00767000 × 4 张 | ask 2.61 | 被删原因：路径燃料不足（负 262.48M/1 个 vs 正 192.67M/3 个）
+20:55:57 [INFO] yhs.overnight_live: 【隔夜·影子】NVDA O:NVDA261106C00202500 × 5 张 | ask 2.16 | 被删原因：目标 202.5 太弱（2.3% < 3%）
+20:55:57 [INFO] yhs.overnight_live: 【隔夜·影子】COIN O:COIN261106P00150000 × 3 张 | ask 3.25 | 被删原因：15:50 再确认未通过：现价 151.39→151.55 往上（反向）0.11%
+20:55:57 [INFO] yhs.overnight_live: 【隔夜·影子】GOOG O:GOOG261106P00287500 × 3 张 | ask 3.45 | 被删原因：同一家公司方向相反
+20:55:57 [INFO] yhs.overnight_live: 【隔夜·影子】MSTR O:MSTR261106C00143000 × 3 张 | ask 3.45 | 被删原因：目标 143 太弱（1.0% < 3%）
+20:55:57 [INFO] yhs.overnight_live: 【隔夜·影子】HOOD O:HOOD261106C00088000 × 5 张 | ask 1.86 | 被删原因：15:50 再确认未通过：现价 87.42→87.36 往下（反向）0.06%
+20:55:57 [INFO] yhs.overnight_live: 【隔夜·影子】CVX O:CVX261106P00215000 × 6 张 | ask 1.63 | 被删原因：15:50 再确认未通过：现价 217.10→217.28 往上（反向）0.08%
+20:55:58 [INFO] yhs.overnight_live: 【隔夜】开仓 6 笔；配额剩余 71432
