@@ -1,0 +1,204 @@
+14:14:07 [INFO] yhs.main: 实盘监控启动（模拟盘）。API Key=sk_live_…R0TT，节奏：早盘/尾盘 5 分钟、午间 12 分钟，限频 50 RPM / 间隔 1.2s / 并发 3
+14:14:08 [INFO] yhs.main: discover：账户=已识别，本月剩余配额=69158（免费端点，0 配额）
+14:14:09 [INFO] yhs.main: 等待至 11-05 09:25 ET（等待拉取当日标的池），约 11 分钟
+14:25:00 [INFO] yhs.main: ==============================================================================
+14:25:00 [INFO] yhs.main: 交易日 2026-11-05 开始（标的池模式：both）
+14:25:00 [INFO] yhs.detector: 【阶段1】拉取当日期权成交量 Top150 榜单（计费 1 次）…
+14:25:00 [INFO] yhs.detector: 【阶段1】榜单共 150 行，截取成交量前 100 名
+14:25:00 [INFO] yhs.detector: 【阶段1】剔除：指数 5、非白名单 ETF 21、量能不足 0、PCR 未极端 0 → 入池 74 只（股价 ≥ $20 门槛将在首次 Heatmap 拉取时用 spot_usd 校验，零额外配额）
+14:25:00 [INFO] yhs.detector:    入池 GME    偏向=BULL    评分=5.42  OI增幅=35.0%，PCR=0.13偏多
+14:25:00 [INFO] yhs.detector:    入池 RIOT   偏向=BULL    评分=4.15  OI增幅=16.8%，PCR=0.11偏多
+14:25:00 [INFO] yhs.detector:    入池 DAL    偏向=BULL    评分=3.67  Vol/OI=0.95，PCR=0.02偏多
+14:25:00 [INFO] yhs.detector:    入池 UAL    偏向=BULL    评分=3.57  Vol/OI=0.83，PCR=0.02偏多
+14:25:00 [INFO] yhs.detector:    入池 RKT    偏向=BULL    评分=2.99  OI增幅=6.2%，PCR=0.14偏多
+14:25:00 [INFO] yhs.detector:    入池 ET     偏向=BULL    评分=2.67  PCR=0.04偏多
+14:25:00 [INFO] yhs.detector:    入池 PCG    偏向=BULL    评分=2.65  PCR=0.05偏多
+14:25:00 [INFO] yhs.detector:    入池 OPEN   偏向=BULL    评分=2.42  PCR=0.13偏多
+14:25:00 [INFO] yhs.detector:    入池 SHOP   偏向=BULL    评分=2.42  PCR=0.13偏多
+14:25:00 [INFO] yhs.detector:    入池 FSLR   偏向=BULL    评分=2.40  PCR=0.13偏多
+14:25:00 [INFO] yhs.detector:    入池 EOSE   偏向=BULL    评分=2.33  PCR=0.16偏多
+14:25:00 [INFO] yhs.detector:    入池 OXY    偏向=BULL    评分=2.29  PCR=0.17偏多
+14:25:00 [INFO] yhs.detector:    入池 CIFR   偏向=BULL    评分=2.21  OI增幅=6.2%，PCR=0.40偏多
+14:25:00 [INFO] yhs.detector:    入池 SMCI   偏向=BULL    评分=2.10  PCR=0.23偏多
+14:25:00 [INFO] yhs.detector:    入池 BMNR   偏向=BULL    评分=2.05  PCR=0.25偏多
+14:25:00 [INFO] yhs.detector:    入池 SOFI   偏向=BULL    评分=2.04  PCR=0.25偏多
+14:25:00 [INFO] yhs.detector:    入池 ONDS   偏向=BULL    评分=2.02  PCR=0.26偏多
+14:25:00 [INFO] yhs.detector:    入池 BABA   偏向=BULL    评分=1.99  PCR=0.27偏多
+14:25:00 [INFO] yhs.detector:    入池 HTZ    偏向=BULL    评分=1.98  PCR=0.27偏多
+14:25:00 [INFO] yhs.detector:    入池 NVO    偏向=BULL    评分=1.97  PCR=0.28偏多
+14:25:00 [INFO] yhs.detector:    入池 ASTS   偏向=BULL    评分=1.83  PCR=0.32偏多
+14:25:00 [INFO] yhs.detector:    入池 RIVN   偏向=BULL    评分=1.82  PCR=0.33偏多
+14:25:00 [INFO] yhs.detector:    入池 NFLX   偏向=BULL    评分=1.79  PCR=0.34偏多
+14:25:00 [INFO] yhs.detector:    入池 NKE    偏向=BULL    评分=1.74  PCR=0.35偏多
+14:25:00 [INFO] yhs.detector:    入池 APLD   偏向=BULL    评分=1.72  PCR=0.36偏多
+14:25:00 [INFO] yhs.detector:    入池 GOOG   偏向=BULL    评分=1.70  PCR=0.37偏多
+14:25:00 [INFO] yhs.detector:    入池 HOOD   偏向=BULL    评分=1.67  PCR=0.38偏多
+14:25:00 [INFO] yhs.detector:    入池 SNAP   偏向=BULL    评分=1.67  PCR=0.38偏多
+14:25:00 [INFO] yhs.detector:    入池 AMC    偏向=BULL    评分=1.66  PCR=0.38偏多
+14:25:00 [INFO] yhs.detector:    入池 GOOGL  偏向=BULL    评分=1.54  PCR=0.42偏多
+14:25:00 [INFO] yhs.detector:    入池 AAL    偏向=BULL    评分=1.49  PCR=0.44偏多
+14:25:00 [INFO] yhs.detector:    入池 META   偏向=BULL    评分=1.46  PCR=0.45偏多
+14:25:00 [INFO] yhs.detector:    入池 MSOS   偏向=BULL    评分=1.46  PCR=0.45偏多
+14:25:00 [INFO] yhs.detector:    入池 CLF    偏向=BEAR    评分=1.45  PCR=2.05偏空
+14:25:00 [INFO] yhs.detector:    入池 U      偏向=BULL    评分=1.34  PCR=0.49偏多
+14:25:00 [INFO] yhs.detector:    入池 IREN   偏向=BULL    评分=1.28  PCR=0.51偏多
+14:25:00 [INFO] yhs.detector:    入池 WULF   偏向=BULL    评分=1.21  PCR=0.53偏多
+14:25:00 [INFO] yhs.detector:    入池 NOW    偏向=BULL    评分=1.21  PCR=0.53偏多
+14:25:00 [INFO] yhs.detector:    入池 NBIS   偏向=BULL    评分=1.19  PCR=0.54偏多
+14:25:00 [INFO] yhs.detector:    入池 MARA   偏向=BULL    评分=1.18  PCR=0.54偏多
+14:25:00 [INFO] yhs.detector:    入池 TLT    偏向=BULL    评分=1.12  PCR=0.56偏多
+14:25:00 [INFO] yhs.detector:    入池 UBER   偏向=BULL    评分=1.06  PCR=0.58偏多
+14:25:00 [INFO] yhs.detector:    入池 AMZN   偏向=BULL    评分=1.02  PCR=0.59偏多
+14:25:00 [INFO] yhs.detector:    入池 SPY    偏向=NEUTRAL 评分=0.75  Vol/OI=0.75
+14:25:00 [INFO] yhs.detector:    入池 QQQ    偏向=NEUTRAL 评分=0.69  Vol/OI=0.69
+14:25:00 [INFO] yhs.detector:    入池 MRVL   偏向=NEUTRAL 评分=0.53  OI增幅=5.2%
+14:25:00 [INFO] yhs.detector:    入池 NVDA   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 TSLA   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 AAPL   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 MU     偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 INTC   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 AMD    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 MSFT   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 PLTR   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 SOXL   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 CRWV   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 TQQQ   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 MSTR   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 ORCL   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 AVGO   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 WMT    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 SNDK   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 PFE    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 BE     偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 QCOM   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 BAC    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 VST    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 COIN   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 ARM    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 TSM    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 DELL   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 APP    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 SKHY   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 CVNA   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.main: 【预算守卫】剩余配额 69158，本月剩余交易日 18，日预算约 3759 次 → 今日最多监控 40 只（上限 60）
+14:25:00 [INFO] yhs.main: 账户 B 监控 40 只：AAPL, AMC, AMD, AMZN, AVGO, BABA, CIFR, CRWV, DAL, GME, GOOG, GOOGL, HOOD, INTC, IREN, META, MRVL, MSFT, MSTR, MU, NFLX, NKE, NVDA, ORCL, PLTR, QQQ, RIOT, RKT, SMCI, SOFI, SOXL, SPY, TLT, TQQQ, TSLA, U, UAL, UBER, WMT, WULF
+14:25:00 [INFO] yhs.main: 账户 A 监控 6 只：CIFR, DAL, GME, RIOT, RKT, UAL
+14:25:01 [INFO] yhs.main: 等待至 11-05 09:35 ET（等待开盘后第一个 Heatmap 快照），约 10 分钟
+14:35:27 [WARNING] yhs.main: UAL 不在 Heatmap 服务范围（404），移出标的池
+14:36:09 [WARNING] yhs.main: AMC 不在 Heatmap 服务范围（404），移出标的池
+14:36:12 [INFO] yhs.main: [09:36:12] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 69053；下一轮 09:40:25
+14:41:09 [INFO] yhs.main: [09:41:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 69002；下一轮 09:45:25
+14:46:09 [INFO] yhs.main: [09:46:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68953；下一轮 09:50:25
+14:51:09 [INFO] yhs.main: [09:51:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68904；下一轮 09:55:25
+14:56:09 [INFO] yhs.main: [09:56:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68855；下一轮 10:00:25
+15:00:44 [INFO] yhs.baseline: 【baseline·信号】META CLIFF_STRUCTURE/REJECTION_DROP 评分 74 | 天花板 612.5(+2.2M) 距 0.07% · 燃料 610(-4.3M) · 路径负 4.3M / 正 0.0M · 目标 = 下方超大正节点 605(+4.5M) 空间 1.16% · R:R 1.45 | 环境 STACKED_FLIP_ZONE · 节点 GROWING · 墙体 MIGRATING_DOWN · 共振 0 · 到期冲突 | 现货止损 616.98 目标 605.00
+15:01:12 [INFO] yhs.trader: 【Flow 记录】META 有大单：Ask 侧大单 $224,800，合约当日量 1,221 ≥ OI 515（日内主动建仓）
+15:01:19 [WARNING] yhs.client: 503 /v1/options/quote/META261106P00610000（READ_MODEL_UNAVAILABLE），3.1s 后重试
+15:01:32 [WARNING] yhs.client: 503 /v1/options/quote/META261106P00610000（READ_MODEL_UNAVAILABLE），4.5s 后重试
+15:01:37 [WARNING] yhs.client: 503 /v1/options/quote/META261106P00610000（READ_MODEL_UNAVAILABLE），4.6s 后重试
+15:01:46 [INFO] yhs.main: META261106P00610000 实时报价不可用：HTTP 503 READ_MODEL_UNAVAILABLE: Read model is temporarily unavailable (/v1/options/quote/META261106P00610000)
+15:01:46 [WARNING] yhs.trader: 【阶段4·放弃】META O:META261106P00610000 无实时报价，不用估算价开仓
+15:01:46 [INFO] yhs.baseline: 【baseline·排序】10:01 本轮信号 1 个 → 开仓 无
+15:01:46 [INFO] yhs.main: [10:01:46] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68803；下一轮 10:05:25
+15:05:26 [INFO] yhs.baseline: 【baseline·信号】DAL CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 87(+2.0M) 距 0.50% · 燃料 86(-1.6M) · 路径负 1.6M / 正 0.0M · 目标 = 下方超大正节点 84(+1.6M) 空间 2.96% · R:R 3.69 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 1 · 到期冲突 | 现货止损 87.26 目标 84.00
+15:05:26 [INFO] yhs.baseline: 【baseline·信号】DAL CLIFF_STRUCTURE/REJECTION_DROP 评分 62 | 天花板 87(+2.0M) 距 0.50% · 燃料 86(-1.6M) · 路径负 1.6M / 正 0.0M · 目标 = 下方超大正节点 84(+1.6M) 空间 2.96% · R:R 3.69 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 1 · 到期冲突 | 现货止损 87.26 目标 84.00
+15:05:57 [INFO] yhs.baseline: 【baseline·信号】GOOG CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 100 | 天花板 290(+2.3M) 距 2.13% · 燃料 282.5(-3.3M) · 路径负 5.9M / 正 0.0M · 目标 = 下方超大正节点 275(+5.3M) 空间 3.16% · R:R 2.10 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_DOWN · 共振 2 | 现货止损 288.22 目标 275.00
+15:06:11 [INFO] yhs.trader: 【Flow 记录】GOOG 无大单：O:GOOG261120P00322500 当日量 20 < OI 282（疑似平仓）
+15:06:13 [INFO] yhs.trader: 【阶段4·开仓】P20261105-0001 GOOG BUY_PUT | 行权价 285.00 到期 2026-11-06 | 现货 283.96 | 中间价 4.400 → 成本 4.550（按 ask 成交（bid 4.250 / ask 4.550）） | δ=0.526 γ=0.0468 | 定价来源=quote | 目标加速位 275.00
+15:06:13 [INFO] yhs.baseline: 【baseline·开仓依据】P20261105-0001 CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 100 | 天花板 290(+2.3M) 距 2.13% · 燃料 282.5(-3.3M) · 路径负 5.9M / 正 0.0M · 目标 = 下方超大正节点 275(+5.3M) 空间 3.16% · R:R 2.10 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_DOWN · 共振 2 | 现货止损 288.22 目标 275.00
+15:06:15 [INFO] yhs.trader: 【Flow 记录】DAL 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+15:06:17 [INFO] yhs.trader: 【阶段4·放弃】DAL O:DAL261106P00087000 买卖价差 38%（bid 1.14 / ask 1.68）> 8%，不开仓
+15:06:17 [INFO] yhs.baseline: 【baseline·排序】10:06 本轮信号 2 个 → 开仓 GOOG(100)
+15:06:19 [INFO] yhs.trader: 【Flow 记录】DAL 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+15:06:19 [INFO] yhs.trader: 【阶段4·放弃】DAL O:DAL261106P00087000 买卖价差 38%（bid 1.14 / ask 1.68）> 8%，不开仓
+15:06:19 [INFO] yhs.baseline: 【baseline·排序】10:06 本轮信号 1 个 → 开仓 无
+15:06:19 [INFO] yhs.main: [10:06:19] 本轮完成：B 持仓 1；A 持仓 0；监控 38 只，配额剩余 68747；下一轮 10:10:25
+15:10:45 [INFO] yhs.baseline: 【baseline·信号】META CLIFF_STRUCTURE/REJECTION_DROP 评分 66 | 天花板 605(+4.4M) 距 0.50% · 燃料 595(-3.3M) · 路径负 5.7M / 正 0.0M · 目标 = 下方超大正节点 587.5(+2.1M) 空间 2.40% · R:R 2.99 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_DOWN · 共振 0 · 到期冲突 | 现货止损 606.81 目标 587.50
+15:11:13 [INFO] yhs.trader: 【Flow 记录】META 有大单：Ask 侧大单 $176,540，合约当日量 2,988 ≥ OI 1,881（日内主动建仓）
+15:11:14 [INFO] yhs.trader: 【阶段4·开仓】P20261105-0002 META BUY_PUT | 行权价 600.00 到期 2026-11-06 | 现货 601.97 | 中间价 9.300 → 成本 9.500（按 ask 成交（bid 9.100 / ask 9.500）） | δ=0.406 γ=0.0174 | 定价来源=quote | 目标加速位 587.50
+15:11:14 [INFO] yhs.baseline: 【baseline·开仓依据】P20261105-0002 CLIFF_STRUCTURE/REJECTION_DROP 评分 66 | 天花板 605(+4.4M) 距 0.50% · 燃料 595(-3.3M) · 路径负 5.7M / 正 0.0M · 目标 = 下方超大正节点 587.5(+2.1M) 空间 2.40% · R:R 2.99 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_DOWN · 共振 0 · 到期冲突 | 现货止损 606.81 目标 587.50
+15:11:14 [INFO] yhs.baseline: 【baseline·排序】10:11 本轮信号 1 个 → 开仓 META(66)
+15:11:14 [INFO] yhs.main: [10:11:14] 本轮完成：B 持仓 2；A 持仓 0；监控 38 只，配额剩余 68685；下一轮 10:15:25
+15:15:27 [INFO] yhs.baseline: 【baseline·信号】DAL CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 62 | 天花板 87(+1.9M) 距 1.09% · 燃料 86(-1.5M) · 路径负 1.5M / 正 0.0M · 目标 = 下方超大正节点 84(+1.8M) 空间 2.40% · R:R 1.73 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 1 · 到期冲突 | 现货止损 87.26 目标 84.00
+15:15:27 [INFO] yhs.baseline: 【baseline·信号】DAL CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 62 | 天花板 87(+1.9M) 距 1.09% · 燃料 86(-1.5M) · 路径负 1.5M / 正 0.0M · 目标 = 下方超大正节点 84(+1.8M) 空间 2.40% · R:R 1.73 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 1 · 到期冲突 | 现货止损 87.26 目标 84.00
+15:15:45 [INFO] yhs.trader: 【阶段4·平仓】P20261105-0002 META BUY_PUT | 原因 连续棘轮锁利 | 现货 601.97→598.90 | 期权 9.500→9.700 | ROI +2.1% | 峰值 +11.6% | 最大逆行 -4.2% | 盈亏 $+20.00
+15:16:14 [INFO] yhs.trader: 【Flow 记录】DAL 无大单：O:DAL270115P00075000 当日量 431 < OI 4,883（疑似平仓）
+15:16:16 [INFO] yhs.trader: 【阶段4·放弃】DAL O:DAL261106P00086000 买卖价差 30%（bid 1.05 / ask 1.42）> 8%，不开仓
+15:16:16 [INFO] yhs.baseline: 【baseline·排序】10:16 本轮信号 1 个 → 开仓 无
+15:16:17 [INFO] yhs.trader: 【Flow 记录】DAL 无大单：O:DAL270115P00075000 当日量 431 < OI 4,883（疑似平仓）
+15:16:18 [INFO] yhs.trader: 【阶段4·放弃】DAL O:DAL261106P00086000 买卖价差 30%（bid 1.05 / ask 1.42）> 8%，不开仓
+15:16:18 [INFO] yhs.baseline: 【baseline·排序】10:16 本轮信号 1 个 → 开仓 无
+15:16:18 [INFO] yhs.main: [10:16:18] 本轮完成：B 持仓 1；A 持仓 0；监控 38 只，配额剩余 68608；下一轮 10:20:25
+15:16:19 [INFO] yhs.trader: 【阶段4·平仓】P20261105-0001 GOOG BUY_PUT | 原因 连续棘轮锁利 | 现货 283.96→283.01 | 期权 4.550→4.600 | ROI +1.1% | 峰值 +11.0% | 最大逆行 -15.4% | 盈亏 $+5.00
+15:21:09 [INFO] yhs.main: [10:21:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68557；下一轮 10:25:25
+15:26:09 [INFO] yhs.main: [10:26:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68508；下一轮 10:30:25
+15:31:09 [INFO] yhs.main: [10:31:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68459；下一轮 10:35:25
+15:36:09 [INFO] yhs.main: [10:36:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68410；下一轮 10:40:25
+15:41:09 [INFO] yhs.main: [10:41:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68361；下一轮 10:45:25
+15:46:09 [INFO] yhs.main: [10:46:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68312；下一轮 10:50:25
+15:51:09 [INFO] yhs.main: [10:51:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68263；下一轮 10:55:25
+15:56:09 [INFO] yhs.main: [10:56:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68214；下一轮 11:00:25
+16:01:09 [INFO] yhs.main: [11:01:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68165；下一轮 11:05:25
+16:06:09 [INFO] yhs.main: [11:06:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68116；下一轮 11:10:25
+16:11:09 [INFO] yhs.main: [11:11:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68067；下一轮 11:15:25
+16:16:09 [INFO] yhs.main: [11:16:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 68018；下一轮 11:20:25
+16:21:08 [INFO] yhs.baseline: 【baseline·信号】WMT CLIFF_STRUCTURE/REJECTION_DROP 评分 100 | 天花板 130(+1.6M) 距 0.12% · 燃料 129(-1.5M) · 路径负 1.5M / 正 0.0M · 目标 = 下方超大正节点 126(+0.9M) 空间 2.96% · R:R 3.70 | 环境 STACKED_FLIP_ZONE · 节点 GROWING · 墙体 MIGRATING_DOWN · 共振 2 | 现货止损 130.88 目标 126.00
+16:21:13 [INFO] yhs.trader: 【Flow 记录】WMT 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+16:21:14 [INFO] yhs.trader: 【阶段4·开仓】P20261105-0003 WMT BUY_PUT | 行权价 130.00 到期 2026-11-06 | 现货 129.84 | 中间价 1.380 → 成本 1.430（按 ask 成交（bid 1.330 / ask 1.430）） | δ=0.347 γ=0.1092 | 定价来源=quote | 目标加速位 126.00
+16:21:14 [INFO] yhs.baseline: 【baseline·开仓依据】P20261105-0003 CLIFF_STRUCTURE/REJECTION_DROP 评分 100 | 天花板 130(+1.6M) 距 0.12% · 燃料 129(-1.5M) · 路径负 1.5M / 正 0.0M · 目标 = 下方超大正节点 126(+0.9M) 空间 2.96% · R:R 3.70 | 环境 STACKED_FLIP_ZONE · 节点 GROWING · 墙体 MIGRATING_DOWN · 共振 2 | 现货止损 130.88 目标 126.00
+16:21:15 [INFO] yhs.baseline: 【baseline·排序】11:21 本轮信号 1 个 → 开仓 WMT(100)
+16:21:15 [INFO] yhs.main: [11:21:15] 本轮完成：B 持仓 1；A 持仓 0；监控 38 只，配额剩余 67966；下一轮 11:25:25
+16:26:10 [INFO] yhs.main: [11:26:10] 本轮完成：B 持仓 1；A 持仓 0；监控 38 只，配额剩余 67907；下一轮 11:30:25
+16:31:09 [INFO] yhs.baseline: 【baseline·起始点衰减】P20261105-0003 130 连续 2 根变小 1.64M→0.94M→0.53M，最远进度 7% < 20%
+16:31:09 [INFO] yhs.trader: 【阶段4·平仓】P20261105-0003 WMT BUY_PUT | 原因 起始点 10 分钟连续变小且进度 <20% 截断 | 现货 129.84→129.71 | 期权 1.430→1.320 | ROI -7.7% | 峰值 -0.7% | 最大逆行 -13.3% | 盈亏 $-55.00
+16:31:10 [INFO] yhs.main: [11:31:10] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67848；下一轮 11:35:25
+16:36:10 [INFO] yhs.main: [11:36:10] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67799；下一轮 11:40:25
+16:41:09 [INFO] yhs.main: [11:41:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67750；下一轮 11:45:25
+16:46:09 [INFO] yhs.main: [11:46:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67701；下一轮 11:50:25
+16:51:09 [INFO] yhs.main: [11:51:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67652；下一轮 11:55:25
+16:56:09 [INFO] yhs.main: [11:56:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67603；下一轮 12:00:25
+17:01:09 [INFO] yhs.main: [12:01:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67554；下一轮 12:05:25
+17:06:09 [INFO] yhs.main: [12:06:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67501；下一轮 12:10:25
+17:11:09 [INFO] yhs.main: [12:11:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67452；下一轮 12:15:25
+17:16:17 [INFO] yhs.main: [12:16:17] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67403；下一轮 12:20:25
+17:21:09 [INFO] yhs.main: [12:21:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67354；下一轮 12:25:25
+17:26:09 [INFO] yhs.main: [12:26:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67305；下一轮 12:30:25
+17:31:09 [INFO] yhs.main: [12:31:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67256；下一轮 12:35:25
+17:36:09 [INFO] yhs.main: [12:36:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67207；下一轮 12:40:25
+17:41:09 [INFO] yhs.main: [12:41:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67158；下一轮 12:45:25
+17:46:09 [INFO] yhs.main: [12:46:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67109；下一轮 12:50:25
+17:51:09 [INFO] yhs.main: [12:51:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67060；下一轮 12:55:25
+17:56:09 [INFO] yhs.main: [12:56:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 67011；下一轮 13:00:25
+18:01:09 [INFO] yhs.main: [13:01:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66962；下一轮 13:05:25
+18:06:06 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/UBER/snapshot：<urlopen error [Errno 104] Connection reset by peer>，4.2s 后第 1 次重试
+18:06:16 [INFO] yhs.main: [13:06:16] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66913；下一轮 13:10:25
+18:11:09 [INFO] yhs.main: [13:11:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66864；下一轮 13:15:25
+18:16:09 [INFO] yhs.main: [13:16:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66815；下一轮 13:20:25
+18:20:44 [INFO] yhs.baseline: 【baseline·信号】META CLIFF_STRUCTURE/REJECTION_DROP 评分 78 | 天花板 605(+4.5M) 距 0.44% · 燃料 590(-6.1M) · 路径负 12.3M / 正 0.0M · 目标 = 下方超大正节点 587.5(+2.1M) 空间 2.47% · R:R 3.08 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_DOWN · 共振 1 | 现货止损 607.17 目标 587.50
+18:21:13 [INFO] yhs.trader: 【Flow 记录】META 有大单：Ask 侧大单 $87,225，合约当日量 19 ≥ OI 6（日内主动建仓）
+18:21:15 [INFO] yhs.trader: 【阶段4·开仓】P20261105-0004 META BUY_PUT | 行权价 600.00 到期 2026-11-06 | 现货 602.35 | 中间价 9.275 → 成本 9.500（按 ask 成交（bid 9.050 / ask 9.500）） | δ=0.453 γ=0.0159 | 定价来源=quote | 目标加速位 587.50
+18:21:15 [INFO] yhs.baseline: 【baseline·开仓依据】P20261105-0004 CLIFF_STRUCTURE/REJECTION_DROP 评分 78 | 天花板 605(+4.5M) 距 0.44% · 燃料 590(-6.1M) · 路径负 12.3M / 正 0.0M · 目标 = 下方超大正节点 587.5(+2.1M) 空间 2.47% · R:R 3.08 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_DOWN · 共振 1 | 现货止损 607.17 目标 587.50
+18:21:15 [INFO] yhs.baseline: 【baseline·排序】13:21 本轮信号 1 个 → 开仓 META(78)
+18:21:15 [INFO] yhs.main: [13:21:15] 本轮完成：B 持仓 1；A 持仓 0；监控 38 只，配额剩余 66763；下一轮 13:25:25
+18:26:10 [INFO] yhs.main: [13:26:10] 本轮完成：B 持仓 1；A 持仓 0；监控 38 只，配额剩余 66704；下一轮 13:30:25
+18:31:10 [INFO] yhs.main: [13:31:10] 本轮完成：B 持仓 1；A 持仓 0；监控 38 只，配额剩余 66645；下一轮 13:35:25
+18:36:10 [INFO] yhs.main: [13:36:10] 本轮完成：B 持仓 1；A 持仓 0；监控 38 只，配额剩余 66586；下一轮 13:40:25
+18:39:25 [INFO] yhs.trader: 【阶段4·平仓】P20261105-0004 META BUY_PUT | 原因 18 分钟零动能截断 | 现货 602.35→605.38 | 期权 9.500→7.350 | ROI -22.6% | 峰值 -3.7% | 最大逆行 -22.6% | 盈亏 $-215.00
+18:41:09 [INFO] yhs.main: [13:41:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66525；下一轮 13:45:25
+18:46:09 [INFO] yhs.main: [13:46:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66476；下一轮 13:50:25
+18:51:09 [INFO] yhs.main: [13:51:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66427；下一轮 13:55:25
+18:56:09 [INFO] yhs.main: [13:56:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66381；下一轮 14:00:25
+19:01:09 [INFO] yhs.main: [14:01:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66324；下一轮 14:05:25
+19:06:09 [INFO] yhs.main: [14:06:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66275；下一轮 14:10:25
+19:11:09 [INFO] yhs.main: [14:11:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66226；下一轮 14:15:25
+19:16:09 [INFO] yhs.main: [14:16:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66177；下一轮 14:20:25
+19:21:10 [INFO] yhs.main: [14:21:10] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66128；下一轮 14:25:25
+19:26:09 [INFO] yhs.main: [14:26:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66079；下一轮 14:30:25
+19:31:09 [INFO] yhs.main: [14:31:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 66030；下一轮 14:35:25
+19:36:09 [INFO] yhs.main: [14:36:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 65981；下一轮 14:40:25
+19:41:09 [INFO] yhs.main: [14:41:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 65932；下一轮 14:45:25
+19:46:09 [INFO] yhs.main: [14:46:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 65883；下一轮 14:50:25
+19:51:10 [INFO] yhs.main: [14:51:10] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 65834；下一轮 14:55:25
+19:56:09 [INFO] yhs.main: [14:56:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 65785；下一轮 15:00:25
+20:01:09 [INFO] yhs.main: [15:01:09] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 65736；下一轮 15:05:25
+20:06:10 [INFO] yhs.main: [15:06:10] 本轮完成：B 持仓 0；A 持仓 0；监控 38 只，配额剩余 65687；下一轮 15:10:25
