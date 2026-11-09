@@ -1,0 +1,30 @@
+20:18:22 [INFO] yhs.main: 实盘监控启动（模拟盘）。API Key=sk_live_…R0TT，节奏：早盘/尾盘 5 分钟、午间 12 分钟，限频 50 RPM / 间隔 1.2s / 并发 3
+20:18:24 [INFO] yhs.main: discover：账户=已识别，本月剩余配额=48416（免费端点，0 配额）
+20:18:24 [INFO] yhs.main: ==============================================================================
+20:18:24 [INFO] yhs.main: 交易日 2026-11-09 开始（标的池模式：both）
+20:18:24 [INFO] yhs.detector: 【阶段1】命中当日标的池缓存 yhs_data/universe_2026-11-09_va0_pcr0.json（72 只），不消耗配额
+20:18:24 [INFO] yhs.main: 【预算守卫】剩余配额 48416，本月剩余交易日 16，日预算约 2932 次 → 今日最多监控 31 只（上限 60）
+20:18:24 [INFO] yhs.main: 账户 B 监控 31 只：AAPL, AMD, AMZN, APLD, AVGO, CORZ, CRWV, DKNG, GOOGL, HOOD, INTC, IREN, MARA, META, MSFT, MSTR, MU, NVDA, ORCL, PLTR, QQQ, RIOT, SMCI, SNDK, SOFI, SOXL, SPY, TLT, TQQQ, TSLA, WULF
+20:18:24 [INFO] yhs.main: 账户 A 监控 3 只：APLD, DKNG, RIOT
+20:19:02 [INFO] yhs.main: [15:19:02] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 48386；下一轮 15:20:25
+20:21:01 [INFO] yhs.main: [15:21:01] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 48343；下一轮 15:25:25
+20:26:02 [INFO] yhs.main: [15:26:02] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 48281；下一轮 15:30:25
+20:31:08 [INFO] yhs.main: [15:31:08] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 48216；下一轮 15:35:25
+20:36:04 [INFO] yhs.main: [15:36:04] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 48157；下一轮 15:40:25
+20:41:01 [INFO] yhs.main: [15:41:01] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 48095；下一轮 15:45:25
+20:46:01 [INFO] yhs.main: [15:46:01] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 48033；下一轮 15:50:25
+20:51:01 [INFO] yhs.main: [15:51:01] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 47971；下一轮 15:55:25
+20:56:10 [INFO] yhs.main: [15:56:10] 本轮完成：B 持仓 0；A 持仓 0；监控 31 只，配额剩余 47848；下一轮 16:00:25
+21:00:00 [INFO] yhs.main: ----- 账户 B 收盘 -----
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:00 [INFO] yhs.trader: 复盘统计：本次运行无已平仓交易
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:00 [INFO] yhs.main: 检测统计：{'snapshots': 0, 'structures': 0, 'fatigue_reject': 0, 'pcr_reject': 0, 'flow_calls': 0, 'flow_throttled': 0, 'flow_reject': 0, 'signals': 0, 'stale_skip': 0}
+21:00:00 [INFO] yhs.main: 本进程计费调用 279 次，免费调用 2 次；服务端剩余配额 47848 / 100000；按端点：{'derived/heatmap/snapshot': 279}
+21:00:00 [INFO] yhs.main: ----- 账户 A 收盘 -----
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:00 [INFO] yhs.trader: 复盘统计：本次运行无已平仓交易
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:01 [INFO] yhs.main: 检测统计：{'snapshots': 0, 'structures': 0, 'fatigue_reject': 0, 'pcr_reject': 0, 'flow_calls': 0, 'flow_throttled': 0, 'flow_reject': 0, 'signals': 0, 'stale_skip': 0}
+21:00:01 [INFO] yhs.main: 本进程计费调用 279 次，免费调用 2 次；服务端剩余配额 47848 / 100000；按端点：{'derived/heatmap/snapshot': 279}
+21:00:01 [INFO] yhs.main: 单日模式：今日结束，退出
