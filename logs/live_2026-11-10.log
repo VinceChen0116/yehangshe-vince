@@ -1,0 +1,313 @@
+14:16:51 [INFO] yhs.main: 实盘监控启动（模拟盘）。API Key=sk_live_…R0TT，节奏：早盘/尾盘 5 分钟、午间 12 分钟，限频 50 RPM / 间隔 1.2s / 并发 3
+14:16:53 [WARNING] yhs.client: 429 /v1/discover（RATE_LIMITED），按 Retry-After 等待 4.3s
+14:16:58 [INFO] yhs.main: discover：账户=已识别，本月剩余配额=45265（免费端点，0 配额）
+14:16:58 [INFO] yhs.main: 等待至 11-10 09:25 ET（等待拉取当日标的池），约 8 分钟
+14:25:00 [INFO] yhs.main: ==============================================================================
+14:25:00 [INFO] yhs.main: 交易日 2026-11-10 开始（标的池模式：both）
+14:25:00 [INFO] yhs.detector: 【阶段1】拉取当日期权成交量 Top150 榜单（计费 1 次）…
+14:25:00 [WARNING] yhs.client: 429 /v1/market/options-volume-rank（RATE_LIMITED），按 Retry-After 等待 4.3s
+14:25:05 [WARNING] yhs.client: 429 /v1/market/options-volume-rank（RATE_LIMITED），按 Retry-After 等待 8.1s
+14:25:14 [WARNING] yhs.client: 429 /v1/market/options-volume-rank（RATE_LIMITED），按 Retry-After 等待 16.3s
+14:25:31 [WARNING] yhs.client: 429 /v1/market/options-volume-rank（RATE_LIMITED），按 Retry-After 等待 32.0s
+14:26:04 [INFO] yhs.detector: 【阶段1】榜单共 150 行，截取成交量前 100 名
+14:26:04 [INFO] yhs.detector: 【阶段1】剔除：指数 5、非白名单 ETF 21、量能不足 0、PCR 未极端 0 → 入池 74 只（股价 ≥ $20 门槛将在首次 Heatmap 拉取时用 spot_usd 校验，零额外配额）
+14:26:04 [INFO] yhs.detector:    入池 TGT    偏向=BULL    评分=3.36  Vol/OI=0.74，PCR=0.06偏多
+14:26:04 [INFO] yhs.detector:    入池 PCG    偏向=BULL    评分=2.71  PCR=0.03偏多
+14:26:04 [INFO] yhs.detector:    入池 KHC    偏向=BULL    评分=2.65  PCR=0.05偏多
+14:26:04 [INFO] yhs.detector:    入池 CORZ   偏向=BULL    评分=2.61  PCR=0.06偏多
+14:26:04 [INFO] yhs.detector:    入池 AMC    偏向=BULL    评分=2.54  PCR=0.09偏多
+14:26:04 [INFO] yhs.detector:    入池 RIOT   偏向=BULL    评分=2.53  PCR=0.09偏多
+14:26:04 [INFO] yhs.detector:    入池 SOFI   偏向=BULL    评分=2.42  PCR=0.13偏多
+14:26:04 [INFO] yhs.detector:    入池 GME    偏向=BULL    评分=2.35  PCR=0.15偏多
+14:26:04 [INFO] yhs.detector:    入池 BTDR   偏向=BULL    评分=2.34  PCR=0.15偏多
+14:26:04 [INFO] yhs.detector:    入池 CIFR   偏向=BULL    评分=2.12  PCR=0.23偏多
+14:26:04 [INFO] yhs.detector:    入池 ACHR   偏向=BULL    评分=2.07  PCR=0.24偏多
+14:26:04 [INFO] yhs.detector:    入池 F      偏向=BULL    评分=2.03  PCR=0.26偏多
+14:26:04 [INFO] yhs.detector:    入池 ONDS   偏向=BULL    评分=2.00  PCR=0.27偏多
+14:26:04 [INFO] yhs.detector:    入池 RIVN   偏向=BULL    评分=1.90  PCR=0.30偏多
+14:26:04 [INFO] yhs.detector:    入池 OPEN   偏向=BULL    评分=1.86  PCR=0.31偏多
+14:26:04 [INFO] yhs.detector:    入池 OKLO   偏向=BULL    评分=1.85  PCR=0.32偏多
+14:26:04 [INFO] yhs.detector:    入池 WULF   偏向=BULL    评分=1.75  PCR=0.35偏多
+14:26:04 [INFO] yhs.detector:    入池 APLD   偏向=BULL    评分=1.71  PCR=0.36偏多
+14:26:04 [INFO] yhs.detector:    入池 UBER   偏向=BULL    评分=1.69  PCR=0.37偏多
+14:26:04 [INFO] yhs.detector:    入池 GOOG   偏向=BULL    评分=1.67  PCR=0.38偏多
+14:26:04 [INFO] yhs.detector:    入池 NKE    偏向=BULL    评分=1.66  PCR=0.38偏多
+14:26:04 [INFO] yhs.detector:    入池 BMNR   偏向=BULL    评分=1.66  PCR=0.38偏多
+14:26:04 [INFO] yhs.detector:    入池 NFLX   偏向=BULL    评分=1.65  PCR=0.38偏多
+14:26:04 [INFO] yhs.detector:    入池 GOOGL  偏向=BULL    评分=1.64  PCR=0.39偏多
+14:26:04 [INFO] yhs.detector:    入池 MRVL   偏向=BULL    评分=1.56  PCR=0.41偏多
+14:26:04 [INFO] yhs.detector:    入池 HOOD   偏向=BULL    评分=1.53  PCR=0.42偏多
+14:26:04 [INFO] yhs.detector:    入池 ORCL   偏向=BULL    评分=1.38  PCR=0.47偏多
+14:26:04 [INFO] yhs.detector:    入池 QUBT   偏向=BULL    评分=1.37  PCR=0.48偏多
+14:26:04 [INFO] yhs.detector:    入池 COIN   偏向=BULL    评分=1.34  PCR=0.49偏多
+14:26:04 [INFO] yhs.detector:    入池 RKLB   偏向=BULL    评分=1.30  PCR=0.50偏多
+14:26:04 [INFO] yhs.detector:    入池 ASTS   偏向=BULL    评分=1.29  PCR=0.50偏多
+14:26:04 [INFO] yhs.detector:    入池 AAL    偏向=BULL    评分=1.28  PCR=0.51偏多
+14:26:04 [INFO] yhs.detector:    入池 BABA   偏向=BULL    评分=1.28  PCR=0.51偏多
+14:26:04 [INFO] yhs.detector:    入池 PFE    偏向=BULL    评分=1.22  PCR=0.53偏多
+14:26:04 [INFO] yhs.detector:    入池 META   偏向=BULL    评分=1.21  PCR=0.53偏多
+14:26:04 [INFO] yhs.detector:    入池 TQQQ   偏向=BULL    评分=1.20  PCR=0.53偏多
+14:26:04 [INFO] yhs.detector:    入池 AMZN   偏向=BULL    评分=1.16  PCR=0.55偏多
+14:26:04 [INFO] yhs.detector:    入池 MSFT   偏向=BULL    评分=1.14  PCR=0.55偏多
+14:26:04 [INFO] yhs.detector:    入池 IREN   偏向=BULL    评分=1.12  PCR=0.56偏多
+14:26:04 [INFO] yhs.detector:    入池 PLTR   偏向=BULL    评分=1.09  PCR=0.57偏多
+14:26:04 [INFO] yhs.detector:    入池 BAC    偏向=BULL    评分=1.09  PCR=0.57偏多
+14:26:04 [INFO] yhs.detector:    入池 INTC   偏向=BULL    评分=1.09  PCR=0.57偏多
+14:26:04 [INFO] yhs.detector:    入池 TTD    偏向=BULL    评分=1.05  PCR=0.58偏多
+14:26:04 [INFO] yhs.detector:    入池 SPY    偏向=NEUTRAL 评分=0.75  Vol/OI=0.75
+14:26:04 [INFO] yhs.detector:    入池 QQQ    偏向=NEUTRAL 评分=0.66  Vol/OI=0.66
+14:26:04 [INFO] yhs.detector:    入池 NVDA   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 TSLA   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 AAPL   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 AMD    偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 MU     偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 CRWV   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 SOXL   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 AVGO   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 TLT    偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 MSTR   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 SMCI   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 HIMS   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 MARA   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 NBIS   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 SNDK   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 BE     偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 BA     偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 TSM    偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 IONQ   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 NU     偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 UAL    偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 NOW    偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 MRNA   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 JBLU   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 SKHY   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 CRWD   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 WMT    偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 APP    偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.detector:    入池 LCID   偏向=NEUTRAL 评分=0.00  
+14:26:04 [INFO] yhs.main: 【预算守卫】剩余配额 45265，本月剩余交易日 15，日预算约 2918 次 → 今日最多监控 31 只（上限 60）
+14:26:04 [INFO] yhs.main: 账户 B 监控 31 只：AAPL, AMD, AMZN, AVGO, CRWV, GOOG, GOOGL, HOOD, INTC, IREN, META, MSFT, MSTR, MU, NFLX, NVDA, ORCL, PCG, PLTR, QQQ, RIOT, RKLB, SMCI, SOFI, SOXL, SPY, TGT, TLT, TQQQ, TSLA, TTD
+14:26:04 [INFO] yhs.main: 账户 A 监控 1 只：TGT
+14:26:05 [INFO] yhs.main: 等待至 11-10 09:35 ET（等待开盘后第一个 Heatmap 快照），约 9 分钟
+14:35:25 [WARNING] yhs.client: 429 /v1/derived/heatmap/TGT/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+14:35:30 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+14:35:35 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 8.1s
+14:35:44 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 16.1s
+14:36:00 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 32.1s
+14:36:33 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 60.3s
+14:37:34 [WARNING] yhs.main: SPY Heatmap 拉取失败：HTTP 429 RATE_LIMITED:  (/v1/derived/heatmap/SPY/snapshot)
+14:37:35 [WARNING] yhs.client: 429 /v1/derived/heatmap/QQQ/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+14:37:40 [WARNING] yhs.client: 429 /v1/derived/heatmap/NVDA/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+14:37:45 [WARNING] yhs.client: 429 /v1/derived/heatmap/NVDA/snapshot（RATE_LIMITED），按 Retry-After 等待 8.1s
+14:37:54 [WARNING] yhs.client: 429 /v1/derived/heatmap/NVDA/snapshot（RATE_LIMITED），按 Retry-After 等待 16.3s
+14:38:10 [WARNING] yhs.client: 429 /v1/derived/heatmap/NVDA/snapshot（RATE_LIMITED），按 Retry-After 等待 32.1s
+14:38:45 [WARNING] yhs.client: 429 /v1/derived/heatmap/AAPL/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+14:38:52 [WARNING] yhs.client: 429 /v1/derived/heatmap/MU/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+14:38:58 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMZN/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+14:39:03 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMZN/snapshot（RATE_LIMITED），按 Retry-After 等待 8.2s
+14:39:11 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMZN/snapshot（RATE_LIMITED），按 Retry-After 等待 16.0s
+14:39:28 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMZN/snapshot（RATE_LIMITED），按 Retry-After 等待 32.2s
+14:40:01 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMZN/snapshot（RATE_LIMITED），按 Retry-After 等待 60.2s
+14:41:02 [WARNING] yhs.main: AMZN Heatmap 拉取失败：HTTP 429 RATE_LIMITED:  (/v1/derived/heatmap/AMZN/snapshot)
+14:41:03 [WARNING] yhs.client: 429 /v1/derived/heatmap/INTC/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+14:41:07 [WARNING] yhs.client: 429 /v1/derived/heatmap/INTC/snapshot（RATE_LIMITED），按 Retry-After 等待 8.2s
+14:41:17 [WARNING] yhs.client: 429 /v1/derived/heatmap/GOOGL/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+14:41:22 [WARNING] yhs.client: 429 /v1/derived/heatmap/GOOGL/snapshot（RATE_LIMITED），按 Retry-After 等待 8.1s
+14:41:30 [WARNING] yhs.client: 429 /v1/derived/heatmap/GOOGL/snapshot（RATE_LIMITED），按 Retry-After 等待 16.1s
+14:41:47 [WARNING] yhs.client: 429 /v1/derived/heatmap/GOOGL/snapshot（RATE_LIMITED），按 Retry-After 等待 32.1s
+14:42:20 [WARNING] yhs.client: 429 /v1/derived/heatmap/GOOGL/snapshot（RATE_LIMITED），按 Retry-After 等待 60.1s
+14:43:20 [WARNING] yhs.main: GOOGL Heatmap 拉取失败：HTTP 429 RATE_LIMITED:  (/v1/derived/heatmap/GOOGL/snapshot)
+14:43:22 [WARNING] yhs.client: 429 /v1/derived/heatmap/META/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+14:43:26 [WARNING] yhs.client: 429 /v1/derived/heatmap/META/snapshot（RATE_LIMITED），按 Retry-After 等待 8.1s
+14:43:35 [WARNING] yhs.client: 429 /v1/derived/heatmap/META/snapshot（RATE_LIMITED），按 Retry-After 等待 16.2s
+14:43:52 [WARNING] yhs.client: 429 /v1/derived/heatmap/META/snapshot（RATE_LIMITED），按 Retry-After 等待 32.2s
+14:44:25 [WARNING] yhs.client: 429 /v1/derived/heatmap/META/snapshot（RATE_LIMITED），按 Retry-After 等待 60.3s
+14:45:26 [WARNING] yhs.main: META Heatmap 拉取失败：HTTP 429 RATE_LIMITED:  (/v1/derived/heatmap/META/snapshot)
+14:45:27 [WARNING] yhs.client: 429 /v1/derived/heatmap/TQQQ/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+14:45:32 [WARNING] yhs.client: 429 /v1/derived/heatmap/TQQQ/snapshot（RATE_LIMITED），按 Retry-After 等待 8.0s
+14:45:40 [WARNING] yhs.client: 429 /v1/derived/heatmap/TQQQ/snapshot（RATE_LIMITED），按 Retry-After 等待 16.2s
+14:45:57 [WARNING] yhs.client: 429 /v1/derived/heatmap/TQQQ/snapshot（RATE_LIMITED），按 Retry-After 等待 32.0s
+14:46:30 [WARNING] yhs.client: 429 /v1/derived/heatmap/TQQQ/snapshot（RATE_LIMITED），按 Retry-After 等待 60.2s
+14:47:32 [WARNING] yhs.client: 429 /v1/derived/heatmap/PCG/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+14:47:36 [WARNING] yhs.client: 429 /v1/derived/heatmap/PCG/snapshot（RATE_LIMITED），按 Retry-After 等待 8.0s
+14:47:45 [WARNING] yhs.client: 429 /v1/derived/heatmap/PCG/snapshot（RATE_LIMITED），按 Retry-After 等待 16.0s
+14:48:02 [WARNING] yhs.main: PCG 不在 Heatmap 服务范围（404），移出标的池
+14:48:02 [WARNING] yhs.client: 429 /v1/derived/heatmap/CRWV/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+14:48:07 [WARNING] yhs.client: 429 /v1/derived/heatmap/CRWV/snapshot（RATE_LIMITED），按 Retry-After 等待 8.1s
+14:48:17 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOXL/snapshot（RATE_LIMITED），按 Retry-After 等待 4.3s
+14:48:21 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOXL/snapshot（RATE_LIMITED），按 Retry-After 等待 8.0s
+14:48:30 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOXL/snapshot（RATE_LIMITED），按 Retry-After 等待 16.0s
+14:48:46 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOXL/snapshot（RATE_LIMITED），按 Retry-After 等待 32.3s
+14:49:23 [WARNING] yhs.client: 429 /v1/derived/heatmap/MSFT/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+14:49:27 [WARNING] yhs.client: 429 /v1/derived/heatmap/MSFT/snapshot（RATE_LIMITED），按 Retry-After 等待 8.2s
+14:49:36 [WARNING] yhs.client: 429 /v1/derived/heatmap/MSFT/snapshot（RATE_LIMITED），按 Retry-After 等待 16.1s
+14:49:52 [WARNING] yhs.client: 429 /v1/derived/heatmap/MSFT/snapshot（RATE_LIMITED），按 Retry-After 等待 32.0s
+14:50:27 [WARNING] yhs.client: 429 /v1/derived/heatmap/TLT/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+14:50:33 [WARNING] yhs.client: 429 /v1/derived/heatmap/RIOT/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+14:50:39 [WARNING] yhs.client: 429 /v1/derived/heatmap/HOOD/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+14:50:44 [WARNING] yhs.client: 429 /v1/derived/heatmap/HOOD/snapshot（RATE_LIMITED），按 Retry-After 等待 8.1s
+14:50:52 [WARNING] yhs.client: 429 /v1/derived/heatmap/HOOD/snapshot（RATE_LIMITED），按 Retry-After 等待 16.2s
+14:51:09 [WARNING] yhs.client: 429 /v1/derived/heatmap/HOOD/snapshot（RATE_LIMITED），按 Retry-After 等待 32.2s
+14:51:42 [WARNING] yhs.client: 429 /v1/derived/heatmap/HOOD/snapshot（RATE_LIMITED），按 Retry-After 等待 60.1s
+14:52:45 [WARNING] yhs.main: TTD 不在 Heatmap 服务范围（404），移出标的池
+14:52:52 [INFO] yhs.main: [09:52:52] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 45200；下一轮 09:40:25
+14:53:27 [INFO] yhs.main: [09:53:27] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 45169；下一轮 09:55:25
+14:55:58 [INFO] yhs.main: [09:55:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 45136；下一轮 10:00:25
+15:00:58 [INFO] yhs.main: [10:00:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 45096；下一轮 10:05:25
+15:06:04 [INFO] yhs.main: [10:06:04] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 45056；下一轮 10:10:25
+15:10:58 [INFO] yhs.main: [10:10:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 45016；下一轮 10:15:25
+15:15:59 [INFO] yhs.main: [10:15:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44976；下一轮 10:20:25
+15:20:58 [INFO] yhs.main: [10:20:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44881；下一轮 10:25:25
+15:25:58 [INFO] yhs.main: [10:25:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44841；下一轮 10:30:25
+15:30:58 [INFO] yhs.main: [10:30:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44801；下一轮 10:35:25
+15:35:58 [INFO] yhs.main: [10:35:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44761；下一轮 10:40:25
+15:40:58 [INFO] yhs.main: [10:40:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44721；下一轮 10:45:25
+15:45:26 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+15:45:31 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 8.3s
+15:45:40 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 16.0s
+15:45:57 [WARNING] yhs.client: 429 /v1/derived/heatmap/QQQ/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+15:46:06 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMD/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+15:46:11 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMD/snapshot（RATE_LIMITED），按 Retry-After 等待 8.3s
+15:46:20 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMD/snapshot（RATE_LIMITED），按 Retry-After 等待 16.3s
+15:46:38 [WARNING] yhs.client: 429 /v1/derived/heatmap/MU/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+15:46:42 [WARNING] yhs.client: 429 /v1/derived/heatmap/MU/snapshot（RATE_LIMITED），按 Retry-After 等待 8.2s
+15:46:51 [WARNING] yhs.client: 429 /v1/derived/heatmap/MU/snapshot（RATE_LIMITED），按 Retry-After 等待 16.2s
+15:47:08 [WARNING] yhs.client: 429 /v1/derived/heatmap/MU/snapshot（RATE_LIMITED），按 Retry-After 等待 32.2s
+15:47:41 [WARNING] yhs.client: 429 /v1/derived/heatmap/MU/snapshot（RATE_LIMITED），按 Retry-After 等待 60.1s
+15:48:42 [WARNING] yhs.client: 429 /v1/derived/heatmap/AMZN/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+15:49:03 [WARNING] yhs.client: 429 /v1/derived/heatmap/HOOD/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+15:49:11 [WARNING] yhs.client: 429 /v1/derived/heatmap/ORCL/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+15:49:20 [INFO] yhs.main: [10:49:20] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44677；下一轮 10:50:25
+15:50:26 [WARNING] yhs.client: 429 /v1/derived/heatmap/SPY/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+15:50:42 [WARNING] yhs.client: 429 /v1/derived/heatmap/META/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+15:50:47 [WARNING] yhs.client: 429 /v1/derived/heatmap/META/snapshot（RATE_LIMITED），按 Retry-After 等待 8.0s
+15:50:59 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOXL/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+15:51:03 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOXL/snapshot（RATE_LIMITED），按 Retry-After 等待 8.1s
+15:51:13 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOFI/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+15:51:18 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOFI/snapshot（RATE_LIMITED），按 Retry-After 等待 8.3s
+15:51:27 [WARNING] yhs.client: 429 /v1/derived/heatmap/SOFI/snapshot（RATE_LIMITED），按 Retry-After 等待 16.2s
+15:51:47 [WARNING] yhs.client: 429 /v1/derived/heatmap/IREN/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+15:51:52 [WARNING] yhs.client: 429 /v1/derived/heatmap/IREN/snapshot（RATE_LIMITED），按 Retry-After 等待 8.3s
+15:52:02 [WARNING] yhs.client: 429 /v1/derived/heatmap/TLT/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+15:52:06 [WARNING] yhs.client: 429 /v1/derived/heatmap/TLT/snapshot（RATE_LIMITED），按 Retry-After 等待 8.3s
+15:52:18 [WARNING] yhs.client: 429 /v1/derived/heatmap/HOOD/snapshot（RATE_LIMITED），按 Retry-After 等待 4.3s
+15:52:23 [WARNING] yhs.client: 429 /v1/derived/heatmap/PLTR/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+15:52:32 [WARNING] yhs.client: 429 /v1/derived/heatmap/SMCI/snapshot（RATE_LIMITED），按 Retry-After 等待 4.1s
+15:52:37 [WARNING] yhs.client: 429 /v1/derived/heatmap/SMCI/snapshot（RATE_LIMITED），按 Retry-After 等待 8.2s
+15:52:46 [WARNING] yhs.client: 429 /v1/derived/heatmap/RKLB/snapshot（RATE_LIMITED），按 Retry-After 等待 4.2s
+15:52:54 [WARNING] yhs.client: 429 /v1/derived/heatmap/GOOG/snapshot（RATE_LIMITED），按 Retry-After 等待 4.0s
+15:52:58 [INFO] yhs.main: [10:52:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44641；下一轮 10:55:25
+15:55:58 [INFO] yhs.main: [10:55:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44606；下一轮 11:00:25
+16:00:58 [INFO] yhs.main: [11:00:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44566；下一轮 11:05:25
+16:05:59 [INFO] yhs.main: [11:05:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44526；下一轮 11:10:25
+16:10:58 [INFO] yhs.main: [11:10:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44486；下一轮 11:15:25
+16:15:58 [INFO] yhs.main: [11:15:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44446；下一轮 11:20:25
+16:20:54 [INFO] yhs.baseline: 【baseline·信号】ORCL SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 70 | Call 墙 121(+1.3M) 跑道 1.66% | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 118.08 目标 121.00
+16:21:01 [INFO] yhs.trader: 【Flow 记录】ORCL 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Call大单
+16:21:02 [INFO] yhs.trader: 【阶段4·开仓】P20261110-0001 ORCL BUY_CALL | 行权价 119.00 到期 2026-11-13 | 现货 119.03 | 中间价 3.475 → 成本 3.550（按 ask 成交（bid 3.400 / ask 3.550）） | δ=0.491 γ=0.0459 | 定价来源=quote | 目标加速位 121.00
+16:21:02 [INFO] yhs.baseline: 【baseline·开仓依据】P20261110-0001 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 70 | Call 墙 121(+1.3M) 跑道 1.66% | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 0 | 现货止损 118.08 目标 121.00
+16:21:03 [INFO] yhs.baseline: 【baseline·排序】11:20 本轮信号 1 个 → 开仓 ORCL(70)
+16:21:03 [INFO] yhs.main: [11:21:03] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 44403；下一轮 11:25:25
+16:26:00 [INFO] yhs.main: [11:26:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 44353；下一轮 11:30:25
+16:31:00 [INFO] yhs.main: [11:31:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 44303；下一轮 11:35:25
+16:36:00 [INFO] yhs.main: [11:36:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 44253；下一轮 11:40:25
+16:41:00 [INFO] yhs.main: [11:41:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 44203；下一轮 11:45:25
+16:46:00 [INFO] yhs.main: [11:46:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 44147；下一轮 11:50:25
+16:48:05 [INFO] yhs.trader: 【阶段4·平仓】P20261110-0001 ORCL BUY_CALL | 原因 25 分钟滞涨截断 | 现货 119.03→118.30 | 期权 3.550→3.000 | ROI -15.5% | 峰值 -1.4% | 最大逆行 -16.1% | 盈亏 $-110.00
+16:50:32 [INFO] yhs.baseline: 【baseline·信号】AMD CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 86 | 天花板 517.5(+2.1M) 距 0.72% · 燃料 502.5(-4.8M) · 路径负 4.8M / 正 0.0M · 目标 = 下方超大正节点 500(+6.1M) 空间 2.69% · R:R 2.63 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 1 | 现货止损 519.04 目标 500.00
+16:51:00 [INFO] yhs.trader: 【Flow 记录】AMD 有大单：Ask 侧大单 $210,790，合约当日量 2,586 ≥ OI 133（日内主动建仓）
+16:51:02 [INFO] yhs.trader: 【阶段4·放弃】AMD O:AMD261111P00515000 单张 $1375 超过上限 $1000，不开仓
+16:51:02 [INFO] yhs.baseline: 【baseline·排序】11:50 本轮信号 1 个 → 开仓 无
+16:51:02 [INFO] yhs.main: [11:51:02] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44088；下一轮 11:55:25
+16:55:32 [INFO] yhs.baseline: 【baseline·信号】AMD CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 76 | 天花板 517.5(+2.5M) 距 1.40% · 燃料 502.5(-5.0M) · 路径负 5.0M / 正 0.0M · 目标 = 下方超大正节点 500(+6.9M) 空间 2.03% · R:R 1.35 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 1 | 现货止损 518.02 目标 500.00
+16:56:00 [INFO] yhs.trader: 【Flow 记录】AMD 有大单：Ask 侧大单 $210,790，合约当日量 2,586 ≥ OI 133（日内主动建仓）
+16:56:02 [INFO] yhs.trader: 【阶段4·放弃】AMD O:AMD261111P00512500 单张 $1350 超过上限 $1000，不开仓
+16:56:02 [INFO] yhs.baseline: 【baseline·排序】11:55 本轮信号 1 个 → 开仓 无
+16:56:02 [INFO] yhs.main: [11:56:02] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44045；下一轮 12:00:25
+17:00:59 [INFO] yhs.main: [12:00:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 44005；下一轮 12:05:25
+17:05:59 [INFO] yhs.main: [12:05:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 43965；下一轮 12:10:25
+17:10:44 [INFO] yhs.baseline: 【baseline·信号】AVGO CLIFF_STRUCTURE/REJECTION_DROP 评分 68 | 天花板 325(+1.7M) 距 0.21% · 燃料 322.5(-2.1M) · 路径负 2.1M / 正 0.0M · 目标 = 下方超大正节点 315(+1.6M) 空间 2.87% · R:R 3.59 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 1 | 现货止损 326.90 目标 315.00
+17:11:00 [INFO] yhs.trader: 【Flow 记录】AVGO 无大单：O:AVGO261113P00357500 当日量 17 < OI 47（疑似平仓）
+17:11:02 [INFO] yhs.trader: 【阶段4·开仓】P20261110-0002 AVGO BUY_PUT | 行权价 325.00 到期 2026-11-11 | 现货 324.31 | 中间价 4.875 → 成本 4.950（按 ask 成交（bid 4.800 / ask 4.950）） | δ=0.518 γ=0.0325 | 定价来源=quote | 目标加速位 315.00
+17:11:02 [INFO] yhs.baseline: 【baseline·开仓依据】P20261110-0002 CLIFF_STRUCTURE/REJECTION_DROP 评分 68 | 天花板 325(+1.7M) 距 0.21% · 燃料 322.5(-2.1M) · 路径负 2.1M / 正 0.0M · 目标 = 下方超大正节点 315(+1.6M) 空间 2.87% · R:R 3.59 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 1 | 现货止损 326.90 目标 315.00
+17:11:03 [INFO] yhs.baseline: 【baseline·排序】12:10 本轮信号 1 个 → 开仓 AVGO(68)
+17:11:03 [INFO] yhs.main: [12:11:03] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43918；下一轮 12:15:25
+17:16:00 [INFO] yhs.main: [12:16:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43868；下一轮 12:20:25
+17:21:00 [INFO] yhs.main: [12:21:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43818；下一轮 12:25:25
+17:26:00 [INFO] yhs.main: [12:26:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43768；下一轮 12:30:25
+17:31:00 [INFO] yhs.main: [12:31:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43718；下一轮 12:35:25
+17:36:00 [INFO] yhs.main: [12:36:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43668；下一轮 12:40:25
+17:41:00 [INFO] yhs.main: [12:41:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43618；下一轮 12:45:25
+17:46:00 [INFO] yhs.main: [12:46:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43568；下一轮 12:50:25
+17:51:00 [INFO] yhs.main: [12:51:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43516；下一轮 12:55:25
+17:53:06 [INFO] yhs.trader: 【阶段4·平仓】P20261110-0002 AVGO BUY_PUT | 原因 棘轮软止损 | 现货 324.31→326.10 | 期权 4.950→4.350 | ROI -12.1% | 峰值 +6.1% | 最大逆行 -15.2% | 盈亏 $-60.00
+17:55:58 [INFO] yhs.main: [12:55:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 43460；下一轮 13:00:25
+18:00:59 [INFO] yhs.main: [13:00:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 43420；下一轮 13:05:25
+18:05:58 [INFO] yhs.main: [13:05:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 43380；下一轮 13:10:25
+18:10:58 [INFO] yhs.main: [13:10:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 43340；下一轮 13:15:25
+18:15:30 [INFO] yhs.baseline: 【baseline·信号】TSLA CLIFF_STRUCTURE/REJECTION_DROP 评分 56 | 天花板 377.5(+16.6M) 距 0.56% · 燃料 375(-16.2M) · 路径负 16.2M / 正 4.2M · 目标 = 下方超大正节点 370(+7.2M) 空间 1.43% · R:R 1.66 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 · 到期冲突 | 现货止损 378.63 目标 370.00
+18:16:00 [INFO] yhs.trader: 【Flow 记录】TSLA 无大单：O:TSLA270115P00420000 当日量 23 < OI 3,879（疑似平仓）
+18:16:02 [INFO] yhs.trader: 【阶段4·开仓】P20261110-0003 TSLA BUY_PUT | 行权价 375.00 到期 2026-11-11 | 现货 375.38 | 中间价 3.800 → 成本 3.850（按 ask 成交（bid 3.750 / ask 3.850）） | δ=0.465 γ=0.0373 | 定价来源=quote | 目标加速位 370.00
+18:16:02 [INFO] yhs.baseline: 【baseline·开仓依据】P20261110-0003 CLIFF_STRUCTURE/REJECTION_DROP 评分 56 | 天花板 377.5(+16.6M) 距 0.56% · 燃料 375(-16.2M) · 路径负 16.2M / 正 4.2M · 目标 = 下方超大正节点 370(+7.2M) 空间 1.43% · R:R 1.66 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 0 · 到期冲突 | 现货止损 378.63 目标 370.00
+18:16:02 [INFO] yhs.baseline: 【baseline·排序】13:15 本轮信号 1 个 → 开仓 TSLA(56)
+18:16:02 [INFO] yhs.main: [13:16:02] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43297；下一轮 13:20:25
+18:21:00 [INFO] yhs.main: [13:21:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43247；下一轮 13:25:25
+18:26:00 [INFO] yhs.main: [13:26:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43197；下一轮 13:30:25
+18:31:00 [INFO] yhs.main: [13:31:00] 本轮完成：B 持仓 1；A 持仓 0；监控 29 只，配额剩余 43147；下一轮 13:35:25
+18:34:05 [INFO] yhs.trader: 【阶段4·平仓】P20261110-0003 TSLA BUY_PUT | 原因 18 分钟零动能截断 | 现货 375.38→377.47 | 期权 3.850→3.000 | ROI -22.1% | 峰值 -2.6% | 最大逆行 -22.3% | 盈亏 $-170.00
+18:35:58 [INFO] yhs.main: [13:35:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 43097；下一轮 13:40:25
+18:41:00 [INFO] yhs.main: [13:41:00] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 43057；下一轮 13:45:25
+18:45:58 [INFO] yhs.main: [13:45:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 43017；下一轮 13:50:25
+18:50:58 [INFO] yhs.main: [13:50:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42977；下一轮 13:55:25
+18:55:59 [INFO] yhs.main: [13:55:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42937；下一轮 14:00:25
+19:01:00 [INFO] yhs.main: [14:01:00] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42892；下一轮 14:05:25
+19:05:59 [INFO] yhs.main: [14:05:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42852；下一轮 14:10:25
+19:10:58 [INFO] yhs.main: [14:10:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42812；下一轮 14:15:25
+19:15:58 [INFO] yhs.main: [14:15:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42772；下一轮 14:20:25
+19:20:58 [INFO] yhs.main: [14:20:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42732；下一轮 14:25:25
+19:25:58 [INFO] yhs.main: [14:25:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42692；下一轮 14:30:25
+19:30:59 [INFO] yhs.main: [14:30:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42652；下一轮 14:35:25
+19:35:59 [INFO] yhs.main: [14:35:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42612；下一轮 14:40:25
+19:40:58 [INFO] yhs.main: [14:40:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42572；下一轮 14:45:25
+19:45:58 [INFO] yhs.main: [14:45:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42532；下一轮 14:50:25
+19:50:58 [INFO] yhs.main: [14:50:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42492；下一轮 14:55:25
+19:55:58 [INFO] yhs.main: [14:55:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42452；下一轮 15:00:25
+20:00:58 [INFO] yhs.main: [15:00:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42412；下一轮 15:05:25
+20:05:59 [INFO] yhs.main: [15:05:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42372；下一轮 15:10:25
+20:10:58 [INFO] yhs.main: [15:10:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42332；下一轮 15:15:25
+20:15:58 [INFO] yhs.main: [15:15:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42292；下一轮 15:20:25
+20:20:59 [INFO] yhs.main: [15:20:59] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42252；下一轮 15:25:25
+20:25:58 [INFO] yhs.main: [15:25:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42212；下一轮 15:30:25
+20:30:58 [INFO] yhs.main: [15:30:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42172；下一轮 15:35:25
+20:35:58 [INFO] yhs.main: [15:35:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42132；下一轮 15:40:25
+20:40:58 [INFO] yhs.main: [15:40:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42092；下一轮 15:45:25
+20:45:58 [INFO] yhs.main: [15:45:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42052；下一轮 15:50:25
+20:50:58 [INFO] yhs.main: [15:50:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 42012；下一轮 15:55:25
+20:55:58 [INFO] yhs.main: [15:55:58] 本轮完成：B 持仓 0；A 持仓 0；监控 29 只，配额剩余 41966；下一轮 16:00:25
+21:00:00 [INFO] yhs.main: ----- 账户 B 收盘 -----
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:00 [INFO] yhs.trader: 复盘统计：共 3 笔
+21:00:00 [INFO] yhs.trader:   方向正确率（峰值浮盈 ≥ +15%）: 0.0%
+21:00:00 [INFO] yhs.trader:   胜率（实现盈亏 > 0）           : 0.0%
+21:00:00 [INFO] yhs.trader:   平均峰值收益率 Avg Peak MFE    : +0.7%
+21:00:00 [INFO] yhs.trader:   平均实现收益率                 : -16.6%
+21:00:00 [INFO] yhs.trader:   平均最大逆行 MAE               : -17.8%
+21:00:00 [INFO] yhs.trader:   合计盈亏                       : $-340.00（每笔约 $650）
+21:00:00 [INFO] yhs.trader:   盈亏比 Profit Factor           : 0.00
+21:00:00 [INFO] yhs.trader:   出场原因分布                   : 25 分钟滞涨截断×1，棘轮软止损×1，18 分钟零动能截断×1
+21:00:00 [INFO] yhs.trader: ------------------------------------------------------------------------------
+21:00:00 [INFO] yhs.trader: 仓位              标的     方向        合约                            实现%      峰值%      逆行%  出场
+21:00:00 [INFO] yhs.trader: P20261110-0001  ORCL   BUY_CALL  O:ORCL261113C00119000       -15.5     -1.4    -16.1  25 分钟滞涨截断 11:20→11:48
+21:00:00 [INFO] yhs.trader: P20261110-0002  AVGO   BUY_PUT   O:AVGO261111P00325000       -12.1     +6.1    -15.2  棘轮软止损 12:10→12:53
+21:00:00 [INFO] yhs.trader: P20261110-0003  TSLA   BUY_PUT   O:TSLA261111P00375000       -22.1     -2.6    -22.3  18 分钟零动能截断 13:15→13:34
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:00 [INFO] yhs.trader: 交易明细已导出：/home/user/yehangshe-vince/live/trades_2026-11-10.csv
+21:00:00 [INFO] yhs.main: 检测统计：{'snapshots': 0, 'structures': 0, 'fatigue_reject': 0, 'pcr_reject': 0, 'flow_calls': 0, 'flow_throttled': 0, 'flow_reject': 0, 'signals': 0, 'stale_skip': 0}
+21:00:00 [INFO] yhs.main: 本进程计费调用 2292 次，免费调用 101 次；服务端剩余配额 41966 / 100000；按端点：{'market/options-volume-rank': 1, 'derived/heatmap/snapshot': 2171, 'flow/trades': 5, 'options/chain-snapshot': 5, 'options/quote': 5, 'options/quotes': 105}
+21:00:00 [INFO] yhs.main: ----- 账户 A 收盘 -----
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:00 [INFO] yhs.trader: 复盘统计：本次运行无已平仓交易
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:00 [INFO] yhs.main: 检测统计：{'snapshots': 0, 'structures': 0, 'fatigue_reject': 0, 'pcr_reject': 0, 'flow_calls': 0, 'flow_throttled': 0, 'flow_reject': 0, 'signals': 0, 'stale_skip': 0}
+21:00:00 [INFO] yhs.main: 本进程计费调用 2292 次，免费调用 101 次；服务端剩余配额 41966 / 100000；按端点：{'market/options-volume-rank': 1, 'derived/heatmap/snapshot': 2171, 'flow/trades': 5, 'options/chain-snapshot': 5, 'options/quote': 5, 'options/quotes': 105}
+21:00:00 [INFO] yhs.main: 单日模式：今日结束，退出
