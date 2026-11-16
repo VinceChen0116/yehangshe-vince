@@ -1,0 +1,6301 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "GEX Heatmap Data API",
+  "version": "0.4.0-operation-ids",
+  "description": "Dealer MVP scope. 数据集端点 paths 由 dataset registry 派生；Dealer GEX / Heatmap 数据集随 P2 注册后自动出现。"
+ },
+ "servers": [
+  {
+   "url": "https://api.yehangshe.com",
+   "description": "production"
+  }
+ ],
+ "paths": {
+  "/v1/options/quote/{contract}": {
+   "get": {
+    "operationId": "options.quote",
+    "summary": "Latest known option quote (1 unit per returned quote)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/quotes": {
+   "get": {
+    "operationId": "options.quotes",
+    "summary": "Latest known option quotes (up to 50 contracts, 1 unit per returned quote)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contracts",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/derived/standard-gex/{ticker}/history": {
+   "get": {
+    "operationId": "derived.standard_gex_history",
+    "summary": "Standard GEX chain-level aggregate history (keyset pagination, newest first)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z]{1,5}$"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "oneOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "string",
+         "format": "date-time"
+        }
+       ]
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "oneOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "string",
+         "format": "date-time"
+        }
+       ]
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "data",
+          "_meta"
+         ],
+         "properties": {
+          "data": {
+           "type": "array",
+           "maxItems": 1000,
+           "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+             "snapshot_at",
+             "ticker",
+             "market_status",
+             "is_stale",
+             "total_gex_usd",
+             "spot_usd"
+            ],
+            "properties": {
+             "snapshot_at": {
+              "type": "string",
+              "format": "date-time"
+             },
+             "ticker": {
+              "type": "string"
+             },
+             "market_status": {
+              "type": "string"
+             },
+             "is_stale": {
+              "type": "boolean"
+             },
+             "total_gex_usd": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "spot_usd": {
+              "type": [
+               "number",
+               "null"
+              ]
+             }
+            }
+           }
+          },
+          "_meta": {
+           "$ref": "#/components/schemas/ResponseMetaList"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/derived/dealer-gex/{ticker}/snapshot": {
+   "get": {
+    "operationId": "derived.dealer_gex_snapshot",
+    "summary": "Dealer GEX (0DTE) latest read-model snapshot projection",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z]{1,5}$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "data",
+          "_meta"
+         ],
+         "properties": {
+          "data": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "ticker",
+            "snapshot_at",
+            "session_date_et",
+            "state",
+            "spot_usd",
+            "strikes",
+            "summary"
+           ],
+           "properties": {
+            "ticker": {
+             "type": "string"
+            },
+            "snapshot_at": {
+             "type": "string",
+             "format": "date-time"
+            },
+            "session_date_et": {
+             "type": [
+              "string",
+              "null"
+             ],
+             "format": "date"
+            },
+            "state": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "spot_usd": {
+             "type": [
+              "number",
+              "null"
+             ]
+            },
+            "strikes": {
+             "type": "array",
+             "maxItems": 5,
+             "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+               "strike_usd",
+               "net_gex_usd",
+               "node_type",
+               "rank",
+               "relative_strength"
+              ],
+              "properties": {
+               "strike_usd": {
+                "type": "number"
+               },
+               "net_gex_usd": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "node_type": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "rank": {
+                "type": "integer",
+                "minimum": 1
+               },
+               "relative_strength": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               }
+              }
+             }
+            },
+            "summary": {
+             "type": "object",
+             "additionalProperties": false,
+             "required": [
+              "total_gex_usd",
+              "king_strike_usd",
+              "gamma_flip_usd",
+              "call_wall_strike_usd",
+              "put_wall_strike_usd",
+              "major_positive_strike_usd",
+              "major_negative_strike_usd"
+             ],
+             "properties": {
+              "total_gex_usd": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "king_strike_usd": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "gamma_flip_usd": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "call_wall_strike_usd": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "put_wall_strike_usd": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "major_positive_strike_usd": {
+               "type": [
+                "number",
+                "null"
+               ]
+              },
+              "major_negative_strike_usd": {
+               "type": [
+                "number",
+                "null"
+               ]
+              }
+             }
+            }
+           }
+          },
+          "_meta": {
+           "$ref": "#/components/schemas/ResponseMeta"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/derived/dealer-gex/{ticker}/history": {
+   "get": {
+    "operationId": "derived.dealer_gex_history",
+    "summary": "Dealer GEX (0DTE) 5-minute public history (three NYSE sessions, newest first)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z]{1,5}$"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "oneOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "string",
+         "format": "date-time"
+        }
+       ]
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "oneOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "string",
+         "format": "date-time"
+        }
+       ]
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "data",
+          "_meta"
+         ],
+         "properties": {
+          "data": {
+           "type": "array",
+           "maxItems": 78,
+           "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+             "ticker",
+             "snapshot_at",
+             "session_date_et",
+             "state",
+             "spot_usd",
+             "strikes",
+             "summary"
+            ],
+            "properties": {
+             "ticker": {
+              "type": "string"
+             },
+             "snapshot_at": {
+              "type": "string",
+              "format": "date-time"
+             },
+             "session_date_et": {
+              "type": [
+               "string",
+               "null"
+              ],
+              "format": "date"
+             },
+             "state": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "spot_usd": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "strikes": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+               "type": "object",
+               "additionalProperties": false,
+               "required": [
+                "strike_usd",
+                "net_gex_usd",
+                "node_type",
+                "rank",
+                "relative_strength"
+               ],
+               "properties": {
+                "strike_usd": {
+                 "type": "number"
+                },
+                "net_gex_usd": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                },
+                "node_type": {
+                 "type": [
+                  "string",
+                  "null"
+                 ]
+                },
+                "rank": {
+                 "type": "integer",
+                 "minimum": 1
+                },
+                "relative_strength": {
+                 "type": [
+                  "number",
+                  "null"
+                 ]
+                }
+               }
+              }
+             },
+             "summary": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+               "total_gex_usd",
+               "king_strike_usd",
+               "gamma_flip_usd",
+               "call_wall_strike_usd",
+               "put_wall_strike_usd",
+               "major_positive_strike_usd",
+               "major_negative_strike_usd"
+              ],
+              "properties": {
+               "total_gex_usd": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "king_strike_usd": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "gamma_flip_usd": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "call_wall_strike_usd": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "put_wall_strike_usd": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "major_positive_strike_usd": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               },
+               "major_negative_strike_usd": {
+                "type": [
+                 "number",
+                 "null"
+                ]
+               }
+              }
+             }
+            }
+           }
+          },
+          "_meta": {
+           "$ref": "#/components/schemas/ResponseMetaList"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/derived/heatmap/{ticker}/snapshot": {
+   "get": {
+    "operationId": "derived.dealer_heatmap_snapshot",
+    "summary": "Dealer Heatmap latest completed 5-minute signed Top-node snapshot",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z]{1,5}$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "data",
+          "_meta"
+         ],
+         "properties": {
+          "data": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "ticker",
+            "generated_at",
+            "session_date_et",
+            "spot_usd",
+            "expirations",
+            "cells"
+           ],
+           "properties": {
+            "ticker": {
+             "type": "string"
+            },
+            "generated_at": {
+             "type": "string",
+             "format": "date-time"
+            },
+            "session_date_et": {
+             "type": "string",
+             "format": "date"
+            },
+            "spot_usd": {
+             "type": [
+              "number",
+              "null"
+             ]
+            },
+            "expirations": {
+             "type": "array",
+             "items": {
+              "type": "string",
+              "format": "date"
+             }
+            },
+            "cells": {
+             "type": "array",
+             "description": "For each expiration: at most ten strongest positive and ten strongest negative net GEX nodes; zero values are omitted.",
+             "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+               "strike_usd",
+               "expiration",
+               "net_dealer_gex_usd"
+              ],
+              "properties": {
+               "strike_usd": {
+                "type": "number"
+               },
+               "expiration": {
+                "type": "string",
+                "format": "date"
+               },
+               "net_dealer_gex_usd": {
+                "type": "number"
+               }
+              }
+             }
+            }
+           }
+          },
+          "_meta": {
+           "$ref": "#/components/schemas/ResponseMeta"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/derived/heatmap/{ticker}/history": {
+   "get": {
+    "operationId": "derived.dealer_heatmap_history",
+    "summary": "Dealer Heatmap expiration Top-node 5-minute history (three NYSE sessions, newest first)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z]{1,5}$"
+      }
+     },
+     {
+      "name": "expiration",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "oneOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "string",
+         "format": "date-time"
+        }
+       ]
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "oneOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "string",
+         "format": "date-time"
+        }
+       ]
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "data",
+          "_meta"
+         ],
+         "properties": {
+          "data": {
+           "type": "array",
+           "maxItems": 24,
+           "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+             "minute_at",
+             "expiration",
+             "spot_usd",
+             "cells"
+            ],
+            "properties": {
+             "minute_at": {
+              "type": "string",
+              "format": "date-time"
+             },
+             "expiration": {
+              "type": "string",
+              "format": "date"
+             },
+             "spot_usd": {
+              "type": [
+               "number",
+               "null"
+              ]
+             },
+             "cells": {
+              "type": "array",
+              "maxItems": 20,
+              "description": "At most ten strongest positive and ten strongest negative net GEX nodes.",
+              "items": {
+               "type": "object",
+               "additionalProperties": false,
+               "required": [
+                "strike_usd",
+                "net_dealer_gex_usd"
+               ],
+               "properties": {
+                "strike_usd": {
+                 "type": "number"
+                },
+                "net_dealer_gex_usd": {
+                 "type": "number"
+                }
+               }
+              }
+             }
+            }
+           }
+          },
+          "_meta": {
+           "$ref": "#/components/schemas/ResponseMetaList"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/trades": {
+   "get": {
+    "operationId": "flow.trades",
+    "summary": "Filtered Flow aggregate history; by default every aggregate (orders and packages, no premium floor), limit 25. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "kind",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "order",
+        "package",
+        "all"
+       ]
+      }
+     },
+     {
+      "name": "tickers",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "contract_symbols",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "expirations",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "rights",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "sides",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "strategies",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "min_premium_usd",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "number"
+      }
+     },
+     {
+      "name": "max_premium_usd",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "number"
+      }
+     },
+     {
+      "name": "min_contracts",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "max_contracts",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "sort_by",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "occurredAt",
+        "premiumCents",
+        "contracts"
+       ]
+      }
+     },
+     {
+      "name": "direction",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "asc",
+        "desc"
+       ]
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/contracts/lookup": {
+   "get": {
+    "operationId": "flow.contract_lookup",
+    "summary": "Resolve one OCC contract symbol into its normalized contract identity and current activity. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_symbol",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/tickers/{ticker}/contract-options": {
+   "get": {
+    "operationId": "flow.contract_options",
+    "summary": "Option-contract directory for one required expiration, paged up to 200 contracts. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "root",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "expiration",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/tickers/{ticker}/boards": {
+   "get": {
+    "operationId": "flow.ticker_boards",
+    "summary": "Ticker option sentiment and five ranked contract boards. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "root",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/tickers/{ticker}/overview": {
+   "get": {
+    "operationId": "flow.ticker_overview",
+    "summary": "Ticker Flow summary and ranked contracts over one or seven trading sessions. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "window",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "1d",
+        "7d"
+       ]
+      }
+     },
+     {
+      "name": "single_leg_only",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "true",
+        "false"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/tickers/{ticker}/chain": {
+   "get": {
+    "operationId": "flow.ticker_chain",
+    "summary": "Ticker Flow contract-day chain, paged at up to 100 rows. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "root",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/contracts/{contract_symbol}/bars": {
+   "get": {
+    "operationId": "flow.contract_bars",
+    "summary": "Intraday contract or net-premium bars for one option contract, paged at up to 100 rows. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_symbol",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "series",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "contract",
+        "premium"
+       ]
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/contracts/{contract_symbol}/bucket": {
+   "get": {
+    "operationId": "flow.contract_bucket",
+    "summary": "Flow aggregates for one contract in an exact five-minute bucket, paged at up to 25 rows; truncated reports the source 200-row ceiling. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_symbol",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "bucket_start_micros",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/contracts/{contract_symbol}/history": {
+   "get": {
+    "operationId": "flow.contract_history",
+    "summary": "Up to 30 trading sessions of contract-day Flow history, back from end_session_date to the first session without Flow data. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract_symbol",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "end_session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "include_current",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "true",
+        "false"
+       ]
+      }
+     },
+     {
+      "name": "coverage",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "contiguous"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/tickers/{ticker}/bars": {
+   "get": {
+    "operationId": "flow.ticker_bars",
+    "summary": "Intraday call and put premium bars for a product ticker. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "list payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/flow/tickers/{ticker}/bucket": {
+   "get": {
+    "operationId": "flow.ticker_bucket",
+    "summary": "Bounded ticker bucket view: both cohort summaries, one cohort top-contract page, or one cohort trade page; truncated preserves the selected source cohort ceiling. ET dates use YYYY-MM-DD.",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "session_date",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "window",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "day",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "60m"
+       ]
+      }
+     },
+     {
+      "name": "bucket_start_micros",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "section",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "summary",
+        "top_contracts",
+        "trades"
+       ]
+      }
+     },
+     {
+      "name": "cohort",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "rest",
+        "zero_dte"
+       ]
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/congress/late-reports": {
+   "get": {
+    "operationId": "congress.late_reports",
+    "summary": "Congress disclosures filed past the statutory deadline (daily disclosure cadence)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/congress/politicians": {
+   "get": {
+    "operationId": "congress.politicians",
+    "summary": "Roster of congress members with disclosed trades (daily disclosure cadence)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/congress/recent-trades": {
+   "get": {
+    "operationId": "congress.recent_trades",
+    "summary": "Latest disclosed congress member trades (daily disclosure cadence)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/congress/trader-reports/{politician}": {
+   "get": {
+    "operationId": "congress.trader_reports",
+    "summary": "Disclosed trades for a single congress member (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "politician",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/darkpool/by-ticker/{ticker}": {
+   "get": {
+    "operationId": "darkpool.by_ticker",
+    "summary": "Most recent dark pool prints for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/darkpool/recent": {
+   "get": {
+    "operationId": "darkpool.recent",
+    "summary": "Recent dark pool prints across the whole market",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/darkpool/volume-price-levels/{ticker}": {
+   "get": {
+    "operationId": "darkpool.volume_price_levels",
+    "summary": "Off-exchange vs lit share volume by price level for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/balance-sheets/{ticker}": {
+   "get": {
+    "operationId": "fundamentals.balance_sheets",
+    "summary": "Quarterly and annual balance sheets for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/cash-flows/{ticker}": {
+   "get": {
+    "operationId": "fundamentals.cash_flows",
+    "summary": "Quarterly and annual cash flow statements for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/earnings-afterhours": {
+   "get": {
+    "operationId": "fundamentals.earnings_afterhours",
+    "summary": "Market-wide after-hours earnings calendar for the latest reporting session",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/earnings-estimates/{ticker}": {
+   "get": {
+    "operationId": "fundamentals.earnings_estimates",
+    "summary": "Forward analyst revenue and EPS estimates for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/earnings-history/{ticker}": {
+   "get": {
+    "operationId": "fundamentals.earnings_history",
+    "summary": "Reported EPS history for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/earnings-premarket": {
+   "get": {
+    "operationId": "fundamentals.earnings_premarket",
+    "summary": "Market-wide premarket earnings calendar for the latest reporting session",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/financials/{ticker}": {
+   "get": {
+    "operationId": "fundamentals.financials",
+    "summary": "All four financial statement blocks for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/fundamental-breakdown/{ticker}": {
+   "get": {
+    "operationId": "fundamentals.fundamental_breakdown",
+    "summary": "SEC filing-level fundamentals and XBRL revenue breakdown for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/income-statements/{ticker}": {
+   "get": {
+    "operationId": "fundamentals.income_statements",
+    "summary": "Quarterly and annual income statements for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/fundamentals/stock-earnings/{ticker}": {
+   "get": {
+    "operationId": "fundamentals.stock_earnings",
+    "summary": "Earnings-event price behaviour and straddle backtest for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/insider/buy-sells-by-ticker/{ticker}": {
+   "get": {
+    "operationId": "insider.buy_sells_by_ticker",
+    "summary": "Per-disclosure-day insider buy/sell counts and notionals for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/insider/by-ticker/{ticker}": {
+   "get": {
+    "operationId": "insider.by_ticker",
+    "summary": "Insider transactions for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/insider/market-buy-sells": {
+   "get": {
+    "operationId": "insider.market_buy_sells",
+    "summary": "Market-wide per-disclosure-day insider buy/sell counts and notionals",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/insider/sector-flow/{sector}": {
+   "get": {
+    "operationId": "insider.sector_flow",
+    "summary": "Daily aggregated insider flow for one sector (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "sector",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "Basic Materials",
+        "Communication Services",
+        "Consumer Cyclical",
+        "Consumer Defensive",
+        "Energy",
+        "Financial Services",
+        "Healthcare",
+        "Industrials",
+        "Real Estate",
+        "Technology",
+        "Utilities"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/insider/ticker-flow/{ticker}": {
+   "get": {
+    "operationId": "insider.ticker_flow",
+    "summary": "Daily aggregated insider flow for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/insider/transactions": {
+   "get": {
+    "operationId": "insider.transactions",
+    "summary": "Market-wide latest insider (Form 4) transactions",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/institutions/activity/{name}": {
+   "get": {
+    "operationId": "institutions.activity",
+    "summary": "Position changes reported by one institution in its latest 13F (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/institutions/holdings/{name}": {
+   "get": {
+    "operationId": "institutions.holdings",
+    "summary": "Latest reported 13F holdings for one institution (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/institutions": {
+   "get": {
+    "operationId": "institutions.institutions",
+    "summary": "Directory of 13F filing institutions ranked by portfolio value",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/institutions/latest-filings": {
+   "get": {
+    "operationId": "institutions.latest_filings",
+    "summary": "Most recent institutional filings across the market",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/institutions/ownership-by-ticker/{ticker}": {
+   "get": {
+    "operationId": "institutions.ownership_by_ticker",
+    "summary": "Institutional holders of one ticker from 13F filings (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/institutions/sectors/{name}": {
+   "get": {
+    "operationId": "institutions.sectors",
+    "summary": "Sector allocation of one institution across recent 13F report periods (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/macro/analytics-window": {
+   "get": {
+    "operationId": "macro.analytics_window",
+    "summary": "Whole-window return statistics across a ticker set (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "symbols",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "range",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "calculations",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/macro/commodities/{name}": {
+   "get": {
+    "operationId": "macro.commodities",
+    "summary": "Commodity price / index time series (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "name",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "wti",
+        "brent",
+        "natural-gas",
+        "copper",
+        "aluminum",
+        "wheat",
+        "corn",
+        "cotton",
+        "sugar",
+        "coffee",
+        "all-commodities"
+       ]
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "quarterly",
+        "annual"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/macro/economy-indicator/{indicator}": {
+   "get": {
+    "operationId": "macro.economy_indicator",
+    "summary": "US macro indicator time series (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "indicator",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "gdp",
+        "gdp-per-capita",
+        "treasury-yield",
+        "fed-funds",
+        "cpi",
+        "inflation",
+        "retail-sales",
+        "durables",
+        "unemployment",
+        "payrolls"
+       ]
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "quarterly",
+        "annual",
+        "semiannual"
+       ]
+      }
+     },
+     {
+      "name": "maturity",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "3month",
+        "2year",
+        "5year",
+        "7year",
+        "10year",
+        "30year"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/macro/forex-history": {
+   "get": {
+    "operationId": "macro.forex_history",
+    "summary": "Daily / weekly / monthly FX bars for a currency pair (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "from",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "daily",
+        "weekly",
+        "monthly"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/macro/forex-intraday": {
+   "get": {
+    "operationId": "macro.forex_intraday",
+    "summary": "Intraday FX bars for a currency pair (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "from",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "1min",
+        "5min",
+        "15min",
+        "30min",
+        "60min"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/macro/forex-rate": {
+   "get": {
+    "operationId": "macro.forex_rate",
+    "summary": "Current FX spot rate for a currency pair (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "from",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/market/correlations": {
+   "get": {
+    "operationId": "market.correlations",
+    "summary": "Pairwise return correlations across a ticker set (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "tickers",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/market/economic-calendar": {
+   "get": {
+    "operationId": "market.economic_calendar",
+    "summary": "Upcoming US economic calendar (forward-looking listing)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/market/fda-calendar": {
+   "get": {
+    "operationId": "market.fda_calendar",
+    "summary": "Upcoming FDA / clinical catalyst calendar (forward-looking listing)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/market/ipo-calendar": {
+   "get": {
+    "operationId": "market.ipo_calendar",
+    "summary": "Upcoming US IPO calendar (forward-looking listing)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/market/movers": {
+   "get": {
+    "operationId": "market.movers",
+    "summary": "Market movers snapshot (most active / top gainers / top losers)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/market/oi-change": {
+   "get": {
+    "operationId": "market.oi_change",
+    "summary": "Market-wide top open-interest changes across all optionable underlyings",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/market/options-volume-rank": {
+   "get": {
+    "operationId": "market.options_volume_rank",
+    "summary": "Today option-volume Top 150 with open-interest changes",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/market/total-options-volume": {
+   "get": {
+    "operationId": "market.total_options_volume",
+    "summary": "Market-wide total options volume and premium per trading day",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/atm-chains/{ticker}": {
+   "get": {
+    "operationId": "options.atm_chains",
+    "summary": "ATM option chain pair for one ticker and one expiry (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "expiration",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/chain-greeks-history/{ticker}": {
+   "get": {
+    "operationId": "options.chain_greeks_history",
+    "summary": "Historical chain Greeks + IV + daily OI for one ticker + expiration + right (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "expiration",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "right",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "C",
+        "P"
+       ]
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "1m",
+        "5m",
+        "10m",
+        "15m",
+        "30m",
+        "1h"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/chain-history/{ticker}": {
+   "get": {
+    "operationId": "options.chain_history",
+    "summary": "Historical chain NBBO series for one ticker + expiration + right (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "expiration",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "right",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "C",
+        "P"
+       ]
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "1m",
+        "5m",
+        "10m",
+        "15m",
+        "30m",
+        "1h"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/chain-snapshot/{ticker}": {
+   "get": {
+    "operationId": "options.chain_snapshot",
+    "summary": "Option chain snapshot for one ticker + expiration (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "expiration",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "paginated object payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/contract-daily/{contract}": {
+   "get": {
+    "operationId": "options.contract_daily",
+    "summary": "Daily EOD series for a single option contract (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/contract-greeks-series/{contract}": {
+   "get": {
+    "operationId": "options.contract_greeks_series",
+    "summary": "Intraday Greeks series for a single option contract (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "date"
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "1m",
+        "5m",
+        "10m",
+        "15m",
+        "30m",
+        "1h"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/contract-intraday/{contract}": {
+   "get": {
+    "operationId": "options.contract_intraday",
+    "summary": "Intraday 1-minute bars for a single option contract (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/contract-volume-profile/{contract}": {
+   "get": {
+    "operationId": "options.contract_volume_profile",
+    "summary": "Latest-day volume profile for a single option contract (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "contract",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "paginated object payload with next_cursor"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/expiry-breakdown/{ticker}": {
+   "get": {
+    "operationId": "options.expiry_breakdown",
+    "summary": "Per-expiry chains/open-interest/volume breakdown for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/max-pain/{ticker}": {
+   "get": {
+    "operationId": "options.max_pain",
+    "summary": "Max pain per expiry for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/oi-change/{ticker}": {
+   "get": {
+    "operationId": "options.oi_change",
+    "summary": "Per-contract open-interest change for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/oi-per-expiry/{ticker}": {
+   "get": {
+    "operationId": "options.oi_per_expiry",
+    "summary": "Open interest per expiry for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/oi-per-strike/{ticker}": {
+   "get": {
+    "operationId": "options.oi_per_strike",
+    "summary": "Open interest per strike for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/optionable-tickers": {
+   "get": {
+    "operationId": "options.optionable_tickers",
+    "summary": "Full market list of optionable tickers",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/options-volume/{ticker}": {
+   "get": {
+    "operationId": "options.options_volume",
+    "summary": "Latest-day options volume aggregate for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/price-levels/{ticker}": {
+   "get": {
+    "operationId": "options.price_levels",
+    "summary": "Option volume distribution by underlying price level for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/options/volume-oi-per-expiry/{ticker}": {
+   "get": {
+    "operationId": "options.volume_oi_per_expiry",
+    "summary": "Volume and open interest per expiry for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/shorts/data/{ticker}": {
+   "get": {
+    "operationId": "shorts.data",
+    "summary": "Securities-lending desk fee/rebate and availability observations for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/shorts/ftds/{ticker}": {
+   "get": {
+    "operationId": "shorts.ftds",
+    "summary": "SEC fails-to-deliver settlement history for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/shorts/interest-float/{ticker}": {
+   "get": {
+    "operationId": "shorts.interest_float",
+    "summary": "FINRA bi-weekly short interest and float history for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/shorts/short-screener": {
+   "get": {
+    "operationId": "shorts.short_screener",
+    "summary": "Market-wide short interest screener for the latest FINRA disclosure period",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/shorts/volume-and-ratio/{ticker}": {
+   "get": {
+    "operationId": "shorts.volume_and_ratio",
+    "summary": "FINRA daily short volume and ratio series for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/shorts/volumes-by-exchange/{ticker}": {
+   "get": {
+    "operationId": "shorts.volumes_by_exchange",
+    "summary": "FINRA daily short volume by reporting venue for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/company-profile/{ticker}": {
+   "get": {
+    "operationId": "stocks.company_profile",
+    "summary": "Company fundamentals and reference profile (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/dividends/{ticker}": {
+   "get": {
+    "operationId": "stocks.dividends",
+    "summary": "Dividend history for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/info/{ticker}": {
+   "get": {
+    "operationId": "stocks.info",
+    "summary": "Reference metadata for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/listings": {
+   "get": {
+    "operationId": "stocks.listings",
+    "summary": "Full active US listing directory (canonical active universe)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/lit-trades-by-ticker/{ticker}": {
+   "get": {
+    "operationId": "stocks.lit_trades_by_ticker",
+    "summary": "Recent lit-exchange prints for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/lit-trades-recent": {
+   "get": {
+    "operationId": "stocks.lit_trades_recent",
+    "summary": "Most recent market-wide lit-exchange stock prints",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/index-ohlc/{ticker}": {
+   "get": {
+    "operationId": "stocks.index_ohlc",
+    "summary": "Latest session OHLC for a cash index (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/ohlc/{ticker}": {
+   "get": {
+    "operationId": "stocks.ohlc",
+    "summary": "OHLC candles for one ticker at a chosen candle size (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "candle_size",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "1m",
+        "5m",
+        "10m",
+        "15m",
+        "30m",
+        "1h",
+        "4h",
+        "1d",
+        "1w"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/quote/{ticker}": {
+   "get": {
+    "operationId": "stocks.quote",
+    "summary": "Latest NBBO quote for a single stock ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/sector-tickers": {
+   "get": {
+    "operationId": "stocks.sector_tickers",
+    "summary": "Tickers in a given sector (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "sector",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "Basic Materials",
+        "Communication Services",
+        "Consumer Cyclical",
+        "Consumer Defensive",
+        "Energy",
+        "Financial Services",
+        "Healthcare",
+        "Industrials",
+        "Real Estate",
+        "Technology",
+        "Utilities"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/splits/{ticker}": {
+   "get": {
+    "operationId": "stocks.splits",
+    "summary": "Stock split history for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/stock-state/{ticker}": {
+   "get": {
+    "operationId": "stocks.stock_state",
+    "summary": "Latest stock state for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/technical-indicator/{ticker}": {
+   "get": {
+    "operationId": "stocks.technical_indicator",
+    "summary": "Technical indicator time series for one ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     },
+     {
+      "name": "function",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "AD",
+        "ADOSC",
+        "ADX",
+        "ADXR",
+        "APO",
+        "AROON",
+        "AROONOSC",
+        "ATR",
+        "BBANDS",
+        "BOP",
+        "CCI",
+        "CMO",
+        "DEMA",
+        "DX",
+        "EMA",
+        "HT_DCPERIOD",
+        "HT_DCPHASE",
+        "HT_PHASOR",
+        "HT_SINE",
+        "HT_TRENDLINE",
+        "HT_TRENDMODE",
+        "KAMA",
+        "MACD",
+        "MACDEXT",
+        "MAMA",
+        "MFI",
+        "MIDPOINT",
+        "MIDPRICE",
+        "MINUS_DI",
+        "MINUS_DM",
+        "MOM",
+        "NATR",
+        "OBV",
+        "PLUS_DI",
+        "PLUS_DM",
+        "PPO",
+        "ROC",
+        "ROCR",
+        "RSI",
+        "SAR",
+        "SMA",
+        "STOCH",
+        "STOCHF",
+        "STOCHRSI",
+        "T3",
+        "TEMA",
+        "TRANGE",
+        "TRIMA",
+        "TRIX",
+        "ULTOSC",
+        "VWAP",
+        "WILLR",
+        "WMA"
+       ]
+      }
+     },
+     {
+      "name": "interval",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "1min",
+        "5min",
+        "15min",
+        "30min",
+        "60min",
+        "daily",
+        "weekly",
+        "monthly"
+       ]
+      }
+     },
+     {
+      "name": "series_type",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "close",
+        "open",
+        "high",
+        "low"
+       ]
+      }
+     },
+     {
+      "name": "time_period",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/stocks/ticker-exchanges": {
+   "get": {
+    "operationId": "stocks.ticker_exchanges",
+    "summary": "Ticker-to-exchange directory (raw vendor list, includes delisted symbols)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/anomaly-top": {
+   "get": {
+    "operationId": "volatility.anomaly_top",
+    "summary": "Market-wide volatility anomaly leaderboard (short_vol + long_vol merged)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/anomaly/{ticker}": {
+   "get": {
+    "operationId": "volatility.anomaly",
+    "summary": "Volatility anomaly score for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/character-top": {
+   "get": {
+    "operationId": "volatility.character_top",
+    "summary": "Market-wide volatility character leaderboard",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/character/{ticker}": {
+   "get": {
+    "operationId": "volatility.character",
+    "summary": "Volatility character metrics for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/interpolated-iv/{ticker}": {
+   "get": {
+    "operationId": "volatility.interpolated_iv",
+    "summary": "Interpolated implied volatility term nodes for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/iv-rank/{ticker}": {
+   "get": {
+    "operationId": "volatility.iv_rank",
+    "summary": "One-year IV rank (0-100 scale) for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/realized/{ticker}": {
+   "get": {
+    "operationId": "volatility.realized",
+    "summary": "Daily realized vs implied volatility series for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/risk-reversal-skew/{ticker}": {
+   "get": {
+    "operationId": "volatility.risk_reversal_skew",
+    "summary": "Daily 25-delta risk reversal skew series for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/stats/{ticker}": {
+   "get": {
+    "operationId": "volatility.stats",
+    "summary": "Volatility stats snapshot for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/term-structure/{ticker}": {
+   "get": {
+    "operationId": "volatility.term_structure",
+    "summary": "Implied volatility term structure for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/volatility/variance-risk-premium/{ticker}": {
+   "get": {
+    "operationId": "volatility.variance_risk_premium",
+    "summary": "Daily variance risk premium series for a single ticker (on-demand materialization)",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ticker",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^[A-Z][A-Z0-9]*(\\.[A-Z0-9]+)*$"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "object payload"
+     },
+     "400": {
+      "$ref": "#/components/responses/ValidationError"
+     },
+     "401": {
+      "$ref": "#/components/responses/AuthenticationError"
+     },
+     "402": {
+      "$ref": "#/components/responses/SubscriptionPaused"
+     },
+     "403": {
+      "$ref": "#/components/responses/ScopeInsufficient"
+     },
+     "429": {
+      "$ref": "#/components/responses/RateLimited"
+     }
+    }
+   }
+  },
+  "/v1/health": {
+   "get": {
+    "operationId": "meta.health",
+    "summary": "服务健康检查（无鉴权）",
+    "security": [],
+    "responses": {
+     "200": {
+      "description": "ok"
+     }
+    }
+   }
+  },
+  "/v1/openapi.json": {
+   "get": {
+    "operationId": "meta.openapi",
+    "summary": "OpenAPI 3.1 spec（无鉴权，weight-0）",
+    "security": [],
+    "responses": {
+     "200": {
+      "description": "OpenAPI document"
+     }
+    }
+   }
+  },
+  "/v1/discover": {
+   "get": {
+    "operationId": "meta.discover",
+    "summary": "当前 key 的 user / quota / capabilities 自描述",
+    "security": [
+     {
+      "bearerAuth": []
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "discover payload"
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "securitySchemes": {
+   "bearerAuth": {
+    "type": "http",
+    "scheme": "bearer",
+    "bearerFormat": "API key"
+   }
+  },
+  "schemas": {
+   "ResponseMeta": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "request_id",
+     "cache_hit",
+     "data_freshness_seconds",
+     "truncated"
+    ],
+    "properties": {
+     "request_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cache_hit": {
+      "type": "boolean"
+     },
+     "data_freshness_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 0
+     },
+     "truncated": {
+      "const": false
+     },
+     "notice": {
+      "type": "string"
+     },
+     "rate_limit_remaining": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "quota_remaining_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+     },
+     "data_source": {
+      "type": "string",
+      "enum": [
+       "internal"
+      ]
+     }
+    }
+   },
+   "ResponseMetaList": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "request_id",
+     "cache_hit",
+     "data_freshness_seconds",
+     "truncated",
+     "next_cursor"
+    ],
+    "properties": {
+     "request_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cache_hit": {
+      "type": "boolean"
+     },
+     "data_freshness_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 0
+     },
+     "truncated": {
+      "const": false
+     },
+     "notice": {
+      "type": "string"
+     },
+     "rate_limit_remaining": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "quota_remaining_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+     },
+     "data_source": {
+      "type": "string",
+      "enum": [
+       "internal"
+      ]
+     },
+     "next_cursor": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "resume_cursor": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    }
+   },
+   "ResponseMetaPage": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "request_id",
+     "cache_hit",
+     "data_freshness_seconds",
+     "truncated",
+     "next_cursor"
+    ],
+    "properties": {
+     "request_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cache_hit": {
+      "type": "boolean"
+     },
+     "data_freshness_seconds": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 0
+     },
+     "truncated": {
+      "type": "boolean"
+     },
+     "notice": {
+      "type": "string"
+     },
+     "rate_limit_remaining": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "quota_remaining_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+     },
+     "data_source": {
+      "type": "string",
+      "enum": [
+       "internal"
+      ]
+     },
+     "next_cursor": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    }
+   },
+   "ErrorEnvelope": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "error"
+    ],
+    "properties": {
+     "error": {
+      "type": "object",
+      "required": [
+       "code",
+       "tags",
+       "message",
+       "docs_url",
+       "request_id"
+      ],
+      "properties": {
+       "code": {
+        "type": "string"
+       },
+       "tags": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "message": {
+        "type": "string"
+       },
+       "docs_url": {
+        "type": "string",
+        "format": "uri"
+       },
+       "request_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "hint": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "responses": {
+   "ValidationError": {
+    "description": "validation error",
+    "content": {
+     "application/json": {
+      "schema": {
+       "$ref": "#/components/schemas/ErrorEnvelope"
+      }
+     }
+    }
+   },
+   "AuthenticationError": {
+    "description": "authentication error",
+    "content": {
+     "application/json": {
+      "schema": {
+       "$ref": "#/components/schemas/ErrorEnvelope"
+      }
+     }
+    }
+   },
+   "SubscriptionPaused": {
+    "description": "subscription paused",
+    "content": {
+     "application/json": {
+      "schema": {
+       "$ref": "#/components/schemas/ErrorEnvelope"
+      }
+     }
+    }
+   },
+   "ScopeInsufficient": {
+    "description": "scope insufficient, dataset access not enabled, or plan tier required",
+    "content": {
+     "application/json": {
+      "schema": {
+       "$ref": "#/components/schemas/ErrorEnvelope"
+      }
+     }
+    }
+   },
+   "RateLimited": {
+    "description": "rate limited or quota exhausted",
+    "content": {
+     "application/json": {
+      "schema": {
+       "$ref": "#/components/schemas/ErrorEnvelope"
+      }
+     }
+    }
+   }
+  }
+ }
+}
