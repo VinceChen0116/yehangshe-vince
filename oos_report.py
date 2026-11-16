@@ -28,8 +28,8 @@ UNIT = 650.0
 def load(pattern: str) -> list[dict]:
     rows = []
     for f in sorted(glob.glob(pattern)):
-        if f.endswith("_A.csv"):
-            continue            # A 账户（严格异动）与 B 重复，只算 B
+        if f.endswith(("_A.csv", "_L.csv")):
+            continue            # A 账户（严格异动）与 B 重复；L 是并行的旧规则账户（单独统计）。只算 B
         with open(f, encoding="utf-8-sig") as fh:
             for r in csv.DictReader(fh):
                 try:
@@ -57,6 +57,36 @@ def load_live() -> list[dict]:
                     seen.add(m.groups())
                     rows.append(dict(day=day, roi=float(m.group(4)), rebuilt=True))
     return rows
+
+
+PARALLEL_START = dt.date(2026, 11, 16)   # 旧规则 L 账户与 baseline B 并行实盘起始日（用户 11/16 定）
+
+
+def parallel_section() -> list[str]:
+    """B（baseline）与 L（旧规则）同一标的池、同一份 Heatmap、同样按金额开仓，只比两边都有交易明细的天。"""
+    days = sorted({os.path.basename(f)[7:17] for f in glob.glob(os.path.join("live", "trades_????-??-??_L.csv"))
+                   if os.path.basename(f)[7:17] >= str(PARALLEL_START)})
+    out = ["", f"## 并行对比：B（baseline） vs L（旧规则）（{PARALLEL_START} 起，同一标的池、每笔约 $650）", ""]
+    if not days:
+        return out + ["> 还没有并行交易日。"]
+    rows = {"B": [], "L": []}
+    for d in days:
+        for k, f in (("B", f"trades_{d}.csv"), ("L", f"trades_{d}_L.csv")):
+            p = os.path.join("live", f)
+            if os.path.exists(p):
+                with open(p, encoding="utf-8-sig") as fh:
+                    for r in csv.DictReader(fh):
+                        rows[k].append(dict(day=dt.date.fromisoformat(r["entry_time"][:10]), roi=float(r["realized_roi_pct"]),
+                                            pnl=float(r["realized_pnl"])))
+    out += [HEAD.replace("| 段 |", "| 账户 |", 1).replace("|---|", "|---|", 1)]
+    for k, name in (("B", "B baseline"), ("L", "L 旧规则")):
+        out.append(f"| {name}（实际 ${sum(r['pnl'] for r in rows[k]):+,.0f}） " + stats(rows[k]))
+    out += ["", "| 日期 | B 笔数 | B 实际盈亏 | L 笔数 | L 实际盈亏 |", "|---|---|---|---|---|"]
+    for d in days:
+        b = [r for r in rows["B"] if str(r["day"]) == d]
+        l = [r for r in rows["L"] if str(r["day"]) == d]
+        out.append(f"| {d} | {len(b)} | {sum(r['pnl'] for r in b):+,.0f} | {len(l)} | {sum(r['pnl'] for r in l):+,.0f} |")
+    return out
 
 
 def stats(rows: list[dict]) -> str:
@@ -125,6 +155,7 @@ def main(argv=None) -> int:
         line = f"| {r.key}：{r.name} | {r.decided} | {sum(d > r.decided for d in live_days)} |"
         out.append(line + (f" {sum(d > r.decided for d in rep_days)} |" if rep else ""))
     spread = next(r for r in RULES if r.key == "spread_8")
+    out += parallel_section()
     out += ["", f"## 价差上限挡掉的信号（实盘日志，{spread.effective} 起为 8%）", "", "| 日期 | 次数 | 合约 |", "|---|---|---|"]
     for f in sorted(glob.glob(os.path.join("logs", "live_????-??-??.log"))):
         day = os.path.basename(f)[5:15]

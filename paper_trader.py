@@ -231,6 +231,15 @@ class PaperTrader:
             sym = "O:" + sym
         return sym, k, mid, (abs(delta) if delta is not None else None), gamma
 
+    def _contracts(self, cost: float) -> int:
+        """每笔张数：默认 contracts_per_trade；legacy_notional_sizing（并行对比的 L 账户）按与 baseline 相同的金额规则。"""
+        if getattr(self.cfg, "legacy_notional_sizing", False):
+            from baseline import contracts_for
+            return contracts_for(cost * self.cfg.contract_multiplier,
+                                 getattr(self.cfg, "bl_target_notional_usd", 650.0),
+                                 getattr(self.cfg, "bl_notional_band_usd", 150.0))
+        return self.cfg.contracts_per_trade
+
     def open_position(self, client, sig: FullSignal, now_et: dt.datetime) -> Position | None:
         cfg = self.cfg
         want, listed = self._choose_strike(sig)
@@ -318,7 +327,7 @@ class PaperTrader:
             structure=sig.structure.structure, contract_symbol=sym, strike=strike, expiration=exp,
             entry_time=now_et, entry_spot=spot, entry_mid=mid, entry_option_price=round(cost, 4),
             delta=delta, gamma=gamma, price_source=src, target_strike=sig.structure.neg_strike,
-            contracts=cfg.contracts_per_trade, last_spot=spot, last_mid=mid,
+            contracts=self._contracts(cost), last_spot=spot, last_mid=mid,
             stop_pct=cfg.stop_loss_pct,
         )
         p.signal_score = getattr(sig, "score", 0.0)
@@ -511,7 +520,7 @@ class PaperTrader:
         log.info("  平均最大逆行 MAE               : %+.1f%%", s["avg_mae_pct"])
         log.info("  合计盈亏                       : $%+.2f（%s）", s["total_pnl_usd"],
                  f"每笔约 ${self.cfg.bl_target_notional_usd:.0f}" if getattr(self, "orig_contracts", None) is not None
-                 else f"每笔 {self.cfg.contracts_per_trade} 张")
+                 or getattr(self.cfg, "legacy_notional_sizing", False) else f"每笔 {self.cfg.contracts_per_trade} 张")
         pf = s["profit_factor"]
         log.info("  盈亏比 Profit Factor           : %s", "∞" if pf == float("inf") else f"{pf:.2f}")
         log.info("  出场原因分布                   : %s",
@@ -559,6 +568,9 @@ class PaperTrader:
                     "flow_premium_usd": f"{p.flow_premium_usd:.0f}" if p.flow_premium_usd else "",
                     "flow_note": p.flow_note,
                 }
+                if getattr(self.cfg, "legacy_notional_sizing", False):
+                    row.update(bl_contracts=p.contracts,
+                               bl_total_cost=f"{p.entry_option_price * self.cfg.contract_multiplier * p.contracts:.0f}")
                 row.update(getattr(self, "meta", {}).get(p.position_id, {}))
                 w.writerow(row)
         log.info("交易明细已导出：%s", os.path.abspath(path))

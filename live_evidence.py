@@ -81,7 +81,7 @@ def main(argv=None) -> int:
     day = dt.date.fromisoformat(args.date) if args.date else et_now().date()
     cfg = SystemConfig.load(None)
     rows = []
-    for fp in sorted(glob.glob(f"live/trades_{day}*.csv")):
+    for fp in sorted(glob.glob(f"live/trades_{day}.csv")):   # 只记 B 账户（_A 与 B 重复，_L 是并行的旧规则账户，单独统计）
         rows += list(csv.DictReader(open(fp, encoding="utf-8-sig")))
     if not os.path.exists(f"yhs_data/archive/heatmap/{day}"):
         print(f"{day} 没有 Heatmap 存档"); return 1

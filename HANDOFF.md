@@ -387,3 +387,8 @@ python3 archive.py --dry-run                 # 只看计划
 * 2026-10-27 用户定：先不加新日内规则，积累样本外。定时任务 `trig_012MdVcLm7LFeBh5YeRq7DTx`「夜航社 每日样本外报告（美东 18:20）」
   每个交易日跑 `python3 oos_report.py`（只看实盘，0 配额）→ 推送 `backtests/oos/live.md` → Discord「📐 样本外报告」。
   绑定会话 session_01VcNgmmTwW5SGauso8rdCt3（换定时任务会话时也要一起换）。约 10 个交易日后评估。
+* **2026-11-16 用户定：旧规则与 baseline 并行实盘对比。** `config.live_parallel_legacy=True` → 实盘多一个 L 账户（🅻【L·旧规则】）：
+  B 的标的池 + 同一份 Heatmap（不额外耗 Heatmap 配额）+ 旧规则（`intraday_rules="legacy"`，SessionEngine/PaperTrader，其余旧规则参数不变）
+  + 与 baseline 相同的按金额开仓（`legacy_notional_sizing`，每笔约 $650）。交易明细 `live/trades_<日期>_L.csv`。
+  额外配额只来自 L 的持仓实时报价（每分钟每持仓 1 次）和开仓前的 Flow 记录。`oos_report.py` 的"并行对比"段逐日比较 B 与 L；
+  live_evidence / 样本外统计仍只算 B。关掉：`live_parallel_legacy=False`。

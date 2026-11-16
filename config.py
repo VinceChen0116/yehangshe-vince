@@ -111,6 +111,10 @@ class SystemConfig:
     #   A（严格异动）：成交量前 100 → 剔除指数/非白名单 ETF → 量能异动 且 PCR 极端（需求文档阶段 1 原文）
     #   B（宽松）：成交量前 100 → 剔除指数/非白名单 ETF → 股价 ≥ min_spot_usd，不要求异动与 PCR
     live_universe_mode: str = "both"
+    # 2026-11-16 用户定：旧规则（legacy）与 baseline 并行实盘对比。L 账户 = B 的标的池 + 同一份 Heatmap（不额外耗 Heatmap 配额）
+    #   + 旧规则 + 与 baseline 相同的按金额开仓（每笔约 $650）；交易明细 *_L.csv，Discord 标签 🅻
+    live_parallel_legacy: bool = True
+    legacy_notional_sizing: bool = False  # 旧规则也按 bl_target_notional_usd 开仓（只在 L 账户打开；旧规则原来每笔 contracts_per_trade 张）
     max_universe_size: int = 60           # 预算守卫上限（10/19 60 → 40；2026-10-20 用户定加回 60）
     est_polls_per_ticker_day: int = 78    # baseline 全天 5 分钟一根：09:35–16:00 ≈ 78 次/标的/日（旧规则午间 12 分钟时约 57）
     flow_chain_budget_share: float = 0.15 # 每日预算中预留给 Flow/期权链的比例

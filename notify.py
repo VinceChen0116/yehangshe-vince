@@ -21,7 +21,7 @@ import urllib.request
 log = logging.getLogger("yhs.notify")
 
 GREEN, RED, BLUE, GREY, ORANGE = 0x2ECC71, 0xE74C3C, 0x3498DB, 0x95A5A6, 0xE67E22
-TAG_A, TAG_B = "🅰️【A·严格异动】", "🅱️【B】"
+TAG_A, TAG_B, TAG_L = "🅰️【A·严格异动】", "🅱️【B】", "🅻【L·旧规则】"
 REASON_CN = {"STOP_LOSS": "硬止损", "BREAKEVEN_STOP": "保本止损", "TRAILING_STOP": "追踪止盈",
              "UNDERLYING_STOP": "标的破节点止损",
              "HARD_TAKE_PROFIT": "硬顶止盈", "EOD_FORCE_CLOSE": "收盘强平", "QUOTA_HALT": "配额熔断",

@@ -28,7 +28,7 @@ from config import (SystemConfig, entry_blocked_window, et_datetime, et_now, exp
 from detector import (HEATMAP_PATH, FLOW_TRADES_PATH, SignalDetector, UniverseEntry, UniverseFilter,
                       extract_rows, is_strict, pick, pick_num)
 from archive import get_heatmap_rows, rows_to_frames
-from notify import TAG_A, TAG_B, DiscordNotifier, from_config as notify_from_config
+from notify import TAG_A, TAG_B, TAG_L, DiscordNotifier, from_config as notify_from_config
 from paper_trader import CHAIN_PATH, PaperTrader, SessionEngine, bs_price_greeks
 from yhs_client import QuotaExhausted, YHSApiError, YHSClient
 
@@ -286,6 +286,12 @@ def build_live_accounts(cfg: SystemConfig, client: YHSClient, day: dt.date, noti
         bcfg = copy.copy(broad_cfg)
         bcfg.trades_csv = cfg.trades_csv
         accounts.append(LiveAccount("B", bcfg, client, universe, notifier, TAG_B))
+        if cfg.live_parallel_legacy and cfg.intraday_rules == "baseline":
+            lcfg = copy.copy(bcfg)
+            lcfg.intraday_rules = "legacy"
+            lcfg.legacy_notional_sizing = True
+            lcfg.trades_csv = _with_suffix(cfg.trades_csv, "_L")
+            accounts.append(LiveAccount("L", lcfg, client, universe, notifier, TAG_L))
     if mode in ("both", "strict") and strict:
         acfg = copy.copy(cfg)
         acfg.trades_csv = _with_suffix(cfg.trades_csv, "_A") if mode == "both" else cfg.trades_csv
@@ -325,18 +331,19 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             a.trader.quote_provider = quotes.get
 
     baseline_rules = cfg.intraday_rules == "baseline"
+    bl_accounts = [a for a in accounts if a.cfg.intraday_rules == "baseline"]   # 并行的 L 账户走旧规则
 
     def refresh_quotes() -> None:
         if quotes:
             syms = [p.contract_symbol for a in accounts for p in a.trader.open_positions()]
-            if baseline_rules:   # 同行权价的另一边一起拉，用 Call/Put 平价反推实时现价（每个持仓多 1 配额）
+            if bl_accounts:   # baseline 持仓：同行权价的另一边一起拉，用 Call/Put 平价反推实时现价（每个持仓多 1 配额）
                 from baseline import pair_symbol
-                syms += [pair_symbol(s) for s in syms]
-            quotes.new_round(syms)
+                syms += [pair_symbol(p.contract_symbol) for a in bl_accounts for p in a.trader.open_positions()]
+            quotes.new_round(list(dict.fromkeys(syms)))
 
-    if quotes and baseline_rules:
+    if quotes and bl_accounts:
         from baseline import parity_spot
-        for a in accounts:
+        for a in bl_accounts:
             a.engine.spot_override = lambda pos, now: parity_spot(
                 pos.contract_symbol, lambda sym: quotes.cache.get(sym.split(":")[-1]))
 
