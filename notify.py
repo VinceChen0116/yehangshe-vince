@@ -94,6 +94,7 @@ class DiscordNotifier:
                 {"name": "成本（按 ask）" if getattr(p, "entry_ask", 0) else "成本（含滑点）",
                  "value": f"${p.entry_option_price:.2f}" + (f"（bid {p.entry_bid:.2f} / ask {p.entry_ask:.2f}）"
                                                            if getattr(p, "entry_ask", 0) else ""), "inline": True},
+                {"name": "张数 / 总成本", "value": f"{p.contracts} 张 / ${p.entry_option_price * 100 * p.contracts:,.0f}", "inline": True},
                 {"name": "目标加速位", "value": f"{p.target_strike:g}", "inline": True},
                 {"name": "δ", "value": f"{p.delta:.2f}", "inline": True},
                 {"name": "信号评分", "value": f"{getattr(p, 'signal_score', 0.0):.2f} / 1.00", "inline": True},
@@ -113,7 +114,8 @@ class DiscordNotifier:
             "fields": [
                 {"name": "期权", "value": f"${p.entry_option_price:.2f} → ${p.exit_option_price:.2f}", "inline": True},
                 {"name": "现货", "value": f"{p.entry_spot:.2f} → {p.exit_spot:.2f}", "inline": True},
-                {"name": "盈亏（每张）", "value": f"${p.realized_pnl:+,.2f}", "inline": True},
+                {"name": "盈亏" if p.contracts > 1 else "盈亏（每张）",
+                 "value": f"${p.realized_pnl:+,.2f}" + (f"（{p.contracts} 张）" if p.contracts > 1 else ""), "inline": True},
                 {"name": "峰值 / 最大逆行", "value": f"{p.peak_roi_pct:+.1f}% / {p.max_adverse_roi_pct:+.1f}%", "inline": True},
                 {"name": "持仓", "value": f"{p.entry_time.strftime('%H:%M')} → {p.exit_time.strftime('%H:%M')}", "inline": True},
             ],
