@@ -21,6 +21,8 @@
 * 夜航社 API 每月 10 万次配额，注意节省。
 * 密钥只在环境变量 `YHS_API_KEY` / `DISCORD_WEBHOOK_URL`；不要提交 `config.json`，不要在任何输出、提交或消息里打印密钥。
 * 不使用 Discord user token / self-bot。
+* **工作结果同时推 Discord**（2026-11-17 用户定）：每次完成一项工作（开发、回测、分析等），把给用户的结果摘要
+  也用 `notify.DiscordNotifier`（`DISCORD_WEBHOOK_URL`）推一条 embed，标题注明是什么工作；不要带密钥或个人信息。
 
 ## 时间口径
 * Heatmap 快照标记 T 表示 T..T+5 这一段，里面的现价是 T+5 前后的价格，T+5 之后才拿得到。和用户说时间时用"数据实际时刻"。
