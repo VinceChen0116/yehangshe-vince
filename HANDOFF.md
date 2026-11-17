@@ -392,3 +392,11 @@ python3 archive.py --dry-run                 # 只看计划
   + 与 baseline 相同的按金额开仓（`legacy_notional_sizing`，每笔约 $650）。交易明细 `live/trades_<日期>_L.csv`。
   额外配额只来自 L 的持仓实时报价（每分钟每持仓 1 次）和开仓前的 Flow 记录。`oos_report.py` 的"并行对比"段逐日比较 B 与 L；
   live_evidence / 样本外统计仍只算 B。关掉：`live_parallel_legacy=False`。
+
+## O. 夜航社 API 计量变更与存档暂停（2026-11-17）
+* 夜航社 changelog「Dealer Top-N 深历史与计量」已生效（discover 中 derived.dealer_heatmap_history / dealer_gex_history weight=10；11/17 实测一页扣 10）。
+  Heatmap / Dealer GEX 历史每个非空页 10 单位，空页 0；同时服务端保留 Heatmap GEX 2026-08-31 起、Dealer GEX 2026-01-02 起的历史（尽力而为）。
+* 每晚收盘存档约 2,500 页 → 约 25,000 单位 / 晚，月配额撑不住。用户 11/17 决定**暂停每晚存档**：定时任务 trig_01DV7G978nPFLwSnTK46TKLf 已停用，
+  11/17 跑了一半的存档被停（未提交，在存档会话的本地 git stash）。11/17 起的 Heatmap 不在本地存档，回放需要时按天从服务端拉（10 单位 / 页）。
+* 实盘不受影响：实盘用 heatmap snapshot（1 单位）和 options.quote(s)（每份报价 1 单位）。不要换成 heatmap live（10 单位）。
+* 新增的期权链 OHLC / 最后成交 / 市场估值只给当前或未来到期的最新值，不能用于历史回放。
