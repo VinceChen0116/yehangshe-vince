@@ -23,6 +23,7 @@ from zoneinfo import ZoneInfo
 from rules_registry import RULES, active_on
 
 UNIT = 650.0
+PARALLEL_START = dt.date(2026, 11, 16)   # 旧规则 L 账户与 baseline B 并行实盘起始日（用户 11/16 定）
 
 
 def load(pattern: str) -> list[dict]:
@@ -49,6 +50,10 @@ def load_live() -> list[dict]:
         day = dt.date.fromisoformat(os.path.basename(f)[5:15])
         if day in have:
             continue
+        if day >= PARALLEL_START:
+            # 11/16 起日志里还有 L 账户（旧规则）的平仓，格式与 B 相同、分不出账户，不能重建；
+            # B 当天没有已平仓交易时本来就不导出 CSV（日志里有"无已平仓交易"），按 0 笔处理
+            continue
         seen = set()
         with open(f, encoding="utf-8", errors="replace") as fh:
             for ln in fh:
@@ -57,9 +62,6 @@ def load_live() -> list[dict]:
                     seen.add(m.groups())
                     rows.append(dict(day=day, roi=float(m.group(4)), rebuilt=True))
     return rows
-
-
-PARALLEL_START = dt.date(2026, 11, 16)   # 旧规则 L 账户与 baseline B 并行实盘起始日（用户 11/16 定）
 
 
 def parallel_section() -> list[str]:
