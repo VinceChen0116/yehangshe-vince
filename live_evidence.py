@@ -83,8 +83,9 @@ def main(argv=None) -> int:
     rows = []
     for fp in sorted(glob.glob(f"live/trades_{day}.csv")):   # 只记 B 账户（_A 与 B 重复，_L 是并行的旧规则账户，单独统计）
         rows += list(csv.DictReader(open(fp, encoding="utf-8-sig")))
-    if not os.path.exists(f"yhs_data/archive/heatmap/{day}"):
-        print(f"{day} 没有 Heatmap 存档"); return 1
+    # 11/17 起每晚存档暂停（夜航社历史接口改为 10 单位/页）：没有存档时只记实盘逐笔，
+    # 依赖 Heatmap 的两项（候选规则触发、逼空 B / C / 燃料拦截）标注"无存档"，不去 API 拉（省配额）
+    has_arc = os.path.exists(f"yhs_data/archive/heatmap/{day}")
     L = [f"\n## {day}\n"]
     pnl = sum(float(r["realized_pnl"]) for r in rows)
     L.append(f"实盘 {len(rows)} 笔，合计 ${pnl:+,.2f}" + (f"（胜率 {sum(1 for r in rows if float(r['realized_pnl']) > 0) / len(rows) * 100:.0f}%）" if rows else "") + "\n")
@@ -93,7 +94,7 @@ def main(argv=None) -> int:
         fcache = {}
         for r in rows:
             tk, st = r["ticker"], r["bl_structure"]
-            fr = fcache.setdefault(tk, day_frames(cfg, day, tk))
+            fr = fcache.setdefault(tk, day_frames(cfg, day, tk)) if has_arc else []
             et = dt.datetime.fromisoformat(r["entry_time"]); lab = ((et.hour * 60 + et.minute) // 5) * 5 - 5
             hist = [x for x in fr if x.t.hour * 60 + x.t.minute <= lab]
             notes = []
@@ -106,9 +107,9 @@ def main(argv=None) -> int:
                 if st.startswith("SHORT") and d > 0.05:
                     notes.append(f"逼空当天已涨 {d * 100:+.1f}%")
             L.append(f"| {r['entry_time'][11:16]} | {tk} {float(r['strike']):g}{'C' if r['action'] == 'BUY_CALL' else 'P'} {B.STRUCT_CN.get(st, st)[:2]} | {r.get('bl_contracts') or 1} | "
-                     f"{r['exit_time'][11:16]} | {r['exit_reason']} | {float(r['realized_pnl']):+.0f} | {'；'.join(notes) or '—'} |")
+                     f"{r['exit_time'][11:16]} | {r['exit_reason']} | {float(r['realized_pnl']):+.0f} | {'；'.join(notes) or ('—' if has_arc else '无存档')} |")
     # 被 B / C / 燃料拦下的逼空信号
-    tickers = live_universe(day) or sorted({r["ticker"] for r in rows})
+    tickers = (live_universe(day) or sorted({r["ticker"] for r in rows})) if has_arc else []
     seen, blk = {}, []
     for tk in tickers:
         jf = []
@@ -132,7 +133,10 @@ def main(argv=None) -> int:
         for x in blk:
             if x[1] == tk and not isinstance(x[4], str):
                 x[4] = outcome(jf, x[5], x[4])
-    L.append(f"\n逼空 B / C / 燃料拦下的信号 {len(blk)} 个（三条全关才会出的逼空信号；「规则」列是单独打开就能拦住它的那几条；之后只看 Heatmap 现价，止损按 −0.8%，不含期权棘轮）：\n")
+    if not has_arc:
+        L.append("\n逼空 B / C / 燃料拦下的信号：当天没有 Heatmap 存档（11/17 起每晚存档暂停），未统计；候选规则列同样不可用。")
+    else:
+        L.append(f"\n逼空 B / C / 燃料拦下的信号 {len(blk)} 个（三条全关才会出的逼空信号；「规则」列是单独打开就能拦住它的那几条；之后只看 Heatmap 现价，止损按 −0.8%，不含期权棘轮）：\n")
     if blk:
         L.append("| 数据时刻 | 标的 | 规则 | 拦下原因 | 之后 |\n|---|---|---|---|---|")
         for x in sorted(blk):
