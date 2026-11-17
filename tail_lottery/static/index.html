@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>尾盘彩票观察台</title>
+<style>
+:root{--bg:#0e1116;--panel:#161b22;--line:#2a313c;--text:#d7dde5;--muted:#8b95a3;--call:#2ecc71;--put:#ff6b5b;--warn:#f5b041;--accent:#5dade2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:13px/1.45 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+.bar{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line);background:#11161d;position:sticky;top:0;z-index:2}
+.bar b{color:#fff}.bar .k{color:var(--muted);margin-right:4px}
+.deg{width:100%;color:var(--warn);font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:10px;padding:10px;height:calc(100vh - 64px);min-height:620px}
+.p{background:var(--panel);border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column;min-height:0;position:relative}
+.p h2{margin:0;padding:8px 12px;font-size:13px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center}
+.p h2 .sub{color:var(--muted);font-weight:400;font-size:12px;margin-left:auto}
+.body{overflow:auto;padding:6px 10px;flex:1;min-height:0}
+#feed{grid-column:1;grid-row:1}#leader{grid-column:1;grid-row:2}#gex{grid-column:2;grid-row:1/3}#pb{grid-column:3;grid-row:1/3}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:3px 5px;text-align:right;white-space:nowrap;border-bottom:1px solid #1f262f}
+th{color:var(--muted);font-weight:500;position:sticky;top:0;background:var(--panel)}
+td:first-child,th:first-child{text-align:left}
+.C{color:var(--call)}.P{color:var(--put)}.muted{color:var(--muted)}
+.dim{position:absolute;inset:34px 0 0 0;background:rgba(14,17,22,.78);display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--warn);font-weight:600;border-radius:0 0 8px 8px}
+.seg button{background:#1f2630;color:var(--text);border:1px solid var(--line);padding:2px 7px;border-radius:4px;cursor:pointer;font-size:12px}
+.seg button.on{background:var(--accent);color:#06121c;border-color:var(--accent)}
+.lad{display:grid;grid-template-columns:1fr 54px 1fr;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
+.lad .k{text-align:center;color:var(--muted);font-size:12px}
+.lad .k.node{color:#fff;font-weight:700}
+.barL,.barR{height:12px;border-radius:2px}
+.barL{justify-self:end;background:var(--put)}.barR{justify-self:start;background:var(--call)}
+.spotline{grid-column:1/4;border-top:2px dashed var(--accent);margin:2px 0;font-size:11px;color:var(--accent);text-align:center}
+.kv{display:flex;flex-wrap:wrap;gap:4px 14px;margin:6px 0 8px}
+.verdict{font-size:44px;font-weight:800;text-align:center;margin:6px 0 2px;letter-spacing:2px}
+.scores{text-align:center;color:var(--muted);margin-bottom:6px}
+.disc{background:#2b2210;color:var(--warn);text-align:center;padding:4px;border-radius:4px;font-weight:700;margin-bottom:6px}
+.leg{border:1px solid var(--line);border-radius:6px;padding:5px 8px;margin:5px 0}
+.leg .n{font-weight:600}.leg .s{float:right}
+.leg.ab{opacity:.6}
+.pill{display:inline-block;padding:0 6px;border-radius:9px;font-size:11px;border:1px solid var(--line);color:var(--muted)}
+@media (max-width:1100px){.grid{grid-template-columns:1fr;grid-template-rows:none;height:auto}#feed,#leader,#gex,#pb{grid-column:1;grid-row:auto;min-height:360px}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar">加载中…</div>
+<div class="grid">
+  <section class="p" id="feed"><h2>Feed · 异动信号流 <span class="sub">估算的主动方向 · 1 分钟桶</span></h2><div class="body" id="feedBody"></div></section>
+  <section class="p" id="leader"><h2>Strike Leader
+    <span class="seg" id="lwin"></span><span class="seg" id="lsort"></span></h2><div class="body" id="leaderBody"></div></section>
+  <section class="p" id="gex"><h2>GEX 阶梯 <span class="sub">做市商持 Call 多 / Put 空（假设）</span></h2><div class="body" id="gexBody"></div></section>
+  <section class="p" id="pb"><h2>Playbook · 尾盘彩票</h2><div class="body" id="pbBody"></div></section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fm=(v,d=0)=>v==null?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const usd=v=>v==null?'—':(Math.abs(v)>=1e6?'$'+(v/1e6).toFixed(2)+'M':Math.abs(v)>=1e3?'$'+(v/1e3).toFixed(1)+'K':'$'+fm(v));
+const gx=v=>v==null?'—':(v/1e6).toFixed(1)+'M';
+let LW='5m',LS='premium',SNAP=null;
+const WINS={'1m':'1分','5m':'5分','15m':'15分','day':'当日'},SORTS={'premium':'权利金','net':'净主动买','signals':'信号数'};
+function seg(id,opts,cur,set){$(id).innerHTML=Object.entries(opts).map(([k,v])=>`<button class="${k===cur?'on':''}" data-k="${k}">${v}</button>`).join('');
+  $(id).querySelectorAll('button').forEach(b=>b.onclick=()=>{set(b.dataset.k);render()})}
+function dim(id,msg){const p=$(id);let d=p.querySelector('.dim');if(msg){if(!d){d=document.createElement('div');d.className='dim';p.appendChild(d)}d.textContent=msg}else if(d)d.remove()}
+function cd(s){if(s==null)return'—';const m=Math.floor(s/60),x=s%60;return `${m}:${String(x).padStart(2,'0')}`}
+function renderBar(s){const st=s.status;const share=st.direction_known_share;
+  $('bar').innerHTML=`<span><span class="k">数据源</span><b>${esc(st.broker)}</b></span>
+  <span><span class="k">连接</span><b>${esc(st.connection)}</b></span>
+  <span><span class="k">行情</span>${esc(st.realtime)}</span>
+  <span><span class="k">合约</span>${st.contracts} / ${esc(st.contracts_limit)}</span>
+  <span><span class="k">SPX</span><b>${fm(st.spot,2)}</b> <span class="muted">${esc(st.spot_at||'')} · ${esc(st.spot_note)}</span></span>
+  <span><span class="k">VIX</span>${st.vix==null?'无':fm(st.vix,2)}</span>
+  <span><span class="k">距收盘</span><b>${cd(st.countdown_s)}</b></span>
+  <span><span class="k">方向已知占比</span><b>${share==null?'—':(share*100).toFixed(0)+'%'}</b> <span class="muted">${esc(st.direction_source)}</span></span>
+  <span><span class="k">OI 日期</span>${esc(st.oi_as_of||'—')}</span>
+  <span><span class="k">配额</span>剩 ${fm(st.quota_remaining)}${st.quota_used_today!=null?' · 今日用 '+fm(st.quota_used_today):''}</span>
+  <span><span class="k">队列丢弃</span>${st.queue_dropped}</span>
+  <span class="muted">更新 ${esc(s.generated_at)} ET</span>
+  ${(s.closed||st.degraded.length)?`<div class="deg">⚠ ${esc([s.closed].concat(st.degraded).filter(Boolean).join(' ｜ '))}</div>`:''}`}
+function renderFeed(f){if(f.error){$('feedBody').innerHTML='';return dim('feed',f.error)}
+  dim('feed',f.stale||'');const rows=f.signals||[];
+  $('feedBody').innerHTML=rows.length?`<table><tr><th>时间 ET</th><th>合约</th><th>类型</th><th>张数</th><th>权利金</th><th>成交价</th><th>买/卖价</th><th>主动买</th><th>倍数</th><th>可信度</th></tr>`+
+   rows.map(r=>`<tr><td>${esc(r.time)}${r.count>1?` <span class="pill">×${r.count}</span>`:''}</td><td class="${r.right}">${fm(r.strike)}${r.right}</td><td>${esc(r.type)}</td><td>${fm(r.contracts)}</td><td>${usd(r.premium)}</td><td>${fm(r.price,2)}</td><td>${fm(r.bid,2)} / ${fm(r.ask,2)}</td><td>${(r.ask_share*100).toFixed(0)}%</td><td>${r.multiple==null?'—':r.multiple+'×'}</td><td>${fm(r.confidence,2)}</td></tr>`).join('')+'</table>'
+   :'<div class="muted">暂无信号</div>'}
+function renderLeader(l){seg('lwin',WINS,LW,k=>LW=k);seg('lsort',SORTS,LS,k=>LS=k);
+  if(l.error){$('leaderBody').innerHTML='';return dim('leader',l.error)}dim('leader',l.stale||'');
+  const rows=((l.windows||{})[LW]||[]).slice().sort((a,b)=>b[LS]-a[LS]);
+  $('leaderBody').innerHTML=rows.length?`<table><tr><th>行权价</th><th>距现货</th><th>现价</th><th>成交量</th><th>权利金</th><th>主动买</th><th>主动卖</th><th>未知</th><th>净量</th><th>信号</th></tr>`+
+   rows.map(r=>`<tr><td class="${r.right}">${fm(r.strike)}${r.right}${r.active?' <span class="pill" style="color:var(--warn)">活跃</span>':''}</td><td>${r.dist==null?'—':(r.dist>0?'+':'')+r.dist}</td><td>${fm(r.mid,2)}</td><td>${fm(r.volume)}</td><td>${usd(r.premium)}</td><td>${fm(r.buy)}</td><td>${fm(r.sell)}</td><td>${fm(r.unknown)}</td><td class="${r.net>=0?'C':'P'}">${fm(r.net)}</td><td>${r.signals}</td></tr>`).join('')+'</table>'
+   :'<div class="muted">暂无成交</div>'}
+function renderGex(g){const b=$('gexBody');
+  if(!g||!g.ladder){b.innerHTML='';return dim('gex',g&&g.reason||'尚无数据')}
+  dim('gex',g.error?g.reason:(g.stale||(!g.available?('不可用：'+(g.reason||'')):'')));
+  const lad=g.ladder,mx=Math.max(1,...lad.map(e=>Math.max(Math.abs(e.call),Math.abs(e.put))));
+  const nodes=new Set((g.top3||[]).map(n=>n.strike));let html=`<div class="kv"><span><span class="muted">净 GEX</span> <b>${gx(g.total)}</b></span><span><span class="muted">状态</span> <b>${g.available?esc(g.regime):'—'}</b></span><span><span class="muted">覆盖率</span> ${(g.coverage*100).toFixed(0)}%</span>
+   <span><span class="muted">Call 墙</span> <b class="C">${fm(g.call_wall)}</b></span><span><span class="muted">Put 墙</span> <b class="P">${fm(g.put_wall)}</b></span>
+   <span><span class="muted">Top3</span> ${(g.top3||[]).map(n=>fm(n.strike)).join(' / ')||'—'}</span></div>
+   <div class="muted" style="margin-bottom:6px">GEX 的符号描述潜在的"阻尼（正）或放大（负）"，不直接给涨跌方向。左：Put GEX，右：Call GEX。</div><div class="lad">`;
+  let placed=false;
+  for(const e of lad){if(!placed&&g.spot!=null&&e.strike<g.spot){html+=`<div class="spotline">SPX ${fm(g.spot,2)}（估算）</div>`;placed=true}
+   html+=`<div class="barL" style="width:${(Math.abs(e.put)/mx*100).toFixed(1)}%" title="${gx(e.put)}"></div><div class="k ${nodes.has(e.strike)?'node':''}">${fm(e.strike)}</div><div class="barR" style="width:${(Math.abs(e.call)/mx*100).toFixed(1)}%" title="${gx(e.call)}"></div>`}
+  b.innerHTML=html+'</div>'}
+function renderPb(p,pin){const col={CALL:'var(--call)',PUT:'var(--put)',NEUTRAL:'#c0c6cf',STAND_BY:'var(--muted)'}[p.verdict]||'var(--muted)';
+  let h=`<div class="disc">${esc(p.disclaimer||'仅观察 · 非建议')}</div><div class="verdict" style="color:${col}">${esc(p.label)}</div>
+   <div class="scores">CALL <b class="C">${fm(p.call_score,0)}</b> · PUT <b class="P">${fm(p.put_score,0)}</b>${p.conflict?' · <b style="color:var(--warn)">证据分歧</b>':''}</div>
+   ${p.reason?`<div class="muted" style="text-align:center">${esc(p.reason)}</div>`:''}`;
+  if(p.reference){const r=p.reference;h+=`<div class="leg">参考合约：<b class="${r.right}">SPXW ${fm(r.strike)}${r.right}</b> · 现价 ${fm(r.mid,2)} · 带内当日量 ${fm(r.day_volume)}</div>`}
+  for(const l of p.legs||[]){const ab=!!l.abstain;
+   h+=`<div class="leg ${ab?'ab':''}"><span class="n">${esc(l.name)}</span> <span class="muted">(${l.weight}${l.info?'，只展示':''})</span><span class="s ${l.side==='CALL'?'C':l.side==='PUT'?'P':''}">${ab?'弃权':(l.side||'不选边')+' '+fm(l.score,0)}</span><div class="muted">${esc(ab?l.abstain:l.note)}</div></div>`}
+  if(pin)h+=`<div class="leg" style="border-color:var(--accent)">🦋 钉住蝴蝶提示（15:10）：${esc(pin.structure)} · 估算净支出 $${fm(pin.est_debit,2)} · ${esc(pin.disclaimer)}</div>`;
+  $('pbBody').innerHTML=h}
+function render(){const s=SNAP;if(!s||!s.status)return;renderBar(s);const m=s.modules||{};
+  renderFeed(m.feed||{signals:[]});renderLeader(m.leader||{});renderGex(m.gex);renderPb(m.playbook||{},m.pin)}
+async function tick(){try{const r=await fetch('/api/snapshot',{cache:'no-store'});SNAP=await r.json();render()}
+  catch(e){$('bar').innerHTML='<div class="deg">⚠ 观察台进程无响应：'+esc(e)+'</div>';['feed','leader','gex','pb'].forEach(i=>dim(i,'观察台进程无响应'))}}
+tick();setInterval(tick,2000);
+</script>
+</body>
+</html>
