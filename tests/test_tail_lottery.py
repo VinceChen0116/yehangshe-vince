@@ -640,6 +640,45 @@ class TestEngine(unittest.TestCase):
             srv.server_close()
 
 
+class TestLiveQuotes(unittest.TestCase):
+    def test_stale_base_chain_fresh_quotes(self):
+        """链快照落后 13 分钟（报价和 IV 都旧），实时报价新鲜 → 一切照常，IV 全部本地反推。"""
+        c = Clock(et("15:28"))
+        eng, src = _engine(c)
+        fresh_fn = src.chain_fn
+
+        def stale_chain(day, now):
+            src.calls += 1
+            old = make_chain(now - dt.timedelta(minutes=13), 7300, CLOSE, DAY, iv=0.5, quote_age_s=800, greeks_age_s=800)
+            for x in old.contracts:   # 行权价 / OI 与实时一致，只有价格和 IV 是旧的
+                x.oi = 1000
+            return old
+        src.fetch_chain = stale_chain
+        src.chain_fn = fresh_fn
+        run_until(eng, c, "15:36")
+        s = eng.snapshot
+        self.assertNotEqual(s["modules"]["playbook"]["verdict"], P.STAND_BY, s["modules"]["playbook"].get("reason"))
+        self.assertAlmostEqual(s["status"]["spot"], 7330, delta=0.5)     # 用实时报价，不是旧链的 7300
+        self.assertTrue(s["modules"]["gex"]["available"])
+        self.assertEqual(eng.store.skew["iv_sources"]["broker"], 0)
+        self.assertGreaterEqual(eng.store.skew["iv_sources"]["local"], 10)   # 远虚值买价为 0 的反推不了
+        self.assertAlmostEqual(eng.store.skew["atm_iv"], 0.20, delta=0.02)
+
+    def test_quote_budget(self):
+        """15:25 之前每 30 秒 6 个报价（另有 15:00 / 15:10 两次完整轮），之后每分钟 40 + 6。"""
+        c = Clock(et("14:57"))
+        eng, src = _engine(c, chain_spot=lambda t: 7331.3)
+        run_until(eng, c, "15:20")
+        early = list(src.quote_calls)
+        self.assertEqual(sum(1 for n in early if n == 40), 3)   # 第一轮 + 15:00 + 15:10
+        self.assertTrue(all(n in (6, 40) for n in early))
+        src.quote_calls.clear()
+        run_until(eng, c, "15:40")
+        late = src.quote_calls
+        self.assertEqual(sum(1 for n in late if n == 40), 16)   # 15:25–15:40 每分钟一次
+        self.assertLessEqual(sum(late), 16 * 40 + 40 * 6 + 50)
+
+
 class TestReadOnly(unittest.TestCase):
     def test_no_order_calls_in_code(self):
         import glob

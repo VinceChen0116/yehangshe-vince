@@ -409,4 +409,6 @@ python3 archive.py --dry-run                 # 只看计划
 * 数据：chain-snapshot/SPX?expiration=今天&limit=1000（30 秒 1 次，1 单位）；flow/tickers/SPX/bucket window=1m summary + top_contracts cohort=zero_dte
   （每分钟约 2 单位）；flow/trades **tickers=SPXW**（SPX 加 expirations 返回空）min_premium 5 万（每分钟约 1 单位）。估计 300–400 单位 / 天。
 * 测试：`python3 -m unittest tests.test_tail_lottery -v`（48 个，0 配额）。能力核对表、与说明的差异、局限、未验证事项见 `tail_lottery/README.md`。
-* 第一次盘中运行要确认：chain-snapshot 盘中刷新间隔（>120 秒会让 Playbook 一直待命）、1 分钟桶的生成延迟、每天实际配额。
+* 11-18 盘中实测：chain-snapshot 落后约 13 分钟 → 改为只取行权价 / OI；现价 / IV / gamma 用 /options/quotes 实时报价本地算
+  （30 秒 6 个、15:25 起每分钟 40 个，约 2,300 配额 / 天）。1 分钟成交桶约 50 秒内可用。
+* 11-18 用户定：11-19 由云端会话跑（`python3 tail_live.py --exit-after-close --no-discord` 之外推送照常），跑完写运行报告推 Discord。

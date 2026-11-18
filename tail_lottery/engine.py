@@ -2,9 +2,12 @@
 
 时间表（美东，交易日）：
   14:58 起开始拉数据（15:00、15:10 的 GEX 帧给钉住蝴蝶用；strike_bias 在 15:30 需要之前 600 秒的成交）
-  期权链每 30 秒一次（1 配额）；1 分钟成交桶每分钟一次（summary 1 + top_contracts 1–3）；大单每分钟一次（通常 1）
+  链快照（行权价 / 合约代码 / OI）每 10 分钟一次（1 配额）——盘中落后约 13 分钟，所以不用它的报价和 IV
+  实时报价：每 30 秒拉离现货最近 3 个行权价的 Call/Put（6 配额）算现价；
+            15:25 起（以及 15:00、15:10 两帧）每分钟拉现货上下各 10 档（40 配额）算 GEX / Skew / Charm
+  1 分钟成交桶每分钟一次（summary 1 + top_contracts 1–3）；大单每分钟一次（通常 1）
   16:01 停止拉取，推一条收盘总结
-  预计每天约 300–400 次配额。剩余配额 < QUOTA_FLOOR 时停止拉取。
+  预计每天约 2,000 次配额。剩余配额 < QUOTA_FLOOR 时停止拉取。
 """
 from __future__ import annotations
 
@@ -24,7 +27,12 @@ from .store import Store
 log = logging.getLogger("tail.engine")
 
 START_HHMM = "14:58"
-CHAIN_POLL_S = 30
+BASE_CHAIN_POLL_S = 600         # 链快照只取行权价 / OI，10 分钟一次足够
+QUOTE_POLL_S = 30
+SPOT_STRIKES = 3                # 现价轮：离现货最近 3 个行权价（6 个报价）
+LIVE_STRIKES_EACH_SIDE = 10     # 完整轮：现货上下各 10 档（40 个报价）
+FULL_FROM = "15:25"             # 完整轮开始时间（之前只在 15:00、15:10 各做一次，给钉住蝴蝶）
+FULL_FRAMES = ("15:00", "15:10")
 FLOW_POLL_S = 60
 FLOW_POLL_OFFSET_S = 8          # 每分钟第 8 秒拉上一分钟的桶
 BUCKET_GIVE_UP_MIN = 4          # 一分钟的桶 4 分钟后仍没有就跳过（记缺失）
@@ -49,8 +57,11 @@ class Engine:
         self.lock = threading.Lock()
         self.snapshot: dict = {}
         self.errors: dict = {}
-        self.last_chain_ok: dt.datetime | None = None
-        self.next_chain: dt.datetime | None = None
+        self.last_chain_ok: dt.datetime | None = None    # 最近一次成功拿到实时报价
+        self.next_chain: dt.datetime | None = None       # 下次拉实时报价
+        self.base_chain = None                            # 链快照（行权价 / OI）
+        self.next_base: dt.datetime | None = None
+        self.last_full_min: dt.datetime | None = None
         self.next_flow: dt.datetime | None = None
         self.next_bucket: dt.datetime | None = None
         self.fail_n = 0
@@ -97,7 +108,9 @@ class Engine:
             self._push_close()
 
     def _new_day(self):
-        self.next_chain = self.next_flow = self.next_bucket = None
+        self.next_chain = self.next_flow = self.next_bucket = self.next_base = None
+        self.base_chain = None
+        self.last_full_min = None
         self.missing_buckets = 0
         self.pin, self.pin_checked = None, False
         self.last_verdict_pushed, self.pending_verdict = None, (None, 0)
@@ -122,14 +135,19 @@ class Engine:
                 self.stopped_reason = f"配额剩余 {q} < {QUOTA_FLOOR}，停止拉取"
                 self._push_text(self.stopped_reason, key="quota")
                 return
-            if self.next_chain is None or now >= self.next_chain:
+            if self.next_base is None or now >= self.next_base:
                 try:
-                    snap = self.source.fetch_chain(day, now)
-                    self._on_chain(now, close, snap)
-                    self.fail_n, self.conn = 0, "已连接"
-                    self.next_chain = now + dt.timedelta(seconds=CHAIN_POLL_S)
+                    self.base_chain = self.source.fetch_chain(day, now)
+                    self.next_base = now + dt.timedelta(seconds=BASE_CHAIN_POLL_S)
                 except SourceError as e:
-                    self.next_chain = self._fail(now, "期权链", e)
+                    self.next_base = self._fail(now, "链快照", e)
+            if self.base_chain is not None and (self.next_chain is None or now >= self.next_chain):
+                try:
+                    self._poll_quotes(now, close)
+                    self.fail_n, self.conn = 0, "已连接"
+                    self.next_chain = now + dt.timedelta(seconds=QUOTE_POLL_S)
+                except SourceError as e:
+                    self.next_chain = self._fail(now, "实时报价", e)
             if self.next_flow is None or now >= self.next_flow:
                 try:
                     self._poll_flow(now, day)
@@ -141,14 +159,52 @@ class Engine:
             self.stopped_reason = str(e)
             self._push_text(f"配额熔断：{e}", key="quota")
 
+    def _full_due(self, now):
+        et = to_et(now)
+        m = now.replace(second=0, microsecond=0)
+        if self.last_full_min == m:
+            return False
+        if self.store.chain is None or minutes_of_day(et) >= hhmm_to_minutes(FULL_FROM):
+            return True
+        return et.strftime("%H:%M") in FULL_FRAMES
+
+    def _poll_quotes(self, now, close):
+        base = self.base_chain
+        T = M.years_to_close(now, close)
+        hint = self.store.spot or base.underlying_price
+        if hint is None:
+            hint = M.parity_spot(base, T)[0]
+        if hint is None:
+            raise SourceError("链快照里没有可用的行权价")
+        if self._full_due(now):
+            syms = M.window_symbols(base, hint, LIVE_STRIKES_EACH_SIDE)
+            q = self.source.fetch_quotes(syms, now)
+            snap, spot, _ = M.live_snapshot(base, q, now, hint, T, LIVE_STRIKES_EACH_SIDE)
+            self.last_full_min = now.replace(second=0, microsecond=0)
+            self.last_chain_ok = now
+            if spot is not None:
+                self.store.add_spot(now, spot, estimated=True)
+            self._on_chain(now, close, snap)
+            return
+        # 现价轮：只拉离现货最近的几个行权价，更新现价和现用期权链里这几个合约的报价
+        syms = [c.symbol for c in M.nearest_contracts(base.contracts, hint, SPOT_STRIKES)]
+        q = self.source.fetch_quotes(syms, now)
+        snap, spot, _ = M.live_snapshot(base, q, now, hint, T, nearest=SPOT_STRIKES)
+        self.last_chain_ok = now
+        if spot is not None:
+            self.store.add_spot(now, spot, estimated=True)
+        cur = self.store.chain
+        if cur is not None:
+            fresh = {c.symbol: c for c in snap.contracts}
+            for c in cur.contracts:
+                f = fresh.get(c.symbol)
+                if f is not None:
+                    c.bid, c.ask, c.quoted_at = f.bid, f.ask, f.quoted_at
+
     def _on_chain(self, now, close, snap):
         self.store.chain = snap
         self.version += 1
-        self.last_chain_ok = now
         T = M.years_to_close(now, close)
-        spot, n = M.parity_spot(snap, T, hint=self.store.spot or snap.underlying_price)
-        if spot is not None:
-            self.store.add_spot(now, spot, estimated=True)
         try:
             g = M.run_gex(snap, self.store.spot) if self.store.spot else {"available": False, "reason": "没有现价"}
             self.errors.pop("gex", None)
@@ -195,11 +251,13 @@ class Engine:
         out = []
         if self.stopped_reason:
             out.append(self.stopped_reason)
+        if self.base_chain is None:
+            out.append("没有链快照（行权价 / OI）")
         if self.last_chain_ok is None or (now - self.last_chain_ok).total_seconds() > M.CHAIN_STALE_S:
-            out.append("行情中断（期权链超过 120 秒没有成功拉取）")
+            out.append("行情中断（实时报价超过 120 秒没有成功拉取）")
         ch = self.store.chain
         if ch is not None and ch.quote_as_of is not None and (now - ch.quote_as_of).total_seconds() > M.CHAIN_STALE_S:
-            out.append(f"期权链报价过期（{to_et(ch.quote_as_of).strftime('%H:%M:%S')}）")
+            out.append(f"实时报价过期（{to_et(ch.quote_as_of).strftime('%H:%M:%S')}）")
         if self.store.spot is None:
             out.append("无法估算现货")
         last_b = next(reversed(self.store.buckets)) if self.store.buckets else None
@@ -259,6 +317,7 @@ class Engine:
             log.exception("Playbook 计算失败")
         self.playbook = pb
         snap["modules"]["playbook"] = pb
+        self._run_log(now, pb, snap["status"], active)
         # 钉住蝴蝶（15:10 判定一次）
         if not closed_reason and not self.pin_checked and minutes_of_day(now_et) >= 15 * 60 + 10 and active:
             self.pin_checked = True
@@ -269,6 +328,29 @@ class Engine:
             self._maybe_push(pb, now)
         with self.lock:
             self.snapshot = snap
+
+    def _run_log(self, now, pb, status, active):
+        """运行日志（不记逐笔行情）：倾向变化 + 每 5 分钟一行健康状况，供收盘后写运行报告。"""
+        if not active:
+            return
+        key = (pb.get("verdict"), pb.get("call_score"), pb.get("put_score"), pb.get("reason"))
+        if key != getattr(self, "_last_log_key", None):
+            self._last_log_key = key
+            legs = "；".join(f"{l['name']}={'弃权' if l.get('abstain') else (l.get('side') or '-') + str(l.get('score'))}"
+                            for l in pb.get("legs", []))
+            log.info("【倾向】%s CALL %s / PUT %s%s %s | %s", pb.get("label"), pb.get("call_score"), pb.get("put_score"),
+                     " 证据分歧" if pb.get("conflict") else "", pb.get("reason") or "", legs)
+        m = now.replace(second=0, microsecond=0)
+        if to_et(now).minute % 5 == 0 and getattr(self, "_last_health", None) != m:
+            self._last_health = m
+            ch = self.store.chain
+            lag = None if ch is None or ch.quote_as_of is None else int((now - ch.quote_as_of).total_seconds())
+            last_b = next(reversed(self.store.buckets)) if self.store.buckets else None
+            blag = None if last_b is None else int((now - last_b).total_seconds())
+            log.info("【健康】现价 %s 报价延迟 %ss 成交桶延迟 %ss 现用合约 %s 方向已知 %s 信号 %d 配额剩 %s 今日用 %s 降级 %s",
+                     status.get("spot"), lag, blag, status.get("contracts"), status.get("direction_known_share"),
+                     len(self.store.signals), status.get("quota_remaining"), status.get("quota_used_today"),
+                     "；".join(status.get("degraded") or []) or "无")
 
     def _check_pin(self, day):
         t0 = et_datetime(day, "15:00").astimezone(dt.timezone.utc)
@@ -293,13 +375,13 @@ class Engine:
         share = st.direction_known_share()
         q = self.source.quota_remaining
         degrade = list(blockers)
-        if st.chain is not None and st.chain.notice:
-            degrade.append("服务端提示：" + st.chain.notice[:80])
+        if self.base_chain is not None and self.base_chain.notice and "older than" not in self.base_chain.notice:
+            degrade.append("服务端提示：" + self.base_chain.notice[:80])
         for k in ("skew", "charm"):
             v = getattr(st, k)
             if active and v is not None and not v.get("available"):
                 degrade.append(f"{k.capitalize()} 不可用：{v.get('reason', '')}")
-        if st.chain is not None and st.chain.contracts and all(c.oi is None for c in st.chain.contracts):
+        if self.base_chain is not None and self.base_chain.contracts and all(c.oi is None for c in self.base_chain.contracts):
             degrade.append("OI 未到齐")
         if self.missing_buckets:
             degrade.append(f"缺失 1 分钟成交桶 {self.missing_buckets} 个")
@@ -307,9 +389,9 @@ class Engine:
             degrade.append(f"{name} 计算失败")
         return {
             "broker": cap["name"], "connection": "休市" if closed_reason else (self.conn if active else "待命（未到拉取时间）"),
-            "realtime": "轮询（期权链约 30 秒、成交 1 分钟），非逐笔推送",
+            "realtime": "轮询（实时报价 30 秒 / 1 分钟、成交 1 分钟），非逐笔推送",
             "contracts": len(st.chain.contracts) if st.chain else 0,
-            "contracts_limit": "无订阅上限（按配额计费）",
+            "contracts_limit": f"现货上下各 {LIVE_STRIKES_EACH_SIDE} 档（按配额计费）",
             "spot": None if st.spot is None else round(st.spot, 2),
             "spot_at": et_fmt(st.spot_at) if st.spot_at else None,
             "spot_note": "估算现货（期权平价反推）",
@@ -320,7 +402,7 @@ class Engine:
             "quota_remaining": q, "quota_used_today": (self.quota_start - q) if (self.quota_start and q is not None) else None,
             "queue_dropped": 0,
             "degraded": degrade,
-            "oi_as_of": to_et(st.chain.oi_as_of).strftime("%m-%d %H:%M") if st.chain and st.chain.oi_as_of else None,
+            "oi_as_of": to_et(self.base_chain.oi_as_of).strftime("%m-%d %H:%M") if self.base_chain and self.base_chain.oi_as_of else None,
         }
 
     @staticmethod
@@ -385,8 +467,11 @@ def playbook_embed(pb, store, now):
             "description": desc}
 
 
-def run_forever(engine, stop_event=None):
+def run_forever(engine, stop_event=None, exit_after_close=False):
     while not (stop_event and stop_event.is_set()):
+        if exit_after_close and engine.closing_sent:
+            log.info("收盘总结已推送，退出（--exit-after-close）")
+            return
         try:
             engine.step()
         except Exception:

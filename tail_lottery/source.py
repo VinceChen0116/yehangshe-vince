@@ -2,6 +2,9 @@
 
 夜航社是 REST 轮询 + 配额计费，不是券商那种推送；所以"统一事件"在这里落成三种轮询快照：
   ChainSnapshot   ← GET /v1/options/chain-snapshot/SPX?expiration=<今天>      1 次配额 / 次（limit=1000 一页拿齐 ATM 附近约 300 个合约）
+                    **盘中落后约 13 分钟（2026-11-18 实测）**，只用来取行权价、合约代码和 OI
+  实时报价        ← GET /v1/options/quotes?contracts=…（≤50 个）                每个报价 1 次配额；延迟约 0 秒
+                    现价、IV、gamma、delta 都由实时报价本地计算
   FlowBucket      ← GET /v1/flow/tickers/SPX/bucket  window=1m                  summary 1 次 + top_contracts 每页 1 次
   BigPrint        ← GET /v1/flow/trades  tickers=SPX expirations=<今天> 大单    每页 1 次
 能力声明见 CAPABILITIES；README 的"能力核对表"逐条写了出处和实测情况。
@@ -216,6 +219,21 @@ class YHSSource:
         p = self._get(self.CHAIN_PATH, {"expiration": expiration.isoformat(), "limit": 1000})
         return parse_chain(p, now, expiration)
 
+    QUOTES_PATH = "/v1/options/quotes"
+    QUOTES_MAX = 50
+
+    def fetch_quotes(self, symbols, now: dt.datetime) -> dict:
+        """实时报价（2026-11-18 盘中实测延迟约 0 秒；chain-snapshot 盘中落后约 13 分钟）。每个返回的报价 1 配额。
+        返回 {合约代码: (bid, ask, quoted_at)}。"""
+        out = {}
+        syms = [x for x in symbols if x]
+        for i in range(0, len(syms), self.QUOTES_MAX):
+            p = self._get(self.QUOTES_PATH, {"contracts": ",".join(syms[i:i + self.QUOTES_MAX])})
+            for x in (((p or {}).get("data") or {}).get("quotes") or []):
+                out[_strip_o(x.get("contract_symbol") or "")] = (_f(x.get("bid_usd")), _f(x.get("ask_usd")),
+                                                                  _ts(x.get("quoted_at")))
+        return out
+
     def fetch_bucket(self, session: dt.date, start: dt.datetime, expiration: dt.date) -> FlowBucket:
         micros = int(start.timestamp() * 1_000_000)
         base = {"session_date": session.isoformat(), "window": "1m", "bucket_start_micros": micros}
@@ -268,6 +286,7 @@ class FakeSource:
         self.big_prints = big_prints or []
         self.error_fn = error_fn
         self.calls = 0
+        self.quote_calls = []
         self.quota_remaining = 99_999
 
     def _maybe_fail(self, now):
@@ -281,6 +300,16 @@ class FakeSource:
         if snap is None:
             raise SourceError("无数据")
         return snap
+
+    def fetch_quotes(self, symbols, now):
+        """默认用 chain_fn(now) 的报价当实时报价；quote_calls 记录每次要了几个合约（核对配额用）。"""
+        self._maybe_fail(now)
+        snap = self.chain_fn(now) if self.chain_fn else None
+        if snap is None:
+            raise SourceError("无数据")
+        want = set(symbols)
+        self.quote_calls.append(len(want))
+        return {c.symbol: (c.bid, c.ask, c.quoted_at) for c in snap.contracts if c.symbol in want}
 
     def fetch_bucket(self, session, start, expiration):
         self._maybe_fail(start)

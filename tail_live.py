@@ -10,6 +10,7 @@ Playbook 倾向（CALL / PUT / 中性 / 待命）变化时推 Discord。所有�
   python3 tail_live.py --port 8765 --log-file logs/tail_live.log
   python3 tail_live.py --no-discord            # 只看网页，不推送
   python3 tail_live.py --demo                  # 假行情源 + 模拟时钟（15:25 起 10 倍速），0 配额，看页面效果
+  python3 tail_live.py --exit-after-close      # 跑完当天（16:01 收盘总结）自动退出
 密钥：环境变量 YHS_API_KEY / DISCORD_WEBHOOK_URL（或 config.json），不会打印。
 """
 from __future__ import annotations
@@ -31,6 +32,7 @@ def main(argv=None):
     ap.add_argument("--log-file", default=None)
     ap.add_argument("--no-discord", action="store_true")
     ap.add_argument("--demo", action="store_true", help="假行情源演示（0 配额）")
+    ap.add_argument("--exit-after-close", action="store_true", help="16:01 推完收盘总结后退出（云端定时运行用）")
     a = ap.parse_args(argv)
     setup_logging("INFO", a.log_file)
 
@@ -55,7 +57,7 @@ def main(argv=None):
     serve(engine, a.host, a.port)
     stop = threading.Event()
     try:
-        run_forever(engine, stop)
+        run_forever(engine, stop, exit_after_close=a.exit_after_close)
     except KeyboardInterrupt:
         log.info("退出")
 

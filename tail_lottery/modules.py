@@ -102,6 +102,47 @@ def parity_spot(chain, T: float, hint: float | None = None):
     return statistics.median(est), len(est)
 
 
+# ============================================================================ 实时报价 → 现用期权链
+def window_symbols(chain, spot, each_side):
+    return [c.symbol for c in strike_window(chain.contracts, spot, each_side)]
+
+
+def nearest_contracts(contracts, spot, n):
+    """离现货最近的 n 个行权价的全部合约。"""
+    ks = sorted({c.strike for c in contracts}, key=lambda k: abs(k - spot))[:n]
+    return [c for c in contracts if c.strike in set(ks)]
+
+
+def live_snapshot(base, quotes, now, spot_hint, T, each_side=None, nearest=None):
+    """用实时报价覆盖链快照（链快照只提供行权价 / 合约代码 / OI）。
+    只保留拿到实时报价的合约；IV 清空（链快照的 IV 落后 13 分钟），gamma / delta 用实时报价本地反推的 IV 计算。
+    返回 (ChainSnapshot, 现货, 平价用到的行权价数)。"""
+    from dataclasses import replace
+    from .source import ChainSnapshot
+    cs, times = [], []
+    pool = nearest_contracts(base.contracts, spot_hint, nearest) if nearest else \
+        strike_window(base.contracts, spot_hint, each_side)
+    for c in pool:
+        q = quotes.get(c.symbol)
+        if not q:
+            continue
+        bid, ask, at = q
+        cs.append(replace(c, bid=bid, ask=ask, quoted_at=at, iv=None, delta=None, gamma=None))
+        if at is not None:
+            times.append(at)
+    snap = ChainSnapshot(fetched_at=now, expiration=base.expiration, quote_as_of=min(times) if times else None,
+                         greeks_as_of=None, oi_as_of=base.oi_as_of, underlying_price=None, underlying_as_of=None,
+                         contracts=cs, notice="")
+    spot, n = parity_spot(snap, T, hint=spot_hint)
+    if spot is not None and T > 0:
+        for c in cs:
+            iv, _ = local_iv(c, spot, T)
+            if iv is not None:
+                c.gamma = bsm.gamma(spot, c.strike, T, iv)
+                c.delta = bsm.delta(spot, c.strike, T, iv, c.right)
+    return snap, spot, n
+
+
 # ============================================================================ IV 选取（Skew 与 Charm 共用）
 def local_iv(c, S, T):
     """本地反推，通过全部拒绝条件才返回 IV，否则 (None, 原因)。"""
