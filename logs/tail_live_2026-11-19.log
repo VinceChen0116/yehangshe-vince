@@ -12,3 +12,4 @@
 20:15:01 [INFO] tail.engine: 【健康】现价 7182.48 报价延迟 1s 成交桶延迟 121s 现用合约 40 方向已知 0.845 信号 2 配额剩 61004 今日用 449 降级 Charm 不可用：15:30 之前不输出
 20:16:26 [WARNING] yhs.client: 网络异常 /v1/flow/tickers/SPX/bucket：Remote end closed connection without response，4.0s 后第 1 次重试
 20:20:00 [INFO] tail.engine: 【健康】现价 7200.88 报价延迟 21s 成交桶延迟 120s 现用合约 40 方向已知 0.836 信号 3 配额剩 60851 今日用 602 降级 Charm 不可用：15:30 之前不输出
+20:25:00 [INFO] tail.engine: 【健康】现价 7192.39 报价延迟 11s 成交桶延迟 120s 现用合约 40 方向已知 0.831 信号 3 配额剩 60697 今日用 756 降级 Charm 不可用：15:30 之前不输出
