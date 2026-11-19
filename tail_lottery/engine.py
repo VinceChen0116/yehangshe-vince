@@ -35,7 +35,7 @@ FULL_FROM = "15:25"             # 完整轮开始时间（之前只在 15:00、1
 FULL_FRAMES = ("15:00", "15:10")
 FLOW_POLL_S = 60
 FLOW_POLL_OFFSET_S = 8          # 每分钟第 8 秒拉上一分钟的桶
-BUCKET_GIVE_UP_MIN = 4          # 一分钟的桶 4 分钟后仍没有就跳过（记缺失）
+BUCKET_GIVE_UP_MIN = 20         # 一分钟的桶 20 分钟后仍没有才跳过（11-19 实测 0DTE 桶晚到约 8 分钟，4 分钟会误判缺失）
 BACKFILL_MIN = 15               # 启动时最多回补 15 分钟成交桶
 FLOW_STALE_MIN = 5              # 最新成交桶比现在早 5 分钟以上 → 成交数据延迟
 QUOTA_FLOOR = 3000              # 与 tape_live 一致：剩余配额低于此值停止拉取
@@ -58,6 +58,7 @@ class Engine:
         self.snapshot: dict = {}
         self.errors: dict = {}
         self.last_chain_ok: dt.datetime | None = None    # 最近一次成功拿到实时报价
+        self.last_quote_at: dt.datetime | None = None    # 最近一轮报价里最新的 quoted_at
         self.next_chain: dt.datetime | None = None       # 下次拉实时报价
         self.base_chain = None                            # 链快照（行权价 / OI）
         self.next_base: dt.datetime | None = None
@@ -179,6 +180,7 @@ class Engine:
         if self._full_due(now):
             syms = M.window_symbols(base, hint, LIVE_STRIKES_EACH_SIDE)
             q = self.source.fetch_quotes(syms, now)
+            self._note_quote_time(q)
             snap, spot, _ = M.live_snapshot(base, q, now, hint, T, LIVE_STRIKES_EACH_SIDE)
             self.last_full_min = now.replace(second=0, microsecond=0)
             self.last_chain_ok = now
@@ -189,6 +191,7 @@ class Engine:
         # 现价轮：只拉离现货最近的几个行权价，更新现价和现用期权链里这几个合约的报价
         syms = [c.symbol for c in M.nearest_contracts(base.contracts, hint, SPOT_STRIKES)]
         q = self.source.fetch_quotes(syms, now)
+        self._note_quote_time(q)
         snap, spot, _ = M.live_snapshot(base, q, now, hint, T, nearest=SPOT_STRIKES)
         self.last_chain_ok = now
         if spot is not None:
@@ -200,6 +203,11 @@ class Engine:
                 f = fresh.get(c.symbol)
                 if f is not None:
                     c.bid, c.ask, c.quoted_at = f.bid, f.ask, f.quoted_at
+
+    def _note_quote_time(self, q):
+        ts = [v[2] for v in q.values() if v and v[2] is not None]
+        if ts:
+            self.last_quote_at = max(ts)
 
     def _on_chain(self, now, close, snap):
         self.store.chain = snap
@@ -255,9 +263,9 @@ class Engine:
             out.append("没有链快照（行权价 / OI）")
         if self.last_chain_ok is None or (now - self.last_chain_ok).total_seconds() > M.CHAIN_STALE_S:
             out.append("行情中断（实时报价超过 120 秒没有成功拉取）")
-        ch = self.store.chain
-        if ch is not None and ch.quote_as_of is not None and (now - ch.quote_as_of).total_seconds() > M.CHAIN_STALE_S:
-            out.append(f"实时报价过期（{to_et(ch.quote_as_of).strftime('%H:%M:%S')}）")
+        qa = self.last_quote_at
+        if qa is not None and (now - qa).total_seconds() > M.CHAIN_STALE_S:
+            out.append(f"实时报价过期（{to_et(qa).strftime('%H:%M:%S')}）")
         if self.store.spot is None:
             out.append("无法估算现货")
         last_b = next(reversed(self.store.buckets)) if self.store.buckets else None
@@ -343,8 +351,8 @@ class Engine:
         m = now.replace(second=0, microsecond=0)
         if to_et(now).minute % 5 == 0 and getattr(self, "_last_health", None) != m:
             self._last_health = m
-            ch = self.store.chain
-            lag = None if ch is None or ch.quote_as_of is None else int((now - ch.quote_as_of).total_seconds())
+            qa = self.last_quote_at
+            lag = None if qa is None else int((now - qa).total_seconds())
             last_b = next(reversed(self.store.buckets)) if self.store.buckets else None
             blag = None if last_b is None else int((now - last_b).total_seconds())
             log.info("【健康】现价 %s 报价延迟 %ss 成交桶延迟 %ss 现用合约 %s 方向已知 %s 信号 %d 配额剩 %s 今日用 %s 降级 %s",
