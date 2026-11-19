@@ -412,3 +412,5 @@ python3 archive.py --dry-run                 # 只看计划
 * 11-18 盘中实测：chain-snapshot 落后约 13 分钟 → 改为只取行权价 / OI；现价 / IV / gamma 用 /options/quotes 实时报价本地算
   （30 秒 6 个、15:25 起每分钟 40 个，约 2,300 配额 / 天）。1 分钟成交桶约 50 秒内可用。
 * 11-18 用户定：11-19 由云端会话跑（`python3 tail_live.py --exit-after-close`，Discord 推送照常），跑完写运行报告推 Discord。
+* 11-19 首次云端完整运行，报告 `reports/tail_live_2026-11-19.md`。用户定（11-20 起）：gex_regime 只在领先方有非 Charm 证据时加分；
+  有证据分歧的 CALL / PUT 推送按中性；钉住蝴蝶等 15:10 完整轮后再判；完整轮 15:28 起、之前现价 60 秒一次。11-20 继续云端跑（定时唤醒 14:45 ET）。

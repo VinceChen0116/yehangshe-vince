@@ -477,6 +477,49 @@ class TestPlaybook(unittest.TestCase):
         self.assertIn("< 50", _legs(P.evaluate(_inp()))["atm_flow_5m"]["abstain"])
 
 
+class TestRuleChanges1119(unittest.TestCase):
+    def test_charm_plus_gex_regime_not_enough(self):
+        """负 Gamma 时只有 Charm 领先：gex_regime 不加分，结论为中性。"""
+        ch = {"available": True, "direction": "BUY", "hedge_flow_delta_1m": 1000, "stability": "NORMAL"}
+        out = P.evaluate(_inp(charm=ch, gex=GEX_NEG))
+        self.assertEqual(_legs(out)["gex_regime"]["score"], 0)
+        self.assertIn("只有 Charm", _legs(out)["gex_regime"]["note"])
+        self.assertEqual(out["verdict"], P.NEUTRAL)
+        flow = [{"strike": 7335, "right": "C", "contracts": 300, "buy": 200, "sell": 50}]
+        out = P.evaluate(_inp(charm=ch, gex=GEX_NEG, flow_600=flow))   # 有非 Charm 证据 → 照常加分
+        self.assertEqual(_legs(out)["gex_regime"]["score"], 15)
+        self.assertEqual(out["call_score"], 75)
+
+    def test_conflicting_direction_pushed_as_neutral(self):
+        sent = []
+
+        class N:
+            def send(self, content="", embeds=None):
+                sent.append(embeds[0]["title"] if embeds else content)
+        eng = Engine(FakeSource(), notifier=N(), clock=lambda: et("15:40"))
+        call_conf = {"verdict": P.CALL, "label": "CALL", "conflict": True, "legs": [], "call_score": 55, "put_score": 10}
+        call_ok = dict(call_conf, conflict=False)
+        neu = {"verdict": P.NEUTRAL, "label": "中性", "conflict": False, "legs": []}
+        eng.store.reset(DAY)
+        for pb in (neu, neu, call_conf, call_conf, call_ok, call_ok):
+            eng._maybe_push(pb, et("15:40"))
+        self.assertEqual(len(sent), 2)
+        self.assertIn("中性", sent[0])
+        self.assertIn("CALL", sent[1])
+        self.assertNotIn("分歧", sent[1])
+
+    def test_pin_waits_for_1510_frame(self):
+        """判定的那一刻，15:10 那一分钟的完整轮（GEX 帧）必须已经算完。"""
+        for start_sec in (0, 17, 45):   # 让报价轮落在一分钟里的不同位置
+            c = Clock(et("15:08", start_sec))
+            eng, src = _engine(c)
+            while not eng.pin_checked and c.t < et("15:13"):
+                eng.step()
+                c.t += dt.timedelta(seconds=1)
+            self.assertTrue(eng.pin_checked)
+            self.assertIn(et("15:10"), eng.store.gex_frames)
+
+
 class TestPin(unittest.TestCase):
     def _quotes(self, spot=7330):
         ch = make_chain(et("15:10"), spot, CLOSE, DAY)
@@ -665,18 +708,19 @@ class TestLiveQuotes(unittest.TestCase):
         self.assertAlmostEqual(eng.store.skew["atm_iv"], 0.20, delta=0.02)
 
     def test_quote_budget(self):
-        """15:25 之前每 30 秒 6 个报价（另有 15:00 / 15:10 两次完整轮），之后每分钟 40 + 6。"""
+        """15:28 之前每 60 秒 6 个报价（另有 15:00 / 15:10 两次完整轮），之后每分钟 40 + 6。"""
         c = Clock(et("14:57"))
         eng, src = _engine(c, chain_spot=lambda t: 7331.3)
         run_until(eng, c, "15:20")
         early = list(src.quote_calls)
         self.assertEqual(sum(1 for n in early if n == 40), 3)   # 第一轮 + 15:00 + 15:10
         self.assertTrue(all(n in (6, 40) for n in early))
+        self.assertLessEqual(sum(1 for n in early if n == 6), 23 + 2)   # 约每分钟 1 次
         src.quote_calls.clear()
         run_until(eng, c, "15:40")
         late = src.quote_calls
-        self.assertEqual(sum(1 for n in late if n == 40), 16)   # 15:25–15:40 每分钟一次
-        self.assertLessEqual(sum(late), 16 * 40 + 40 * 6 + 50)
+        self.assertEqual(sum(1 for n in late if n == 40), 13)   # 15:28–15:40 每分钟一次
+        self.assertLessEqual(sum(late), 13 * 40 + 34 * 6 + 50)
 
 
 class TestReadOnly(unittest.TestCase):

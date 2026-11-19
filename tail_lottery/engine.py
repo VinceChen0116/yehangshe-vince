@@ -31,7 +31,8 @@ BASE_CHAIN_POLL_S = 600         # 链快照只取行权价 / OI，10 分钟一�
 QUOTE_POLL_S = 30
 SPOT_STRIKES = 3                # 现价轮：离现货最近 3 个行权价（6 个报价）
 LIVE_STRIKES_EACH_SIDE = 10     # 完整轮：现货上下各 10 档（40 个报价）
-FULL_FROM = "15:25"             # 完整轮开始时间（之前只在 15:00、15:10 各做一次，给钉住蝴蝶）
+FULL_FROM = "15:28"             # 完整轮开始时间（之前只在 15:00、15:10 各做一次，给钉住蝴蝶）；11-19 用户定从 15:25 改 15:28 省配额
+SPOT_POLL_EARLY_S = 60          # 完整轮开始前，现价轮 60 秒一次（11-19 用户定，省配额）；之后 30 秒
 FULL_FRAMES = ("15:00", "15:10")
 FLOW_POLL_S = 60
 FLOW_POLL_OFFSET_S = 8          # 每分钟第 8 秒拉上一分钟的桶
@@ -146,7 +147,8 @@ class Engine:
                 try:
                     self._poll_quotes(now, close)
                     self.fail_n, self.conn = 0, "已连接"
-                    self.next_chain = now + dt.timedelta(seconds=QUOTE_POLL_S)
+                    early = minutes_of_day(to_et(now)) < hhmm_to_minutes(FULL_FROM)
+                    self.next_chain = now + dt.timedelta(seconds=SPOT_POLL_EARLY_S if early else QUOTE_POLL_S)
                 except SourceError as e:
                     self.next_chain = self._fail(now, "实时报价", e)
             if self.next_flow is None or now >= self.next_flow:
@@ -327,7 +329,10 @@ class Engine:
         snap["modules"]["playbook"] = pb
         self._run_log(now, pb, snap["status"], active)
         # 钉住蝴蝶（15:10 判定一次）
-        if not closed_reason and not self.pin_checked and minutes_of_day(now_et) >= 15 * 60 + 10 and active:
+        # 钉住蝴蝶：等 15:10 那一分钟的完整轮（GEX 帧）算完再判；15:12 还没有就按缺数据判
+        frame_ready = self.last_full_min is not None and minutes_of_day(to_et(self.last_full_min)) >= 15 * 60 + 10
+        if not closed_reason and not self.pin_checked and active and minutes_of_day(now_et) >= 15 * 60 + 10 \
+                and (frame_ready or minutes_of_day(now_et) >= 15 * 60 + 12):
             self.pin_checked = True
             self._check_pin(day)
         snap["modules"]["pin"] = self.pin
@@ -430,7 +435,10 @@ class Engine:
             self.n.send(f"🎰【尾盘彩票】{msg}")
 
     def _maybe_push(self, pb, now):
+        # 11-19 用户定：有"证据分歧"的 CALL / PUT 不推方向，按中性处理
         v = pb.get("verdict")
+        if v in (P.CALL, P.PUT) and pb.get("conflict"):
+            v = P.NEUTRAL
         if v in (None, P.STAND_BY) and self.last_verdict_pushed is None:
             return
         pv, cnt = self.pending_verdict
@@ -440,7 +448,7 @@ class Engine:
             return
         self.last_verdict_pushed = v
         if self.n and self.push_enabled:
-            self.n.send(embeds=[playbook_embed(pb, self.store, now)])
+            self.n.send(embeds=[playbook_embed(pb, self.store, now, pushed_as=v)])
 
     def _push_close(self):
         pb = self.playbook or {}
@@ -456,7 +464,7 @@ class Engine:
 COLORS = {P.CALL: 0x2ECC71, P.PUT: 0xE74C3C, P.NEUTRAL: 0x95A5A6, P.STAND_BY: 0x7F8C8D}
 
 
-def playbook_embed(pb, store, now):
+def playbook_embed(pb, store, now, pushed_as=None):
     lines = []
     for l in pb.get("legs", []):
         if l.get("abstain"):
@@ -471,7 +479,11 @@ def playbook_embed(pb, store, now):
     desc = (f"**{pb.get('label')}** · CALL {pb.get('call_score', 0):g} / PUT {pb.get('put_score', 0):g}"
             + (" · ⚠️ 证据分歧" if pb.get("conflict") else "") + f"\nSPX {spot} · {et_fmt(now)} ET\n"
             + ("\n".join(lines))[:3000] + ("\n" + ref_s if ref_s else ""))
-    return {"title": f"🎰【尾盘彩票】{pb.get('label')} · {P.DISCLAIMER}", "color": COLORS.get(pb.get("verdict"), 0x7F8C8D),
+    shown = pushed_as or pb.get("verdict")
+    title = P.LABEL.get(shown, pb.get("label"))
+    if shown != pb.get("verdict"):
+        title += f"（{pb.get('label')} 证据分歧，不推方向）"
+    return {"title": f"🎰【尾盘彩票】{title} · {P.DISCLAIMER}", "color": COLORS.get(shown, 0x7F8C8D),
             "description": desc}
 
 

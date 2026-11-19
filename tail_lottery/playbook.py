@@ -209,7 +209,7 @@ def leg_atm_flow(inp):
     return _leg("atm_flow_5m", 0, side, 0, note, info=True), side
 
 
-def leg_gex_regime(inp, leader):
+def leg_gex_regime(inp, leader, leader_has_non_charm=True):
     g = inp.get("gex") or {}
     if g.get("error"):
         return _leg("gex_regime", W_GEX_REGIME, abstain="GEX 计算失败")
@@ -219,6 +219,8 @@ def leg_gex_regime(inp, leader):
         return _leg("gex_regime", W_GEX_REGIME, None, 0, "正 Gamma：0 分，钉住风险")
     if leader is None:
         return _leg("gex_regime", W_GEX_REGIME, None, 0, "负 Gamma，但没有领先方向")
+    if not leader_has_non_charm:   # 2026-11-19 用户定：只有 Charm 领先时不加分，否则 Charm 20 + 15 = 35 会单独构成结论
+        return _leg("gex_regime", W_GEX_REGIME, None, 0, f"负 Gamma，但领先方（{leader}）只有 Charm 一条证据，不加分")
     return _leg("gex_regime", W_GEX_REGIME, leader, W_GEX_REGIME, f"负 Gamma，放大领先方（{leader}）")
 
 
@@ -241,7 +243,8 @@ def evaluate(inp: dict) -> dict:
     cs = sum(l["score"] for l in legs if l["side"] == CALL)
     ps = sum(l["score"] for l in legs if l["side"] == PUT)
     leader = CALL if cs > ps else PUT if ps > cs else None
-    reg = leg_gex_regime(inp, leader)
+    non_charm = any(l["side"] == leader and l["score"] > 0 and l["name"] != "charm_hedge_flow" for l in legs)
+    reg = leg_gex_regime(inp, leader, non_charm)
     legs.append(reg)
     if reg["side"] == CALL:
         cs += reg["score"]
