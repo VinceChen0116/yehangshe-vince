@@ -19,3 +19,10 @@
 20:30:54 [INFO] tail.engine: 【倾向】PUT CALL 20 / PUT 65 证据分歧  | strike_bias=PUT40；charm_hedge_flow=CALL20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
 20:33:26 [INFO] tail.engine: 【倾向】PUT CALL 0 / PUT 85  | strike_bias=PUT40；charm_hedge_flow=PUT20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
 20:35:01 [INFO] tail.engine: 【健康】现价 6920.44 报价延迟 4s 成交桶延迟 121s 现用合约 40 方向已知 0.858 信号 1 配额剩 49567 今日用 1166 降级 无
+20:36:29 [INFO] tail.engine: 【倾向】PUT CALL 20 / PUT 55 证据分歧  | strike_bias=PUT40；charm_hedge_flow=CALL20；key_level=弃权；skew_rr25=弃权；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
+20:36:59 [INFO] tail.engine: 【倾向】中性 CALL 35 / PUT 55 证据分歧 分差 20 < 21 | strike_bias=PUT40；charm_hedge_flow=CALL20；key_level=弃权；skew_rr25=弃权；breakout_integrity=CALL15；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
+20:37:30 [INFO] tail.engine: 【倾向】PUT CALL 35 / PUT 65 证据分歧  | strike_bias=PUT40；charm_hedge_flow=CALL20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=CALL15；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
+20:38:30 [INFO] tail.engine: 【倾向】PUT CALL 0 / PUT 85  | strike_bias=PUT40；charm_hedge_flow=PUT20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
+20:39:00 [INFO] tail.engine: 【倾向】PUT CALL 15 / PUT 85 证据分歧  | strike_bias=PUT40；charm_hedge_flow=PUT20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=CALL15；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
+20:39:31 [INFO] tail.engine: 【倾向】PUT CALL 35 / PUT 65 证据分歧  | strike_bias=PUT40；charm_hedge_flow=CALL20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=CALL15；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
+20:40:00 [INFO] tail.engine: 【健康】现价 6931.14 报价延迟 29s 成交桶延迟 120s 现用合约 40 方向已知 0.858 信号 3 配额剩 49279 今日用 1454 降级 无
