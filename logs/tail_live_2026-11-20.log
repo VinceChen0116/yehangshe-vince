@@ -55,3 +55,4 @@
 20:59:50 [INFO] tail.engine: 【倾向】中性 CALL 50.0 / PUT 50 证据分歧 分差 0 < 21 | strike_bias=PUT40；charm_hedge_flow=CALL10.0；key_level=弃权；skew_rr25=PUT10；breakout_integrity=CALL15；rejection_reversal=CALL25；gex_regime=-0；atm_flow_5m=PUT0
 21:00:00 [INFO] tail.engine: 【倾向】待命 CALL 0 / PUT 0 不在美东 15:30–16:00 | 
 21:00:00 [INFO] tail.engine: 【健康】现价 6898.37 报价延迟 7s 成交桶延迟 120s 现用合约 40 方向已知 0.883 信号 26 配额剩 47470 今日用 3263 降级 无
+21:01:01 [INFO] tail.engine: 收盘总结已推送，退出（--exit-after-close）
