@@ -32,3 +32,5 @@
 20:44:05 [INFO] tail.engine: 【倾向】PUT CALL 0 / PUT 85  | strike_bias=PUT40；charm_hedge_flow=PUT20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
 20:45:00 [INFO] tail.engine: 【健康】现价 6922.59 报价延迟 24s 成交桶延迟 120s 现用合约 40 方向已知 0.862 信号 3 配额剩 48916 今日用 1817 降级 无
 20:45:07 [INFO] tail.engine: 【倾向】PUT CALL 10.0 / PUT 65 证据分歧  | strike_bias=PUT40；charm_hedge_flow=CALL10.0；key_level=弃权；skew_rr25=PUT10；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=PUT15；atm_flow_5m=PUT0
+20:45:37 [INFO] tail.engine: 【倾向】CALL CALL 40.0 / PUT 10 证据分歧  | strike_bias=弃权；charm_hedge_flow=CALL10.0；key_level=弃权；skew_rr25=PUT10；breakout_integrity=CALL15；rejection_reversal=弃权；gex_regime=CALL15；atm_flow_5m=弃权
+20:46:07 [INFO] tail.engine: 【倾向】CALL CALL 40.0 / PUT 0  | strike_bias=弃权；charm_hedge_flow=CALL10.0；key_level=弃权；skew_rr25=弃权；breakout_integrity=CALL15；rejection_reversal=弃权；gex_regime=CALL15；atm_flow_5m=CALL0
