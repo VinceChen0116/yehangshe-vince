@@ -63,6 +63,8 @@ class TestParse(unittest.TestCase):
                               {"contract_symbol": "SPXW261117C07340000", "strike_usd": 7340, "right": "C", "bid_usd": 4.1,
                                "ask_usd": 4.3, "quoted_at": "2026-11-17T20:50:01Z", "open_interest": 8,
                                "implied_vol_pct": 0.323, "delta": 0.5, "gamma": 0.0032}]}, "_meta": {"notice": "stale"}}
+        chain["data"]["contracts"].append(dict(chain["data"]["contracts"][0], contract_symbol="SPX261117C07340000",
+                                               bid_usd=250.0, ask_usd=253.0))   # 月度 AM 结算合约：丢掉
         s = parse_chain(chain, et("15:50"), DAY)
         self.assertEqual(len(s.contracts), 1)
         c = s.contracts[0]

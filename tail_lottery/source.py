@@ -146,6 +146,10 @@ def parse_chain(payload: dict, fetched_at: dt.datetime, expiration: dt.date) -> 
         k, r = _f(x.get("strike_usd")), x.get("right")
         if k is None or r not in ("C", "P"):
             continue
+        # 只要 SPXW（PM 结算）。月度到期日（第三个周五）链里还有 SPX 根的 AM 结算合约：当天开盘已结算，
+        # 报价停在前一天收盘，混进来会污染现价 / GEX / IV 并重复计算 OI（2026-11-20 实测）
+        if not _strip_o(x.get("contract_symbol") or "").startswith("SPXW"):
+            continue
         oi = x.get("open_interest")
         cs.append(Contract(symbol=_strip_o(x.get("contract_symbol") or ""), strike=k, right=r,
                            bid=_f(x.get("bid_usd")), ask=_f(x.get("ask_usd")), quoted_at=_ts(x.get("quoted_at")),
