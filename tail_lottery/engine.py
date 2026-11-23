@@ -350,6 +350,7 @@ class Engine:
         if key != getattr(self, "_last_log_key", None):
             self._last_log_key = key
             legs = "；".join(f"{l['name']}={'弃权' if l.get('abstain') else (l.get('side') or '-') + str(l.get('score'))}"
+                            + (f"（{l.get('abstain') or l.get('note')}）" if l['name'] == "gex_regime" else "")
                             for l in pb.get("legs", []))
             log.info("【倾向】%s CALL %s / PUT %s%s %s | %s", pb.get("label"), pb.get("call_score"), pb.get("put_score"),
                      " 证据分歧" if pb.get("conflict") else "", pb.get("reason") or "", legs)
@@ -360,9 +361,10 @@ class Engine:
             lag = None if qa is None else int((now - qa).total_seconds())
             last_b = next(reversed(self.store.buckets)) if self.store.buckets else None
             blag = None if last_b is None else int((now - last_b).total_seconds())
-            log.info("【健康】现价 %s 报价延迟 %ss 成交桶延迟 %ss 现用合约 %s 方向已知 %s 信号 %d 配额剩 %s 今日用 %s 降级 %s",
+            log.info("【健康】现价 %s 报价延迟 %ss 成交桶延迟 %ss 现用合约 %s 方向已知 %s 信号 %d 配额剩 %s 今日用 %s 本进程用 %s 推送 %d 降级 %s",
                      status.get("spot"), lag, blag, status.get("contracts"), status.get("direction_known_share"),
                      len(self.store.signals), status.get("quota_remaining"), status.get("quota_used_today"),
+                     getattr(self.source, "units", None), getattr(self, "push_count", 0),
                      "；".join(status.get("degraded") or []) or "无")
 
     def _check_pin(self, day):
@@ -449,6 +451,9 @@ class Engine:
         self.last_verdict_pushed = v
         if self.n and self.push_enabled:
             self.n.send(embeds=[playbook_embed(pb, self.store, now, pushed_as=v)])
+            self.push_count = getattr(self, "push_count", 0) + 1
+            log.info("【推送】%s（原始 %s，CALL %s / PUT %s%s）", P.LABEL.get(v, v), pb.get("label"), pb.get("call_score"),
+                     pb.get("put_score"), "，证据分歧" if pb.get("conflict") else "")
 
     def _push_close(self):
         pb = self.playbook or {}

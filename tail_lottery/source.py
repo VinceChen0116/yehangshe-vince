@@ -207,6 +207,7 @@ class YHSSource:
 
     def __init__(self, client):
         self.client = client
+        self.units = 0   # 本进程自己消耗的配额（估算：普通请求 1，实时报价按返回的报价数）
 
     @property
     def quota_remaining(self):
@@ -215,7 +216,9 @@ class YHSSource:
     def _get(self, path, params):
         from yhs_client import YHSApiError
         try:
-            return self.client.get(path, params)
+            r = self.client.get(path, params)
+            self.units += 1
+            return r
         except YHSApiError as e:
             raise SourceError(str(e))
 
@@ -233,7 +236,9 @@ class YHSSource:
         syms = [x for x in symbols if x]
         for i in range(0, len(syms), self.QUOTES_MAX):
             p = self._get(self.QUOTES_PATH, {"contracts": ",".join(syms[i:i + self.QUOTES_MAX])})
-            for x in (((p or {}).get("data") or {}).get("quotes") or []):
+            got = (((p or {}).get("data") or {}).get("quotes") or [])
+            self.units += max(0, len(got) - 1)   # _get 已计 1
+            for x in got:
                 out[_strip_o(x.get("contract_symbol") or "")] = (_f(x.get("bid_usd")), _f(x.get("ask_usd")),
                                                                   _ts(x.get("quoted_at")))
         return out
@@ -290,6 +295,7 @@ class FakeSource:
         self.big_prints = big_prints or []
         self.error_fn = error_fn
         self.calls = 0
+        self.units = 0
         self.quote_calls = []
         self.quota_remaining = 99_999
 
