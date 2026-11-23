@@ -400,3 +400,17 @@ python3 archive.py --dry-run                 # 只看计划
   11/17 跑了一半的存档被停（未提交，在存档会话的本地 git stash）。11/17 起的 Heatmap 不在本地存档，回放需要时按天从服务端拉（10 单位 / 页）。
 * 实盘不受影响：实盘用 heatmap snapshot（1 单位）和 options.quote(s)（每份报价 1 单位）。不要换成 heatmap live（10 单位）。
 * 新增的期权链 OHLC / 最后成交 / 市场估值只给当前或未来到期的最新值，不能用于历史回放。
+
+## P. 尾盘彩票精简版观察台（tail_live.py，2026-11-17 新增，未在盘中跑过）
+* 来源：用户给的「尾盘彩票精简版：给开发 agent 的任务说明」（按券商推送写的）。11/17 用户定：**只推倾向不开仓**、
+  按夜航社**分钟粒度**做、**网页 + Discord**、现货用**期权平价反推**。
+* 代码 `tail_lottery/`（适配层 source.py、模块 modules.py、playbook.py、调度 engine.py、网页 web.py + static/index.html），
+  入口 `python3 tail_live.py`（交易日 14:58–16:01 ET 拉数据，网页 http://127.0.0.1:8765，倾向变化推 Discord）；`--demo` 假行情 0 配额。
+* 数据：chain-snapshot/SPX?expiration=今天&limit=1000（30 秒 1 次，1 单位）；flow/tickers/SPX/bucket window=1m summary + top_contracts cohort=zero_dte
+  （每分钟约 2 单位）；flow/trades **tickers=SPXW**（SPX 加 expirations 返回空）min_premium 5 万（每分钟约 1 单位）。估计 300–400 单位 / 天。
+* 测试：`python3 -m unittest tests.test_tail_lottery -v`（48 个，0 配额）。能力核对表、与说明的差异、局限、未验证事项见 `tail_lottery/README.md`。
+* 11-18 盘中实测：chain-snapshot 落后约 13 分钟 → 改为只取行权价 / OI；现价 / IV / gamma 用 /options/quotes 实时报价本地算
+  （30 秒 6 个、15:25 起每分钟 40 个，约 2,300 配额 / 天）。1 分钟成交桶约 50 秒内可用。
+* 11-18 用户定：11-19 由云端会话跑（`python3 tail_live.py --exit-after-close`，Discord 推送照常），跑完写运行报告推 Discord。
+* 11-19 首次云端完整运行，报告 `reports/tail_live_2026-11-19.md`。用户定（11-20 起）：gex_regime 只在领先方有非 Charm 证据时加分；
+  有证据分歧的 CALL / PUT 推送按中性；钉住蝴蝶等 15:10 完整轮后再判；完整轮 15:28 起、之前现价 60 秒一次。11-20 继续云端跑（定时唤醒 14:45 ET）。
