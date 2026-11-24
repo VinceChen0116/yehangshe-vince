@@ -1,0 +1,748 @@
+14:14:26 [INFO] yhs.main: 实盘监控启动（模拟盘）。API Key=sk_live_…sQTV，节奏：早盘/尾盘 5 分钟、午间 12 分钟，限频 50 RPM / 间隔 1.2s / 并发 3
+14:14:27 [INFO] yhs.main: discover：账户=已识别，本月剩余配额=91445（免费端点，0 配额）
+14:14:28 [INFO] yhs.main: 等待至 11-24 09:25 ET（等待拉取当日标的池），约 11 分钟
+14:25:00 [INFO] yhs.main: ==============================================================================
+14:25:00 [INFO] yhs.main: 交易日 2026-11-24 开始（标的池模式：both）
+14:25:00 [INFO] yhs.detector: 【阶段1】拉取当日期权成交量 Top150 榜单（计费 1 次）…
+14:25:00 [INFO] yhs.detector: 【阶段1】榜单共 150 行，截取成交量前 100 名
+14:25:00 [INFO] yhs.detector: 【阶段1】剔除：指数 5、非白名单 ETF 26、量能不足 0、PCR 未极端 0 → 入池 69 只（股价 ≥ $20 门槛将在首次 Heatmap 拉取时用 spot_usd 校验，零额外配额）
+14:25:00 [INFO] yhs.detector:    入池 SNDK   偏向=NEUTRAL 评分=3.00  OI增幅=654.3%
+14:25:00 [INFO] yhs.detector:    入池 EQT    偏向=BEAR    评分=3.00  PCR=13.63偏空
+14:25:00 [INFO] yhs.detector:    入池 EXE    偏向=BEAR    评分=3.00  PCR=32.68偏空
+14:25:00 [INFO] yhs.detector:    入池 WU     偏向=BULL    评分=2.75  PCR=0.02偏多
+14:25:00 [INFO] yhs.detector:    入池 PCG    偏向=BULL    评分=2.68  PCR=0.04偏多
+14:25:00 [INFO] yhs.detector:    入池 CMCSA  偏向=BULL    评分=2.62  PCR=0.06偏多
+14:25:00 [INFO] yhs.detector:    入池 RIOT   偏向=BULL    评分=2.59  PCR=0.07偏多
+14:25:00 [INFO] yhs.detector:    入池 JNJ    偏向=BULL    评分=2.52  PCR=0.09偏多
+14:25:00 [INFO] yhs.detector:    入池 AMC    偏向=BULL    评分=2.52  PCR=0.09偏多
+14:25:00 [INFO] yhs.detector:    入池 GME    偏向=BULL    评分=2.51  PCR=0.10偏多
+14:25:00 [INFO] yhs.detector:    入池 ONDS   偏向=BULL    评分=2.20  PCR=0.20偏多
+14:25:00 [INFO] yhs.detector:    入池 F      偏向=BULL    评分=2.16  PCR=0.21偏多
+14:25:00 [INFO] yhs.detector:    入池 APLD   偏向=BULL    评分=2.00  PCR=0.27偏多
+14:25:00 [INFO] yhs.detector:    入池 GOOG   偏向=BULL    评分=1.94  PCR=0.29偏多
+14:25:00 [INFO] yhs.detector:    入池 SOFI   偏向=BULL    评分=1.93  PCR=0.29偏多
+14:25:00 [INFO] yhs.detector:    入池 NOK    偏向=BULL    评分=1.93  PCR=0.29偏多
+14:25:00 [INFO] yhs.detector:    入池 BABA   偏向=BULL    评分=1.91  PCR=0.30偏多
+14:25:00 [INFO] yhs.detector:    入池 NKE    偏向=BULL    评分=1.88  PCR=0.31偏多
+14:25:00 [INFO] yhs.detector:    入池 NFLX   偏向=BULL    评分=1.86  PCR=0.31偏多
+14:25:00 [INFO] yhs.detector:    入池 WULF   偏向=BULL    评分=1.86  PCR=0.31偏多
+14:25:00 [INFO] yhs.detector:    入池 CIFR   偏向=BULL    评分=1.82  PCR=0.33偏多
+14:25:00 [INFO] yhs.detector:    入池 TSM    偏向=BULL    评分=1.77  PCR=0.34偏多
+14:25:00 [INFO] yhs.detector:    入池 SMCI   偏向=BULL    评分=1.75  PCR=0.35偏多
+14:25:00 [INFO] yhs.detector:    入池 RKLB   偏向=BULL    评分=1.67  PCR=0.38偏多
+14:25:00 [INFO] yhs.detector:    入池 BMNR   偏向=BULL    评分=1.64  PCR=0.39偏多
+14:25:00 [INFO] yhs.detector:    入池 AMZN   偏向=BULL    评分=1.39  PCR=0.47偏多
+14:25:00 [INFO] yhs.detector:    入池 RIVN   偏向=BULL    评分=1.34  PCR=0.49偏多
+14:25:00 [INFO] yhs.detector:    入池 NOW    偏向=BULL    评分=1.28  PCR=0.51偏多
+14:25:00 [INFO] yhs.detector:    入池 IREN   偏向=BULL    评分=1.28  PCR=0.51偏多
+14:25:00 [INFO] yhs.detector:    入池 GOOGL  偏向=BULL    评分=1.25  PCR=0.52偏多
+14:25:00 [INFO] yhs.detector:    入池 INTC   偏向=BULL    评分=1.25  PCR=0.52偏多
+14:25:00 [INFO] yhs.detector:    入池 META   偏向=BULL    评分=1.18  PCR=0.54偏多
+14:25:00 [INFO] yhs.detector:    入池 MARA   偏向=BULL    评分=1.16  PCR=0.55偏多
+14:25:00 [INFO] yhs.detector:    入池 MRVL   偏向=BULL    评分=1.14  PCR=0.55偏多
+14:25:00 [INFO] yhs.detector:    入池 HPE    偏向=BULL    评分=1.07  PCR=0.58偏多
+14:25:00 [INFO] yhs.detector:    入池 HOOD   偏向=BULL    评分=1.06  PCR=0.58偏多
+14:25:00 [INFO] yhs.detector:    入池 ORCL   偏向=BULL    评分=1.06  PCR=0.58偏多
+14:25:00 [INFO] yhs.detector:    入池 BAC    偏向=BULL    评分=1.04  PCR=0.59偏多
+14:25:00 [INFO] yhs.detector:    入池 NBIS   偏向=BULL    评分=1.03  PCR=0.59偏多
+14:25:00 [INFO] yhs.detector:    入池 SPY    偏向=NEUTRAL 评分=0.84  Vol/OI=0.84
+14:25:00 [INFO] yhs.detector:    入池 NVDA   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 QQQ    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 TSLA   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 MU     偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 AAPL   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 AMD    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 TQQQ   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 TLT    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 ANT    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 SOXL   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 CRWV   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 AVGO   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 MSFT   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 MSTR   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 PLTR   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 CRWD   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 SKHY   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 UBER   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 BE     偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 WMT    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 BA     偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 ASTS   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 COIN   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 DELL   偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 UNH    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 AAL    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 XOM    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 JPM    偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.detector:    入池 C      偏向=NEUTRAL 评分=0.00  
+14:25:00 [INFO] yhs.main: 【预算守卫】剩余配额 91445，本月剩余交易日 5，日预算约 17989 次 → 今日最多监控 196 只（上限 60）
+14:25:00 [INFO] yhs.main: 账户 B 监控 60 只：AAL, AAPL, AMC, AMD, AMZN, ANT, APLD, ASTS, AVGO, BA, BABA, BAC, BE, BMNR, CMCSA, COIN, CRWD, CRWV, DELL, GME, GOOG, GOOGL, HOOD, HPE, INTC, IREN, MARA, META, MRVL, MSFT, MSTR, MU, NBIS, NFLX, NKE, NOK, NOW, NVDA, ONDS, ORCL, PCG, PLTR, QQQ, RIOT, RIVN, RKLB, SKHY, SMCI, SNDK, SOFI, SOXL, SPY, TLT, TQQQ, TSLA, TSM, UBER, UNH, WMT, WULF
+14:25:00 [INFO] yhs.main: 账户 L 监控 60 只：AAL, AAPL, AMC, AMD, AMZN, ANT, APLD, ASTS, AVGO, BA, BABA, BAC, BE, BMNR, CMCSA, COIN, CRWD, CRWV, DELL, GME, GOOG, GOOGL, HOOD, HPE, INTC, IREN, MARA, META, MRVL, MSFT, MSTR, MU, NBIS, NFLX, NKE, NOK, NOW, NVDA, ONDS, ORCL, PCG, PLTR, QQQ, RIOT, RIVN, RKLB, SKHY, SMCI, SNDK, SOFI, SOXL, SPY, TLT, TQQQ, TSLA, TSM, UBER, UNH, WMT, WULF
+14:25:01 [INFO] yhs.main: 等待至 11-24 09:35 ET（等待开盘后第一个 Heatmap 快照），约 10 分钟
+14:35:35 [INFO] yhs.detector: 【阶段2】AMZN 识别到跳板(看涨)结构：现货 252.59，正节点 252.50（距 0.04%），负节点 255.00，到期 2026-11-25
+14:35:38 [WARNING] yhs.main: ANT 不在 Heatmap 服务范围（404），移出标的池
+14:35:44 [INFO] yhs.detector: 【阶段1·股价门槛】IREN 现价 $13.64 < $20.00，移出标的池
+14:35:49 [INFO] yhs.detector: 【阶段1·股价门槛】RIOT 现价 $16.69 < $20.00，移出标的池
+14:35:50 [INFO] yhs.detector: 【阶段1·股价门槛】SOFI 现价 $13.01 < $20.00，移出标的池
+14:35:57 [INFO] yhs.detector: 【阶段1·股价门槛】MARA 现价 $5.43 < $20.00，移出标的池
+14:36:02 [WARNING] yhs.main: PCG 不在 Heatmap 服务范围（404），移出标的池
+14:36:07 [INFO] yhs.detector: 【阶段1·股价门槛】APLD 现价 $13.08 < $20.00，移出标的池
+14:36:10 [INFO] yhs.detector: 【阶段1·股价门槛】RIVN 现价 $11.30 < $20.00，移出标的池
+14:36:12 [INFO] yhs.detector: 【阶段1·股价门槛】WULF 现价 $10.51 < $20.00，移出标的池
+14:36:13 [INFO] yhs.detector: 【阶段1·股价门槛】NOK 现价 $7.36 < $20.00，移出标的池
+14:36:18 [WARNING] yhs.main: AMC 不在 Heatmap 服务范围（404），移出标的池
+14:36:21 [INFO] yhs.detector: 【阶段1·股价门槛】BMNR 现价 $13.97 < $20.00，移出标的池
+14:36:34 [INFO] yhs.detector: 【阶段1·股价门槛】ONDS 现价 $3.97 < $20.00，移出标的池
+14:36:37 [INFO] yhs.detector: 【阶段1·股价门槛】AAL 现价 $12.55 < $20.00，移出标的池
+14:36:38 [INFO] yhs.main: [09:36:38] 本轮完成：B 持仓 0；L 持仓 0；监控 57 只，配额剩余 91302；下一轮 09:40:25
+14:40:25 [INFO] yhs.detector: 【阶段2】SPY 识别到跳板(看涨)结构：现货 714.38，正节点 713.00（距 0.19%），负节点 715.00，到期 2026-11-24
+14:40:55 [INFO] yhs.detector: 【阶段2】GME 识别到跳板(看涨)结构：现货 27.59，正节点 27.50（距 0.33%），负节点 32.00，到期 2026-11-27
+14:41:03 [INFO] yhs.detector: 【阶段2】HPE 识别到跳板(看涨)结构：现货 40.36，正节点 40.00（距 0.89%），负节点 42.00，到期 2026-11-27
+14:41:19 [INFO] yhs.main: [09:41:19] 本轮完成：B 持仓 0；L 持仓 0；监控 46 只，配额剩余 91241；下一轮 09:45:25
+14:45:25 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:45:30 [INFO] yhs.detector: 【阶段2】MU 识别到悬崖(看跌)结构：现货 652.49，正节点 652.50（距 0.00%），负节点 642.50，到期 2026-11-25
+14:45:30 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+14:45:31 [INFO] yhs.detector: 【阶段2】AAPL 识别到跳板(看涨)结构：现货 352.26，正节点 350.00（距 0.65%），负节点 355.00，到期 2026-11-25
+14:45:31 [INFO] yhs.detector: 【阶段3·跳过】AAPL BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:45:40 [INFO] yhs.detector: 【阶段2】GOOGL 识别到悬崖(看跌)结构：现货 278.29，正节点 280.00（距 0.61%），负节点 272.50，到期 2026-11-25
+14:45:40 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+14:45:57 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:46:08 [INFO] yhs.detector: 【阶段2】WMT 识别到跳板(看涨)结构：现货 131.22，正节点 131.00（距 0.17%），负节点 132.00，到期 2026-11-27
+14:46:08 [INFO] yhs.detector: 【阶段3·跳过】WMT BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:46:09 [INFO] yhs.detector: 【阶段2】BA 识别到悬崖(看跌)结构：现货 163.92，正节点 165.00（距 0.65%），负节点 155.00，到期 2026-11-27
+14:46:09 [INFO] yhs.detector: 【阶段3·跳过】BA BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+14:46:22 [INFO] yhs.trader: 【Flow 记录】WMT 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Call大单
+14:46:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0001 WMT BUY_CALL | 行权价 131.00 到期 2026-11-27 | 现货 131.22 | 中间价 1.410 → 成本 1.450（按 ask 成交（bid 1.370 / ask 1.450）） | δ=0.529 γ=0.1239 | 定价来源=quote | 目标加速位 132.00
+14:46:26 [INFO] yhs.trader: 【Flow 记录】GME 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Call大单
+14:46:28 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0002 GME BUY_CALL | 行权价 27.50 到期 2026-11-27 | 现货 27.53 | 中间价 0.570 → 成本 0.590（按 ask 成交（bid 0.550 / ask 0.590）） | δ=0.524 γ=0.2914 | 定价来源=quote | 目标加速位 32.00
+14:46:28 [INFO] yhs.trader: 【排序】09:46 本轮信号 7 个 → 开仓 WMT(0.61)、GME(0.60)；未开：GOOGL(0.48<门槛)、BA(0.46<门槛)、AAPL(0.45<门槛)、SPY(0.42<门槛)、MU(0.42<门槛)
+14:46:28 [INFO] yhs.main: [09:46:28] 本轮完成：B 持仓 0；L 持仓 2；监控 46 只，配额剩余 91178；下一轮 09:50:25
+14:50:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:50:32 [INFO] yhs.detector: 【阶段3·跳过】AAPL BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:50:36 [INFO] yhs.detector: 【阶段2】AMZN 识别到跳板(看涨)结构：现货 253.99，正节点 252.50（距 0.59%），负节点 255.00，到期 2026-11-25
+14:50:36 [INFO] yhs.detector: 【阶段3·跳过】AMZN BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:50:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+14:51:04 [INFO] yhs.detector: 【阶段2】HPE 识别到跳板(看涨)结构：现货 41.24，正节点 41.00（距 0.58%），负节点 42.00，到期 2026-11-27
+14:51:04 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:51:08 [INFO] yhs.detector: 【阶段3·跳过】BA BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+14:51:21 [INFO] yhs.trader: 【Flow 记录】GOOGL 无大单：O:GOOGL261127P00275000 当日量 468 < OI 3,864（疑似平仓）
+14:51:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0003 GOOGL BUY_PUT | 行权价 280.00 到期 2026-11-25 | 现货 278.91 | 中间价 3.500 → 成本 3.650（按 ask 成交（bid 3.350 / ask 3.650）） | δ=0.502 γ=0.0442 | 定价来源=quote | 目标加速位 272.50
+14:51:25 [INFO] yhs.trader: 【Flow 记录】AAPL 有大单：Ask 侧大单 $91,314，合约当日量 12,471 ≥ OI 2,601（日内主动建仓）
+14:51:27 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0004 AAPL BUY_CALL | 行权价 352.50 到期 2026-11-25 | 现货 352.92 | 中间价 3.775 → 成本 3.850（按 ask 成交（bid 3.700 / ask 3.850）） | δ=0.477 γ=0.0505 | 定价来源=quote | 目标加速位 360.00
+14:51:28 [INFO] yhs.trader: 【排序】09:51 本轮信号 6 个 → 开仓 GOOGL(0.53)、AAPL(0.53)；未开：SPY(0.44<门槛)、AMZN(0.43<门槛)、HPE(0.36<门槛)、BA(0.32<门槛)
+14:51:28 [INFO] yhs.main: [09:51:28] 本轮完成：B 持仓 0；L 持仓 4；监控 46 只，配额剩余 91105；下一轮 09:55:25
+14:55:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:55:36 [INFO] yhs.detector: 【阶段3·跳过】AMZN BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:55:45 [INFO] yhs.detector: 【阶段2】AVGO 识别到跳板(看涨)结构：现货 303.12，正节点 302.50（距 0.21%），负节点 340.00，到期 2026-11-25
+14:55:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+14:56:08 [INFO] yhs.detector: 【阶段3·跳过】BA BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+14:56:22 [INFO] yhs.trader: 【Flow 记录】SPY 有大单：Ask 侧大单 $98,699，合约当日量 28,528 ≥ OI 596（日内主动建仓）
+14:56:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0005 SPY BUY_CALL | 行权价 721.00 到期 2026-11-24 | 现货 719.10 | 中间价 2.270 → 成本 2.280（按 ask 成交（bid 2.260 / ask 2.280）） | δ=0.343 γ=0.0410 | 定价来源=quote | 目标加速位 723.00
+14:56:25 [INFO] yhs.trader: 【排序】09:56 本轮信号 4 个 → 开仓 SPY(0.55)；未开：AMZN(0.47<门槛)、AVGO(0.42<门槛)、BA(0.32<门槛)
+14:56:25 [INFO] yhs.main: [09:56:25] 本轮完成：B 持仓 0；L 持仓 5；监控 46 只，配额剩余 91025；下一轮 10:00:25
+15:00:26 [INFO] yhs.trader:    ⤴ SPY 峰值浮盈 42.1% ≥ 35%，止损上移至保本 0%
+15:00:29 [INFO] yhs.detector: 【阶段2】QQQ 识别到悬崖(看跌)结构：现货 642.31，正节点 648.00（距 0.88%），负节点 641.00，到期 2026-11-24
+15:00:29 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:00:42 [INFO] yhs.detector: 【阶段3·跳过】AMZN BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:00:57 [INFO] yhs.detector: 【阶段2】ORCL 识别到跳板(看涨)结构：现货 111.41，正节点 111.00（距 0.37%），负节点 115.00，到期 2026-11-27
+15:00:57 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:01:03 [INFO] yhs.baseline: 【baseline·信号】GOOG SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 94 | Call 墙 282.5(+2.1M) 跑道 1.50% | 环境 TREND_DRIVER · 节点 GROWING · 墙体 STABLE · 共振 1 | 现货止损 276.09 目标 282.50
+15:01:27 [INFO] yhs.trader: 【Flow 记录】GOOG 无大单：O:GOOG270416C00300000 当日量 31 < OI 1,646（疑似平仓）
+15:01:30 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0001 GOOG BUY_CALL | 行权价 277.50 到期 2026-11-27 | 现货 278.32 | 中间价 5.100 → 成本 5.200（按 ask 成交（bid 5.000 / ask 5.200）） | δ=0.544 γ=0.0338 | 定价来源=quote | 目标加速位 282.50
+15:01:30 [INFO] yhs.baseline: 【baseline·开仓依据】P20261124-0001 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 94 | Call 墙 282.5(+2.1M) 跑道 1.50% | 环境 TREND_DRIVER · 节点 GROWING · 墙体 STABLE · 共振 1 | 现货止损 276.09 目标 282.50
+15:01:31 [INFO] yhs.baseline: 【baseline·排序】10:01 本轮信号 1 个 → 开仓 GOOG(94)
+15:01:31 [INFO] yhs.trader: 【排序】10:01 本轮信号 3 个 → 开仓 无；未开：ORCL(0.48<门槛)、AMZN(0.40<门槛)、QQQ(0.30<门槛)
+15:01:31 [INFO] yhs.main: [10:01:31] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 90940；下一轮 10:05:25
+15:05:31 [INFO] yhs.detector: 【阶段2】MU 识别到悬崖(看跌)结构：现货 651.18，正节点 652.50（距 0.20%），负节点 590.00，到期 2026-11-25
+15:05:31 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:05:51 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:06:03 [INFO] yhs.baseline: 【baseline·信号】UBER SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 100 | Call 墙 69(+0.8M) 跑道 5.21% | 环境 TREND_DRIVER · 节点 GROWING · 墙体 STABLE · 共振 2 | 现货止损 65.06 目标 69.00
+15:06:21 [INFO] yhs.trader: 【Flow 记录】UBER 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Call大单
+15:06:24 [INFO] yhs.trader: 【阶段4·放弃】UBER O:UBER261127C00065000 买卖价差 8%（bid 1.20 / ask 1.30）> 8%，不开仓
+15:06:24 [INFO] yhs.baseline: 【baseline·排序】10:06 本轮信号 1 个 → 开仓 无
+15:06:24 [INFO] yhs.trader: 【排序】10:06 本轮信号 2 个 → 开仓 无；未开：ORCL(0.41<门槛)、MU(0.32<门槛)
+15:06:24 [INFO] yhs.main: [10:06:24] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 90846；下一轮 10:10:25
+15:06:25 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0005 SPY BUY_CALL | 原因 保本止损 +3% | 现货 719.10→720.36 | 期权 2.280→2.180 | ROI -4.4% | 峰值 +42.1% | 最大逆行 -4.4% | 盈亏 $-30.00
+15:10:36 [INFO] yhs.detector: 【阶段2】AMZN 识别到跳板(看涨)结构：现货 254.97，正节点 252.50（距 0.98%），负节点 255.00，到期 2026-11-25
+15:10:36 [INFO] yhs.detector: 【阶段3·跳过】AMZN BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:10:45 [INFO] yhs.detector: 【阶段2】AVGO 识别到跳板(看涨)结构：现货 305.14，正节点 302.50（距 0.87%），负节点 325.00，到期 2026-11-25
+15:10:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:11:20 [INFO] yhs.trader: 【排序】10:11 本轮信号 2 个 → 开仓 无；未开：AVGO(0.38<门槛)、AMZN(0.36<门槛)
+15:11:20 [INFO] yhs.main: [10:11:20] 本轮完成：B 持仓 1；L 持仓 4；监控 46 只，配额剩余 90758；下一轮 10:15:25
+15:15:30 [INFO] yhs.detector: 【阶段2】TSLA 识别到跳板(看涨)结构：现货 383.07，正节点 380.00（距 0.81%），负节点 387.50，到期 2026-11-25
+15:15:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:15:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:15:51 [INFO] yhs.detector: 【阶段2】ORCL 识别到跳板(看涨)结构：现货 111.91，正节点 111.00（距 0.82%），负节点 115.00，到期 2026-11-27
+15:15:51 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:16:03 [INFO] yhs.baseline: 【baseline·信号】UBER SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 100 | Call 墙 69(+0.9M) 跑道 5.08% | 环境 TREND_DRIVER · 节点 GROWING · 墙体 STABLE · 共振 2 | 现货止损 65.14 目标 69.00
+15:16:07 [INFO] yhs.trader:    ⤴ WMT 峰值浮盈 41.4% ≥ 35%，止损上移至保本 0%
+15:16:21 [INFO] yhs.trader: 【Flow 记录】UBER 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Call大单
+15:16:24 [INFO] yhs.trader: 【阶段4·放弃】UBER O:UBER261127C00065000 买卖价差 8%（bid 1.29 / ask 1.40）> 8%，不开仓
+15:16:24 [INFO] yhs.baseline: 【baseline·排序】10:16 本轮信号 1 个 → 开仓 无
+15:16:24 [INFO] yhs.trader: 【排序】10:16 本轮信号 3 个 → 开仓 无；未开：TSLA(0.49<门槛)、ORCL(0.40<门槛)、AVGO(0.37<门槛)
+15:16:24 [INFO] yhs.main: [10:16:24] 本轮完成：B 持仓 1；L 持仓 4；监控 46 只，配额剩余 90656；下一轮 10:20:25
+15:20:36 [INFO] yhs.detector: 【阶段2】AMZN 识别到跳板(看涨)结构：现货 254.67，正节点 252.50（距 0.86%），负节点 255.00，到期 2026-11-25
+15:20:36 [INFO] yhs.detector: 【阶段3·跳过】AMZN BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:20:44 [INFO] yhs.detector: 【阶段2】META 识别到跳板(看涨)结构：现货 595.52，正节点 590.00（距 0.94%），负节点 612.50，到期 2026-11-25
+15:20:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:20:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:20:56 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0002 GME BUY_CALL | 原因 标的破节点止损 | 现货 27.53→27.26 | 期权 0.590→0.410 | ROI -30.5% | 峰值 +1.7% | 最大逆行 -32.2% | 盈亏 $-198.00
+15:21:01 [INFO] yhs.detector: 【阶段2】SKHY 识别到跳板(看涨)结构：现货 113.15，正节点 113.00（距 0.13%），负节点 118.00，到期 2026-11-27
+15:21:01 [INFO] yhs.detector: 【阶段3·跳过】SKHY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:21:18 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 92 | 天花板 49(+1.1M) 距 0.93% · 燃料 48.5(-1.0M) · 路径负 1.0M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.16% · R:R 1.76 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+15:21:21 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+15:21:24 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 14%（bid 0.46 / ask 0.53）> 8%，不开仓
+15:21:24 [INFO] yhs.baseline: 【baseline·排序】10:21 本轮信号 1 个 → 开仓 无
+15:21:25 [INFO] yhs.trader: 【Flow 记录】SKHY 无大单：O:SKHY270219C00115000 当日量 116 < OI 229（疑似平仓）
+15:21:28 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0006 SKHY BUY_CALL | 行权价 113.00 到期 2026-11-27 | 现货 113.15 | 中间价 5.225 → 成本 6.250（按 ask 成交（bid 4.200 / ask 6.250）） | δ=0.642 γ=0.0311 | 定价来源=quote | 目标加速位 118.00
+15:21:28 [INFO] yhs.trader: 【排序】10:21 本轮信号 4 个 → 开仓 SKHY(0.59)；未开：AVGO(0.45<门槛)、AMZN(0.38<门槛)、META(0.28<门槛)
+15:21:28 [INFO] yhs.main: [10:21:28] 本轮完成：B 持仓 1；L 持仓 4；监控 46 只，配额剩余 90551；下一轮 10:25:25
+15:25:26 [INFO] yhs.detector: 【阶段2】SPY 识别到跳板(看涨)结构：现货 716.09，正节点 711.00（距 0.72%），负节点 723.00，到期 2026-11-24
+15:25:30 [INFO] yhs.detector: 【阶段2】TSLA 识别到悬崖(看跌)结构：现货 379.27，正节点 380.00（距 0.19%），负节点 367.50，到期 2026-11-25
+15:25:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:25:36 [INFO] yhs.detector: 【阶段3·跳过】AMZN BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:25:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:25:52 [INFO] yhs.detector: 【阶段2】ORCL 识别到悬崖(看跌)结构：现货 110.45，正节点 111.00（距 0.50%），负节点 105.00，到期 2026-11-27
+15:25:52 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:26:17 [INFO] yhs.detector: 【阶段2】RKLB 识别到跳板(看涨)结构：现货 45.39，正节点 45.00（距 0.88%），负节点 46.00，到期 2026-11-27
+15:26:17 [INFO] yhs.detector: 【阶段3·跳过】RKLB BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:26:21 [INFO] yhs.trader: 【排序】10:26 本轮信号 5 个 → 开仓 无；未开：TSLA(0.48<门槛)、AMZN(0.47<门槛)、RKLB(0.43<门槛)、ORCL(0.33<门槛)、META(0.30<门槛)
+15:26:21 [INFO] yhs.main: [10:26:21] 本轮完成：B 持仓 1；L 持仓 4；监控 46 只，配额剩余 90446；下一轮 10:30:25
+15:26:46 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0001 GOOG BUY_CALL | 原因 25 分钟滞涨截断 | 现货 278.32→277.47 | 期权 5.200→4.250 | ROI -18.3% | 峰值 -3.8% | 最大逆行 -18.3% | 盈亏 $-95.00
+15:30:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:30:36 [INFO] yhs.detector: 【阶段3·跳过】AMZN BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:31:16 [INFO] yhs.detector: 【阶段3·跳过】RKLB BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:31:21 [INFO] yhs.trader: 【Flow 记录】AMZN 无大单：O:AMZN271217C00300000 当日量 50 < OI 8,064（疑似平仓）
+15:31:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0007 AMZN BUY_CALL | 行权价 252.50 到期 2026-11-25 | 现货 253.62 | 中间价 4.050 → 成本 4.200（按 ask 成交（bid 3.900 / ask 4.200）） | δ=0.557 γ=0.0476 | 定价来源=quote | 目标加速位 255.00
+15:31:25 [INFO] yhs.trader: 【Flow 记录】RKLB 有大单：Ask 侧大单 $53,865，合约当日量 840 ≥ OI 84（日内主动建仓）
+15:31:27 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0008 RKLB BUY_CALL | 行权价 45.00 到期 2026-11-27 | 现货 45.13 | 中间价 1.760 → 成本 1.820（按 ask 成交（bid 1.700 / ask 1.820）） | δ=0.521 γ=0.0947 | 定价来源=quote | 目标加速位 46.00
+15:31:28 [INFO] yhs.trader: 【排序】10:31 本轮信号 3 个 → 开仓 AMZN(0.58)、RKLB(0.55)；未开：TSLA(0.42<门槛)
+15:31:28 [INFO] yhs.main: [10:31:28] 本轮完成：B 持仓 0；L 持仓 6；监控 46 只，配额剩余 90343；下一轮 10:35:25
+15:35:45 [INFO] yhs.detector: 【阶段2】AVGO 识别到跳板(看涨)结构：现货 303.11，正节点 302.50（距 0.20%），负节点 325.00，到期 2026-11-25
+15:35:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:35:51 [INFO] yhs.detector: 【阶段2】ORCL 识别到悬崖(看跌)结构：现货 110.30，正节点 111.00（距 0.63%），负节点 105.00，到期 2026-11-27
+15:35:51 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:36:20 [INFO] yhs.trader: 【排序】10:36 本轮信号 2 个 → 开仓 无；未开：AVGO(0.41<门槛)、ORCL(0.31<门槛)
+15:36:20 [INFO] yhs.main: [10:36:20] 本轮完成：B 持仓 0；L 持仓 6；监控 46 只，配额剩余 90256；下一轮 10:40:25
+15:40:26 [INFO] yhs.detector: 【阶段2】SPY 识别到悬崖(看跌)结构：现货 716.03，正节点 717.00（距 0.14%），负节点 715.00，到期 2026-11-24
+15:40:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:40:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:41:15 [INFO] yhs.baseline: 【baseline·信号】UNH SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 88 | Call 墙 355(+2.3M) 跑道 4.50% | 环境 TREND_DRIVER · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 336.98 目标 355.00
+15:41:21 [INFO] yhs.trader: 【Flow 记录】UNH 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Call大单
+15:41:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0002 UNH BUY_CALL | 行权价 340.00 到期 2026-11-27 | 现货 339.70 | 中间价 5.400 → 成本 5.450（按 ask 成交（bid 5.350 / ask 5.450）） | δ=0.491 γ=0.0303 | 定价来源=quote | 目标加速位 355.00
+15:41:24 [INFO] yhs.baseline: 【baseline·开仓依据】P20261124-0002 SHORT_GAMMA_VACUUM_SQUEEZE/EFFECTIVE_BREAKOUT 评分 88 | Call 墙 355(+2.3M) 跑道 4.50% | 环境 TREND_DRIVER · 节点 GROWING · 墙体 STABLE · 共振 0 | 现货止损 336.98 目标 355.00
+15:41:24 [INFO] yhs.baseline: 【baseline·排序】10:41 本轮信号 1 个 → 开仓 UNH(88)
+15:41:24 [INFO] yhs.trader: 【排序】10:41 本轮信号 2 个 → 开仓 无；未开：AVGO(0.37<门槛)、SPY(0.36<门槛)
+15:41:24 [INFO] yhs.main: [10:41:24] 本轮完成：B 持仓 1；L 持仓 6；监控 46 只，配额剩余 90166；下一轮 10:45:25
+15:44:26 [INFO] yhs.trader:    ⤴ GOOGL 峰值浮盈 37.0% ≥ 35%，止损上移至保本 0%
+15:45:26 [INFO] yhs.detector: 【阶段2】SPY 识别到跳板(看涨)结构：现货 713.42，正节点 711.00（距 0.34%），负节点 715.00，到期 2026-11-24
+15:45:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:46:01 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0006 SKHY BUY_CALL | 原因 标的破节点止损 | 现货 113.15→111.90 | 期权 6.250→3.750 | ROI -40.0% | 峰值 -32.0% | 最大逆行 -41.6% | 盈亏 $-250.00
+15:46:20 [INFO] yhs.trader: 【排序】10:46 本轮信号 1 个 → 开仓 无；未开：SPY(0.34<门槛)
+15:46:20 [INFO] yhs.main: [10:46:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 90069；下一轮 10:50:25
+15:50:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+15:51:20 [INFO] yhs.trader: 【排序】10:51 本轮信号 1 个 → 开仓 无；未开：SPY(0.33<门槛)
+15:51:20 [INFO] yhs.main: [10:51:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89977；下一轮 10:55:25
+15:55:26 [INFO] yhs.detector: 【阶段2】SPY 识别到悬崖(看跌)结构：现货 715.44，正节点 717.00（距 0.22%），负节点 715.00，到期 2026-11-24
+15:55:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:55:37 [INFO] yhs.detector: 【阶段2】TLT 识别到悬崖(看跌)结构：现货 81.91，正节点 82.00（距 0.11%），负节点 75.00，到期 2026-11-25
+15:55:37 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+15:56:20 [INFO] yhs.trader: 【排序】10:56 本轮信号 2 个 → 开仓 无；未开：TLT(0.40<门槛)、SPY(0.32<门槛)
+15:56:20 [INFO] yhs.main: [10:56:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89885；下一轮 11:00:25
+16:00:37 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:01:20 [INFO] yhs.trader: 【排序】11:01 本轮信号 1 个 → 开仓 无；未开：TLT(0.42<门槛)
+16:01:20 [INFO] yhs.main: [11:01:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89793；下一轮 11:05:25
+16:05:26 [INFO] yhs.detector: 【阶段2】SPY 识别到跳板(看涨)结构：现货 713.50，正节点 711.00（距 0.35%），负节点 715.00，到期 2026-11-24
+16:05:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:05:37 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:05:44 [INFO] yhs.detector: 【阶段2】META 识别到悬崖(看跌)结构：现货 586.29，正节点 590.00（距 0.63%），负节点 570.00，到期 2026-11-25
+16:05:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:06:20 [INFO] yhs.trader: 【排序】11:06 本轮信号 3 个 → 开仓 无；未开：TLT(0.43<门槛)、META(0.35<门槛)、SPY(0.34<门槛)
+16:06:20 [INFO] yhs.main: [11:06:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89701；下一轮 11:10:25
+16:10:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:10:33 [INFO] yhs.detector: 【阶段2】AMD 识别到悬崖(看跌)结构：现货 399.93，正节点 400.00（距 0.02%），负节点 390.00，到期 2026-11-25
+16:10:33 [INFO] yhs.detector: 【阶段3·跳过】AMD BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:10:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:11:22 [INFO] yhs.trader: 【Flow 记录】AMD 有大单：Ask 侧大单 $1,451,520，合约当日量 843 ≥ OI 180（日内主动建仓）
+16:11:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0009 AMD BUY_PUT | 行权价 400.00 到期 2026-11-25 | 现货 399.93 | 中间价 13.225 → 成本 13.400（按 ask 成交（bid 13.050 / ask 13.400）） | δ=0.455 γ=0.0117 | 定价来源=quote | 目标加速位 390.00
+16:11:24 [INFO] yhs.trader: 【排序】11:11 本轮信号 3 个 → 开仓 AMD(0.56)；未开：META(0.36<门槛)、SPY(0.29<门槛)
+16:11:24 [INFO] yhs.main: [11:11:24] 本轮完成：B 持仓 1；L 持仓 6；监控 46 只，配额剩余 89606；下一轮 11:15:25
+16:15:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:15:27 [INFO] yhs.detector: 【阶段2】NVDA 识别到跳板(看涨)结构：现货 151.13，正节点 150.00（距 0.75%），负节点 152.50，到期 2026-11-25
+16:15:27 [INFO] yhs.detector: 【阶段3·跳过】NVDA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:15:37 [INFO] yhs.detector: 【阶段2】TLT 识别到悬崖(看跌)结构：现货 81.97，正节点 82.00（距 0.03%），负节点 75.00，到期 2026-11-25
+16:15:37 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:15:38 [INFO] yhs.detector: 【阶段2】SNDK 识别到跳板(看涨)结构：现货 75.74，正节点 75.00（距 0.99%），负节点 85.00，到期 2026-11-27
+16:15:38 [INFO] yhs.detector: 【阶段3·跳过】SNDK BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:15:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:16:16 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0008 RKLB BUY_CALL | 原因 标的破节点止损 | 现货 45.13→44.64 | 期权 1.820→1.470 | ROI -19.2% | 峰值 +4.4% | 最大逆行 -19.8% | 盈亏 $-140.00
+16:16:20 [INFO] yhs.trader: 【排序】11:16 本轮信号 5 个 → 开仓 无；未开：TLT(0.43<门槛)、NVDA(0.40<门槛)、SPY(0.37<门槛)、SNDK(0.34<门槛)、META(0.33<门槛)
+16:16:20 [INFO] yhs.main: [11:16:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89509；下一轮 11:20:25
+16:20:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:20:37 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:20:38 [INFO] yhs.detector: 【阶段3·跳过】SNDK BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:20:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:21:20 [INFO] yhs.trader: 【排序】11:21 本轮信号 4 个 → 开仓 无；未开：TLT(0.43<门槛)、META(0.37<门槛)、SNDK(0.36<门槛)、SPY(0.28<门槛)
+16:21:20 [INFO] yhs.main: [11:21:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89417；下一轮 11:25:25
+16:25:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:25:38 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:25:46 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:26:18 [INFO] yhs.detector: 【阶段2】RKLB 识别到跳板(看涨)结构：现货 45.30，正节点 45.00（距 0.67%），负节点 46.00，到期 2026-11-27
+16:26:22 [INFO] yhs.trader: 【排序】11:26 本轮信号 3 个 → 开仓 无；未开：META(0.42<门槛)、TLT(0.41<门槛)、SPY(0.36<门槛)
+16:26:22 [INFO] yhs.main: [11:26:22] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89325；下一轮 11:30:25
+16:30:27 [INFO] yhs.detector: 【阶段2】NVDA 识别到跳板(看涨)结构：现货 151.50，正节点 150.00（距 1.00%），负节点 152.50，到期 2026-11-25
+16:30:27 [INFO] yhs.detector: 【阶段3·跳过】NVDA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:30:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:30:45 [INFO] yhs.detector: 【阶段2】AVGO 识别到悬崖(看跌)结构：现货 300.49，正节点 302.50（距 0.67%），负节点 300.00，到期 2026-11-25
+16:30:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:31:20 [INFO] yhs.trader: 【排序】11:31 本轮信号 3 个 → 开仓 无；未开：AVGO(0.43<门槛)、META(0.38<门槛)、NVDA(0.30<门槛)
+16:31:20 [INFO] yhs.main: [11:31:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89233；下一轮 11:35:25
+16:35:37 [INFO] yhs.detector: 【阶段2】TLT 识别到悬崖(看跌)结构：现货 81.90，正节点 82.00（距 0.13%），负节点 75.00，到期 2026-11-25
+16:35:37 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:35:45 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:35:47 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:36:22 [INFO] yhs.trader: 【排序】11:36 本轮信号 3 个 → 开仓 无；未开：AVGO(0.44<门槛)、TLT(0.41<门槛)、META(0.39<门槛)
+16:36:22 [INFO] yhs.main: [11:36:22] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 89141；下一轮 11:40:25
+16:40:26 [INFO] yhs.detector: 【阶段2】SPY 识别到跳板(看涨)结构：现货 713.62，正节点 710.00（距 0.51%），负节点 715.00，到期 2026-11-24
+16:40:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:40:27 [INFO] yhs.detector: 【阶段2】NVDA 识别到跳板(看涨)结构：现货 150.86，正节点 150.00（距 0.57%），负节点 152.50，到期 2026-11-25
+16:40:27 [INFO] yhs.detector: 【阶段3·跳过】NVDA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:40:36 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0007 AMZN BUY_CALL | 原因 标的破节点止损 | 现货 253.62→251.00 | 期权 4.200→2.520 | ROI -40.0% | 峰值 +2.4% | 最大逆行 -40.5% | 盈亏 $-168.00
+16:40:37 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:40:38 [INFO] yhs.detector: 【阶段2】SNDK 识别到跳板(看涨)结构：现货 75.72，正节点 75.00（距 0.96%），负节点 85.00，到期 2026-11-27
+16:40:38 [INFO] yhs.detector: 【阶段3·跳过】SNDK BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:41:20 [INFO] yhs.trader: 【排序】11:41 本轮信号 4 个 → 开仓 无；未开：NVDA(0.45<门槛)、TLT(0.43<门槛)、SPY(0.34<门槛)、SNDK(0.33<门槛)
+16:41:20 [INFO] yhs.main: [11:41:20] 本轮完成：B 持仓 1；L 持仓 4；监控 46 只，配额剩余 89049；下一轮 11:45:25
+16:45:28 [INFO] yhs.detector: 【阶段3·跳过】NVDA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:45:33 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0009 AMD BUY_PUT | 原因 标的破节点止损 | 现货 399.93→404.31 | 期权 13.400→11.100 | ROI -17.2% | 峰值 +10.1% | 最大逆行 -17.2% | 盈亏 $-230.00
+16:45:37 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:45:44 [INFO] yhs.detector: 【阶段2】META 识别到悬崖(看跌)结构：现货 588.22，正节点 590.00（距 0.30%），负节点 570.00，到期 2026-11-25
+16:45:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:45:46 [INFO] yhs.detector: 【阶段2】AVGO 识别到悬崖(看跌)结构：现货 300.71，正节点 302.50（距 0.59%），负节点 300.00，到期 2026-11-25
+16:45:46 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:46:21 [INFO] yhs.trader: 【排序】11:46 本轮信号 4 个 → 开仓 无；未开：TLT(0.41<门槛)、META(0.40<门槛)、AVGO(0.40<门槛)、NVDA(0.36<门槛)
+16:46:21 [INFO] yhs.main: [11:46:21] 本轮完成：B 持仓 1；L 持仓 3；监控 46 只，配额剩余 88962；下一轮 11:50:25
+16:50:45 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:50:46 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:50:47 [INFO] yhs.detector: 【阶段2】MSFT 识别到跳板(看涨)结构：现货 498.08，正节点 497.50（距 0.12%），负节点 505.00，到期 2026-11-25
+16:50:47 [INFO] yhs.detector: 【阶段3·跳过】MSFT BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+16:51:22 [INFO] yhs.trader: 【Flow 记录】MSFT 无大单：O:MSFT261127C00505000 当日量 1,024 < OI 1,785（疑似平仓）
+16:51:25 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0010 MSFT BUY_CALL | 行权价 497.50 到期 2026-11-25 | 现货 498.08 | 中间价 5.575 → 成本 5.750（按 ask 成交（bid 5.400 / ask 5.750）） | δ=0.457 γ=0.0290 | 定价来源=quote | 目标加速位 505.00
+16:51:25 [INFO] yhs.trader: 【排序】11:51 本轮信号 3 个 → 开仓 MSFT(0.52)；未开：META(0.41<门槛)、AVGO(0.40<门槛)
+16:51:25 [INFO] yhs.main: [11:51:25] 本轮完成：B 持仓 1；L 持仓 4；监控 46 只，配额剩余 88877；下一轮 11:55:25
+16:55:28 [INFO] yhs.detector: 【阶段2】QQQ 识别到悬崖(看跌)结构：现货 634.74，正节点 638.00（距 0.51%），负节点 633.00，到期 2026-11-24
+16:55:28 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:55:30 [INFO] yhs.detector: 【阶段2】TSLA 识别到悬崖(看跌)结构：现货 378.29，正节点 380.00（距 0.45%），负节点 367.50，到期 2026-11-25
+16:55:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:55:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:55:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+16:56:21 [INFO] yhs.trader: 【Flow 记录】TSLA 有大单：Ask 侧大单 $81,840，合约当日量 22,290 ≥ OI 974（日内主动建仓）
+16:56:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0011 TSLA BUY_PUT | 行权价 380.00 到期 2026-11-25 | 现货 378.29 | 中间价 6.725 → 成本 6.800（按 ask 成交（bid 6.650 / ask 6.800）） | δ=0.572 γ=0.0271 | 定价来源=quote | 目标加速位 367.50
+16:56:24 [INFO] yhs.trader: 【排序】11:56 本轮信号 4 个 → 开仓 TSLA(0.52)；未开：META(0.39<门槛)、AVGO(0.37<门槛)、QQQ(0.37<门槛)
+16:56:24 [INFO] yhs.main: [11:56:24] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 88787；下一轮 12:00:25
+17:00:26 [INFO] yhs.detector: 【阶段2】SPY 识别到跳板(看涨)结构：现货 714.12，正节点 710.00（距 0.58%），负节点 715.00，到期 2026-11-24
+17:00:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+17:00:28 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:00:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:01:05 [INFO] yhs.detector: 【阶段2】HPE 识别到悬崖(看跌)结构：现货 39.93，正节点 40.00（距 0.17%），负节点 38.50，到期 2026-11-27
+17:01:05 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:01:21 [INFO] yhs.trader: 【Flow 记录】HPE 无大单：O:HPE261127P00050000 当日量 409 < OI 2,916（疑似平仓）
+17:01:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0012 HPE BUY_PUT | 行权价 40.00 到期 2026-11-27 | 现货 39.93 | 中间价 1.485 → 成本 1.530（按 ask 成交（bid 1.440 / ask 1.530）） | δ=0.490 γ=0.1123 | 定价来源=quote | 目标加速位 38.50
+17:01:24 [INFO] yhs.trader: 【排序】12:01 本轮信号 4 个 → 开仓 HPE(0.52)；未开：META(0.37<门槛)、SPY(0.34<门槛)、QQQ(0.28<门槛)
+17:01:24 [INFO] yhs.main: [12:01:24] 本轮完成：B 持仓 1；L 持仓 6；监控 46 只，配额剩余 88692；下一轮 12:05:25
+17:05:27 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+17:05:30 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:05:38 [INFO] yhs.detector: 【阶段2】TLT 识别到悬崖(看跌)结构：现货 81.91，正节点 82.00（距 0.11%），负节点 75.00，到期 2026-11-25
+17:05:38 [INFO] yhs.detector: 【阶段3·跳过】TLT BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:05:46 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:06:18 [INFO] yhs.detector: 【阶段2】RKLB 识别到跳板(看涨)结构：现货 45.43，正节点 45.00（距 0.96%），负节点 46.00，到期 2026-11-27
+17:06:18 [INFO] yhs.detector: 【阶段3·跳过】RKLB BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+17:06:22 [INFO] yhs.trader: 【排序】12:06 本轮信号 5 个 → 开仓 无；未开：TLT(0.41<门槛)、META(0.38<门槛)、RKLB(0.34<门槛)、SPY(0.30<门槛)、QQQ(0.29<门槛)
+17:06:22 [INFO] yhs.main: [12:06:22] 本轮完成：B 持仓 1；L 持仓 6；监控 46 只，配额剩余 88573；下一轮 12:10:25
+17:10:29 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:10:45 [INFO] yhs.detector: 【阶段2】AVGO 识别到悬崖(看跌)结构：现货 302.05，正节点 302.50（距 0.15%），负节点 300.00，到期 2026-11-25
+17:10:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:10:47 [INFO] yhs.baseline: 【baseline·信号】MSFT SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 66 | 踏板 497.5(+4.4M) 距 0.32% · 燃料 505(-4.7M) · 路径负 4.7M / 正 0.0M · 目标 = 上方超大正节点 510(+3.3M) 空间 2.19% · R:R 2.74 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 · 到期冲突 | 现货止损 495.09 目标 510.00
+17:11:21 [INFO] yhs.trader: 【Flow 记录】MSFT 有大单：Ask 侧大单 $681,345，合约当日量 1,137 ≥ OI 364（日内主动建仓）
+17:11:23 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0003 MSFT BUY_CALL | 行权价 497.50 到期 2026-11-25 | 现货 499.08 | 中间价 6.175 → 成本 6.300（按 ask 成交（bid 6.050 / ask 6.300）） | δ=0.473 γ=0.0304 | 定价来源=quote | 目标加速位 510.00
+17:11:23 [INFO] yhs.baseline: 【baseline·开仓依据】P20261124-0003 SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 66 | 踏板 497.5(+4.4M) 距 0.32% · 燃料 505(-4.7M) · 路径负 4.7M / 正 0.0M · 目标 = 上方超大正节点 510(+3.3M) 空间 2.19% · R:R 2.74 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 · 到期冲突 | 现货止损 495.09 目标 510.00
+17:11:23 [INFO] yhs.baseline: 【baseline·排序】12:11 本轮信号 1 个 → 开仓 MSFT(66)
+17:11:23 [INFO] yhs.trader: 【排序】12:11 本轮信号 2 个 → 开仓 无；未开：AVGO(0.49<门槛)、QQQ(0.41<门槛)
+17:11:23 [INFO] yhs.main: [12:11:23] 本轮完成：B 持仓 2；L 持仓 6；监控 46 只，配额剩余 88474；下一轮 12:15:25
+17:15:26 [INFO] yhs.detector: 【阶段2】SPY 识别到悬崖(看跌)结构：现货 718.23，正节点 725.00（距 0.93%），负节点 715.00，到期 2026-11-24
+17:15:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:15:29 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:15:30 [INFO] yhs.baseline: 【baseline·信号】TSLA SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 66 | 踏板 380(+10.3M) 距 0.50% · 燃料 387.5(-2.7M) · 路径负 7.5M / 正 0.0M · 目标 = 上方超大正节点 390(+7.0M) 空间 2.12% · R:R 2.65 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 · 到期冲突 | 现货止损 378.85 目标 390.00
+17:15:30 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0011 TSLA BUY_PUT | 原因 标的破节点止损 | 现货 378.29→381.91 | 期权 6.800→4.600 | ROI -32.4% | 峰值 +2.2% | 最大逆行 -32.4% | 盈亏 $-220.00
+17:15:36 [INFO] yhs.detector: 【阶段2】AMZN 识别到跳板(看涨)结构：现货 253.12，正节点 252.50（距 0.25%），负节点 255.00，到期 2026-11-25
+17:15:36 [INFO] yhs.detector: 【阶段3·跳过】AMZN BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+17:15:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:15:56 [INFO] yhs.detector: 【阶段2】GME 识别到跳板(看涨)结构：现货 27.55，正节点 27.50（距 0.17%），负节点 32.00，到期 2026-11-27
+17:15:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+17:16:01 [INFO] yhs.detector: 【阶段2】SKHY 识别到跳板(看涨)结构：现货 113.03，正节点 113.00（距 0.03%），负节点 118.00，到期 2026-11-27
+17:16:01 [INFO] yhs.detector: 【阶段2·疲劳】SKHY 正节点 113.00 已被测试 4 次 > 3，对冲垫片耗尽，放弃信号
+17:16:22 [INFO] yhs.trader: 【Flow 记录】TSLA 有大单：Ask 侧大单 $1,764,480，合约当日量 282 ≥ OI 18（日内主动建仓）
+17:16:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0004 TSLA BUY_CALL | 行权价 382.50 到期 2026-11-25 | 现货 381.91 | 中间价 5.200 → 成本 5.250（按 ask 成交（bid 5.150 / ask 5.250）） | δ=0.372 γ=0.0274 | 定价来源=quote | 目标加速位 390.00
+17:16:24 [INFO] yhs.baseline: 【baseline·开仓依据】P20261124-0004 SPRINGBOARD_STRUCTURE/REJECTION_BOUNCE 评分 66 | 踏板 380(+10.3M) 距 0.50% · 燃料 387.5(-2.7M) · 路径负 7.5M / 正 0.0M · 目标 = 上方超大正节点 390(+7.0M) 空间 2.12% · R:R 2.65 | 环境 TREND_DRIVER · 节点 FLAT · 墙体 MIGRATING_UP · 共振 0 · 到期冲突 | 现货止损 378.85 目标 390.00
+17:16:24 [INFO] yhs.baseline: 【baseline·排序】12:16 本轮信号 1 个 → 开仓 TSLA(66)
+17:16:25 [INFO] yhs.trader: 【Flow 记录】AMZN 无大单：O:AMZN261218C00260000 当日量 1,356 < OI 25,533（疑似平仓）
+17:16:27 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0013 AMZN BUY_CALL | 行权价 252.50 到期 2026-11-25 | 现货 253.12 | 中间价 3.325 → 成本 3.450（按 ask 成交（bid 3.200 / ask 3.450）） | δ=0.435 γ=0.0503 | 定价来源=quote | 目标加速位 255.00
+17:16:28 [INFO] yhs.trader: 【排序】12:16 本轮信号 5 个 → 开仓 AMZN(0.58)；未开：QQQ(0.47<门槛)、AVGO(0.45<门槛)、GME(0.41<门槛)、SPY(0.39<门槛)
+17:16:28 [INFO] yhs.main: [12:16:28] 本轮完成：B 持仓 3；L 持仓 6；监控 46 只，配额剩余 88366；下一轮 12:20:25
+17:20:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:20:29 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:20:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:21:20 [INFO] yhs.trader: 【排序】12:21 本轮信号 3 个 → 开仓 无；未开：SPY(0.48<门槛)、QQQ(0.47<门槛)、AVGO(0.40<门槛)
+17:21:20 [INFO] yhs.main: [12:21:20] 本轮完成：B 持仓 3；L 持仓 6；监控 46 只，配额剩余 88254；下一轮 12:25:25
+17:25:26 [INFO] yhs.detector: 【阶段3·跳过】SPY BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:25:29 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:25:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:25:56 [INFO] yhs.detector: 【阶段2】GME 识别到跳板(看涨)结构：现货 27.52，正节点 27.50（距 0.09%），负节点 32.00，到期 2026-11-27
+17:25:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+17:26:21 [INFO] yhs.trader: 【Flow 记录】SPY 有大单：Ask 侧大单 $578,865，合约当日量 9,674 ≥ OI 826（日内主动建仓）
+17:26:24 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0014 SPY BUY_PUT | 行权价 715.00 到期 2026-11-24 | 现货 718.19 | 中间价 1.000 → 成本 1.010（按 ask 成交（bid 0.990 / ask 1.010）） | δ=0.277 γ=0.0575 | 定价来源=quote | 目标加速位 715.00
+17:26:25 [INFO] yhs.trader: 【Flow 记录】QQQ 有大单：Ask 侧大单 $373,760，合约当日量 13,108 ≥ OI 10,532（日内主动建仓）
+17:26:28 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0015 QQQ BUY_PUT | 行权价 635.00 到期 2026-11-24 | 现货 637.72 | 中间价 1.455 → 成本 1.460（按 ask 成交（bid 1.450 / ask 1.460）） | δ=0.346 γ=0.0547 | 定价来源=quote | 目标加速位 634.00
+17:26:28 [INFO] yhs.trader: 【排序】12:26 本轮信号 4 个 → 开仓 SPY(0.51)、QQQ(0.51)；未开：AVGO(0.49<门槛)、GME(0.43<门槛)
+17:26:28 [INFO] yhs.main: [12:26:28] 本轮完成：B 持仓 3；L 持仓 8；监控 46 只，配额剩余 88136；下一轮 12:30:25
+17:31:01 [INFO] yhs.detector: 【阶段2】SKHY 识别到跳板(看涨)结构：现货 113.38，正节点 113.00（距 0.34%），负节点 118.00，到期 2026-11-27
+17:31:01 [INFO] yhs.detector: 【阶段2·疲劳】SKHY 正节点 113.00 已被测试 4 次 > 3，对冲垫片耗尽，放弃信号
+17:31:04 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0012 HPE BUY_PUT | 原因 标的破节点止损 | 现货 39.93→40.28 | 期权 1.530→1.140 | ROI -25.5% | 峰值 +0.7% | 最大逆行 -25.5% | 盈亏 $-156.00
+17:31:18 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 49(+1.2M) 距 0.87% · 燃料 48.5(-1.0M) · 路径负 1.0M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.22% · R:R 1.91 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+17:31:21 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+17:31:24 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 11%（bid 0.45 / ask 0.50）> 8%，不开仓
+17:31:24 [INFO] yhs.baseline: 【baseline·排序】12:31 本轮信号 1 个 → 开仓 无
+17:31:24 [INFO] yhs.main: [12:31:24] 本轮完成：B 持仓 3；L 持仓 7；监控 46 只，配额剩余 87912；下一轮 12:35:25
+17:32:26 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0003 MSFT BUY_CALL | 原因 连续棘轮锁利 | 现货 499.08→500.73 | 期权 6.300→6.650 | ROI +5.6% | 峰值 +15.1% | 最大逆行 -7.9% | 盈亏 $+35.00
+17:33:26 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0003 GOOGL BUY_PUT | 原因 保本止损 +3% | 现货 278.91→278.52 | 期权 3.650→3.600 | ROI -1.4% | 峰值 +52.1% | 最大逆行 -19.5% | 盈亏 $-10.00
+17:35:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+17:36:14 [INFO] yhs.detector: 【阶段2】DELL 识别到悬崖(看跌)结构：现货 297.88，正节点 300.00（距 0.71%），负节点 255.00，到期 2026-11-27
+17:36:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:36:20 [INFO] yhs.trader: 【排序】12:36 本轮信号 2 个 → 开仓 无；未开：GME(0.43<门槛)、DELL(0.25<门槛)
+17:36:20 [INFO] yhs.main: [12:36:20] 本轮完成：B 持仓 2；L 持仓 6；监控 46 只，配额剩余 87782；下一轮 12:40:25
+17:41:21 [INFO] yhs.main: [12:41:21] 本轮完成：B 持仓 2；L 持仓 6；监控 46 只，配额剩余 87665；下一轮 12:45:25
+17:46:15 [INFO] yhs.detector: 【阶段2】DELL 识别到悬崖(看跌)结构：现货 297.13，正节点 300.00（距 0.96%），负节点 255.00，到期 2026-11-27
+17:46:15 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:46:21 [INFO] yhs.trader: 【排序】12:46 本轮信号 1 个 → 开仓 无；未开：DELL(0.21<门槛)
+17:46:21 [INFO] yhs.main: [12:46:21] 本轮完成：B 持仓 2；L 持仓 6；监控 46 只，配额剩余 87558；下一轮 12:50:25
+17:47:25 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0004 TSLA BUY_CALL | 原因 连续棘轮锁利 | 现货 381.91→383.62 | 期权 5.250→6.100 | ROI +16.2% | 峰值 +29.5% | 最大逆行 -4.8% | 盈亏 $+85.00
+17:50:42 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/GOOGL/snapshot：Remote end closed connection without response，4.2s 后第 1 次重试
+17:51:19 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:51:25 [INFO] yhs.trader: 【排序】12:51 本轮信号 1 个 → 开仓 无；未开：DELL(0.20<门槛)
+17:51:25 [INFO] yhs.main: [12:51:25] 本轮完成：B 持仓 1；L 持仓 6；监控 46 只，配额剩余 87457；下一轮 12:55:25
+17:55:46 [INFO] yhs.detector: 【阶段2】AVGO 识别到悬崖(看跌)结构：现货 302.37，正节点 302.50（距 0.04%），负节点 300.00，到期 2026-11-25
+17:55:46 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+17:56:18 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 49(+1.1M) 距 0.87% · 燃料 48.5(-0.9M) · 路径负 0.9M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.22% · R:R 1.90 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+17:56:22 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+17:56:24 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 9%（bid 0.44 / ask 0.48）> 8%，不开仓
+17:56:24 [INFO] yhs.baseline: 【baseline·排序】12:56 本轮信号 1 个 → 开仓 无
+17:56:26 [INFO] yhs.trader: 【Flow 记录】AVGO 无大单：O:AVGO261130P00340000 当日量 28 < OI 46（疑似平仓）
+17:56:27 [INFO] yhs.trader: 【阶段4·开仓】P20261124-0016 AVGO BUY_PUT | 行权价 302.50 到期 2026-11-25 | 现货 302.37 | 中间价 6.100 → 成本 6.200（按 ask 成交（bid 6.000 / ask 6.200）） | δ=0.494 γ=0.0249 | 定价来源=quote | 目标加速位 300.00
+17:56:28 [INFO] yhs.trader: 【排序】12:56 本轮信号 1 个 → 开仓 AVGO(0.53)
+17:56:28 [INFO] yhs.main: [12:56:28] 本轮完成：B 持仓 1；L 持仓 7；监控 46 只，配额剩余 87354；下一轮 13:00:25
+18:00:31 [INFO] yhs.detector: 【阶段2】MU 识别到跳板(看涨)结构：现货 635.38，正节点 635.00（距 0.06%），负节点 640.00，到期 2026-11-25
+18:00:31 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+18:01:01 [INFO] yhs.detector: 【阶段2】SKHY 识别到跳板(看涨)结构：现货 113.23，正节点 113.00（距 0.20%），负节点 118.00，到期 2026-11-27
+18:01:01 [INFO] yhs.detector: 【阶段2·疲劳】SKHY 正节点 113.00 已被测试 4 次 > 3，对冲垫片耗尽，放弃信号
+18:01:20 [INFO] yhs.trader: 【排序】13:01 本轮信号 1 个 → 开仓 无；未开：MU(0.48<门槛)
+18:01:20 [INFO] yhs.main: [13:01:20] 本轮完成：B 持仓 1；L 持仓 7；监控 46 只，配额剩余 87255；下一轮 13:05:25
+18:05:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:06:21 [INFO] yhs.trader: 【排序】13:06 本轮信号 1 个 → 开仓 无；未开：GOOGL(0.49<门槛)
+18:06:21 [INFO] yhs.main: [13:06:21] 本轮完成：B 持仓 1；L 持仓 7；监控 46 只，配额剩余 87165；下一轮 13:10:25
+18:10:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:11:18 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 49(+1.1M) 距 0.84% · 燃料 48.5(-1.0M) · 路径负 1.0M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.24% · R:R 1.96 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+18:11:22 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+18:11:25 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 13%（bid 0.42 / ask 0.48）> 8%，不开仓
+18:11:25 [INFO] yhs.baseline: 【baseline·排序】13:11 本轮信号 1 个 → 开仓 无
+18:11:25 [INFO] yhs.trader: 【排序】13:11 本轮信号 1 个 → 开仓 无；未开：GOOGL(0.48<门槛)
+18:11:25 [INFO] yhs.main: [13:11:25] 本轮完成：B 持仓 1；L 持仓 7；监控 46 只，配额剩余 87068；下一轮 13:15:25
+18:15:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:16:01 [INFO] yhs.detector: 【阶段2】SKHY 识别到跳板(看涨)结构：现货 113.03，正节点 113.00（距 0.02%），负节点 118.00，到期 2026-11-27
+18:16:01 [INFO] yhs.detector: 【阶段2·疲劳】SKHY 正节点 113.00 已被测试 4 次 > 3，对冲垫片耗尽，放弃信号
+18:16:14 [INFO] yhs.detector: 【阶段2】DELL 识别到悬崖(看跌)结构：现货 297.23，正节点 300.00（距 0.92%），负节点 255.00，到期 2026-11-27
+18:16:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:16:18 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 49(+1.1M) 距 0.86% · 燃料 48.5(-1.0M) · 路径负 1.0M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.23% · R:R 1.92 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+18:16:21 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+18:16:24 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 13%（bid 0.42 / ask 0.48）> 8%，不开仓
+18:16:24 [INFO] yhs.baseline: 【baseline·排序】13:16 本轮信号 1 个 → 开仓 无
+18:16:24 [INFO] yhs.trader: 【排序】13:16 本轮信号 2 个 → 开仓 无；未开：GOOGL(0.48<门槛)、DELL(0.22<门槛)
+18:16:24 [INFO] yhs.main: [13:16:24] 本轮完成：B 持仓 1；L 持仓 7；监控 46 只，配额剩余 86967；下一轮 13:20:25
+18:20:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:21:06 [INFO] yhs.detector: 【阶段2】HPE 识别到跳板(看涨)结构：现货 40.31，正节点 40.00（距 0.78%），负节点 40.50，到期 2026-11-27
+18:21:06 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+18:21:18 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 49(+1.1M) 距 0.86% · 燃料 48.5(-1.0M) · 路径负 1.0M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.22% · R:R 1.91 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+18:21:22 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+18:21:24 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 9%（bid 0.43 / ask 0.47）> 8%，不开仓
+18:21:24 [INFO] yhs.baseline: 【baseline·排序】13:21 本轮信号 1 个 → 开仓 无
+18:21:24 [INFO] yhs.trader: 【排序】13:21 本轮信号 2 个 → 开仓 无；未开：GOOGL(0.48<门槛)、HPE(0.26<门槛)
+18:21:24 [INFO] yhs.main: [13:21:24] 本轮完成：B 持仓 1；L 持仓 7；监控 46 只，配额剩余 86862；下一轮 13:25:25
+18:25:32 [INFO] yhs.detector: 【阶段2】MU 识别到跳板(看涨)结构：现货 635.28，正节点 635.00（距 0.04%），负节点 640.00，到期 2026-11-25
+18:25:32 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+18:25:43 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:25:54 [INFO] yhs.detector: 【阶段2】ORCL 识别到悬崖(看跌)结构：现货 110.02，正节点 111.00（距 0.89%），负节点 110.00，到期 2026-11-27
+18:25:54 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:26:03 [INFO] yhs.detector: 【阶段2】SKHY 识别到跳板(看涨)结构：现货 113.30，正节点 113.00（距 0.27%），负节点 118.00，到期 2026-11-27
+18:26:03 [INFO] yhs.detector: 【阶段2·疲劳】SKHY 正节点 113.00 已被测试 4 次 > 3，对冲垫片耗尽，放弃信号
+18:26:22 [INFO] yhs.trader: 【排序】13:26 本轮信号 3 个 → 开仓 无；未开：MU(0.48<门槛)、GOOGL(0.48<门槛)、ORCL(0.24<门槛)
+18:26:22 [INFO] yhs.main: [13:26:22] 本轮完成：B 持仓 1；L 持仓 7；监控 46 只，配额剩余 86760；下一轮 13:30:25
+18:30:26 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0014 SPY BUY_PUT | 原因 硬止损 | 现货 718.19→718.83 | 期权 1.010→0.350 | ROI -65.3% | 峰值 +1.0% | 最大逆行 -65.3% | 盈亏 $-396.00
+18:30:29 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0015 QQQ BUY_PUT | 原因 硬止损 | 现货 637.72→638.90 | 期权 1.460→0.510 | ROI -65.1% | 峰值 +1.4% | 最大逆行 -65.1% | 盈亏 $-380.00
+18:30:31 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+18:30:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:30:51 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:31:20 [INFO] yhs.trader: 【排序】13:31 本轮信号 3 个 → 开仓 无；未开：MU(0.50<门槛)、GOOGL(0.48<门槛)、ORCL(0.24<门槛)
+18:31:20 [INFO] yhs.main: [13:31:20] 本轮完成：B 持仓 1；L 持仓 5；监控 46 只，配额剩余 86662；下一轮 13:35:25
+18:35:27 [INFO] yhs.detector: 【阶段2】SPY 识别到跳板(看涨)结构：现货 719.26，正节点 718.00（距 0.18%），负节点 721.00，到期 2026-11-24
+18:35:31 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+18:35:43 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:35:46 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0016 AVGO BUY_PUT | 原因 标的破节点止损 | 现货 302.37→304.50 | 期权 6.200→5.150 | ROI -16.9% | 峰值 +2.4% | 最大逆行 -16.9% | 盈亏 $-105.00
+18:35:52 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:36:15 [INFO] yhs.detector: 【阶段2】DELL 识别到悬崖(看跌)结构：现货 297.02，正节点 300.00（距 0.99%），负节点 255.00，到期 2026-11-27
+18:36:15 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:36:21 [INFO] yhs.trader: 【排序】13:36 本轮信号 4 个 → 开仓 无；未开：GOOGL(0.47<门槛)、MU(0.43<门槛)、ORCL(0.26<门槛)、DELL(0.20<门槛)
+18:36:21 [INFO] yhs.main: [13:36:21] 本轮完成：B 持仓 1；L 持仓 4；监控 46 只，配额剩余 86571；下一轮 13:40:25
+18:40:28 [INFO] yhs.detector: 【阶段2】QQQ 识别到悬崖(看跌)结构：现货 639.38，正节点 640.00（距 0.10%），负节点 639.00，到期 2026-11-24
+18:40:31 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+18:40:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:40:51 [INFO] yhs.detector: 【阶段3·跳过】ORCL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:41:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:41:18 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 49(+1.2M) 距 0.87% · 燃料 48.5(-1.0M) · 路径负 1.0M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.21% · R:R 1.88 | 环境 NEUTRAL · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+18:41:21 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+18:41:24 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 11%（bid 0.44 / ask 0.49）> 8%，不开仓
+18:41:24 [INFO] yhs.baseline: 【baseline·排序】13:41 本轮信号 1 个 → 开仓 无
+18:41:24 [INFO] yhs.trader: 【排序】13:41 本轮信号 4 个 → 开仓 无；未开：GOOGL(0.47<门槛)、MU(0.45<门槛)、ORCL(0.27<门槛)、DELL(0.23<门槛)
+18:41:24 [INFO] yhs.main: [13:41:24] 本轮完成：B 持仓 1；L 持仓 4；监控 46 只，配额剩余 86481；下一轮 13:45:25
+18:41:26 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0002 UNH BUY_CALL | 原因 持仓满 180 分钟 | 现货 339.70→345.67 | 期权 5.450→8.050 | ROI +47.7% | 峰值 +61.5% | 最大逆行 -10.1% | 盈亏 $+260.00
+18:45:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:46:18 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 82 | 天花板 49(+1.1M) 距 0.99% · 燃料 48.5(-1.0M) · 路径负 1.0M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.11% · R:R 1.64 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+18:46:21 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+18:46:24 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 11%（bid 0.44 / ask 0.49）> 8%，不开仓
+18:46:24 [INFO] yhs.baseline: 【baseline·排序】13:46 本轮信号 1 个 → 开仓 无
+18:46:24 [INFO] yhs.trader: 【排序】13:46 本轮信号 1 个 → 开仓 无；未开：GOOGL(0.45<门槛)
+18:46:24 [INFO] yhs.main: [13:46:24] 本轮完成：B 持仓 0；L 持仓 4；监控 46 只，配额剩余 86395；下一轮 13:50:25
+18:49:45 [WARNING] yhs.client: 网络异常 /v1/options/quotes：The read operation timed out，4.1s 后第 1 次重试
+18:50:49 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/TSLA/snapshot：The read operation timed out，4.1s 后第 1 次重试
+18:51:22 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/SNDK/snapshot：The read operation timed out，4.3s 后第 1 次重试
+18:51:31 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:51:53 [INFO] yhs.detector: 【阶段2】HPE 识别到跳板(看涨)结构：现货 40.28，正节点 40.00（距 0.70%），负节点 40.50，到期 2026-11-27
+18:51:53 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+18:52:06 [INFO] yhs.baseline: 【baseline·信号】BAC CLIFF_STRUCTURE/TREND_PULLBACK_REJECT 评分 74 | 天花板 49(+1.2M) 距 0.95% · 燃料 48.5(-1.0M) · 路径负 1.0M / 正 0.0M · 目标 = 下方超大正节点 47.5(+0.7M) 空间 2.14% · R:R 1.72 | 环境 STACKED_FLIP_ZONE · 节点 FLAT · 墙体 STABLE · 共振 2 | 现货止损 49.15 目标 47.50
+18:52:10 [INFO] yhs.trader: 【Flow 记录】BAC 无大单：近 15 分钟无 ≥$50,000 的 Ask 侧Put大单
+18:52:13 [INFO] yhs.trader: 【阶段4·放弃】BAC O:BAC261127P00048500 买卖价差 13%（bid 0.44 / ask 0.50）> 8%，不开仓
+18:52:13 [INFO] yhs.baseline: 【baseline·排序】13:52 本轮信号 1 个 → 开仓 无
+18:52:13 [INFO] yhs.trader: 【排序】13:52 本轮信号 2 个 → 开仓 无；未开：GOOGL(0.44<门槛)、HPE(0.29<门槛)
+18:52:13 [INFO] yhs.main: [13:52:13] 本轮完成：B 持仓 0；L 持仓 4；监控 46 只，配额剩余 86312；下一轮 13:55:25
+18:55:26 [INFO] yhs.detector: 【阶段2】SPY 识别到悬崖(看跌)结构：现货 717.72，正节点 718.00（距 0.04%），负节点 715.00，到期 2026-11-24
+18:55:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:56:05 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+18:56:14 [INFO] yhs.detector: 【阶段2】DELL 识别到悬崖(看跌)结构：现货 297.06，正节点 300.00（距 0.98%），负节点 255.00，到期 2026-11-27
+18:56:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+18:56:20 [INFO] yhs.trader: 【排序】13:56 本轮信号 3 个 → 开仓 无；未开：GOOGL(0.43<门槛)、HPE(0.25<门槛)、DELL(0.21<门槛)
+18:56:20 [INFO] yhs.main: [13:56:20] 本轮完成：B 持仓 0；L 持仓 4；监控 46 只，配额剩余 86237；下一轮 14:00:25
+19:00:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:00:47 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0010 MSFT BUY_CALL | 原因 标的破节点止损 | 现货 498.08→494.35 | 期权 5.750→3.200 | ROI -44.3% | 峰值 +26.1% | 最大逆行 -45.2% | 盈亏 $-255.00
+19:01:05 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:01:20 [INFO] yhs.trader: 【排序】14:01 本轮信号 2 个 → 开仓 无；未开：GOOGL(0.41<门槛)、HPE(0.26<门槛)
+19:01:20 [INFO] yhs.main: [14:01:20] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 86128；下一轮 14:05:25
+19:05:43 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:05:45 [INFO] yhs.detector: 【阶段2】META 识别到悬崖(看跌)结构：现货 591.67，正节点 595.00（距 0.56%），负节点 570.00，到期 2026-11-25
+19:05:45 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:06:06 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:06:21 [INFO] yhs.trader: 【排序】14:06 本轮信号 3 个 → 开仓 无；未开：GOOGL(0.41<门槛)、HPE(0.38<门槛)、META(0.33<门槛)
+19:06:21 [INFO] yhs.main: [14:06:21] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 86056；下一轮 14:10:25
+19:10:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:10:45 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:10:57 [INFO] yhs.detector: 【阶段2】GME 识别到跳板(看涨)结构：现货 27.50，正节点 27.50（距 0.00%），负节点 32.00，到期 2026-11-27
+19:10:57 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:11:05 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:11:14 [INFO] yhs.detector: 【阶段2】DELL 识别到悬崖(看跌)结构：现货 297.24，正节点 300.00（距 0.92%），负节点 255.00，到期 2026-11-27
+19:11:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:11:21 [INFO] yhs.trader: 【排序】14:11 本轮信号 5 个 → 开仓 无；未开：GME(0.45<门槛)、GOOGL(0.42<门槛)、META(0.31<门槛)、HPE(0.28<门槛)、DELL(0.22<门槛)
+19:11:21 [INFO] yhs.main: [14:11:21] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85984；下一轮 14:15:25
+19:14:45 [WARNING] yhs.client: 网络异常 /v1/options/quotes：The read operation timed out，4.1s 后第 1 次重试
+19:15:10 [WARNING] yhs.client: 网络异常 /v1/options/quotes：The read operation timed out，8.3s 后第 2 次重试
+19:16:14 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/TQQQ/snapshot：The read operation timed out，4.3s 后第 1 次重试
+19:16:26 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:16:29 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:16:41 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:17:02 [WARNING] yhs.client: 网络异常 /v1/derived/heatmap/GOOG/snapshot：The read operation timed out，4.1s 后第 1 次重试
+19:17:23 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:17:29 [INFO] yhs.trader: 【排序】14:17 本轮信号 4 个 → 开仓 无；未开：GME(0.43<门槛)、GOOGL(0.43<门槛)、META(0.32<门槛)、DELL(0.28<门槛)
+19:17:29 [INFO] yhs.main: [14:17:29] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85906；下一轮 14:20:25
+19:20:29 [INFO] yhs.detector: 【阶段2】QQQ 识别到悬崖(看跌)结构：现货 639.08，正节点 643.00（距 0.61%），负节点 639.00，到期 2026-11-24
+19:20:29 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:20:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:20:45 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:20:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:21:01 [INFO] yhs.detector: 【阶段2】SKHY 识别到跳板(看涨)结构：现货 113.10，正节点 113.00（距 0.09%），负节点 118.00，到期 2026-11-27
+19:21:01 [INFO] yhs.detector: 【阶段2·疲劳】SKHY 正节点 113.00 已被测试 4 次 > 3，对冲垫片耗尽，放弃信号
+19:21:05 [INFO] yhs.detector: 【阶段2】HPE 识别到跳板(看涨)结构：现货 40.40，正节点 40.00（距 0.99%），负节点 40.50，到期 2026-11-27
+19:21:05 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:21:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:21:21 [INFO] yhs.trader: 【排序】14:21 本轮信号 6 个 → 开仓 无；未开：GOOGL(0.45<门槛)、GME(0.42<门槛)、QQQ(0.35<门槛)、META(0.34<门槛)、DELL(0.30<门槛)、HPE(0.23<门槛)
+19:21:21 [INFO] yhs.main: [14:21:21] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85836；下一轮 14:25:25
+19:25:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:25:45 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:25:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:26:05 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:26:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:26:20 [INFO] yhs.trader: 【排序】14:26 本轮信号 5 个 → 开仓 无；未开：GOOGL(0.45<门槛)、GME(0.37<门槛)、META(0.34<门槛)、DELL(0.30<门槛)、HPE(0.24<门槛)
+19:26:20 [INFO] yhs.main: [14:26:20] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85764；下一轮 14:30:25
+19:30:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:30:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:30:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:31:04 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:31:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:31:20 [INFO] yhs.trader: 【排序】14:31 本轮信号 5 个 → 开仓 无；未开：GOOGL(0.45<门槛)、GME(0.42<门槛)、META(0.34<门槛)、DELL(0.27<门槛)、HPE(0.27<门槛)
+19:31:20 [INFO] yhs.main: [14:31:20] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85692；下一轮 14:35:25
+19:35:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:35:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:35:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:36:05 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:36:14 [INFO] yhs.detector: 【阶段3·跳过】DELL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:36:20 [INFO] yhs.trader: 【排序】14:36 本轮信号 5 个 → 开仓 无；未开：GOOGL(0.45<门槛)、GME(0.43<门槛)、HPE(0.34<门槛)、META(0.31<门槛)、DELL(0.19<门槛)
+19:36:20 [INFO] yhs.main: [14:36:20] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85620；下一轮 14:40:25
+19:40:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:40:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:40:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:41:05 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:41:20 [INFO] yhs.trader: 【排序】14:41 本轮信号 4 个 → 开仓 无；未开：GME(0.46<门槛)、GOOGL(0.41<门槛)、HPE(0.37<门槛)、META(0.29<门槛)
+19:41:20 [INFO] yhs.main: [14:41:20] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85548；下一轮 14:45:25
+19:45:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:45:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:45:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:46:04 [INFO] yhs.detector: 【阶段3·跳过】HPE BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:46:20 [INFO] yhs.trader: 【排序】14:46 本轮信号 4 个 → 开仓 无；未开：GME(0.46<门槛)、GOOGL(0.40<门槛)、HPE(0.36<门槛)、META(0.29<门槛)
+19:46:20 [INFO] yhs.main: [14:46:20] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85476；下一轮 14:50:25
+19:50:31 [INFO] yhs.detector: 【阶段2】MU 识别到悬崖(看跌)结构：现货 628.79，正节点 635.00（距 0.98%），负节点 627.50，到期 2026-11-25
+19:50:31 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:50:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:50:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:51:20 [INFO] yhs.trader: 【排序】14:51 本轮信号 3 个 → 开仓 无；未开：GOOGL(0.41<门槛)、META(0.27<门槛)、MU(0.17<门槛)
+19:51:20 [INFO] yhs.main: [14:51:20] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85404；下一轮 14:55:25
+19:55:26 [INFO] yhs.detector: 【阶段2】SPY 识别到悬崖(看跌)结构：现货 716.54，正节点 717.00（距 0.06%），负节点 715.00，到期 2026-11-24
+19:55:30 [INFO] yhs.detector: 【阶段2】TSLA 识别到跳板(看涨)结构：现货 381.90，正节点 380.00（距 0.50%），负节点 382.50，到期 2026-11-25
+19:55:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+19:55:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:55:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+19:56:20 [INFO] yhs.trader: 【排序】14:56 本轮信号 3 个 → 开仓 无；未开：GOOGL(0.40<门槛)、TSLA(0.39<门槛)、META(0.25<门槛)
+19:56:20 [INFO] yhs.main: [14:56:20] 本轮完成：B 持仓 0；L 持仓 3；监控 46 只，配额剩余 85332；下一轮 15:00:25
+20:00:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:00:36 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0013 AMZN BUY_CALL | 原因 标的破节点止损 | 现货 253.12→251.16 | 期权 3.450→2.150 | ROI -37.7% | 峰值 +5.8% | 最大逆行 -37.7% | 盈亏 $-260.00
+20:00:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:00:45 [INFO] yhs.detector: 【阶段2】AVGO 识别到悬崖(看跌)结构：现货 302.20，正节点 302.50（距 0.10%），负节点 300.00，到期 2026-11-25
+20:00:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:00:56 [INFO] yhs.detector: 【阶段2】GME 识别到跳板(看涨)结构：现货 27.51，正节点 27.50（距 0.04%），负节点 32.00，到期 2026-11-27
+20:00:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:01:20 [INFO] yhs.trader: 【排序】15:01 本轮信号 4 个 → 开仓 无；未开：AVGO(0.48<门槛)、GME(0.47<门槛)、TSLA(0.39<门槛)、META(0.21<门槛)
+20:01:20 [INFO] yhs.main: [15:01:20] 本轮完成：B 持仓 0；L 持仓 2；监控 46 只，配额剩余 85126；下一轮 15:05:25
+20:02:25 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0001 WMT BUY_CALL | 原因 保本止损 +3% | 现货 131.22→131.65 | 期权 1.450→1.420 | ROI -2.1% | 峰值 +44.1% | 最大逆行 -6.2% | 盈亏 $-12.00
+20:05:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:05:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:06:20 [INFO] yhs.trader: 【排序】15:06 本轮信号 2 个 → 开仓 无；未开：TSLA(0.42<门槛)、AVGO(0.37<门槛)
+20:06:20 [INFO] yhs.main: [15:06:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 85015；下一轮 15:10:25
+20:10:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:10:42 [INFO] yhs.detector: 【阶段2】GOOGL 识别到悬崖(看跌)结构：现货 277.22，正节点 280.00（距 0.99%），负节点 272.50，到期 2026-11-25
+20:10:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:10:44 [INFO] yhs.detector: 【阶段2】META 识别到悬崖(看跌)结构：现货 588.89，正节点 590.00（距 0.19%），负节点 570.00，到期 2026-11-25
+20:10:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:10:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:11:20 [INFO] yhs.trader: 【排序】15:11 本轮信号 4 个 → 开仓 无；未开：TSLA(0.39<门槛)、AVGO(0.38<门槛)、GOOGL(0.38<门槛)、META(0.36<门槛)
+20:11:20 [INFO] yhs.main: [15:11:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 84873；下一轮 15:15:25
+20:15:28 [INFO] yhs.detector: 【阶段2】QQQ 识别到跳板(看涨)结构：现货 636.58，正节点 631.00（距 0.88%），负节点 637.00，到期 2026-11-24
+20:15:28 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:15:31 [INFO] yhs.detector: 【阶段2】MU 识别到悬崖(看跌)结构：现货 628.72，正节点 635.00（距 0.99%），负节点 627.50，到期 2026-11-25
+20:15:31 [INFO] yhs.detector: 【阶段3·跳过】MU BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:15:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:15:45 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:15:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:15:56 [INFO] yhs.detector: 【阶段2】GME 识别到跳板(看涨)结构：现货 27.54，正节点 27.50（距 0.13%），负节点 32.00，到期 2026-11-27
+20:15:56 [INFO] yhs.detector: 【阶段3·跳过】GME BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:16:20 [INFO] yhs.trader: 【排序】15:16 本轮信号 6 个 → 开仓 无；未开：GME(0.47<门槛)、AVGO(0.46<门槛)、GOOGL(0.39<门槛)、QQQ(0.35<门槛)、META(0.27<门槛)、MU(0.18<门槛)
+20:16:20 [INFO] yhs.main: [15:16:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 84766；下一轮 15:20:25
+20:20:26 [INFO] yhs.detector: 【阶段2】SPY 识别到悬崖(看跌)结构：现货 716.40，正节点 717.00（距 0.08%），负节点 715.00，到期 2026-11-24
+20:20:29 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:20:30 [INFO] yhs.detector: 【阶段2】TSLA 识别到跳板(看涨)结构：现货 382.00，正节点 380.00（距 0.53%），负节点 382.50，到期 2026-11-25
+20:20:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:20:42 [INFO] yhs.detector: 【阶段3·跳过】GOOGL BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:20:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:20:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:21:20 [INFO] yhs.trader: 【排序】15:21 本轮信号 5 个 → 开仓 无；未开：AVGO(0.41<门槛)、QQQ(0.39<门槛)、GOOGL(0.38<门槛)、META(0.35<门槛)、TSLA(0.31<门槛)
+20:21:20 [INFO] yhs.main: [15:21:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 84658；下一轮 15:25:25
+20:25:29 [INFO] yhs.detector: 【阶段3·跳过】QQQ BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:25:30 [INFO] yhs.detector: 【阶段3·跳过】TSLA BUY_CALL：仅 Heatmap 模式，结构成立直接开仓
+20:25:44 [INFO] yhs.detector: 【阶段3·跳过】META BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:25:45 [INFO] yhs.detector: 【阶段3·跳过】AVGO BUY_PUT：仅 Heatmap 模式，结构成立直接开仓
+20:26:20 [INFO] yhs.trader: 【排序】15:26 本轮信号 4 个 → 开仓 无；未开：QQQ(0.40<门槛)、AVGO(0.38<门槛)、META(0.35<门槛)、TSLA(0.31<门槛)
+20:26:20 [INFO] yhs.main: [15:26:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 84551；下一轮 15:30:25
+20:30:42 [INFO] yhs.detector: 【阶段2】GOOGL 识别到悬崖(看跌)结构：现货 277.45，正节点 280.00（距 0.91%），负节点 272.50，到期 2026-11-25
+20:31:21 [INFO] yhs.main: [15:31:21] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 84329；下一轮 15:35:25
+20:35:30 [INFO] yhs.detector: 【阶段2】TSLA 识别到跳板(看涨)结构：现货 382.49，正节点 380.00（距 0.66%），负节点 382.50，到期 2026-11-25
+20:36:20 [INFO] yhs.main: [15:36:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 83988；下一轮 15:40:25
+20:40:56 [INFO] yhs.detector: 【阶段2】GME 识别到悬崖(看跌)结构：现货 27.25，正节点 27.50（距 0.91%），负节点 27.00，到期 2026-11-27
+20:41:20 [INFO] yhs.main: [15:41:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 83680；下一轮 15:45:25
+20:46:20 [INFO] yhs.main: [15:46:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 83413；下一轮 15:50:25
+20:50:28 [INFO] yhs.detector: 【阶段2】QQQ 识别到悬崖(看跌)结构：现货 637.47，正节点 638.00（距 0.08%），负节点 637.00，到期 2026-11-24
+20:50:31 [INFO] yhs.detector: 【阶段2】MU 识别到悬崖(看跌)结构：现货 631.69，正节点 635.00（距 0.52%），负节点 627.50，到期 2026-11-25
+20:50:45 [INFO] yhs.detector: 【阶段2】AVGO 识别到悬崖(看跌)结构：现货 302.47，正节点 302.50（距 0.01%），负节点 300.00，到期 2026-11-25
+20:51:14 [INFO] yhs.detector: 【阶段2】DELL 识别到悬崖(看跌)结构：现货 297.41，正节点 300.00（距 0.86%），负节点 232.50，到期 2026-11-27
+20:51:20 [INFO] yhs.main: [15:51:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 83063；下一轮 15:55:25
+20:55:46 [INFO] yhs.detector: 【阶段2】MSFT 识别到悬崖(看跌)结构：现货 495.55，正节点 500.00（距 0.89%），负节点 490.00，到期 2026-11-25
+20:56:20 [INFO] yhs.main: [15:56:20] 本轮完成：B 持仓 0；L 持仓 1；监控 46 只，配额剩余 82756；下一轮 16:00:25
+21:00:00 [INFO] yhs.main: ----- 账户 B 收盘 -----
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:00 [INFO] yhs.trader: 复盘统计：共 4 笔
+21:00:00 [INFO] yhs.trader:   方向正确率（峰值浮盈 ≥ +15%）: 75.0%
+21:00:00 [INFO] yhs.trader:   胜率（实现盈亏 > 0）           : 75.0%
+21:00:00 [INFO] yhs.trader:   平均峰值收益率 Avg Peak MFE    : +25.6%
+21:00:00 [INFO] yhs.trader:   平均实现收益率                 : +12.8%
+21:00:00 [INFO] yhs.trader:   平均最大逆行 MAE               : -10.3%
+21:00:00 [INFO] yhs.trader:   合计盈亏                       : $+285.00（每笔约 $650）
+21:00:00 [INFO] yhs.trader:   盈亏比 Profit Factor           : 4.00
+21:00:00 [INFO] yhs.trader:   出场原因分布                   : 25 分钟滞涨截断×1，持仓满 180 分钟×1，连续棘轮锁利×2
+21:00:00 [INFO] yhs.trader: ------------------------------------------------------------------------------
+21:00:00 [INFO] yhs.trader: 仓位              标的     方向        合约                            实现%      峰值%      逆行%  出场
+21:00:00 [INFO] yhs.trader: P20261124-0001  GOOG   BUY_CALL  O:GOOG261127C00277500       -18.3     -3.8    -18.3  25 分钟滞涨截断 10:01→10:26
+21:00:00 [INFO] yhs.trader: P20261124-0002  UNH    BUY_CALL  O:UNH261127C00340000        +47.7    +61.5    -10.1  持仓满 180 分钟 10:41→13:41
+21:00:00 [INFO] yhs.trader: P20261124-0003  MSFT   BUY_CALL  O:MSFT261125C00497500        +5.6    +15.1     -7.9  连续棘轮锁利 12:11→12:32
+21:00:00 [INFO] yhs.trader: P20261124-0004  TSLA   BUY_CALL  O:TSLA261125C00382500       +16.2    +29.5     -4.8  连续棘轮锁利 12:16→12:47
+21:00:00 [INFO] yhs.trader: ==============================================================================
+21:00:01 [INFO] yhs.trader: 交易明细已导出：/home/user/yehangshe-vince/live/trades_2026-11-24.csv
+21:00:01 [INFO] yhs.main: 检测统计：{'snapshots': 0, 'structures': 0, 'fatigue_reject': 0, 'pcr_reject': 0, 'flow_calls': 0, 'flow_throttled': 0, 'flow_reject': 0, 'signals': 0, 'stale_skip': 0}
+21:00:01 [INFO] yhs.main: 本进程计费调用 4042 次，免费调用 5 次；服务端剩余配额 82557 / 100000；按端点：{'market/options-volume-rank': 1, 'derived/heatmap/snapshot': 3553, 'flow/trades': 31, 'options/chain-snapshot': 31, 'options/quote': 30, 'options/quotes': 396}
+21:00:01 [INFO] yhs.main: ----- 账户 L 收盘 -----
+21:00:01 [INFO] yhs.trader: 【收盘】16:00 ET 强制清平全部未结头寸（1 笔）
+21:00:01 [INFO] yhs.trader: 【阶段4·平仓】P20261124-0004 AAPL BUY_CALL | 原因 收盘强平 | 现货 352.92→353.58 | 期权 3.850→3.300 | ROI -14.3% | 峰值 -3.9% | 最大逆行 -53.0% | 盈亏 $-110.00
+21:00:01 [INFO] yhs.trader: ==============================================================================
+21:00:01 [INFO] yhs.trader: 复盘统计：共 16 笔
+21:00:01 [INFO] yhs.trader:   方向正确率（峰值浮盈 ≥ +15%）: 25.0%
+21:00:01 [INFO] yhs.trader:   胜率（实现盈亏 > 0）           : 0.0%
+21:00:01 [INFO] yhs.trader:   平均峰值收益率 Avg Peak MFE    : +10.0%
+21:00:01 [INFO] yhs.trader:   平均实现收益率                 : -28.5%
+21:00:01 [INFO] yhs.trader:   平均最大逆行 MAE               : -32.6%
+21:00:01 [INFO] yhs.trader:   合计盈亏                       : $-2920.00（每笔约 $650）
+21:00:01 [INFO] yhs.trader:   盈亏比 Profit Factor           : 0.00
+21:00:01 [INFO] yhs.trader:   出场原因分布                   : 保本止损 +3%×3，标的破节点止损×10，收盘强平×1，硬止损×2
+21:00:01 [INFO] yhs.trader: ------------------------------------------------------------------------------
+21:00:01 [INFO] yhs.trader: 仓位              标的     方向        合约                            实现%      峰值%      逆行%  出场
+21:00:01 [INFO] yhs.trader: P20261124-0001  WMT    BUY_CALL  O:WMT261127C00131000         -2.1    +44.1     -6.2  保本止损 +3% 09:46→15:02
+21:00:01 [INFO] yhs.trader: P20261124-0002  GME    BUY_CALL  O:GME261127C00027500        -30.5     +1.7    -32.2  标的破节点止损 09:46→10:20
+21:00:01 [INFO] yhs.trader: P20261124-0003  GOOGL  BUY_PUT   O:GOOGL261125P00280000       -1.4    +52.1    -19.5  保本止损 +3% 09:51→12:33
+21:00:01 [INFO] yhs.trader: P20261124-0004  AAPL   BUY_CALL  O:AAPL261125C00352500       -14.3     -3.9    -53.0  收盘强平 09:51→16:00
+21:00:01 [INFO] yhs.trader: P20261124-0005  SPY    BUY_CALL  O:SPY261124C00721000         -4.4    +42.1     -4.4  保本止损 +3% 09:56→10:06
+21:00:01 [INFO] yhs.trader: P20261124-0006  SKHY   BUY_CALL  O:SKHY261127C00113000       -40.0    -32.0    -41.6  标的破节点止损 10:21→10:46
+21:00:01 [INFO] yhs.trader: P20261124-0007  AMZN   BUY_CALL  O:AMZN261125C00252500       -40.0     +2.4    -40.5  标的破节点止损 10:31→11:40
+21:00:01 [INFO] yhs.trader: P20261124-0008  RKLB   BUY_CALL  O:RKLB261127C00045000       -19.2     +4.4    -19.8  标的破节点止损 10:31→11:16
+21:00:01 [INFO] yhs.trader: P20261124-0009  AMD    BUY_PUT   O:AMD261125P00400000        -17.2    +10.1    -17.2  标的破节点止损 11:11→11:45
+21:00:01 [INFO] yhs.trader: P20261124-0010  MSFT   BUY_CALL  O:MSFT261125C00497500       -44.3    +26.1    -45.2  标的破节点止损 11:51→14:00
+21:00:01 [INFO] yhs.trader: P20261124-0011  TSLA   BUY_PUT   O:TSLA261125P00380000       -32.4     +2.2    -32.4  标的破节点止损 11:56→12:15
+21:00:01 [INFO] yhs.trader: P20261124-0012  HPE    BUY_PUT   O:HPE261127P00040000        -25.5     +0.7    -25.5  标的破节点止损 12:01→12:31
+21:00:01 [INFO] yhs.trader: P20261124-0013  AMZN   BUY_CALL  O:AMZN261125C00252500       -37.7     +5.8    -37.7  标的破节点止损 12:16→15:00
+21:00:01 [INFO] yhs.trader: P20261124-0014  SPY    BUY_PUT   O:SPY261124P00715000        -65.3     +1.0    -65.3  硬止损 12:26→13:30
+21:00:01 [INFO] yhs.trader: P20261124-0015  QQQ    BUY_PUT   O:QQQ261124P00635000        -65.1     +1.4    -65.1  硬止损 12:26→13:30
+21:00:01 [INFO] yhs.trader: P20261124-0016  AVGO   BUY_PUT   O:AVGO261125P00302500       -16.9     +2.4    -16.9  标的破节点止损 12:56→13:35
+21:00:01 [INFO] yhs.trader: ==============================================================================
+21:00:02 [INFO] yhs.trader: 交易明细已导出：/home/user/yehangshe-vince/live/trades_2026-11-24_L.csv
+21:00:02 [INFO] yhs.main: 检测统计：{'snapshots': 3553, 'structures': 308, 'fatigue_reject': 18, 'pcr_reject': 0, 'flow_calls': 0, 'flow_throttled': 0, 'flow_reject': 0, 'signals': 216, 'stale_skip': 0}
+21:00:02 [INFO] yhs.main: 本进程计费调用 4042 次，免费调用 5 次；服务端剩余配额 82557 / 100000；按端点：{'market/options-volume-rank': 1, 'derived/heatmap/snapshot': 3553, 'flow/trades': 31, 'options/chain-snapshot': 31, 'options/quote': 30, 'options/quotes': 396}
+21:00:02 [INFO] yhs.main: 单日模式：今日结束，退出
