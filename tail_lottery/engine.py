@@ -439,6 +439,8 @@ class Engine:
     def _maybe_push(self, pb, now):
         # 11-19 用户定：有"证据分歧"的 CALL / PUT 不推方向，按中性处理
         v = pb.get("verdict")
+        if v == P.STAND_BY and pb.get("reason", "").startswith("不在美东"):
+            return   # 窗口结束不推"待命"，由收盘总结代替（11-24 起）
         if v in (P.CALL, P.PUT) and pb.get("conflict"):
             v = P.NEUTRAL
         if v in (None, P.STAND_BY) and self.last_verdict_pushed is None:

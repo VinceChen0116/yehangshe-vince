@@ -49,3 +49,5 @@
 20:59:31 [INFO] tail.engine: 【倾向】中性 CALL 10.0 / PUT 0 分差 10 < 21 | strike_bias=弃权；charm_hedge_flow=CALL10.0；key_level=弃权；skew_rr25=弃权；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=弃权（GEX 覆盖率 5% < 20%）；atm_flow_5m=弃权
 21:00:01 [INFO] tail.engine: 【倾向】待命 CALL 0 / PUT 0 不在美东 15:30–16:00 | 
 21:00:01 [INFO] tail.engine: 【健康】现价 7200.41 报价延迟 0s 成交桶延迟 120s 现用合约 40 方向已知 0.834 信号 63 配额剩 82556 今日用 2690 本进程用 2006 推送 5 降级 Skew 不可用：没有合约或已到期；Charm 不可用：距到期不足 10 秒
+21:00:11 [INFO] tail.engine: 【推送】待命（原始 待命，CALL 0 / PUT 0）
+21:01:01 [INFO] tail.engine: 收盘总结已推送，退出（--exit-after-close）
