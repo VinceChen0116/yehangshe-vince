@@ -485,12 +485,23 @@ class TestRuleChanges1119(unittest.TestCase):
         ch = {"available": True, "direction": "BUY", "hedge_flow_delta_1m": 1000, "stability": "NORMAL"}
         out = P.evaluate(_inp(charm=ch, gex=GEX_NEG))
         self.assertEqual(_legs(out)["gex_regime"]["score"], 0)
-        self.assertIn("只有 Charm", _legs(out)["gex_regime"]["note"])
+        self.assertIn("只有 Charm / Skew", _legs(out)["gex_regime"]["note"])
         self.assertEqual(out["verdict"], P.NEUTRAL)
         flow = [{"strike": 7335, "right": "C", "contracts": 300, "buy": 200, "sell": 50}]
         out = P.evaluate(_inp(charm=ch, gex=GEX_NEG, flow_600=flow))   # 有非 Charm 证据 → 照常加分
         self.assertEqual(_legs(out)["gex_regime"]["score"], 15)
         self.assertEqual(out["call_score"], 75)
+
+    def test_skew_plus_gex_regime_not_enough(self):
+        """11-23 用户定：只有 Skew（或 Skew + Charm）领先时 gex_regime 也不加分。"""
+        sk = {"available": True, "risk_reversal_25d": -0.03, "atm_iv": 0.7}
+        out = P.evaluate(_inp(skew=sk, gex=GEX_NEG))
+        self.assertEqual(_legs(out)["gex_regime"]["score"], 0)
+        self.assertEqual(out["verdict"], P.NEUTRAL)          # 只有 PUT 10
+        ch = {"available": True, "direction": "SELL", "hedge_flow_delta_1m": -1, "stability": "NORMAL"}
+        out = P.evaluate(_inp(skew=sk, charm=ch, gex=GEX_NEG))
+        self.assertEqual(_legs(out)["gex_regime"]["score"], 0)
+        self.assertEqual((out["put_score"], out["verdict"]), (30, P.PUT))   # Charm 20 + Skew 10 本身就 ≥ 21，规则未禁止
 
     def test_conflicting_direction_pushed_as_neutral(self):
         sent = []

@@ -414,3 +414,5 @@ python3 archive.py --dry-run                 # 只看计划
 * 11-18 用户定：11-19 由云端会话跑（`python3 tail_live.py --exit-after-close`，Discord 推送照常），跑完写运行报告推 Discord。
 * 11-19 首次云端完整运行，报告 `reports/tail_live_2026-11-19.md`。用户定（11-20 起）：gex_regime 只在领先方有非 Charm 证据时加分；
   有证据分歧的 CALL / PUT 推送按中性；钉住蝴蝶等 15:10 完整轮后再判；完整轮 15:28 起、之前现价 60 秒一次。11-20 继续云端跑（定时唤醒 14:45 ET）。
+* 11-23 用户定：gex_regime 只在领先方有 strike_bias / key_level / breakout / rejection 时加分（Charm、Skew 不算）；
+  改为每个交易日自动云端运行（定时任务 trig_01FNsW1kekDNYZ4W3VAGVkhv，14:45 ET，周一至周五，绑定本会话）。

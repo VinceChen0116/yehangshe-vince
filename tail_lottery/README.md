@@ -30,6 +30,12 @@ caffeinate -i python3 tail_live.py --log-file logs/tail_live.log   # macOS 防�
 - 配额熔断 / 停止拉取时推一条。
 - 16:01 推收盘总结：最后倾向、Feed 条数、方向已知占比、今日用掉的配额。
 
+## 2026-11-23 用户定的改动（11-24 起生效）
+
+- **gex_regime**：负 Gamma 时，只有领先方有资金或价格形态证据（strike_bias / key_level / breakout_integrity / rejection_reversal）才加 15 分；
+  只有 Charm、Skew 领先时不加分（11-20 实测 Skew 10 + gex_regime 15 = 25 会单独出方向）。
+- **每个交易日自动运行**：云端定时任务 14:45 ET 唤醒（节假日 / 半日市跳过并推说明）。
+
 ## 2026-11-19 用户定的改动（11-20 起生效）
 
 - **gex_regime**：负 Gamma 时，只有领先方至少有一条非 Charm 的证据投票，才给领先方加 15 分。
