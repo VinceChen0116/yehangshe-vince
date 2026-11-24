@@ -400,3 +400,7 @@ python3 archive.py --dry-run                 # 只看计划
   11/17 跑了一半的存档被停（未提交，在存档会话的本地 git stash）。11/17 起的 Heatmap 不在本地存档，回放需要时按天从服务端拉（10 单位 / 页）。
 * 实盘不受影响：实盘用 heatmap snapshot（1 单位）和 options.quote(s)（每份报价 1 单位）。不要换成 heatmap live（10 单位）。
 * 新增的期权链 OHLC / 最后成交 / 市场估值只给当前或未来到期的最新值，不能用于历史回放。
+
+## P. 初始止损 −25%（2026-11-24 用户定，11/25 起）
+* baseline 出场的期权初始硬止损 −35% → −25%（`baseline.EW.initial_stop_loss_roi_pct`），A / B 账户生效；L（旧规则）不受影响。
+* 已登记 `rules_registry.py`：stop_25（决定日 11/24、生效日 11/25），样本外从 11/25 算。没有跑回放（用户未要求）。

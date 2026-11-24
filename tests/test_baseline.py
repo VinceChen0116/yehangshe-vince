@@ -505,8 +505,8 @@ class TestExits(unittest.TestCase):
 
     def test_initial_stop(self):
         tr, fq, p, now = opened()
-        self.assertIsNone(self.tick(tr, fq, p, now, 1, 1.5, 100.6))           # −25%
-        self.assertIsNotNone(self.tick(tr, fq, p, now, 2, 1.29, 100.7))       # −35.5%
+        self.assertIsNone(self.tick(tr, fq, p, now, 1, 1.52, 100.6))          # −24%（11/25 起初始止损 −25%）
+        self.assertIsNotNone(self.tick(tr, fq, p, now, 2, 1.49, 100.7))       # −25.5%
         self.assertEqual(p.exit_reason, "INITIAL_STOP_LOSS")
 
     def test_no_8_min_truncation(self):              # 2026-10-20 用户定：0DTE 8 分钟截断已去掉，10 分钟推迟到 18 分钟
@@ -563,8 +563,8 @@ class TestNearTrigger(unittest.TestCase):
         tr, fq, p, now = opened()
         st = tr.state[p.position_id]
         tr.mark(p, 100.5, now + dt.timedelta(minutes=1))          # 先盯一次：峰值约 −5%
-        self.assertFalse(B.near_trigger(st, -20.0, 100.5, 3))       # 离 −35% 还有 15 点，时间截断尚未生效
-        self.assertTrue(B.near_trigger(st, -31.0, 100.5, 3))        # 离 −35% 4 点
+        self.assertFalse(B.near_trigger(st, -12.0, 100.5, 3))       # 离 −25% 还有 13 点，时间截断尚未生效
+        self.assertTrue(B.near_trigger(st, -21.0, 100.5, 3))        # 离 −25% 4 点
         self.assertFalse(B.near_trigger(st, -9.0, 100.5, 8))        # 8 分钟截断已去掉
         self.assertTrue(B.near_trigger(st, -16.0, 100.5, 17))       # 18 分钟零动能截断线 −20% 在 5 点内
         self.assertTrue(B.near_trigger(st, 0.0, 101.25, 3))         # 现价离现货止损 101.3 不到 0.1%
