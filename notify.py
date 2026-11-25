@@ -149,6 +149,9 @@ class DiscordNotifier:
                 {"name": "环境 / 演化 / 迁移", "value": f"{m.get('bl_regime', '')} / {m.get('bl_growth', '')} / "
                                                    f"{m.get('bl_migration', '')}", "inline": True},
                 {"name": "开仓依据", "value": (m.get("bl_notes") or "—")[:1000], "inline": False},
+                {"name": "Flow 大单（仅记录）", "value": ("—" if getattr(p, "flow_ok", None) is None else
+                                                     (f"🐋 有 ${p.flow_premium_usd:,.0f}" if p.flow_ok else "无") + f"：{p.flow_note[:80]}"),
+                 "inline": False},
             ],
             "footer": {"text": f"{p.position_id} · {m.get('bl_trigger', '')} · 模拟盘"},
         }])
