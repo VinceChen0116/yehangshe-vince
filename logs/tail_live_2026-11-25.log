@@ -10,3 +10,6 @@
 20:25:00 [INFO] tail.engine: 【健康】现价 7178.49 报价延迟 45s 成交桶延迟 120s 现用合约 40 方向已知 0.828 信号 2 配额剩 74078 今日用 752 本进程用 405 推送 0 降级 Charm 不可用：15:30 之前不输出
 20:30:00 [INFO] tail.engine: 【倾向】中性 CALL 0 / PUT 0 分差 0 < 21 | strike_bias=弃权；charm_hedge_flow=弃权；key_level=弃权；skew_rr25=弃权；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=-0（负 Gamma，但没有领先方向）；atm_flow_5m=PUT0
 20:30:00 [INFO] tail.engine: 【健康】现价 7171.64 报价延迟 16s 成交桶延迟 120s 现用合约 40 方向已知 0.822 信号 2 配额剩 73863 今日用 967 本进程用 532 推送 0 降级 Charm 不可用：15:30 之前不输出
+20:30:18 [INFO] tail.engine: 【倾向】PUT CALL 0 / PUT 30  | strike_bias=弃权；charm_hedge_flow=PUT20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=弃权；rejection_reversal=弃权；gex_regime=-0（负 Gamma，但领先方（PUT）没有资金或价格形态证据（只有 Charm / Skew），不加分）；atm_flow_5m=PUT0
+20:31:12 [INFO] tail.engine: 【推送】PUT（原始 PUT，CALL 0 / PUT 30）
+20:35:01 [INFO] tail.engine: 【健康】现价 7162.39 报价延迟 5s 成交桶延迟 121s 现用合约 40 方向已知 0.83 信号 18 配额剩 73527 今日用 1303 本进程用 782 推送 1 降级 无
