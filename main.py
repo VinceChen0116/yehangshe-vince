@@ -291,7 +291,7 @@ def build_live_accounts(cfg: SystemConfig, client: YHSClient, day: dt.date, noti
             lcfg.intraday_rules = "legacy"
             lcfg.legacy_notional_sizing = True
             lcfg.trades_csv = _with_suffix(cfg.trades_csv, "_L")
-            accounts.append(LiveAccount("L", lcfg, client, universe, notifier, TAG_L))
+            accounts.append(LiveAccount("L", lcfg, client, universe, notifier if cfg.live_legacy_discord else None, TAG_L))
     if mode in ("both", "strict") and strict:
         acfg = copy.copy(cfg)
         acfg.trades_csv = _with_suffix(cfg.trades_csv, "_A") if mode == "both" else cfg.trades_csv
@@ -431,7 +431,8 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             if notifier and cfg.discord_heartbeat_min and et_now() >= next_heartbeat:
                 next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min)
                 notifier.text(f"💓 {et_now().strftime('%H:%M')} ET 运行中｜监控 {len(pool)} 只｜"
-                              + "｜".join(a.status() for a in accounts) + f"｜配额剩余 {client.quota_remaining}")
+                              + "｜".join(a.status() for a in accounts if a.name != "L" or cfg.live_legacy_discord)
+                              + f"｜配额剩余 {client.quota_remaining}")
             # 两次扫描之间：持仓每 position_mark_min 分钟用实时报价盯一次（只拉持仓合约的报价，每个 1 配额）
             # baseline：任一持仓靠近出场触发线时，两次分钟检查之间再每 bl_fast_mark_s 秒加查一次
             step = cfg.position_mark_min if cfg.live_quotes else 0

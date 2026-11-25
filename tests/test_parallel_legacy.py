@@ -23,6 +23,8 @@ def entry(t, strict=False):
 
 
 class ParallelLegacyTest(unittest.TestCase):
+    _notifier = None
+
     def build(self, **over):
         cfg = SystemConfig.load(None)
         cfg.trades_csv = "live/trades_2026-11-16.csv"
@@ -34,7 +36,7 @@ class ParallelLegacyTest(unittest.TestCase):
                 mock.patch.object(main, "budget_cap", return_value=60):
             uf.return_value.build.return_value = list(uni)
             client = mock.Mock(quota_remaining=99999)
-            return main.build_live_accounts(cfg, client, dt.date(2026, 11, 16), None)[1]
+            return main.build_live_accounts(cfg, client, dt.date(2026, 11, 16), self._notifier)[1]
 
     def test_accounts(self):
         acc = {a.name: a for a in self.build()}
@@ -47,6 +49,20 @@ class ParallelLegacyTest(unittest.TestCase):
         self.assertEqual(acc["L"].cfg.trades_csv, "live/trades_2026-11-16_L.csv")
         self.assertEqual(acc["B"].cfg.trades_csv, "live/trades_2026-11-16.csv")
         self.assertEqual(type(acc["L"].trader), PaperTrader)
+
+    def test_legacy_discord_off(self):
+        """11/25 用户定：L 不推 Discord（默认关），B / A 照常推。"""
+        from notify import DiscordNotifier
+        self._notifier = DiscordNotifier("")
+        try:
+            acc = {a.name: a for a in self.build()}
+            self.assertIsNone(acc["L"].trader.notifier)
+            self.assertIsNotNone(acc["B"].trader.notifier)
+            self.assertIsNotNone(acc["A"].trader.notifier)
+            acc = {a.name: a for a in self.build(live_legacy_discord=True)}
+            self.assertIsNotNone(acc["L"].trader.notifier)
+        finally:
+            self._notifier = None
 
     def test_switch_off(self):
         self.assertEqual(sorted(a.name for a in self.build(live_parallel_legacy=False)), ["A", "B"])

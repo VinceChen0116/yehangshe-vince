@@ -392,6 +392,8 @@ python3 archive.py --dry-run                 # 只看计划
   + 与 baseline 相同的按金额开仓（`legacy_notional_sizing`，每笔约 $650）。交易明细 `live/trades_<日期>_L.csv`。
   额外配额只来自 L 的持仓实时报价（每分钟每持仓 1 次）和开仓前的 Flow 记录。`oos_report.py` 的"并行对比"段逐日比较 B 与 L；
   live_evidence / 样本外统计仍只算 B。关掉：`live_parallel_legacy=False`。
+* **2026-11-25 用户定：L 不再推 Discord，只在后台跑。** `config.live_legacy_discord=False`（默认）→ L 的开平仓、收盘复盘、心跳里的 L 状态都不发；
+  `_L.csv` 与日志照常写，B / A 的推送不变。要恢复推送设为 True。
 
 ## O. 夜航社 API 计量变更与存档暂停（2026-11-17）
 * 夜航社 changelog「Dealer Top-N 深历史与计量」已生效（discover 中 derived.dealer_heatmap_history / dealer_gex_history weight=10；11/17 实测一页扣 10）。

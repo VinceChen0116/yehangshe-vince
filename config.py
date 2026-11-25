@@ -114,6 +114,7 @@ class SystemConfig:
     # 2026-11-16 用户定：旧规则（legacy）与 baseline 并行实盘对比。L 账户 = B 的标的池 + 同一份 Heatmap（不额外耗 Heatmap 配额）
     #   + 旧规则 + 与 baseline 相同的按金额开仓（每笔约 $650）；交易明细 *_L.csv，Discord 标签 🅻
     live_parallel_legacy: bool = True
+    live_legacy_discord: bool = False  # 2026-11-25 用户定：L（旧规则）不再推 Discord（开平仓、收盘复盘、心跳里的 L 状态），只在后台跑、照常写 *_L.csv 与日志
     flow_stream_record: bool = True   # 实盘同时用 WebSocket 采集全市场 Ask 侧 ≥$50k 单腿大单（flow_stream.py；只记录、0 配额；11/25 用户定）
     legacy_notional_sizing: bool = False  # 旧规则也按 bl_target_notional_usd 开仓（只在 L 账户打开；旧规则原来每笔 contracts_per_trade 张）
     max_universe_size: int = 60           # 预算守卫上限（10/19 60 → 40；2026-10-20 用户定加回 60）
