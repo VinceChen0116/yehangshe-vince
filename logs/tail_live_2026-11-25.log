@@ -35,3 +35,11 @@
 20:48:11 [INFO] tail.engine: 【推送】PUT（原始 PUT，CALL 0 / PUT 30）
 20:50:00 [INFO] tail.engine: 【倾向】CALL CALL 55 / PUT 30 证据分歧  | strike_bias=弃权；charm_hedge_flow=PUT20；key_level=CALL15；skew_rr25=PUT10；breakout_integrity=弃权；rejection_reversal=CALL25；gex_regime=CALL15（负 Gamma，放大领先方（CALL））；atm_flow_5m=CALL0
 20:50:00 [INFO] tail.engine: 【健康】现价 7180.9 报价延迟 14s 成交桶延迟 120s 现用合约 40 方向已知 0.829 信号 27 配额剩 72080 今日用 2750 本进程用 1509 推送 5 降级 无
+20:50:18 [INFO] tail.engine: 【倾向】CALL CALL 110 / PUT 0  | strike_bias=CALL40；charm_hedge_flow=CALL20；key_level=CALL15；skew_rr25=弃权；breakout_integrity=弃权；rejection_reversal=CALL35；gex_regime=-0（正 Gamma：0 分，钉住风险）；atm_flow_5m=CALL0
+20:50:47 [INFO] tail.engine: 【倾向】CALL CALL 60 / PUT 15 证据分歧  | strike_bias=CALL40；charm_hedge_flow=CALL20；key_level=弃权；skew_rr25=弃权；breakout_integrity=弃权；rejection_reversal=PUT15；gex_regime=-0（正 Gamma：0 分，钉住风险）；atm_flow_5m=CALL0
+20:51:18 [INFO] tail.engine: 【倾向】中性 CALL 40 / PUT 45 证据分歧 分差 5 < 21 | strike_bias=CALL40；charm_hedge_flow=PUT20；key_level=弃权；skew_rr25=弃权；breakout_integrity=弃权；rejection_reversal=PUT25；gex_regime=-0（正 Gamma：0 分，钉住风险）；atm_flow_5m=CALL0
+20:51:18 [INFO] tail.engine: 【推送】中性（原始 中性，CALL 40 / PUT 45，证据分歧）
+20:52:19 [INFO] tail.engine: 【倾向】PUT CALL 40 / PUT 70 证据分歧  | strike_bias=CALL40；charm_hedge_flow=PUT20；key_level=弃权；skew_rr25=PUT10；breakout_integrity=弃权；rejection_reversal=PUT25；gex_regime=PUT15（负 Gamma，放大领先方（PUT））；atm_flow_5m=CALL0
+20:53:20 [INFO] tail.engine: 【倾向】中性 CALL 40 / PUT 35.0 证据分歧 分差 5 < 21 | strike_bias=CALL40；charm_hedge_flow=PUT10.0；key_level=弃权；skew_rr25=弃权；breakout_integrity=弃权；rejection_reversal=PUT25；gex_regime=-0（正 Gamma：0 分，钉住风险）；atm_flow_5m=CALL0
+20:54:22 [INFO] tail.engine: 【倾向】CALL CALL 70 / PUT 35.0 证据分歧  | strike_bias=CALL40；charm_hedge_flow=PUT10.0；key_level=CALL15；skew_rr25=弃权；breakout_integrity=弃权；rejection_reversal=PUT25；gex_regime=CALL15（负 Gamma，放大领先方（CALL））；atm_flow_5m=CALL0
+20:55:00 [INFO] tail.engine: 【健康】现价 7184.55 报价延迟 9s 成交桶延迟 120s 现用合约 40 方向已知 0.829 信号 35 配额剩 71749 今日用 3081 本进程用 1754 推送 6 降级 无
