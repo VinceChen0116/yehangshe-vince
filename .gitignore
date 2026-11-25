@@ -4,3 +4,8 @@ __pycache__/
 # 含 API Key，不入库；用环境变量 YHS_API_KEY 或本地 config.json
 config.json
 .env
+
+# 分享版尾盘工作台的运行输出（本地诊断，不提交）
+third_party/spx_tail_observer/logs/
+logs/nightwatch_app_*.out
+__pycache__/
