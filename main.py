@@ -23,7 +23,7 @@ import os
 import sys
 import time
 
-from config import (SystemConfig, entry_blocked_window, et_datetime, et_now, expiry_candidates, hhmm_to_minutes,
+from config import (SystemConfig, entry_blocked_window, session_close_hhmm, et_datetime, et_now, expiry_candidates, hhmm_to_minutes,
                     minutes_of_day, parse_iso, poll_interval_min, setup_logging, to_et)
 from detector import (HEATMAP_PATH, FLOW_TRADES_PATH, SignalDetector, UniverseEntry, UniverseFilter,
                       extract_rows, is_strict, pick, pick_num)
@@ -347,6 +347,13 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             a.engine.spot_override = lambda pos, now: parity_spot(
                 pos.contract_symbol, lambda sym: quotes.cache.get(sym.split(":")[-1]))
 
+    flow_rec = None
+    if cfg.flow_stream_record:   # 11/25 用户定：WebSocket 采集全市场 Ask 侧 ≥$50k 大单，只记录不参与交易（0 配额）
+        try:
+            import flow_stream
+            flow_rec = flow_stream.start_background(cfg, until_hhmm=session_close_hhmm(day))
+        except Exception as e:  # noqa: BLE001
+            log.warning("【Flow 采集】启动失败（不影响交易）：%s", e)
     pool = [e.ticker for e in universe]
     last_poll: dict[str, dt.datetime] = {}
     open_t = et_datetime(day, cfg.session_open)
@@ -449,6 +456,10 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
         log.warning("收到中断信号，按最新现货清平所有模拟持仓并导出")
         finish_all(et_now(), "MANUAL_STOP")
         raise
+    finally:
+        if flow_rec is not None:
+            import flow_stream
+            flow_stream.finish_background(flow_rec)
 
 
 # =============================================================================

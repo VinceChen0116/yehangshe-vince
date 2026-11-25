@@ -404,3 +404,10 @@ python3 archive.py --dry-run                 # 只看计划
 ## P. 初始止损 −25%（2026-11-24 用户定，11/25 起）
 * baseline 出场的期权初始硬止损 −35% → −25%（`baseline.EW.initial_stop_loss_roi_pct`），A / B 账户生效；L（旧规则）不受影响。
 * 已登记 `rules_registry.py`：stop_25（决定日 11/24、生效日 11/25），样本外从 11/25 算。没有跑回放（用户未要求）。
+
+## Q. Flow WebSocket 大单采集（2026-11-25 用户定，11/26 起随实盘运行）
+* `flow_stream.py`：实盘 `main.py --live` 在后台线程里连夜航社 Flow WebSocket（0 配额；每账户同一入口只能 1 条连接，另一个仓库不用），
+  订阅全市场单腿、Ask 侧（A / AA）、权利金 ≥ $50,000 的大单；只记录，不参与交易。开关 `config.flow_stream_record`（默认开）。
+* 原始推送追加到 `yhs_data/flow_stream/<日期>.jsonl`（不提交），收盘后按 aggregate_id 去重写成 `live/flow_stream_<日期>.jsonl.gz`
+  （首行 `_meta`：笔数、更新次数、resync 次数、断线区间），随实盘日志一起提交。11/25 盘中实测约 30 笔 / 分钟、推送延迟约 0.2 秒。
+* 缺 websockets 库时自动 pip 安装；失败或断线只记日志，不影响交易。4409（同账户已有连接）/ 权限失效时停止重连。
