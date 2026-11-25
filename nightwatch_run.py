@@ -5,7 +5,7 @@ nightwatch_run.py —— 云端并行运行别人分享的「SPX 尾盘工作台
 
 做的事（只用标准库）：
   1. 非交易日 / 半日市：不启动。
-  2. 14:58 ET 用独立 venv 启动它：`python -m observer.app --source nightwatch --port 8767`，
+  2. 15:30 ET（收盘前半小时，用户 11-26 定；可用 --start 改）用独立 venv 启动它：`python -m observer.app --source nightwatch --port 8767`，
      key 通过环境变量 NIGHTWATCH_API_KEY 传入（取自 YHS_API_KEY，不打印、不落盘）。它自己限本进程 ≤3000 units。
   3. 每 5 秒读 http://127.0.0.1:8767/api/snapshot（只读本机，不调夜航社）：
        方向（CALL / PUT / NEUTRAL）连续 2 次一致且与上次推送不同 → 推 Discord「🌙【分享版工作台】」；疑似 pin 出现时推一次。
@@ -33,7 +33,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 APP_DIR = os.path.join(HERE, "third_party", "spx_tail_observer")
 VENV_PY = os.environ.get("NIGHTWATCH_PYTHON", "/home/user/.nw_venv/bin/python")
 PORT = 8767
-START, STOP = "14:58", "16:02"
+START, STOP = "15:30", "16:02"   # 2026-11-26 用户定：收盘前半小时（15:30 ET）启动
 POLL_S = 5
 TAG = "🌙【分享版工作台】"
 LABEL = {"CALL": "偏多 CALL", "PUT": "偏空 PUT", "NEUTRAL": "中性", "STAND_BY": "待命"}
@@ -74,6 +74,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--log-file", default=None)
     ap.add_argument("--no-discord", action="store_true")
+    ap.add_argument("--start", default=START, help="启动时刻 HH:MM ET（默认 15:30；已过则立即启动）")
     a = ap.parse_args(argv)
     setup_logging("INFO", a.log_file)
     cfg = SystemConfig.load()
@@ -90,7 +91,7 @@ def main(argv=None):
     if not is_trading_day(today) or session_close_hhmm(today) != "16:00":
         log.info("今天休市或半日市，不启动")
         return 0
-    start = et_datetime(today, START)
+    start = et_datetime(today, a.start)
     stop = et_datetime(today, STOP)
     while et_now() < start:
         time.sleep(5)

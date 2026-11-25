@@ -421,5 +421,7 @@ python3 archive.py --dry-run                 # 只看计划
 * 代码原样放在 `third_party/spx_tail_observer/`（别人分享的，未改；自带 97 个测试在云端通过）。只连 api.yehangshe.com（可选 stream.yehangshe.com / api.massive.com，未启用）。
 * 依赖（fastapi / uvicorn / httpx / exchange-calendars / websockets）只装在云端独立 venv `/home/user/.nw_venv`，不进本项目代码：
   `python3 -m venv /home/user/.nw_venv && /home/user/.nw_venv/bin/pip install -r third_party/spx_tail_observer/requirements.txt`
-* `nightwatch_run.py`（标准库）：14:58 ET 启动它（端口 8767，key 用环境变量传入），每 5 秒读它的本地快照，方向变化推 Discord「🌙【分享版工作台】」，
+* `nightwatch_run.py`（标准库）：15:30 ET（11-26 用户定：收盘前半小时）启动它（端口 8767，key 用环境变量传入），每 5 秒读它的本地快照，方向变化推 Discord「🌙【分享版工作台】」，
   日志 `logs/nightwatch_<日期>.log`（【NW倾向】【NW健康】【NW推送】），16:02 关掉并推收盘总结。它自己限本进程 ≤3000 units。
+* 定时任务（均绑定本会话，周一至周五，美东）：我们的观察台 trig_01FNsW1kekDNYZ4W3VAGVkhv 14:45；
+  分享版 trig_0144VuL5uvkpEXUTEV7Q8YuY 15:25 唤醒、15:30 启动，16:02 停，收盘报告 reports/nightwatch_<日期>.md。
