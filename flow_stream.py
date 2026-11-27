@@ -122,6 +122,8 @@ class FlowRecorder:
                     await ws.send(json.dumps({"type": "subscribe", "id": "rec", "channel": "flow", "filter": FILTER}))
                 elif t == "subscribed":
                     self.status = "已订阅"
+                    if self.gaps and self.gaps[-1][1] is None:     # 断线后重新订阅成功：补上恢复时刻
+                        self.gaps[-1][1] = et_now().strftime("%H:%M:%S")
                     log.info("【Flow 采集】已订阅：单腿 Ask 侧 ≥ $50,000")
                 elif t == "flow":
                     now = dt.datetime.now(dt.timezone.utc).isoformat(timespec="milliseconds")
@@ -162,7 +164,8 @@ class FlowRecorder:
                     return
             except Exception as e:  # noqa: BLE001
                 log.warning("【Flow 采集】连接异常：%s: %s", type(e).__name__, str(e)[:200])
-            self.gaps.append([t0.strftime("%H:%M:%S"), et_now().strftime("%H:%M:%S"), str(code)])
+            # 断线区间 = [断开时刻, 重新订阅成功时刻（之后补上）, 关闭码]
+            self.gaps.append([et_now().strftime("%H:%M:%S"), None, str(code)])
             if et_now() - t0 > dt.timedelta(minutes=2):
                 backoff = 1.0
             await asyncio.sleep(backoff + random.random())
