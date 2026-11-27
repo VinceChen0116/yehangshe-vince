@@ -413,3 +413,13 @@ python3 archive.py --dry-run                 # 只看计划
 * 原始推送追加到 `yhs_data/flow_stream/<日期>.jsonl`（不提交），收盘后按 aggregate_id 去重写成 `live/flow_stream_<日期>.jsonl.gz`
   （首行 `_meta`：笔数、更新次数、resync 次数、断线区间），随实盘日志一起提交。11/25 盘中实测约 30 笔 / 分钟、推送延迟约 0.2 秒。
 * 缺 websockets 库时自动 pip 安装；失败或断线只记日志，不影响交易。4409（同账户已有连接）/ 权限失效时停止重连。
+
+## R. B 盯仓改为实时推送每 5 秒（2026-11-26 用户定，11/27 起；rules_registry: mark_5s）
+* `quote_stream.py`：后台线程连 option-quotes 推送（`/v1/stream`，0 配额；与 Flow 采集的 `/v1/flow/stream` 是两个入口，互不占用），
+  只订阅 **B** 的持仓合约 + 同行权价另一边（Call/Put 平价反推现价）。每个账户这个入口只能 1 条连接：别的程序（例如自己调试的 BOT）
+  同时连 `/v1/stream` 会 4409，本程序就停止推送、B 退回每分钟 REST。
+* `main.py` 实盘循环：推送健康时 B 每 `bl_stream_mark_s`=5 秒用推送报价盯一次（扫描 Heatmap 期间也照盯），B 不再走 REST 报价；
+  推送断开 / 连不上 → B 自动退回每分钟 REST（+ 靠近触发线 20 秒），日志与 Discord 提示（每天最多 6 次）。A / L 不变（每分钟 REST）。
+  开关：`config.bl_stream_quotes`。每轮日志末尾写"B 盯仓：推送 5 秒 / 每分钟 REST"。
+* 同时修正：提前收盘日（感恩节次日、平安夜、7/3，13:00 收盘）实盘按 13:00 强平退出，原来会空跑到 16:00。
+* 回放同口径：见下一节（分钟线 + 关键分钟 5 秒精查）。

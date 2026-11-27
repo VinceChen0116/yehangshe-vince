@@ -333,19 +333,82 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
     baseline_rules = cfg.intraday_rules == "baseline"
     bl_accounts = [a for a in accounts if a.cfg.intraday_rules == "baseline"]   # 并行的 L 账户走旧规则
 
+    # 2026-11-26 用户定（11/27 起，rules_registry: mark_5s）：B 持仓用 option-quotes 实时推送（0 配额）每 bl_stream_mark_s 秒盯一次；
+    # 推送不健康时 B 自动退回每分钟 REST。A / L 不变。
+    b_acc = next((a for a in accounts if a.name == "B"), None)
+    qstream = None
+    if quotes and b_acc is not None and cfg.bl_stream_quotes and cfg.bl_stream_mark_s > 0:
+        try:
+            import quote_stream
+            qstream = quote_stream.start_background(cfg, until_hhmm=session_close_hhmm(day))
+        except Exception as e:  # noqa: BLE001
+            log.warning("【报价推送】启动失败，B 用每分钟 REST 盯仓：%s", e)
+
+    def b_streamed() -> bool:
+        return qstream is not None and qstream.healthy()
+
+    def b_quote(sym: str):
+        q = qstream.get(sym) if qstream is not None else None
+        return q if q is not None else quotes.get(sym)
+
+    def sync_stream() -> None:
+        if qstream is not None and b_acc is not None:
+            from baseline import pair_symbol
+            ps = b_acc.trader.open_positions()
+            qstream.set_contracts([p.contract_symbol for p in ps] + [pair_symbol(p.contract_symbol) for p in ps])
+
     def refresh_quotes() -> None:
+        sync_stream()
         if quotes:
-            syms = [p.contract_symbol for a in accounts for p in a.trader.open_positions()]
+            streamed = b_streamed()
+            accs = [a for a in accounts if not (streamed and a is b_acc)]   # 推送健康时 B 不再走 REST
+            syms = [p.contract_symbol for a in accs for p in a.trader.open_positions()]
             if bl_accounts:   # baseline 持仓：同行权价的另一边一起拉，用 Call/Put 平价反推实时现价（每个持仓多 1 配额）
                 from baseline import pair_symbol
-                syms += [pair_symbol(p.contract_symbol) for a in bl_accounts for p in a.trader.open_positions()]
+                syms += [pair_symbol(p.contract_symbol) for a in bl_accounts if a in accs for p in a.trader.open_positions()]
             quotes.new_round(list(dict.fromkeys(syms)))
 
     if quotes and bl_accounts:
         from baseline import parity_spot
         for a in bl_accounts:
-            a.engine.spot_override = lambda pos, now: parity_spot(
-                pos.contract_symbol, lambda sym: quotes.cache.get(sym.split(":")[-1]))
+            if a is b_acc and qstream is not None:
+                a.engine.spot_override = lambda pos, now: parity_spot(
+                    pos.contract_symbol,
+                    lambda sym: qstream.get(sym) or quotes.cache.get(sym.split(":")[-1]))
+            else:
+                a.engine.spot_override = lambda pos, now: parity_spot(
+                    pos.contract_symbol, lambda sym: quotes.cache.get(sym.split(":")[-1]))
+    if qstream is not None:
+        b_acc.trader.quote_provider = b_quote
+    stream_state = {"last": None, "notes": 0, "b_mark": None}
+
+    def mark_b_stream(force: bool = False) -> None:
+        """推送健康且 B 有持仓时，距上次 ≥ bl_stream_mark_s 秒就用推送报价盯一次 B（扫描 Heatmap 期间也照盯）。"""
+        if b_acc is None or not b_streamed() or not b_acc.trader.open_positions():
+            return
+        now = et_now()
+        last = stream_state["b_mark"]
+        if force or last is None or (now - last).total_seconds() >= cfg.bl_stream_mark_s:
+            stream_state["b_mark"] = now
+            sync_stream()
+            b_acc.engine.mark_open(now)
+
+    def note_stream() -> None:
+        """推送健康状态变化：写日志；Discord 每天最多提示 6 次，避免刷屏。"""
+        if qstream is None:
+            return
+        ok = b_streamed()
+        if ok == stream_state["last"]:
+            return
+        prev, stream_state["last"] = stream_state["last"], ok
+        if ok:
+            msg = "✅ 实时报价推送已连上：B 持仓每 %d 秒盯一次" % cfg.bl_stream_mark_s
+        else:
+            msg = "⚠️ 实时报价推送不可用（%s），B 退回每分钟 REST 盯仓" % qstream.status
+        log.info("【报价推送】%s", msg)
+        if notifier and stream_state["notes"] < 6 and (prev is not None or not ok):
+            stream_state["notes"] += 1
+            notifier.text(msg)
 
     flow_rec = None
     if cfg.flow_stream_record:   # 11/25 用户定：WebSocket 采集全市场 Ask 侧 ≥$50k 大单，只记录不参与交易（0 配额）
@@ -357,7 +420,8 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
     pool = [e.ticker for e in universe]
     last_poll: dict[str, dt.datetime] = {}
     open_t = et_datetime(day, cfg.session_open)
-    close_t = et_datetime(day, cfg.force_close_time)
+    # 提前收盘日（感恩节次日等 13:00 收盘）按实际收盘时间强平退出，不再空跑到 16:00
+    close_t = min(et_datetime(day, cfg.force_close_time), et_datetime(day, session_close_hhmm(day)))
     session_verified = False
     next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min or 0)
 
@@ -418,6 +482,7 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
                             notifier.text(f"💤 {day} 判定休市（Heatmap 会话日期 {sd}），今日不交易。")
                         return
                     session_verified = True
+                mark_b_stream()   # 扫描 Heatmap 期间 B 持仓照样每 5 秒盯一次
                 ts = et_now()
                 for a in accounts:   # 同一份快照喂给每个账户，A 不额外消耗配额
                     if t in a.tickers:
@@ -425,9 +490,11 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             for a in accounts:   # 本轮所有标的处理完，再按信号分数排序开仓
                 a.engine.flush(et_now())
             nxt = grid + dt.timedelta(minutes=5, seconds=cfg.poll_offset_s)
-            log.info("[%s] 本轮完成：%s；监控 %d 只，配额剩余 %s；下一轮 %s", et_now().strftime("%H:%M:%S"),
+            log.info("[%s] 本轮完成：%s；监控 %d 只，配额剩余 %s；下一轮 %s%s", et_now().strftime("%H:%M:%S"),
                      "；".join(f"{a.name} 持仓 {len(a.trader.open_positions())}" for a in accounts), len(pool),
-                     client.quota_remaining, nxt.strftime("%H:%M:%S"))
+                     client.quota_remaining, nxt.strftime("%H:%M:%S"),
+                     "" if qstream is None else ("；B 盯仓：推送 %d 秒" % cfg.bl_stream_mark_s if b_streamed()
+                                                 else "；B 盯仓：每分钟 REST（推送 %s）" % qstream.status))
             if notifier and cfg.discord_heartbeat_min and et_now() >= next_heartbeat:
                 next_heartbeat = et_now() + dt.timedelta(minutes=cfg.discord_heartbeat_min)
                 notifier.text(f"💓 {et_now().strftime('%H:%M')} ET 运行中｜监控 {len(pool)} 只｜"
@@ -439,15 +506,25 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
             fast = cfg.bl_fast_mark_s if (baseline_rules and step) else 0
             tick = grid + dt.timedelta(seconds=cfg.poll_offset_s)
             while step:
-                near = bool(fast) and any(getattr(a.trader, "any_near_trigger", lambda _t: False)(et_now()) for a in accounts)
-                tick = next_mark_tick(tick, grid, cfg.poll_offset_s, step, fast, near)
-                if tick >= nxt or tick >= close_t:
+                sync_stream()
+                note_stream()
+                streamed = b_streamed()
+                near = bool(fast) and any(getattr(a.trader, "any_near_trigger", lambda _t: False)(et_now())
+                                          for a in accounts if not (streamed and a is b_acc))
+                next_min = next_mark_tick(tick, grid, cfg.poll_offset_s, step, fast, near)
+                b_live = streamed and b_acc is not None and bool(b_acc.trader.open_positions())
+                t_next = min(next_min, et_now() + dt.timedelta(seconds=cfg.bl_stream_mark_s)) if b_live else next_min
+                if t_next >= nxt or t_next >= close_t:
                     break
-                sleep_until(tick)
-                if any(a.trader.open_positions() for a in accounts):
-                    refresh_quotes()
-                    for a in accounts:
-                        a.engine.mark_open(et_now())
+                sleep_until(t_next)
+                if t_next >= next_min:   # 每分钟（或靠近触发线时 20 秒）：REST 账户 + 推送不健康时的 B
+                    tick = next_min
+                    if any(a.trader.open_positions() for a in accounts):
+                        refresh_quotes()
+                        for a in accounts:
+                            a.engine.mark_open(et_now())
+                else:                    # 两次分钟检查之间：B 用推送报价每 5 秒盯一次（0 配额）
+                    mark_b_stream(force=True)
             sleep_until(min(nxt, close_t))
         finish_all(close_t)
     except QuotaExhausted:
@@ -458,6 +535,9 @@ def run_live_day(cfg: SystemConfig, client: YHSClient, day: dt.date, notifier=No
         finish_all(et_now(), "MANUAL_STOP")
         raise
     finally:
+        if qstream is not None:
+            import quote_stream
+            quote_stream.stop_background(qstream)
         if flow_rec is not None:
             import flow_stream
             flow_stream.finish_background(flow_rec)

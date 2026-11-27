@@ -134,6 +134,10 @@ class SystemConfig:
     #   legacy = 旧规则（最大正/负节点 + 距离 ≤1% + 0–1 评分 + 标的破节点止损），只留作回测对照
     bl_enable_avalanche: bool = False          # baseline：先不做雪崩结构（2026-10-20 用户定）
     bl_fast_mark_s: int = 20                   # baseline 实盘：持仓靠近触发线时每 20 秒盯一次（平时 position_mark_min 分钟）
+    # 2026-11-26 用户定（11/27 起，rules_registry: mark_5s）：B 账户持仓改用 option-quotes 实时推送报价（0 配额）每 bl_stream_mark_s 秒盯一次；
+    #   推送断开 / 连不上时自动退回每分钟 REST（+ 靠近触发线 20 秒）。A / L 不变。回放同口径见 HistoryClient（分钟线 + 关键分钟 5 秒精查）。
+    bl_stream_quotes: bool = True
+    bl_stream_mark_s: int = 5
     bl_max_spread_pct: float = 0.08            # baseline 执行层保护：买卖价差 > 中间价 8% 不开（2026-10-26 晚用户定，10/27 起；旧 25%，回放见 bl_spr25/8/5）
     bl_exit_overrides: dict | None = None      # baseline 出场参数覆盖（ExitWeights 字段名 → 值），只给回放做对比；None = 按 baseline.EW
     bl_max_contract_cost_usd: float = 1000.0   # baseline 日内：单张成本（ask × 100）超过 $1,000 不开（2026-10-20 用户定）
