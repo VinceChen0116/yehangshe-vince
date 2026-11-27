@@ -19,6 +19,7 @@ import datetime as dt
 import logging
 from dataclasses import dataclass, field, replace
 
+from config import session_close_hhmm
 from detector import FlowConfirmation, HeatmapSnapshot, StructureSignal, parse_heatmap
 from paper_trader import PaperTrader, Position, SessionEngine
 from strategy_core_spec import (ExitWeights, HeatmapWeights, PositionState, compute_local_gamma_regime,
@@ -1039,6 +1040,9 @@ class BaselineEngine(SessionEngine):
         cfg = self.cfg
         if now_et.hour * 60 + now_et.minute >= 15 * 60:
             return False, "15:00 后不开日内单（baseline 尾盘为隔夜模式）"
+        # 2026-11-27 用户定（rules_registry: halfday_noon）：提前收盘日（13:00 收盘）12:00 后不开新仓
+        if session_close_hhmm(now_et.date()) == "13:00" and now_et.hour * 60 + now_et.minute >= 12 * 60:
+            return False, "提前收盘日 12:00 后不开新仓"
         if self.trader.open_for(ticker) is not None:
             return False, "该标的已有持仓"
         if cfg.max_trades_per_ticker_day and len(self.trader.trades_today(ticker, now_et.date())) >= cfg.max_trades_per_ticker_day:

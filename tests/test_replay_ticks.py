@@ -41,3 +41,19 @@ class MinuteNeedsTicksTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HalfDayCutoffTest(unittest.TestCase):
+    def test_noon_cutoff_on_early_close(self):
+        import datetime as dt
+        from unittest import mock
+        from baseline import BaselineEngine
+        from config import SystemConfig, et_datetime
+        eng = BaselineEngine.__new__(BaselineEngine)
+        eng.cfg = SystemConfig.load(None)
+        eng.trader = mock.Mock(open_for=lambda t: None, trades_today=lambda t, d: [])
+        eng.last_exit_for = lambda t: None
+        half, normal = dt.date(2026, 11, 27), dt.date(2026, 11, 30)
+        self.assertTrue(eng.can_enter("NVDA", et_datetime(half, "11:59"))[0])
+        self.assertFalse(eng.can_enter("NVDA", et_datetime(half, "12:00"))[0])
+        self.assertTrue(eng.can_enter("NVDA", et_datetime(normal, "12:30"))[0])
