@@ -27,7 +27,7 @@ class MinuteNeedsTicksTest(unittest.TestCase):
     def test_near_initial_stop(self):
         self.assertTrue(minute_needs_ticks(st(), (EW.initial_stop_loss_roi_pct + 3, -10.0), (100.4, 100.5), 3))
 
-    def test_range_crosses_line(self):     # 分钟内从 +5% 冲到 −40%：跨过 −25% 止损
+    def test_range_crosses_line(self):     # 分钟内从 +5% 冲到 −40%：跨过 −22% 止损
         self.assertTrue(minute_needs_ticks(st(), (5.0, -40.0), (100.4, 100.5), 3))
 
     def test_spot_near_stop_or_target(self):

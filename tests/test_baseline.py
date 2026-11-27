@@ -505,8 +505,8 @@ class TestExits(unittest.TestCase):
 
     def test_initial_stop(self):
         tr, fq, p, now = opened()
-        self.assertIsNone(self.tick(tr, fq, p, now, 1, 1.52, 100.6))          # −24%（11/25 起初始止损 −25%）
-        self.assertIsNotNone(self.tick(tr, fq, p, now, 2, 1.49, 100.7))       # −25.5%
+        self.assertIsNone(self.tick(tr, fq, p, now, 1, 1.57, 100.6))          # −21.5%（11/30 起初始止损 −22%）
+        self.assertIsNotNone(self.tick(tr, fq, p, now, 2, 1.55, 100.7))       # −22.5%
         self.assertEqual(p.exit_reason, "INITIAL_STOP_LOSS")
 
     def test_no_8_min_truncation(self):              # 2026-10-20 用户定：0DTE 8 分钟截断已去掉，10 分钟推迟到 18 分钟

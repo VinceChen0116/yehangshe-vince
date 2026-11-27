@@ -30,8 +30,9 @@ HW = HeatmapWeights()
 # 2026-10-20 用户定：去掉 0DTE 8 分钟零动能截断；零动能截断从 10 分钟推迟到 18 分钟（最高 < +4%、当前 ≤ −20% 不变）；
 # 25 分钟滞涨截断（最高 < +6%、当前 ≤ −15%）不变；全天一样
 # 2026-11-24 用户定：期权初始硬止损 −35% → −25%（11/25 起实盘，登记 rules_registry: stop_25）
+# 2026-11-27 用户定：−25% → −22%（11/30 起实盘，登记 rules_registry: stop_22）
 EW = replace(ExitWeights(), stage0_0dte_minutes=float("inf"), stage1_dead_minutes=18.0,
-             initial_stop_loss_roi_pct=-25.0)
+             initial_stop_loss_roi_pct=-22.0)
 INDEX_TICKERS = {"SPX", "SPXW", "NDX", "QQQ"}   # 文档原文的"指数"集合（SPY 不在内）
 OUTER_WALL_STEPS = 3                             # 墙外侧 3 格以内有更大的正节点 → 结构不成立（2026-10-20 用户定）
 PATH_NEG_RATIO = 1.5                             # 路径上显著负节点合计 ≥ 1.5 × 显著正节点合计（2026-10-20 用户定）
@@ -740,7 +741,7 @@ class BaselineJudge:
 
 # ============================================================================== 交易：出场用 spec 的 evaluate_exit_tick
 REASON_CN = {
-    "INITIAL_STOP_LOSS": "初始止损 −25%", "RATCHET_SOFT_STOP": "棘轮软止损", "BREAKEVEN_STOP": "保本止损 +3%",
+    "INITIAL_STOP_LOSS": "初始止损 −22%", "RATCHET_SOFT_STOP": "棘轮软止损", "BREAKEVEN_STOP": "保本止损 +3%",
     "TRAILING_STOP": "连续棘轮锁利", "HARD_TP_CAP": "硬顶 +250%", "SPOT_STOP": "现货止损", "SPOT_PROFIT_STOP": "现货锁利止盈",
     "STRUCTURE_TARGET": "到达结构目标", "MAX_HOLD": "持仓满 180 分钟", "EOD_0DTE_CLOSE": "15:50 0DTE 强平",
     "DEAD_MOMENTUM_TRUNCATE_0DTE_8M": "0DTE 8 分钟零动能截断", "DEAD_MOMENTUM_TRUNCATE_10M": "18 分钟零动能截断",
