@@ -517,13 +517,13 @@ class TestExits(unittest.TestCase):
     def test_dead_momentum_18m(self):
         tr, fq, p, now = opened()
         self.assertIsNone(self.tick(tr, fq, p, now, 17, 1.58, 100.6))         # 17 分钟、−21%
-        self.assertIsNotNone(self.tick(tr, fq, p, now, 18, 1.58, 100.6))      # 18 分钟、最高 < +4%、≤ −20%
+        self.assertIsNotNone(self.tick(tr, fq, p, now, 18, 1.64, 100.6))      # 18 分钟、最高 < +4%、−18% ≤ −17%（11/30 起）
         self.assertEqual(p.exit_reason, "DEAD_MOMENTUM_TRUNCATE_10M")
 
     def test_stagnation_25m(self):
         tr, fq, p, now = opened()
-        self.assertIsNone(self.tick(tr, fq, p, now, 24, 1.66, 100.6))         # 24 分钟、−17%
-        self.assertIsNotNone(self.tick(tr, fq, p, now, 25, 1.66, 100.6))      # 25 分钟、最高 < +6%、≤ −15%
+        self.assertIsNone(self.tick(tr, fq, p, now, 24, 1.68, 100.6))         # 24 分钟、−16%（未到零动能线 −17%）
+        self.assertIsNotNone(self.tick(tr, fq, p, now, 25, 1.68, 100.6))      # 25 分钟、最高 < +6%、≤ −15%
         self.assertEqual(p.exit_reason, "THETA_STAGNATION_TRUNCATE_25M")
 
     def test_trailing(self):
@@ -566,7 +566,7 @@ class TestNearTrigger(unittest.TestCase):
         self.assertFalse(B.near_trigger(st, -12.0, 100.5, 3))       # 离 −25% 还有 13 点，时间截断尚未生效
         self.assertTrue(B.near_trigger(st, -21.0, 100.5, 3))        # 离 −25% 4 点
         self.assertFalse(B.near_trigger(st, -9.0, 100.5, 8))        # 8 分钟截断已去掉
-        self.assertTrue(B.near_trigger(st, -16.0, 100.5, 17))       # 18 分钟零动能截断线 −20% 在 5 点内
+        self.assertTrue(B.near_trigger(st, -16.0, 100.5, 17))       # 18 分钟零动能截断线 −17% 在 5 点内
         self.assertTrue(B.near_trigger(st, 0.0, 101.25, 3))         # 现价离现货止损 101.3 不到 0.1%
         st.trailing_active, st.trailing_stop_level_pct, st.breakeven_locked = True, 34.1, True
         self.assertTrue(B.near_trigger(st, 37.0, 100.0, 20))        # 离锁利线 2.9 点

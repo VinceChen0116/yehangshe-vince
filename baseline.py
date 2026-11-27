@@ -31,7 +31,8 @@ HW = HeatmapWeights()
 # 25 分钟滞涨截断（最高 < +6%、当前 ≤ −15%）不变；全天一样
 # 2026-11-24 用户定：期权初始硬止损 −35% → −25%（11/25 起实盘，登记 rules_registry: stop_25）
 # 2026-11-27 用户定：−25% → −22%（11/30 起实盘，登记 rules_registry: stop_22）
-EW = replace(ExitWeights(), stage0_0dte_minutes=float("inf"), stage1_dead_minutes=18.0,
+# 2026-11-27 用户定：18 分钟零动能截断线 当前 ≤ −20% → ≤ −17%（11/30 起，登记 rules_registry: dead_17）
+EW = replace(ExitWeights(), stage0_0dte_minutes=float("inf"), stage1_dead_minutes=18.0, stage1_dead_mae_floor_pct=-17.0,
              initial_stop_loss_roi_pct=-22.0)
 INDEX_TICKERS = {"SPX", "SPXW", "NDX", "QQQ"}   # 文档原文的"指数"集合（SPY 不在内）
 OUTER_WALL_STEPS = 3                             # 墙外侧 3 格以内有更大的正节点 → 结构不成立（2026-10-20 用户定）
@@ -91,7 +92,7 @@ BASELINE_NOTES = """
 14b. 2026-10-20 用户定：先不做雪崩结构（bl_enable_avalanche=False）。
 14c. 实盘盯仓：平时每分钟；任一持仓离出场触发线 5 个百分点以内（现货离止损 / 目标 0.1% 以内）时改为每 20 秒（回放只有 1 分钟数据，仍按分钟）。
 15. 盘中开仓只到 15:00（之后文档是尾盘隔夜模式；我们的隔夜单是另一套独立规则，不动）。
-15a. 时间截断（2026-10-20 用户定）：去掉 0DTE 8 分钟截断；零动能截断 = 持仓 ≥ 18 分钟（原 10）且期间最高 < +4%、当前 ≤ −20%
+15a. 时间截断（2026-10-20 用户定）：去掉 0DTE 8 分钟截断；零动能截断 = 持仓 ≥ 18 分钟（原 10）且期间最高 < +4%、当前 ≤ −20%（11/30 起 ≤ −17%）
     （原因码沿用 DEAD_MOMENTUM_TRUNCATE_10M）；25 分钟滞涨截断（最高 < +6%、当前 ≤ −15%）不变。
 16. PINNING_MAGNET 只限 SPX/SPXW 而且没有方向，不开仓。
 17. 起始点衰减截断（2026-10-20 用户定，只限悬崖 / 跳板；默认时间截断照旧，逼空不适用）：持仓期间每根新 Heatmap
