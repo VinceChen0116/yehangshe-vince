@@ -797,6 +797,47 @@ def exit_detail(p: Position, st: PositionState | None, note: str = "") -> str:
     return base
 
 
+def exit_lines(st: PositionState, held_min: float, w=None) -> list:
+    """当前生效的期权收益率出场线（百分比）：硬顶 / 初始止损 / 软止损 / 保本 / 追踪 / 时间截断 / +80% 分批。"""
+    EW_ = w or EW
+    lines = [EW_.hard_take_profit_roi_pct]
+    if not st.partial_harvested and st.quantity >= 2:
+        lines.append(EW_.scale_out_half_roi_pct)
+    if not st.breakeven_locked:
+        lines.append(EW_.initial_stop_loss_roi_pct)
+    if st.soft_stop_level_pct > EW_.initial_stop_loss_roi_pct:
+        lines.append(st.soft_stop_level_pct)
+    if st.breakeven_locked:
+        lines.append(EW_.breakeven_floor_roi_pct)
+    if st.trailing_active:
+        lines.append(st.trailing_stop_level_pct)
+    if st.is_0dte and held_min >= EW_.stage0_0dte_minutes - 1 and st.peak_roi_pct <= EW_.stage0_0dte_max_mfe_pct:
+        lines.append(EW_.stage0_0dte_mae_floor_pct)
+    if held_min >= EW_.stage1_dead_minutes - 1 and st.peak_roi_pct < EW_.stage1_dead_max_mfe_pct:
+        lines.append(EW_.stage1_dead_mae_floor_pct)
+    if held_min >= EW_.stage2_stag_minutes - 1 and st.peak_roi_pct < EW_.stage2_stag_max_mfe_pct:
+        lines.append(EW_.stage2_stag_mae_floor_pct)
+    return lines
+
+
+def minute_needs_ticks(st: PositionState, roi_range: tuple, spot_range: tuple, held_min: float,
+                       w=None, band_pct: float = 5.0, spot_band: float = 0.001) -> bool:
+    """回放（2026-11-26 用户定）：这一分钟的期权收益率区间 / 标的价区间有没有碰到或靠近任何出场线
+    （收益率线 ± band_pct 个百分点、现货止损 / 目标 ± 0.1%），或者创出新高（会抬高追踪线）。是 → 这一分钟按 5 秒逐点精查。"""
+    lo, hi = min(roi_range), max(roi_range)
+    if any(lo - band_pct <= x <= hi + band_pct for x in exit_lines(st, held_min, w)):
+        return True
+    if st.peak_roi_pct >= (w or EW).breakeven_trigger_roi_pct - band_pct and hi > st.peak_roi_pct:
+        return True
+    s = [x for x in spot_range if x]
+    if s:
+        slo, shi = min(s), max(s)
+        for lvl in (st.stop_loss_spot, st.target_spot):
+            if lvl and slo * (1 - spot_band) <= lvl <= shi * (1 + spot_band):
+                return True
+    return False
+
+
 def near_trigger(st: PositionState, roi: float, spot: float, held_min: float, band_pct: float = 5.0,
                  spot_band: float = 0.001) -> bool:
     """持仓是否靠近任何出场触发线（用于实盘把盯仓从 1 分钟加密到 20 秒，2026-10-20 用户定）：
@@ -925,7 +966,7 @@ class BaselineTrader(PaperTrader):
         st = self.state.get(p.position_id)
         if st is None:
             return super().mark(p, spot, now_et)
-        if not p.is_open:
+        if not p.is_open or now_et < p.entry_time:   # 回放按网格 + 85 秒开仓：早于开仓时刻的盯仓点跳过
             return None
         mid = self.current_mid(p, spot, now_et)
         px = self._exit_value(p, mid)                    # 能卖出的价格（实盘 bid / 回放 中间价 − 半价差）

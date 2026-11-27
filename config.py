@@ -215,6 +215,14 @@ class SystemConfig:
     replay_hist_spread: bool = True
     # 历史回放持仓盯市间隔（分钟）；0 = 只在 5 分钟 Heatmap 快照时盯市 = 与实盘每 5 分钟一轮一致（2026-10-14 起默认）
     intraday_mark_min: int = 0
+    # 2026-11-26 用户定（与实盘 mark_5s 同口径）：baseline 回放的开仓 / 盯仓价改用当时的真实 NBBO（/v1/options/contract-at-time，1 配额 / 次），
+    #   每分钟一次；用 1 分钟成交 K 线（contract-bars，每 20 根 1 配额）+ 1 分钟标的价判断这一分钟里会不会碰到出场线，
+    #   会碰到的分钟再按 bl_stream_mark_s（5 秒）逐点查真实 NBBO 与标的价（stocks/at-time）。数据全部本地缓存，重跑 0 配额。
+    replay_tick_quotes: bool = True
+    # 实盘开仓不在 5 分钟网格整点：要先等 poll_offset、再逐只拉完 Heatmap 才排序开仓。11/16–11/25 实盘 46 次开仓，距网格中位 84 秒
+    #   （p10 63 / p90 90）。逐点真实报价下回放按网格 + 85 秒的报价开仓（只在 replay_tick_quotes 打开时生效）
+    replay_entry_lag_s: int = 85
+    replay_tick_budget_day: int = 3000    # 每个回放日 5 秒精查最多用多少次配额（超了这一天剩下的只按分钟盯，并在日志里说明）
     min_entry_delta: float = 0.0          # 开仓合约 |delta| 低于此值不开仓（0 = 关闭；2026-10-12 用户决定关闭）；历史回放用真实 delta
     min_option_price: float = 0.05       # 期权价低于此值不开仓（防异常报价导致 ROI 失真）
     contracts_per_trade: int = 1

@@ -734,6 +734,118 @@ class HistoryClient:
             last = row
         return last[1] if last is not None and (t - last[0]).total_seconds() <= 5 * 60 else None
 
+    # ------------------------------------------------------------------ 2026-11-26：真实瞬时 NBBO（与实盘 5 秒推送同口径）
+    def _tick_cache(self, kind: str, key: str) -> dict:
+        """按 (类别, 合约/标的) 缓存当天逐时刻结果：yhs_data/cache/{kind}/{日期}/{key}.json（已收盘交易日才落盘）。"""
+        store = self.__dict__.setdefault("_ticks", {})
+        k = (kind, key)
+        if k not in store:
+            fp = os.path.join(self.cfg.data_dir, "cache", kind, self.date.isoformat(), f"{key}.json")
+            store[k] = {}
+            if os.path.exists(fp):
+                with open(fp, encoding="utf-8") as f:
+                    store[k] = json.load(f)
+        return store[k]
+
+    def _tick_save(self, kind: str, key: str) -> None:
+        if not (self.date < et_now().date() or et_now() >= et_datetime(self.date, "16:30")):
+            return
+        fp = os.path.join(self.cfg.data_dir, "cache", kind, self.date.isoformat(), f"{key}.json")
+        os.makedirs(os.path.dirname(fp), exist_ok=True)
+        tmp = f"{fp}.{os.getpid()}.tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(self._ticks[(kind, key)], f, ensure_ascii=False)
+        os.replace(tmp, fp)
+
+    def tick_units(self) -> int:
+        return self.__dict__.get("_tick_units", 0)
+
+    def _tick_fetch(self, key: str, path: str, hms: str):
+        try:
+            payload = self.real.get(path, {"date": self.date.isoformat(), "time": hms})
+            return hms, (payload.get("data") if isinstance(payload, dict) else None), 1
+        except QuotaExhausted:
+            raise
+        except YHSApiError as e:
+            log.info("【历史·逐点】%s %s 获取失败：%s", key, hms, e)
+            return hms, None, 0
+
+    def _tick_get(self, kind: str, key: str, path: str, t: dt.datetime) -> dict | None:
+        cache = self._tick_cache(kind, key)
+        hms = t.strftime("%H:%M:%S")
+        if hms not in cache:
+            _, cache[hms], n = self._tick_fetch(key, path, hms)
+            self.__dict__["_tick_units"] = self.tick_units() + n
+            self._tick_save(kind, key)
+        return cache[hms]
+
+    def prefetch_ticks(self, kind: str, key: str, path: str, times: list) -> None:
+        """并发预取一批时刻（接口首次请求常返回 202 要等 5 秒，逐个取太慢）；并发数 = max_in_flight。"""
+        cache = self._tick_cache(kind, key)
+        todo = sorted({t.strftime("%H:%M:%S") for t in times} - set(cache))
+        if not todo:
+            return
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=max(1, self.cfg.max_in_flight)) as ex:
+            for hms, data, n in ex.map(lambda h: self._tick_fetch(key, path, h), todo):
+                cache[hms] = data
+                self.__dict__["_tick_units"] = self.tick_units() + n
+        self._tick_save(kind, key)
+
+    def option_at(self, contract: str, t: dt.datetime) -> dict | None:
+        """t 时刻（含）之前最近的真实 NBBO：{"bid","ask","mid","quoted_at"}；没有卖价返回 None（1 配额，缓存）。"""
+        core = contract.split(":")[-1]
+        d = self._tick_get("optattime", core, f"/v1/options/contract-at-time/{core}", t)
+        bid, ask = _num((d or {}).get("bid_usd")), _num((d or {}).get("ask_usd"))
+        if ask is None or ask <= 0:
+            return None
+        bid = bid or 0.0
+        return {"bid": bid, "ask": ask, "mid": (bid + ask) / 2, "quoted_at": (d or {}).get("quoted_at")}
+
+    def quote_now(self, contract: str) -> dict | None:
+        """回放里的"实时报价"：self.now 时刻的真实 NBBO（交易器的 quote_provider，与实盘同一条路径）。"""
+        return self.option_at(contract, self.now)
+
+    def stock_at(self, ticker: str, t: dt.datetime) -> float | None:
+        """t 时刻的真实标的价（/v1/stocks/at-time：有 NBBO 取中间价，否则最近成交价；1 配额，缓存）。"""
+        d = self._tick_get("stkattime", ticker, f"/v1/stocks/at-time/{ticker}", t) or {}
+        bid, ask, px = _num(d.get("bid_usd")), _num(d.get("ask_usd")), _num(d.get("price_usd"))
+        if bid and ask and 0 < bid <= ask:
+            return (bid + ask) / 2
+        return px if px and px > 0 else None
+
+    def bars_1m(self, contract: str) -> dict:
+        """当天 1 分钟成交 K 线（/v1/options/contract-bars，每 20 根 1 配额，缓存）：{分钟开始 ET: (开, 高, 低, 收)}。"""
+        core = contract.split(":")[-1]
+        memo = self.__dict__.setdefault("_bars", {})
+        if core in memo:
+            return memo[core]
+        rows, cursor = [], None
+        try:
+            for _ in range(5):
+                params = {"from": self.date.isoformat(), "to": self.date.isoformat(), "interval": "1m", "limit": 1000}
+                if cursor:
+                    params["cursor"] = cursor
+                payload = self._cached_get("bars1m", core + (f"_{cursor}" if cursor else ""),
+                                           f"/v1/options/contract-bars/{core}", params)
+                data = payload.get("data") if isinstance(payload, dict) else None
+                rows += (data or {}).get("bars") or []
+                cursor = ((payload or {}).get("_meta") or {}).get("next_cursor")
+                if not cursor:
+                    break
+        except QuotaExhausted:
+            raise
+        except YHSApiError as e:
+            log.info("【历史·分钟线】%s 获取失败：%s", core, e)
+        out = {}
+        for b in rows:
+            ts = parse_iso(b.get("bar_at"))
+            o, h, lo, c = (_num(b.get(k)) for k in ("open_usd", "high_usd", "low_usd", "close_usd"))
+            if ts is not None and h and lo:
+                out[to_et(ts).replace(second=0, microsecond=0)] = (o, h, lo, c)
+        memo[core] = out
+        return out
+
     def option_delta(self, contract: str, t: dt.datetime) -> float | None:
         """t 时刻（含 5 分钟内下一个点，与开仓成交口径一致）的真实 |delta|。"""
         rows = self._load_greeks(contract.split(":")[-1])
